@@ -564,3 +564,103 @@ rg -i "Meridian|Alliance|Beginnings|Investment Committee|CIFF|Delta Philanthrop|
 ```
 
 This should return zero matches.
+
+---
+
+## 15. GitHub Pages Deployment
+
+### The Problem
+
+When deploying a Quarto website to GitHub Pages, the default Pages configuration uses **Jekyll** to process the repo. Jekyll doesn't understand Quarto — it just renders the `README.md`, resulting in a blank page showing only the repo name and description.
+
+### Root Cause
+
+Three things were missing:
+
+1. **No GitHub Actions workflow** — there was no `.github/workflows/` directory, so GitHub had no instructions for deploying the `_site/` output.
+2. **No `.nojekyll` marker** — without this file, GitHub tries to process the site through Jekyll, which ignores files/folders starting with `_` (like `_site/`).
+3. **Pages source set incorrectly** — the repo's GitHub Pages settings were likely set to "Deploy from a branch" (Jekyll mode) instead of "GitHub Actions".
+
+### The Fix
+
+**Step 1: Created `.github/workflows/deploy.yml`**
+
+```yaml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+This workflow:
+- Triggers on every push to `main` (and can be triggered manually via `workflow_dispatch`)
+- Checks out the repo
+- Uploads the `_site/` directory as a Pages artifact
+- Deploys it to GitHub Pages
+
+Since `_site/` is already committed to the repo (pre-rendered by Quarto locally), the workflow does **not** need to install Quarto or run `quarto render`. It just deploys the existing output.
+
+**Step 2: Added `_site/.nojekyll`**
+
+An empty file that tells GitHub Pages to skip Jekyll processing and serve files as-is, including folders starting with `_`.
+
+**Step 3: Changed GitHub Pages source setting**
+
+In the GitHub repo: **Settings → Pages → Source → GitHub Actions**
+
+This tells GitHub to use the workflow above instead of trying to auto-detect and build with Jekyll.
+
+### For Future Quarto Repos
+
+When creating a new Quarto website repo for GitHub Pages:
+
+1. Render locally with `quarto render` (output goes to `_site/`)
+2. Make sure `_site/` is **not** in `.gitignore` (it needs to be committed)
+3. Add the `.nojekyll` file inside `_site/`
+4. Add the `deploy.yml` workflow to `.github/workflows/`
+5. Push to GitHub
+6. Go to **Settings → Pages → Source → GitHub Actions**
+7. The site will deploy automatically on the next push
+
+### Alternative: Quarto's Built-in `quarto publish`
+
+Quarto has a built-in command for GitHub Pages:
+
+```bash
+quarto publish gh-pages
+```
+
+This creates a `gh-pages` branch with the rendered output and configures Pages to serve from that branch. This is simpler but requires Quarto installed locally every time you publish. The GitHub Actions approach above is more automated — just push to `main` and the site updates.
