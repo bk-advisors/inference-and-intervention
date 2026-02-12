@@ -643,17 +643,61 @@ In the GitHub repo: **Settings → Pages → Source → GitHub Actions**
 
 This tells GitHub to use the workflow above instead of trying to auto-detect and build with Jekyll.
 
+**Step 4: Manually trigger the first workflow run**
+
+Changing the Pages source to "GitHub Actions" does **not** retroactively trigger the workflow. The old Jekyll deployment remains cached until the new workflow runs. If you pushed the workflow file *before* changing the source setting, you must manually trigger it:
+
+1. Go to the repo's **Actions** tab
+2. Click **"Deploy to GitHub Pages"** in the left sidebar
+3. Click the **"Run workflow"** dropdown button on the right
+4. Click **"Run workflow"**
+
+After this first manual trigger, all subsequent pushes to `main` will automatically deploy via the workflow.
+
+### Gotcha: Reveal.js Slides Rendering as Plain HTML
+
+**Symptom:** Slide deck pages (e.g., `/ch01-intro/`) show raw content with headings and bullet points instead of a reveal.js presentation.
+
+**Root cause:** Quarto website builds skip `*_files/` directories when copying files to `_site/`. These directories contain the reveal.js libraries, CSS, fonts, and plugins that the slide `index.html` files reference via relative paths. Without them, the browser has no JS/CSS to render the presentation.
+
+**Fix (one-time):** Manually copy the `index_files/` directories from each source chapter folder into `_site/`:
+
+```bash
+for dir in ch01-intro ch02-qualitative-models ch03-interview-case ch04-quantitative-models ch05-situational-analysis ch06-business-financials ch07-single-agent ch08-resource-allocation ch09-multi-agent ch10-data-driven; do
+  cp -r "$dir/index_files" "_site/$dir/index_files"
+done
+```
+
+**Fix (permanent):** Add a `resources:` field to `_quarto.yml` so that future `quarto render` runs automatically copy these files into `_site/`:
+
+```yaml
+project:
+  type: website
+  render:
+    - index.qmd
+    - schedule.qmd
+    - r-setup.qmd
+    - references.qmd
+    - chapters/*.qmd
+  resources:
+    - "ch*/index_files/**"
+  output-dir: _site
+```
+
+The `resources:` glob tells Quarto to treat the matched files as static resources and copy them to the output directory alongside the rendered pages.
+
 ### For Future Quarto Repos
 
 When creating a new Quarto website repo for GitHub Pages:
 
 1. Render locally with `quarto render` (output goes to `_site/`)
-2. Make sure `_site/` is **not** in `.gitignore` (it needs to be committed)
-3. Add the `.nojekyll` file inside `_site/`
-4. Add the `deploy.yml` workflow to `.github/workflows/`
-5. Push to GitHub
-6. Go to **Settings → Pages → Source → GitHub Actions**
-7. The site will deploy automatically on the next push
+2. If the project includes standalone reveal.js slide decks, add `resources: ["ch*/index_files/**"]` to `_quarto.yml` (or the equivalent glob for your folder structure) so `index_files/` directories get copied to `_site/`
+3. Make sure `_site/` is **not** in `.gitignore` (it needs to be committed)
+4. Add the `.nojekyll` file inside `_site/`
+5. Add the `deploy.yml` workflow to `.github/workflows/`
+6. Push to GitHub
+7. Go to **Settings → Pages → Source → GitHub Actions**
+8. The site will deploy automatically on the next push
 
 ### Alternative: Quarto's Built-in `quarto publish`
 
