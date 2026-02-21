@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd GitHub Actions workflow for Pages deployment\n\nGitHub Pages was rendering README.md via Jekyll instead of\nthe Quarto-generated _site/ directory. Added deploy.yml workflow\nto upload and deploy _site/ as a Pages artifact, plus .nojekyll\nto bypass Jekyll processing. Documented the fix in skills.md.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh run list:*)",
+      "Bash(where:*)",
+      "Bash(cmd /c \"where gh 2>nul || echo gh not found\")",
+      "Bash(cmd /c \"dir /b \"\"c:\\\\Users\\\\HP\\\\Desktop\\\\Parking Lot\\\\1 Frequently Used\\\\Web Projects\\\\bk-github\\\\inference-and-intervention\\\\_site\\\\ch01-intro\"\"\")",
+      "Bash(cmd /c \"dir /b \"\"c:\\\\Users\\\\HP\\\\Desktop\\\\Parking Lot\\\\1 Frequently Used\\\\Web Projects\\\\bk-github\\\\inference-and-intervention\\\\_site\\\\ch01-intro\\\\index_files\"\" 2>nul || echo DIRECTORY NOT FOUND\")",
+      "Bash(cmd /c \"dir /b \"\"c:\\\\Users\\\\HP\\\\Desktop\\\\Parking Lot\\\\1 Frequently Used\\\\Web Projects\\\\bk-github\\\\inference-and-intervention\\\\ch01-intro\\\\index_files\"\" 2>nul || echo DIRECTORY NOT FOUND\")",
+      "Bash(for dir in ch*/index_files)",
+      "Bash(do echo \"$dir\")",
+      "Bash(done)",
+      "Bash(for:*)",
+      "Bash(do cp -r \"$dir/index_files\" \"_site/$dir/index_files\")",
+      "Bash(echo:*)",
+      "Bash(git commit:*)",
+      "Bash(git rm:*)"
+    ]
+  }
+}

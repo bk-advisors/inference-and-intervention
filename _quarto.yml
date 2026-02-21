@@ -6,8 +6,6 @@ project:
     - r-setup.qmd
     - references.qmd
     - chapters/*.qmd
-  resources:
-    - "ch*/index_files/**"
   output-dir: _site
 
 website:
