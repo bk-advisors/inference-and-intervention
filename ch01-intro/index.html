@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="BK Advisors">
-  <meta name="dcterms.date" content="2026-02-21">
+  <meta name="dcterms.date" content="2026-03-07">
   <title>Chapter 1: Introduction to Causal Analysis</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -205,17 +205,17 @@ BK Advisors
 </div>
 </div>
 
-  <p class="date">2026-02-21</p>
+  <p class="date">2026-03-07</p>
 </section>
 <section class="slide level2">
 <h2>Learning Objectives</h2>
 <p>After this chapter, you will be able to:</p>
 <ul>
-<li class="fragment">Distinguish between <strong>situational assessment</strong> and <strong>managerial intervention</strong></li>
-<li class="fragment">Explain why <strong>correlation does not imply causation</strong> with real MNH examples</li>
-<li class="fragment">Identify three classic causal thinking traps: confounding, reverse causation, and selection bias</li>
-<li class="fragment">Describe the basic elements of a <strong>causal model</strong> (nodes, arrows, directed graphs)</li>
-<li class="fragment">Articulate why causal thinking is essential for large-scale pooled investment decisions in maternal and newborn health programs</li>
+<li class="fragment">Distinguish between <strong>situational assessment</strong> (“What is happening?”) and <strong>managerial intervention</strong> (“What should I do?”)</li>
+<li class="fragment">Explain why <strong>correlation does not imply causation</strong> using real-world health examples</li>
+<li class="fragment">Identify three classic traps in causal thinking: <strong>confounding</strong>, <strong>reverse causation</strong>, and <strong>selection bias</strong></li>
+<li class="fragment">Describe the basic building blocks of a <strong>causal model</strong> — nodes, arrows, and directed acyclic graphs (DAGs)</li>
+<li class="fragment">Explain why causal reasoning matters for designing health programs that actually save lives</li>
 </ul>
 </section>
 <section class="slide level2">
@@ -251,7 +251,7 @@ MNH<br>Application
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>Core Insight:</strong> In a world of resource scarcity, a decision about <em>which</em> program elements to control or change must precede any decision on <em>how</em> to control or change them. Understanding causality is crucial to making effective interventions.</p>
+<p><strong>The big idea:</strong> When resources are scarce — and they always are — you need to know <em>what causes what</em> before you can decide <em>what to do</em>. This chapter introduces the thinking tools that make that possible.</p>
 </div>
 </div>
 </section>
@@ -261,59 +261,123 @@ MNH<br>Application
 <p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What is happening? What are the causes?</span></p>
 </section>
 <section class="slide level2">
+<h2>Here’s the Puzzle</h2>
+<p>Ethiopia has one of the largest community health worker programs in Africa — over <strong>40,000 Health Extension Workers</strong> deployed across the country.</p>
+<div class="fragment">
+<p>But here is something strange:</p>
+</div>
+<div class="fragment">
+<div class="callout-box red">
+<p><strong>The regions where the most Health Extension Workers are deployed tend to have the highest mortality rates.</strong></p>
+</div>
+</div>
+<div class="fragment">
+<p>Does deploying health workers <em>cause</em> deaths?</p>
+</div>
+<div class="fragment">
+<p>Obviously not. But if you just looked at the numbers — workers deployed vs.&nbsp;mortality rates — that is exactly what the data would seem to say.</p>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>This is the kind of puzzle that causal thinking solves.</strong> The data is not lying. But it is not telling the whole story either. By the end of this chapter, you will be able to explain exactly what is going on.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
 <h2>The Manager’s Two Questions</h2>
-<p>Every manager faces two fundamental questions:</p>
+<p>Every decision-maker faces two fundamental questions:</p>
 <div class="fragment">
 <div class="columns-equal">
 <div class="col">
 <div class="callout-box">
 <p><strong>Question 1: What is happening?</strong></p>
 <p><em>Situational Assessment</em> — understanding the current state by gathering evidence and reasoning about causes.</p>
-<p>“Why is neonatal mortality still high in District X despite our investments?”</p>
+<p>“Why are so many mothers still dying in Amhara region despite having more health workers than anywhere else?”</p>
 </div>
 </div>
 <div class="col">
 <div class="callout-box green">
 <p><strong>Question 2: What should I do?</strong></p>
 <p><em>Managerial Intervention</em> — choosing which levers to pull to change outcomes.</p>
-<p>“Should we invest in more CPAP machines or in training more midwives?”</p>
+<p>“Should we train more midwives, buy more equipment, or fix the data system?”</p>
 </div>
 </div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>Key insight:</strong> You cannot answer Question 2 well until you have answered Question 1 well. Acting without understanding causes is like prescribing medicine without a diagnosis.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Situational Assessment in Practice</h2>
+<h2>What Is Situational Assessment?</h2>
 <div class="definition-box">
-<p><strong>Situational Assessment:</strong> Using evidence to reason about the current state of a system — determining which variables are in which states, and why.</p>
+<p><strong>Situational Assessment:</strong> Using evidence to reason about the current state of a system — figuring out which variables are in which states, and <em>why</em>.</p>
 </div>
 <div class="fragment">
+<p>Think of it this way:</p>
 <ul>
-<li class="fragment">A police inspector assessing cause of death: What evidence points to which explanation?</li>
-<li class="fragment">A technical advisor diagnosing an organization’s declining health outcomes: Which factors are driving the problem?</li>
-<li class="fragment">A <strong>program director</strong> in a large MNH initiative asking: Why is a country’s NMR not declining?</li>
+<li class="fragment">A <strong>doctor</strong> examining a patient: What symptoms are present? What do they point to?</li>
+<li class="fragment">A <strong>mechanic</strong> diagnosing a car: The engine is overheating — but is it the coolant, the fan, or a cracked gasket?</li>
+<li class="fragment">A <strong>health program manager</strong> in Ethiopia: Neonatal mortality is not falling in Somali region — is it a workforce problem, a supply chain problem, or something else entirely?</li>
 </ul>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p>Causal models help us <strong>incorporate multiple sources of evidence</strong> and reason systematically about what they imply.</p>
+<p>In each case, the person is trying to <strong>figure out what is causing what</strong> before deciding how to act. Causal models give us a systematic way to do this.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>The Maxwell Example (from the Book)</h2>
-<p>Ryall &amp; Bramson open with a compelling example:</p>
+<h2>Ethiopia’s Health Challenge: The Numbers</h2>
+<p>Here is the situation Ethiopia faces, based on publicly available data:</p>
 <div class="fragment">
-<p><strong>Robert Maxwell</strong> — media tycoon found dead off his yacht in 1991.</p>
-<ul>
-<li class="fragment">McKinsey’s issue tree approach: break down “How did he die?” into MECE categories</li>
-<li class="fragment">But this misses the <em>causal</em> question: What <strong>caused</strong> each possibility?</li>
-<li class="fragment">Causal thinking leads us both <strong>up</strong> the chain (what caused X?) and <strong>down</strong> (what evidence would X produce?)</li>
-</ul>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Indicator</th>
+<th>Ethiopia</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Maternal Mortality Ratio</strong></td>
+<td>~267 per 100,000 live births</td>
+<td>WHO, 2020</td>
+</tr>
+<tr class="even">
+<td><strong>Neonatal Mortality Rate</strong></td>
+<td>~28 per 1,000 live births</td>
+<td>UNICEF, 2021</td>
+</tr>
+<tr class="odd">
+<td><strong>Health Extension Workers</strong></td>
+<td>40,000+ deployed nationally</td>
+<td>Ethiopia MoH</td>
+</tr>
+<tr class="even">
+<td><strong>Antenatal care coverage</strong> (at least 1 visit)</td>
+<td>~74%</td>
+<td>DHS, 2019</td>
+</tr>
+<tr class="odd">
+<td><strong>Leading causes of maternal death</strong></td>
+<td>Hemorrhage, hypertension, sepsis, obstructed labor</td>
+<td>WHO</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="fragment">
-<div class="callout-box orange">
-<p><strong>Key Insight:</strong> Framing analysis in causal terms points us toward useful sources of information <em>and</em> allows us to incorporate evidence in useful ways.</p>
+<div class="callout-box">
+<p>Ethiopia has made enormous progress — maternal mortality dropped from over 1,000 per 100,000 in the 1990s to about 267 today. But there is still a long way to go, and where to invest next depends on understanding what is <em>causing</em> the remaining deaths.</p>
 </div>
 </div>
 </section></section>
@@ -325,125 +389,77 @@ MNH<br>Application
 <section class="slide level2">
 <h2>Managers Manage Scarce Resources</h2>
 <div class="definition-box">
-<p><strong>Managerial Intervention:</strong> A decision about which objects to control or change — the choice of <em>what</em> to act on, before deciding <em>how</em> to act.</p>
+<p><strong>Managerial Intervention:</strong> A decision about which things to control or change — the choice of <em>what</em> to act on, before deciding <em>how</em> to act.</p>
 </div>
 <div class="fragment">
 <ul>
-<li class="fragment">Resources are always limited — money, time, personnel, equipment</li>
-<li class="fragment">Every intervention involves <strong>trade-offs</strong>: investing in CPAP means <em>not</em> investing in workforce</li>
-<li class="fragment">Constraints imply choices, and choices require understanding of <strong>what causes what</strong></li>
+<li class="fragment">Resources are always limited — money, time, people, equipment</li>
+<li class="fragment">Every investment involves <strong>trade-offs</strong>: spending on training means <em>not</em> spending on equipment</li>
+<li class="fragment">Choosing wisely requires understanding <strong>what causes what</strong></li>
 </ul>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p>A large-scale MNH initiative may deploy <strong>pooled investments</strong> across <strong>multiple countries in sub-Saharan Africa</strong>. Every dollar spent on one intervention is a dollar not spent on another. <strong>Which interventions will <em>cause</em> the greatest reduction in maternal and newborn mortality?</strong></p>
+<p>Imagine you are running a health program in Ethiopia with a fixed budget. You have to choose how to divide your resources. Here are three options:</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>The Feather Touch Cautionary Tale</h2>
-<p>The book’s centerpiece example (adapted to our MNH context):</p>
-<div class="fragment">
-<p><strong>The Setup:</strong> A consulting organization (TruSmartz) analyzes data on an MNH program across multiple countries. They find:</p>
-<ul>
-<li class="fragment">Countries with <strong>more demand generation</strong> for health services show <strong>lower</strong> service utilization</li>
-<li class="fragment">Countries that run <strong>subsidy programs</strong> also show <strong>lower</strong> utilization</li>
-<li class="fragment">The regression model predicts: <em>stop demand generation to increase utilization!</em></li>
-</ul>
+<h2>The Trade-Off</h2>
+<div class="columns-equal">
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">Option A: People</span></p>
+<p>Train 5,000 more midwives in emergency obstetric care. Staff every health center with a skilled birth attendant.</p>
+<p><strong>Theory:</strong> More trained staff → better care → fewer deaths.</p>
+</div>
+</div>
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">Option B: Products</span></p>
+<p>Buy CPAP machines for newborn breathing support, PPH kits for hemorrhage treatment, and ultrasound devices for every district hospital.</p>
+<p><strong>Theory:</strong> Better equipment → better treatment → fewer deaths.</p>
+</div>
+</div>
 </div>
 <div class="fragment">
-<div class="callout-box red">
-<p><strong>What went wrong?</strong> The regression captured <em>correlations in the data</em>, not <em>causal effects</em>. Demand generation and subsidies were substitutes in program managers’ decision-making — creating a spurious negative correlation.</p>
+<div class="example-block">
+<p><span class="example-label">Option C: Systems</span></p>
+<p>Build a real-time data dashboard (DHIS2), a referral transport network, and a supply chain tracking system.</p>
+<p><strong>Theory:</strong> Better information → better decisions → better care → fewer deaths.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>Here is the problem:</strong> All three sound reasonable. But you cannot do all three equally well. So which one will <em>cause</em> the greatest reduction in mortality? That is a causal question — and you cannot answer it with a spreadsheet full of correlations.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>The Causal Truth</h2>
-<p>The true causal model reveals a different story:</p>
-<table style="width: 90%; margin: 0.4em auto; font-size: 0.55em;">
-<tbody><tr>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node decision rect">
-Demand Generation<br>Decision
-</div>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<span class="dag-arrow negative">→ [−]</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node decision rect">
-Subsidy<br>Decision
-</div>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<span class="dag-arrow positive">→ [+]</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node">
-Care-Seeking<br>Behavior
-</div>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<span class="dag-arrow positive">→ [+]</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node outcome">
-Service<br>Utilization
-</div>
-</td>
-</tr>
-</tbody></table>
+<h2>Why You Need Causal Thinking to Decide</h2>
+<p>Consider what happens if you skip the causal reasoning and just look at the data:</p>
 <div class="fragment">
-<ul>
-<li class="fragment">Program managers only run subsidies when they are <strong>not</strong> doing demand generation (substitutes!)</li>
-<li class="fragment">Subsidies drive care-seeking behavior (service uptake) — but they’re underused</li>
-<li class="fragment"><strong>Correct intervention:</strong> Run subsidies <em>alongside</em> demand generation, not as a replacement</li>
-<li class="fragment">The single-stage regression gets the sign wrong; the causal model gets it right</li>
-</ul>
+<div class="columns-equal">
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">What the data might show</span></p>
+<p>Regions with the <strong>most equipment</strong> have the <strong>lowest mortality</strong>.</p>
+<p><strong>Naive conclusion:</strong> Buy more equipment!</p>
 </div>
-</section>
-<section class="slide level2">
-<h2>Regression vs.&nbsp;Causal Model: The Numbers</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Approach</th>
-<th>Stop Subsidies</th>
-<th>Stop Demand Generation</th>
-<th>Run Both</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Single-stage regression</strong></td>
-<td>+73 impact units</td>
-<td>+282 impact units</td>
-<td>—</td>
-</tr>
-<tr class="even">
-<td><strong>Multi-stage (causal) regression</strong></td>
-<td>−783 impact units</td>
-<td>−57 impact units</td>
-<td><strong>+544 impact units</strong></td>
-</tr>
-<tr class="odd">
-<td><strong>True causal effect</strong></td>
-<td>−832 impact units</td>
-<td>+38 impact units</td>
-<td><strong>+816 impact units</strong></td>
-</tr>
-</tbody>
-</table>
+</div>
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">What is actually going on</span></p>
+<p>Regions with the most equipment are also the <strong>wealthiest, most urban regions</strong> — they would have had lower mortality anyway.</p>
+<p><strong>The equipment is not causing the low mortality. Wealth is causing both.</strong></p>
+</div>
+</div>
+</div>
+</div>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>The regression without causal structure recommends the worst option.</strong></p>
-<p>A causal model correctly identifies the best intervention.</p>
+<p><strong>Without causal thinking, data can lead you to exactly the wrong decision.</strong></p>
+<p>The rest of this chapter teaches you <em>why</em> this happens and <em>how</em> to avoid it.</p>
 </div>
 </div>
 </section></section>
@@ -453,17 +469,34 @@ Service<br>Utilization
 <p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The three traps of causal reasoning</span></p>
 </section>
 <section class="slide level2">
+<h2>The Ice Cream Problem</h2>
+<p>Before we go back to health data, here is a classic example everyone can relate to:</p>
+<div class="fragment">
+<div class="example-block">
+<p><span class="example-label">Everyday Analogy</span></p>
+<p><strong>Observation:</strong> On days when ice cream sales are high, drowning deaths are also high.</p>
+<p><strong>Naive conclusion:</strong> Ice cream causes drowning!</p>
+<p><strong>Reality:</strong> Hot weather causes <em>both</em>. People eat more ice cream in summer. People also swim more in summer. <strong>Summer heat</strong> is the hidden third variable connecting both.</p>
+</div>
+</div>
+<div class="fragment">
+<p>This hidden-third-variable problem has a name: <strong>confounding</strong>. And it is just one of three traps that make people confuse correlation with causation.</p>
+</div>
+</section>
+<section class="slide level2">
 <h2>Trap 1: Confounding</h2>
 <div class="definition-box">
-<p><strong>Confounding</strong> occurs when a third variable influences both the supposed cause and effect, creating a spurious association.</p>
+<p><strong>Confounding</strong> occurs when a third variable influences both the supposed cause and the supposed effect, creating a misleading association between them.</p>
 </div>
 <div class="fragment">
 <div class="example-block">
 <p><span class="example-label">MNH Example</span></p>
-<p><strong>Observation:</strong> Countries with more health workers deployed have <em>higher</em> neonatal mortality rates.</p>
-<p><strong>Naive conclusion:</strong> Health workers cause deaths?!</p>
-<p><strong>Reality:</strong> More health workers are deployed <em>to sicker areas</em> (high-burden districts). <strong>Disease burden</strong> is the confounder — it drives both worker deployment and mortality.</p>
+<p><strong>Observation:</strong> Regions in Ethiopia with more Health Extension Workers deployed have <em>higher</em> mortality rates.</p>
+<p><strong>Naive conclusion:</strong> Health workers cause deaths?</p>
+<p><strong>Reality:</strong> More health workers are deployed <strong>to the sickest regions</strong> — places with the highest disease burden. <strong>Disease burden</strong> is the confounder. It drives both health worker deployment (because that is where the need is) <em>and</em> mortality (because that is where disease is worst).</p>
 </div>
+</div>
+<div class="fragment">
 <table style="margin: 0.3em auto; font-size: 0.55em;">
 <tbody><tr>
 <td style="text-align: center; padding: 0.5em;">
@@ -490,47 +523,64 @@ Neonatal<br>Mortality
 </tr>
 </tbody></table>
 </div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Read the diagram:</strong> Disease burden sends arrows to <em>both</em> health worker deployment <em>and</em> mortality. That shared cause creates a correlation between workers and mortality — even though workers actually <em>help</em>.</p>
+</div>
+</div>
 </section>
 <section class="slide level2">
 <h2>Trap 2: Reverse Causation</h2>
 <div class="definition-box">
-<p><strong>Reverse Causation</strong> occurs when the supposed effect actually causes the supposed cause.</p>
+<p><strong>Reverse Causation</strong> occurs when the supposed effect actually causes the supposed cause — the arrow points the wrong way.</p>
 </div>
 <div class="fragment">
 <div class="example-block">
 <p><span class="example-label">MNH Example</span></p>
-<p><strong>Observation:</strong> Countries receiving more <strong>donor funding</strong> have <em>higher</em> mortality rates.</p>
-<p><strong>Naive conclusion:</strong> Donor funding increases mortality?</p>
-<p><strong>Reality:</strong> High mortality <strong>attracts</strong> donor funding. The causal arrow runs in the opposite direction.</p>
+<p><strong>Observation:</strong> Countries that receive more international health funding tend to have <em>higher</em> mortality rates.</p>
+<p><strong>Naive conclusion:</strong> Foreign aid increases mortality?</p>
+<p><strong>Reality:</strong> High mortality <strong>attracts</strong> funding. Donors send money to the countries with the worst health outcomes. The causal arrow runs from mortality to funding, not the other way around.</p>
 </div>
+</div>
+<div class="fragment">
 <div class="columns-equal">
 <div class="col">
-<p><span class="bad-example">Assumed model:</span></p>
-<p>Donor Funding → Higher Mortality</p>
+<p><span class="bad-example">What people assume:</span></p>
+<p>More Funding → Higher Mortality</p>
 </div>
 <div class="col">
-<p><span class="good-example">Actual model:</span></p>
-<p>Higher Mortality → More Donor Funding</p>
+<p><span class="good-example">What is actually happening:</span></p>
+<p>Higher Mortality → More Funding</p>
 </div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>Think of it this way:</strong> Seeing more firefighters at bigger fires does not mean firefighters cause fires. They are responding to them. Same logic.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 <h2>Trap 3: Selection Bias</h2>
 <div class="definition-box">
-<p><strong>Selection Bias</strong> occurs when the data sample is not representative of the population, because selection into the sample is related to both cause and effect.</p>
+<p><strong>Selection Bias</strong> occurs when the data sample is not representative of the population, because which cases end up in your data depends on the very things you are trying to study.</p>
 </div>
 <div class="fragment">
 <div class="example-block">
 <p><span class="example-label">MNH Example</span></p>
-<p><strong>Observation:</strong> Among hospitals that report data to DHIS2, CPAP usage appears unrelated to neonatal outcomes.</p>
-<p><strong>Problem:</strong> Only well-resourced hospitals report to DHIS2. These hospitals <em>already</em> have better outcomes — the data misses the facilities where CPAP would make the biggest difference.</p>
-<p><strong>Selection mechanism:</strong> Hospital capacity → {DHIS2 Reporting, Outcomes}</p>
+<p><strong>Observation:</strong> Among hospitals that report data to Ethiopia’s DHIS2 system, CPAP machine availability appears unrelated to neonatal survival.</p>
+<p><strong>Problem:</strong> Only <strong>well-resourced hospitals</strong> consistently report data to DHIS2. These hospitals already have better outcomes. The hospitals where CPAP machines would make the <em>biggest</em> difference — small, under-resourced facilities — are missing from the data entirely.</p>
+<p><strong>Selection mechanism:</strong> Hospital capacity determines both whether the hospital reports data <em>and</em> how well its babies survive.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box red">
+<p><strong>The danger:</strong> If you only study the hospitals you can see in the data, you might conclude that equipment does not matter — when in fact it matters enormously for the facilities you <em>cannot</em> see.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Three Traps Summary</h2>
+<h2>Three Traps: Summary</h2>
 <table class="caption-top">
 <colgroup>
 <col style="width: 33%">
@@ -540,32 +590,32 @@ Neonatal<br>Mortality
 <thead>
 <tr class="header">
 <th>Trap</th>
-<th>What Happens</th>
-<th>MNH Example</th>
+<th>What Goes Wrong</th>
+<th>Ethiopia Example</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Confounding</strong></td>
-<td>Third variable drives both X and Y</td>
+<td>A hidden third variable drives both X and Y</td>
 <td>Disease burden drives both worker deployment and mortality</td>
 </tr>
 <tr class="even">
 <td><strong>Reverse Causation</strong></td>
 <td>Y causes X, not X causes Y</td>
-<td>Mortality attracts funding, not vice versa</td>
+<td>Mortality attracts international funding</td>
 </tr>
 <tr class="odd">
 <td><strong>Selection Bias</strong></td>
-<td>Non-random sample distorts relationship</td>
-<td>Only high-capacity hospitals report data</td>
+<td>Your data sample is not representative</td>
+<td>Only well-resourced hospitals report to DHIS2</td>
 </tr>
 </tbody>
 </table>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>All three traps create statistical associations that look like causal effects but aren’t.</strong></p>
-<p>The antidote is explicit causal modeling.</p>
+<p><strong>All three traps create patterns in the data that look like causal effects but are not.</strong></p>
+<p>The antidote? Explicit causal modeling — drawing a picture of what causes what <em>before</em> you analyze the data.</p>
 </div>
 </div>
 </section></section>
@@ -575,31 +625,59 @@ Neonatal<br>Mortality
 <p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Nodes, arrows, and directed graphs</span></p>
 </section>
 <section class="slide level2">
-<h2>Elements of a Causal Model</h2>
-<p>A <strong>causal model</strong> is a directed graph consisting of:</p>
+<h2>What Is a Causal Model?</h2>
+<p>Think of it this way: a causal model is just a <strong>diagram</strong> that shows what causes what.</p>
+<div class="fragment">
+<p>It has three simple ingredients:</p>
 <ul>
-<li class="fragment"><strong>Nodes</strong> — variables in the system (represented by shapes)</li>
-<li class="fragment"><strong>Directed links (arrows)</strong> — causal relationships from one variable to another</li>
-<li class="fragment"><strong>Signs</strong> — [+] or [−] indicating the direction of effect</li>
+<li class="fragment"><strong>Nodes</strong> — the things you care about (drawn as circles, rectangles, or other shapes)</li>
+<li class="fragment"><strong>Arrows</strong> — causal links from one thing to another (“A causes B” is drawn as A → B)</li>
+<li class="fragment"><strong>Signs</strong> — [+] or [-] telling you the direction of effect (does more of A mean more of B, or less?)</li>
 </ul>
+</div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>The key rule:</strong> An arrow from A to B means that changing A can change B, but changing B does <em>not</em> change A.</p>
-</div>
-</div>
-<div class="fragment">
-<div class="definition-box">
-<p><strong>Directed Acyclic Graph (DAG):</strong> A causal diagram with no cycles — you cannot follow arrows from any node back to itself. This is the mathematical foundation of causal modeling.</p>
+<p><strong>The key rule:</strong> An arrow from A to B means that <em>changing</em> A can change B. But changing B does <em>not</em> change A. Arrows have a direction — and the direction matters.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>A Simple MNH Causal Model</h2>
+<h2>What Is a DAG?</h2>
+<div class="definition-box">
+<p><strong>Directed Acyclic Graph (DAG):</strong> A diagram where all arrows point in one direction and there are no loops — you can never follow the arrows from any node back to itself. “Directed” means arrows have a direction. “Acyclic” means no circles. “Graph” is just the math word for a diagram of connected nodes.</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Valid DAG (no loops)</strong></p>
+<p>A → B → C</p>
+<p>You can follow the arrows forward but never get back to where you started.</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Not a valid DAG (has a loop)</strong></p>
+<p>A → B → C → A</p>
+<p>Following the arrows brings you back to A. This is a cycle, not a DAG.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Why does this matter?</strong> Loops make it impossible to figure out what causes what — everything causes everything. DAGs force you to be clear and specific about the direction of causation.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>A Simple 3-Node Chain</h2>
+<p>Here is the simplest useful causal model for a health program:</p>
 <table style="width: 85%; margin: 0.5em auto; font-size: 0.6em;">
 <tbody><tr>
 <td style="text-align: center; padding: 1em;">
 <div class="dag-node treatment" style="padding: 0.5em 0.8em;">
-Investment<br>($M)
+Investment
 </div>
 </td>
 <td style="text-align: center;">
@@ -607,175 +685,56 @@ Investment<br>($M)
 </td>
 <td style="text-align: center; padding: 1em;">
 <div class="dag-node" style="padding: 0.5em 0.8em;">
-Intervention<br>Coverage (%)
+Intervention<br>Coverage
 </div>
 </td>
 <td style="text-align: center;">
-<span class="dag-arrow negative" style="font-size: 1.8em;">→ [−]</span>
+<span class="dag-arrow negative" style="font-size: 1.8em;">→ [-]</span>
 </td>
 <td style="text-align: center; padding: 1em;">
 <div class="dag-node outcome" style="padding: 0.5em 0.8em;">
-Neonatal<br>Mortality Rate
+Maternal<br>Mortality
 </div>
 </td>
 </tr>
 </tbody></table>
 <div class="fragment">
 <ul>
-<li class="fragment"><strong>Investment → Coverage [+]:</strong> More funding increases the percentage of facilities with key interventions</li>
-<li class="fragment"><strong>Coverage → NMR [−]:</strong> Higher intervention coverage reduces neonatal mortality</li>
-<li class="fragment">This is a <em>serial chain</em> — investment has an indirect effect on mortality through coverage</li>
+<li class="fragment"><strong>Investment → Coverage [+]:</strong> More funding increases the percentage of mothers who receive skilled care</li>
+<li class="fragment"><strong>Coverage → Mortality [-]:</strong> Higher coverage of life-saving interventions reduces maternal deaths</li>
+<li class="fragment">This is a <strong>chain</strong> — investment does not directly reduce mortality; it works <em>through</em> coverage</li>
 </ul>
 </div>
 <div class="fragment">
-<p>But this model is too simple! What about confounders, competing causes, feedback?</p>
-<p><strong>That’s what the rest of the book is about.</strong></p>
+<div class="callout-box">
+<p>This tiny model already tells us something useful: if investment goes up but coverage does <em>not</em> go up, the money is being wasted somewhere in between. The chain helps you find where things break down.</p>
+</div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Preview: What’s Coming</h2>
-<table class="caption-top">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Chapter</th>
-<th>What You’ll Learn</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Ch 2</strong></td>
-<td>Building qualitative causal models — nodes, links, triplets</td>
-</tr>
-<tr class="even">
-<td><strong>Ch 3</strong></td>
-<td>Application: The MNH consulting case study</td>
-</tr>
-<tr class="odd">
-<td><strong>Ch 4</strong></td>
-<td>Adding numbers — probability tables, Bayes’ rule</td>
-</tr>
-<tr class="even">
-<td><strong>Ch 5</strong></td>
-<td>Situational analysis — updating beliefs with evidence</td>
-</tr>
-<tr class="odd">
-<td><strong>Ch 6</strong></td>
-<td>Application: Simpson’s Paradox in MNH cost-effectiveness</td>
-</tr>
-<tr class="even">
-<td><strong>Ch 7</strong></td>
-<td>Decision analysis — choosing optimal interventions</td>
-</tr>
-<tr class="odd">
-<td><strong>Ch 8</strong></td>
-<td>Application: Allocating resources across multiple countries</td>
-</tr>
-<tr class="even">
-<td><strong>Ch 9</strong></td>
-<td>Game theory — strategic interactions between donors &amp; governments</td>
-</tr>
-<tr class="odd">
-<td><strong>Ch 10</strong></td>
-<td>Learning causal structure from DHIS2 data</td>
-</tr>
-</tbody>
-</table>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>MNH Application: The Investment Question</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Causal thinking for MNH program design</span></p>
-</section>
-<section class="slide level2">
-<h2>The MNH Investment Challenge</h2>
-<div class="callout-box green">
-<p>Consider a <strong>large-scale MNH initiative</strong> — a multi-country philanthropic program pooling resources from multiple global health foundations to accelerate maternal and newborn survival across sub-Saharan Africa.</p>
-</div>
+<h2>But Wait — It Is Not That Simple</h2>
+<p>The 3-node chain is a good start, but it ignores a lot. What about:</p>
 <div class="fragment">
-<p><strong>The scale of the problem:</strong></p>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Metric</th>
-<th>Annual Deaths in Sub-Saharan Africa</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Maternal deaths</td>
-<td>182,000 (70% of global total)</td>
-</tr>
-<tr class="even">
-<td>Newborn deaths</td>
-<td>950,000 (47% of global total)</td>
-</tr>
-<tr class="odd">
-<td>Stillbirths</td>
-<td>1.2 million (48% of global total)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<p><strong>Target:</strong> Save <strong>hundreds of thousands of lives</strong> over the program period across multiple countries.</p>
-</div>
-</section>
-<section class="slide level2">
-<h2>The Causal Investment Question</h2>
-<p>Such an initiative typically invests in three pillars:</p>
-<div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;">
-<strong>People</strong><br>Health workforce
-</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;">
-<strong>Products</strong><br>MNH innovations
-</div>
-<div class="step-item" style="border-left: 4px solid #FA7650;">
-<strong>Systems</strong><br>Data &amp; referrals
-</div>
+<ul>
+<li class="fragment"><strong>Confounders</strong> like disease burden, that affect both where investment goes and how high mortality is?</li>
+<li class="fragment"><strong>Multiple pathways</strong> — investment might improve training, equipment, <em>and</em> data systems, each affecting mortality differently?</li>
+<li class="fragment"><strong>Quality of care</strong> as a mediator between inputs and outcomes?</li>
+</ul>
 </div>
 <div class="fragment">
 <div class="callout-box orange">
-<p><strong>The fundamental question is causal:</strong> Which combination of investments across these three pillars will <em>cause</em> the greatest reduction in mortality?</p>
-<p>This is <em>not</em> a question that correlation analysis can answer.</p>
+<p><strong>That is what the rest of the course is about.</strong> In Chapter 2, we will learn the formal rules for building these diagrams. In Chapters 4-6, we will add numbers. In Chapters 7-8, we will use them to make decisions. For now, just understand the basic building blocks: <strong>nodes</strong>, <strong>arrows</strong>, and <strong>direction</strong>.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Why Naive Data Analysis Fails</h2>
-<p>Suppose we compare spending vs.&nbsp;outcomes across the target countries:</p>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
-<div class="example-block">
-<p><span class="example-label bad-example">Naive Correlation</span></p>
-<p>Country A receives the most funding and has the highest absolute deaths.</p>
-<p>“More spending = more deaths!”</p>
-<p>This ignores that Country A is invested in <em>because</em> it has the highest burden.</p>
-</div>
-</div>
-<div class="col">
-<div class="example-block">
-<p><span class="example-label good-example">Causal Reasoning</span></p>
-<p>Country A has the highest burden <em>and</em> the greatest potential for lives saved.</p>
-<p>The investment is targeted at the cause of mortality, not correlated with it.</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Building a Richer Causal Model</h2>
-<p>A more realistic model of the MNH initiative’s theory of change:</p>
+<h2>Preview: A Richer Model</h2>
+<p>Here is a taste of where we are heading — a more realistic model with multiple pathways:</p>
 <table style="width: 95%; margin: 0.3em auto; font-size: 0.5em;">
 <tbody><tr>
 <td style="vertical-align: middle; text-align: center; padding: 0.4em;">
 <div class="dag-node decision rect" style="min-width: 80px;">
-Budget<br>Allocation
+Health<br>Investment
 </div>
 </td>
 <td style="text-align: center;">
@@ -814,11 +773,146 @@ Mortality<br>Reduction
 </tbody></table>
 <div class="fragment">
 <ul>
-<li class="fragment">Budget allocation is a <strong>decision node</strong> (rectangle) — we control it</li>
-<li class="fragment">Workforce, equipment, and data are <strong>mediators</strong> through which investment works</li>
-<li class="fragment">Quality of care is the proximate driver of outcomes</li>
-<li class="fragment"><strong>Confounders</strong> not shown: baseline disease burden, government capacity, political stability</li>
+<li class="fragment"><strong>Investment</strong> is a decision node (rectangle) — we control it</li>
+<li class="fragment"><strong>Workforce, Equipment, Data Systems</strong> are different channels through which investment works</li>
+<li class="fragment"><strong>Quality of Care</strong> is where all the channels converge</li>
+<li class="fragment"><strong>Mortality Reduction</strong> is the outcome we care about</li>
+<li class="fragment">What is missing? Confounders! We will add those in Chapter 2.</li>
 </ul>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>MNH Application: Ethiopia</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Causal thinking applied to real health decisions</span></p>
+</section>
+<section class="slide level2">
+<h2>Ethiopia’s Three-Pillar Approach</h2>
+<p>Ethiopia’s Health Extension Program — one of the most ambitious in Africa — has invested across three pillars:</p>
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">
+<strong>People</strong><br>40,000+ Health<br>Extension Workers
+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">
+<strong>Products</strong><br>Essential medicines,<br>equipment, supplies
+</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">
+<strong>Systems</strong><br>DHIS2, referral<br>networks, supervision
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>The causal question:</strong> How do these three pillars combine to produce better outcomes? Do they work independently, or do they need each other?</p>
+</div>
+</div>
+<div class="fragment">
+<p>Think of it this way: a trained midwife (People) without a PPH kit (Products) cannot stop a hemorrhage. A PPH kit without a trained midwife is just a box on a shelf. And neither one helps if the mother cannot get to the facility (Systems).</p>
+<p><strong>People, Products, and Systems are <em>complements</em> — they multiply each other’s effect.</strong></p>
+</div>
+</section>
+<section class="slide level2">
+<h2>Ethiopia’s Causal Chain</h2>
+<p>Here is how these pillars connect to outcomes:</p>
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.5em;">
+<tbody><tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">
+People<br><span style="font-size: 0.75em; font-weight: 400;">40,000 HEWs</span>
+</div>
+</td>
+<td style="text-align: center;" rowspan="3">
+<span class="dag-arrow positive" style="font-size: 1.6em;">→ [+]</span>
+</td>
+<td style="text-align: center; padding: 0.4em;" rowspan="3">
+<div class="dag-node" style="padding: 0.4em 0.6em;">
+Quality<br>of Care
+</div>
+</td>
+<td style="text-align: center;" rowspan="3">
+<span class="dag-arrow negative" style="font-size: 1.6em;">→ [-]</span>
+</td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node outcome" style="padding: 0.3em 0.6em;">
+Maternal<br>Mortality<br><span style="font-size: 0.75em; font-weight: 400;">MMR ~267</span>
+</div>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">
+Products<br><span style="font-size: 0.75em; font-weight: 400;">Equipment &amp; supplies</span>
+</div>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">
+Systems<br><span style="font-size: 0.75em; font-weight: 400;">DHIS2 &amp; referrals</span>
+</div>
+</td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node outcome" style="padding: 0.3em 0.6em;">
+Neonatal<br>Mortality<br><span style="font-size: 0.75em; font-weight: 400;">NMR ~28</span>
+</div>
+</td>
+</tr>
+</tbody></table>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>Notice:</strong> All three pillars flow into Quality of Care. Quality is the bottleneck — the place where everything converges. If quality is poor, no amount of spending on any one pillar will fix the outcomes.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Why the Numbers Mislead</h2>
+<p>Now let’s go back to our opening puzzle. If you looked at raw data across Ethiopia’s regions:</p>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">What the data shows</span></p>
+<p>Regions with the most Health Extension Workers per capita also have the highest maternal mortality.</p>
+<p>Regions with the most equipment also tend to have high mortality.</p>
+<p><strong>A naive analyst might say:</strong> “These investments are not working!”</p>
+</div>
+</div>
+<div class="col">
+<div class="example-block">
+<p><span class="example-label">What the causal model reveals</span></p>
+<p>The regions with the highest <strong>disease burden</strong> — think Somali, Afar, Gambella — receive the most resources <em>because</em> they have the worst outcomes.</p>
+<p><strong>Confounding by disease burden</strong> creates a positive correlation between resources and mortality, even when resources are saving lives.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>This is exactly Trap 1 (confounding) in action.</strong> The solution is not to ignore the data. The solution is to build a causal model that includes disease burden as a confounder, and then analyze the data <em>through</em> that model.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>ANC Coverage: A Closer Look</h2>
+<p>Ethiopia’s antenatal care (ANC) coverage shows how much progress has been made — and how far there is to go:</p>
+<div class="fragment">
+<ul>
+<li class="fragment"><strong>~74% of pregnant women</strong> attend at least one ANC visit (DHS 2019)</li>
+<li class="fragment">But only about <strong>43%</strong> complete the recommended four or more visits</li>
+<li class="fragment"><strong>Urban coverage</strong> is much higher than <strong>rural coverage</strong> — another confounder</li>
+<li class="fragment">The leading causes of maternal death — hemorrhage (~25%), hypertension (~16%), sepsis (~11%) — are all treatable <em>if</em> mothers reach skilled care in time</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Here is the causal chain:</strong> ANC visits → Early detection of complications → Timely referral → Skilled treatment → Survival. Every link in this chain must work. If <em>any</em> one link breaks — a missed visit, a failed referral, an absent midwife, a missing drug — the outcome can be death.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>This is why causal models matter for real decisions.</strong> A naive analysis might say “ANC does not reduce mortality” if coverage goes up but deaths stay constant. A causal model asks: <em>where in the chain is it breaking?</em></p>
+</div>
 </div>
 </section></section>
 <section>
@@ -828,139 +922,191 @@ Mortality<br>Reduction
 </section>
 <section class="slide level2">
 <h2>Setting Up the R Environment</h2>
+<p>Before we draw any diagrams, we need to load our tools. The code below loads three R packages that we will use throughout this course.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># Install packages (run once)</span></span>
-<span id="cb1-2"><a href=""></a><span class="co"># install.packages(c("dagitty", "ggdag", "ggplot2", "bnlearn"))</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># Install these packages the first time you use them (remove the # to run):</span></span>
+<span id="cb1-2"><a href=""></a><span class="co"># install.packages(c("dagitty", "ggdag", "ggplot2"))</span></span>
 <span id="cb1-3"><a href=""></a></span>
-<span id="cb1-4"><a href=""></a><span class="co"># Load packages</span></span>
-<span id="cb1-5"><a href=""></a><span class="fu">library</span>(dagitty)    <span class="co"># DAG specification and analysis</span></span>
-<span id="cb1-6"><a href=""></a><span class="fu">library</span>(ggdag)      <span class="co"># DAG visualization with ggplot2</span></span>
-<span id="cb1-7"><a href=""></a><span class="fu">library</span>(ggplot2)    <span class="co"># General plotting</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href=""></a><span class="co"># Load the packages into our R session</span></span>
+<span id="cb1-5"><a href=""></a><span class="fu">library</span>(dagitty)    <span class="co"># dagitty lets us define and analyze causal diagrams (DAGs)</span></span>
+<span id="cb1-6"><a href=""></a><span class="fu">library</span>(ggdag)      <span class="co"># ggdag draws pretty pictures of those DAGs</span></span>
+<span id="cb1-7"><a href=""></a><span class="fu">library</span>(ggplot2)    <span class="co"># ggplot2 is the general-purpose plotting library</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout-box">
-<p>These packages form our core toolkit throughout the course:</p>
+<p><strong>What do these packages do?</strong></p>
 <ul>
-<li><strong>dagitty</strong> — specify and analyze DAGs (d-separation, adjustment sets)</li>
-<li><strong>ggdag</strong> — beautiful DAG visualizations using ggplot2</li>
-<li><strong>bnlearn</strong> — Bayesian network structure learning and inference (Ch 4+)</li>
+<li><strong>dagitty</strong> — lets you write down a causal diagram in code and ask questions about it (like “what do I need to control for?”)</li>
+<li><strong>ggdag</strong> — turns that code into a visual diagram you can look at</li>
+<li><strong>ggplot2</strong> — the engine that powers the drawings (ggdag uses it behind the scenes)</li>
 </ul>
 </div>
 </section>
 <section class="slide level2">
-<h2>R: A Simple MNH Causal Model</h2>
+<h2>R: Drawing Our Simple 3-Node Chain</h2>
+<p>Let’s start by drawing the simple Investment → Coverage → Mortality chain we saw earlier. The code below defines three nodes and two arrows, then draws the picture.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Define a simple 3-node DAG</span></span>
-<span id="cb2-2"><a href=""></a>mnh_simple <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb2-3"><a href=""></a><span class="st">  Investment [pos="0,0"]</span></span>
-<span id="cb2-4"><a href=""></a><span class="st">  Coverage [pos="1,0"]</span></span>
-<span id="cb2-5"><a href=""></a><span class="st">  NMR [pos="2,0"]</span></span>
-<span id="cb2-6"><a href=""></a></span>
-<span id="cb2-7"><a href=""></a><span class="st">  Investment -&gt; Coverage</span></span>
-<span id="cb2-8"><a href=""></a><span class="st">  Coverage -&gt; NMR</span></span>
-<span id="cb2-9"><a href=""></a><span class="st">}'</span>)</span>
-<span id="cb2-10"><a href=""></a></span>
-<span id="cb2-11"><a href=""></a><span class="co"># Visualize</span></span>
-<span id="cb2-12"><a href=""></a><span class="fu">ggdag</span>(mnh_simple) <span class="sc">+</span></span>
-<span id="cb2-13"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb2-14"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simple MNH Causal Model"</span>,</span>
-<span id="cb2-15"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"Investment → Coverage → Neonatal Mortality Rate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Step 1: Define the DAG</span></span>
+<span id="cb2-2"><a href=""></a><span class="co"># We list nodes with positions (pos="x,y") and arrows (-&gt;)</span></span>
+<span id="cb2-3"><a href=""></a>mnh_simple <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb2-4"><a href=""></a><span class="st">  Investment [pos="0,0"]</span></span>
+<span id="cb2-5"><a href=""></a><span class="st">  Coverage   [pos="1,0"]</span></span>
+<span id="cb2-6"><a href=""></a><span class="st">  Mortality  [pos="2,0"]</span></span>
+<span id="cb2-7"><a href=""></a></span>
+<span id="cb2-8"><a href=""></a><span class="st">  Investment -&gt; Coverage</span></span>
+<span id="cb2-9"><a href=""></a><span class="st">  Coverage -&gt; Mortality</span></span>
+<span id="cb2-10"><a href=""></a><span class="st">}'</span>)</span>
+<span id="cb2-11"><a href=""></a></span>
+<span id="cb2-12"><a href=""></a><span class="co"># Step 2: Draw it</span></span>
+<span id="cb2-13"><a href=""></a><span class="co"># ggdag() takes our DAG definition and produces a plot</span></span>
+<span id="cb2-14"><a href=""></a><span class="co"># theme_dag() removes the gridlines and axes to keep it clean</span></span>
+<span id="cb2-15"><a href=""></a><span class="fu">ggdag</span>(mnh_simple) <span class="sc">+</span></span>
+<span id="cb2-16"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb2-17"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simple MNH Causal Model"</span>,</span>
+<span id="cb2-18"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"Investment → Coverage → Mortality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout-box green">
+<p><strong>What to notice:</strong> The arrows only go left-to-right. Investment affects Coverage, and Coverage affects Mortality. There is no arrow from Investment directly to Mortality — the effect goes <em>through</em> Coverage.</p>
 </div>
 </section>
 <section class="slide level2">
-<h2>R: A Confounded Model</h2>
+<h2>R: Adding a Confounder</h2>
+<p>Now let’s add Disease Burden as a confounder — the hidden variable that was creating the misleading correlation between health workers and mortality. This is the confounding diagram from our Ethiopia example.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Hospital delivery and mortality: confounded by complication severity</span></span>
-<span id="cb3-2"><a href=""></a>confounded_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb3-3"><a href=""></a><span class="st">  Complication_Severity [pos="1,0"]</span></span>
-<span id="cb3-4"><a href=""></a><span class="st">  Hospital_Delivery [pos="0,1"]</span></span>
-<span id="cb3-5"><a href=""></a><span class="st">  Neonatal_Mortality [pos="2,1"]</span></span>
-<span id="cb3-6"><a href=""></a></span>
-<span id="cb3-7"><a href=""></a><span class="st">  Complication_Severity -&gt; Hospital_Delivery</span></span>
-<span id="cb3-8"><a href=""></a><span class="st">  Complication_Severity -&gt; Neonatal_Mortality</span></span>
-<span id="cb3-9"><a href=""></a><span class="st">  Hospital_Delivery -&gt; Neonatal_Mortality</span></span>
-<span id="cb3-10"><a href=""></a><span class="st">}'</span>)</span>
-<span id="cb3-11"><a href=""></a></span>
-<span id="cb3-12"><a href=""></a><span class="co"># Visualize with exposure and outcome</span></span>
-<span id="cb3-13"><a href=""></a><span class="fu">ggdag_status</span>(confounded_dag,</span>
-<span id="cb3-14"><a href=""></a>             <span class="at">exposure =</span> <span class="st">"Hospital_Delivery"</span>,</span>
-<span id="cb3-15"><a href=""></a>             <span class="at">outcome =</span> <span class="st">"Neonatal_Mortality"</span>) <span class="sc">+</span></span>
-<span id="cb3-16"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb3-17"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"exposure"</span> <span class="ot">=</span> <span class="st">"#83BD00"</span>,</span>
-<span id="cb3-18"><a href=""></a>                                <span class="st">"outcome"</span> <span class="ot">=</span> <span class="st">"#E24A3F"</span>,</span>
-<span id="cb3-19"><a href=""></a>                                <span class="st">"other"</span> <span class="ot">=</span> <span class="st">"#F8A623"</span>)) <span class="sc">+</span></span>
-<span id="cb3-20"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Confounding in Hospital Delivery Data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Define the confounded model</span></span>
+<span id="cb3-2"><a href=""></a><span class="co"># Disease_Burden affects BOTH Health_Workers and Mortality</span></span>
+<span id="cb3-3"><a href=""></a>confounded_model <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb3-4"><a href=""></a><span class="st">  Disease_Burden [pos="1,0"]</span></span>
+<span id="cb3-5"><a href=""></a><span class="st">  Health_Workers [pos="0,1"]</span></span>
+<span id="cb3-6"><a href=""></a><span class="st">  Mortality      [pos="2,1"]</span></span>
+<span id="cb3-7"><a href=""></a></span>
+<span id="cb3-8"><a href=""></a><span class="st">  Disease_Burden -&gt; Health_Workers</span></span>
+<span id="cb3-9"><a href=""></a><span class="st">  Disease_Burden -&gt; Mortality</span></span>
+<span id="cb3-10"><a href=""></a><span class="st">  Health_Workers -&gt; Mortality</span></span>
+<span id="cb3-11"><a href=""></a><span class="st">}'</span>)</span>
+<span id="cb3-12"><a href=""></a></span>
+<span id="cb3-13"><a href=""></a><span class="co"># Draw it with color-coding:</span></span>
+<span id="cb3-14"><a href=""></a><span class="co"># - "exposure" = the thing we think is the cause (Health_Workers)</span></span>
+<span id="cb3-15"><a href=""></a><span class="co"># - "outcome" = the thing we are measuring (Mortality)</span></span>
+<span id="cb3-16"><a href=""></a><span class="fu">ggdag_status</span>(confounded_model,</span>
+<span id="cb3-17"><a href=""></a>             <span class="at">exposure =</span> <span class="st">"Health_Workers"</span>,</span>
+<span id="cb3-18"><a href=""></a>             <span class="at">outcome =</span> <span class="st">"Mortality"</span>) <span class="sc">+</span></span>
+<span id="cb3-19"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb3-20"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"exposure"</span> <span class="ot">=</span> <span class="st">"#83BD00"</span>,    <span class="co"># green for treatment</span></span>
+<span id="cb3-21"><a href=""></a>                                <span class="st">"outcome"</span> <span class="ot">=</span> <span class="st">"#E24A3F"</span>,     <span class="co"># red for outcome</span></span>
+<span id="cb3-22"><a href=""></a>                                <span class="st">"other"</span> <span class="ot">=</span> <span class="st">"#F8A623"</span>)) <span class="sc">+</span>    <span class="co"># amber for confounder</span></span>
+<span id="cb3-23"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Confounding: Health Workers and Mortality"</span>,</span>
+<span id="cb3-24"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"Disease burden drives both — creating a misleading correlation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout-box">
+<p><strong>Read the picture:</strong> Disease Burden sits at the top, sending arrows down to <em>both</em> Health Workers and Mortality. That is the fork structure — the classic confounding pattern. Without accounting for Disease Burden, you would wrongly conclude that health workers increase mortality.</p>
 </div>
 </section>
 <section class="slide level2">
-<h2>R: Finding Adjustment Sets</h2>
+<h2>R: What Do We Need to Control For?</h2>
+<p>Here is the powerful part. Once we have drawn the diagram, R can tell us <em>exactly</em> which variables we need to control for to get the true causal effect.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co"># What must we control for to estimate the causal effect</span></span>
-<span id="cb4-2"><a href=""></a><span class="co"># of hospital delivery on mortality?</span></span>
-<span id="cb4-3"><a href=""></a><span class="fu">adjustmentSets</span>(confounded_dag,</span>
-<span id="cb4-4"><a href=""></a>               <span class="at">exposure =</span> <span class="st">"Hospital_Delivery"</span>,</span>
-<span id="cb4-5"><a href=""></a>               <span class="at">outcome =</span> <span class="st">"Neonatal_Mortality"</span>)</span>
-<span id="cb4-6"><a href=""></a><span class="co"># Returns: { Complication_Severity }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co"># Ask dagitty: "What do I need to control for to estimate the</span></span>
+<span id="cb4-2"><a href=""></a><span class="co"># causal effect of Health_Workers on Mortality?"</span></span>
+<span id="cb4-3"><a href=""></a><span class="fu">adjustmentSets</span>(confounded_model,</span>
+<span id="cb4-4"><a href=""></a>               <span class="at">exposure =</span> <span class="st">"Health_Workers"</span>,</span>
+<span id="cb4-5"><a href=""></a>               <span class="at">outcome =</span> <span class="st">"Mortality"</span>)</span>
+<span id="cb4-6"><a href=""></a></span>
+<span id="cb4-7"><a href=""></a><span class="co"># This should return: { Disease_Burden }</span></span>
+<span id="cb4-8"><a href=""></a><span class="co"># Translation: "Control for Disease Burden, and the confounding goes away."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>Interpretation:</strong> To estimate the true causal effect of hospital delivery on neonatal mortality, we must <strong>control for complication severity</strong>. Without this adjustment, the correlation between hospital delivery and mortality is biased by confounding.</p>
+<p><strong>What this means in plain English:</strong> If you compare regions that have the <em>same</em> disease burden, then the regions with more health workers will have <em>lower</em> mortality. The confounding disappears once you account for why workers were deployed where they were.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>This is the whole point of the course in one slide.</strong> Draw the causal diagram. Ask R what to control for. Analyze the data correctly. Make better decisions. We will build on this foundation in every chapter that follows.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>R: A Richer MNH Model</h2>
+<h2>R: Ethiopia’s Three-Pillar Model</h2>
+<p>Let’s build the richer model that includes Ethiopia’s three-pillar approach — People, Products, and Systems — with Disease Burden as a confounder.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># MNH initiative theory of change</span></span>
-<span id="cb5-2"><a href=""></a>mnh_toc <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb5-3"><a href=""></a><span class="st">  Budget [pos="0,1"]</span></span>
-<span id="cb5-4"><a href=""></a><span class="st">  Workforce [pos="1,0"]</span></span>
-<span id="cb5-5"><a href=""></a><span class="st">  Equipment [pos="1,1"]</span></span>
-<span id="cb5-6"><a href=""></a><span class="st">  Data_Systems [pos="1,2"]</span></span>
-<span id="cb5-7"><a href=""></a><span class="st">  Quality [pos="2,1"]</span></span>
-<span id="cb5-8"><a href=""></a><span class="st">  NMR [pos="3,1"]</span></span>
-<span id="cb5-9"><a href=""></a><span class="st">  Baseline_Burden [pos="1.5,2.5"]</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># Define Ethiopia's three-pillar theory of change as a DAG</span></span>
+<span id="cb5-2"><a href=""></a>ethiopia_toc <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb5-3"><a href=""></a><span class="st">  People          [pos="1,0"]</span></span>
+<span id="cb5-4"><a href=""></a><span class="st">  Products        [pos="1,1"]</span></span>
+<span id="cb5-5"><a href=""></a><span class="st">  Systems         [pos="1,2"]</span></span>
+<span id="cb5-6"><a href=""></a><span class="st">  Quality         [pos="2,1"]</span></span>
+<span id="cb5-7"><a href=""></a><span class="st">  NMR             [pos="3,0.5"]</span></span>
+<span id="cb5-8"><a href=""></a><span class="st">  MMR             [pos="3,1.5"]</span></span>
+<span id="cb5-9"><a href=""></a><span class="st">  Disease_Burden  [pos="2,2.5"]</span></span>
 <span id="cb5-10"><a href=""></a></span>
-<span id="cb5-11"><a href=""></a><span class="st">  Budget -&gt; Workforce</span></span>
-<span id="cb5-12"><a href=""></a><span class="st">  Budget -&gt; Equipment</span></span>
-<span id="cb5-13"><a href=""></a><span class="st">  Budget -&gt; Data_Systems</span></span>
-<span id="cb5-14"><a href=""></a><span class="st">  Workforce -&gt; Quality</span></span>
-<span id="cb5-15"><a href=""></a><span class="st">  Equipment -&gt; Quality</span></span>
-<span id="cb5-16"><a href=""></a><span class="st">  Data_Systems -&gt; Quality</span></span>
-<span id="cb5-17"><a href=""></a><span class="st">  Quality -&gt; NMR</span></span>
-<span id="cb5-18"><a href=""></a><span class="st">  Baseline_Burden -&gt; NMR</span></span>
-<span id="cb5-19"><a href=""></a><span class="st">  Baseline_Burden -&gt; Budget</span></span>
-<span id="cb5-20"><a href=""></a><span class="st">}'</span>)</span>
-<span id="cb5-21"><a href=""></a></span>
-<span id="cb5-22"><a href=""></a><span class="co"># Identify the adjustment set for Budget → NMR</span></span>
-<span id="cb5-23"><a href=""></a><span class="fu">adjustmentSets</span>(mnh_toc,</span>
-<span id="cb5-24"><a href=""></a>               <span class="at">exposure =</span> <span class="st">"Budget"</span>,</span>
-<span id="cb5-25"><a href=""></a>               <span class="at">outcome =</span> <span class="st">"NMR"</span>)</span>
-<span id="cb5-26"><a href=""></a></span>
-<span id="cb5-27"><a href=""></a><span class="co"># Visualize</span></span>
-<span id="cb5-28"><a href=""></a><span class="fu">ggdag</span>(mnh_toc) <span class="sc">+</span></span>
-<span id="cb5-29"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb5-30"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"MNH Initiative: Theory of Change as a DAG"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-11"><a href=""></a><span class="st">  People   -&gt; Quality</span></span>
+<span id="cb5-12"><a href=""></a><span class="st">  Products -&gt; Quality</span></span>
+<span id="cb5-13"><a href=""></a><span class="st">  Systems  -&gt; Quality</span></span>
+<span id="cb5-14"><a href=""></a><span class="st">  Quality  -&gt; NMR</span></span>
+<span id="cb5-15"><a href=""></a><span class="st">  Quality  -&gt; MMR</span></span>
+<span id="cb5-16"><a href=""></a><span class="st">  Disease_Burden -&gt; NMR</span></span>
+<span id="cb5-17"><a href=""></a><span class="st">  Disease_Burden -&gt; MMR</span></span>
+<span id="cb5-18"><a href=""></a><span class="st">}'</span>)</span>
+<span id="cb5-19"><a href=""></a></span>
+<span id="cb5-20"><a href=""></a><span class="co"># Draw the full model</span></span>
+<span id="cb5-21"><a href=""></a><span class="fu">ggdag</span>(ethiopia_toc) <span class="sc">+</span></span>
+<span id="cb5-22"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb5-23"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ethiopia MNH: Three-Pillar Theory of Change"</span>,</span>
+<span id="cb5-24"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"People, Products, and Systems → Quality → Mortality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>What this model says:</strong> All three pillars flow into Quality of Care. Quality then reduces both NMR and MMR. Disease Burden affects the outcomes directly — a region with severe malaria burden will have higher mortality even with good care.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>R: Finding All the Paths</h2>
+<p>We can also ask R to show us every causal pathway from a starting point to an endpoint. This helps us see all the different routes through which an investment could affect mortality.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="co"># What are all the paths from People (workforce investment) to NMR?</span></span>
+<span id="cb6-2"><a href=""></a>people_to_nmr <span class="ot">&lt;-</span> <span class="fu">paths</span>(ethiopia_toc,</span>
+<span id="cb6-3"><a href=""></a>                        <span class="at">from =</span> <span class="st">"People"</span>,</span>
+<span id="cb6-4"><a href=""></a>                        <span class="at">to =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb6-5"><a href=""></a></span>
+<span id="cb6-6"><a href=""></a><span class="co"># Print the paths — each one is a different causal route</span></span>
+<span id="cb6-7"><a href=""></a><span class="fu">print</span>(people_to_nmr)</span>
+<span id="cb6-8"><a href=""></a></span>
+<span id="cb6-9"><a href=""></a><span class="co"># What variables must we control for to isolate</span></span>
+<span id="cb6-10"><a href=""></a><span class="co"># the effect of People on NMR?</span></span>
+<span id="cb6-11"><a href=""></a><span class="fu">adjustmentSets</span>(ethiopia_toc,</span>
+<span id="cb6-12"><a href=""></a>               <span class="at">exposure =</span> <span class="st">"People"</span>,</span>
+<span id="cb6-13"><a href=""></a>               <span class="at">outcome =</span> <span class="st">"NMR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout-box green">
+<p><strong>Try It:</strong> Modify the code above to look at the paths from “Systems” to “MMR” instead. How many routes are there? What do you need to control for?</p>
 </div>
 </section>
 <section class="slide level2">
 <h2>Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Causal modeling serves two purposes:</strong> situational assessment (What is happening?) and managerial intervention (What should I do?).</p>
-<p><strong>Correlation ≠ causation.</strong> Confounding, reverse causation, and selection bias all create misleading associations.</p>
-<p><strong>A causal model</strong> makes your assumptions explicit, testable, and actionable — essential for allocating large-scale program funding effectively.</p>
+<p><strong>Causal thinking starts with two questions:</strong> “What is happening?” (situational assessment) and “What should I do?” (managerial intervention). You cannot answer the second well without answering the first.</p>
+<p><strong>Correlation does not equal causation.</strong> Three traps — confounding, reverse causation, and selection bias — all create misleading patterns in data.</p>
+<p><strong>A causal model (DAG)</strong> makes your assumptions visible, testable, and actionable. It tells you what to control for, where the chain breaks, and which interventions will actually work.</p>
+<p><strong>Ethiopia’s 40,000 Health Extension Workers are not causing deaths.</strong> Disease burden is confounding the relationship. Causal models help us see through the numbers to the truth.</p>
 </div>
 </section>
 <section class="slide level2">
 <h2>Looking Ahead</h2>
 <div class="callout-box">
 <p><strong>Next: Chapter 2 — Qualitative Causal Models</strong></p>
-<p>We’ll learn the formal language of causal diagrams:</p>
+<p>Now that you know <em>why</em> we need causal diagrams, we will learn <em>how</em> to build them properly:</p>
 <ul>
-<li>Four types of nodes (probabilistic, objective, strategic option, function)</li>
-<li>Directed links with [+] and [−] signs</li>
-<li>The three fundamental triplet structures: serial, diverging, and converging</li>
-<li>How to determine whether two variables are causally independent</li>
+<li>Four types of nodes: probabilistic, objective, strategic option, and function</li>
+<li>How to assign [+] and [-] signs to every arrow</li>
+<li>The three fundamental structures: <strong>chains</strong>, <strong>forks</strong>, and <strong>colliders</strong> — and why colliders are the most surprising</li>
+<li>How to determine whether two variables are truly independent (d-separation)</li>
 </ul>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>By the end of Chapter 2</strong>, you will be able to draw a complete causal diagram for any health program — and use it to make testable predictions about what the data should look like.</p>
+</div>
 </div>
 </section>
 <section class="slide level2" data-background-color="white">

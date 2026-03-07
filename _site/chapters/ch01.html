@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 6: Simpson's Paradox &amp; Cost-Effectiveness</span></a>
+ <span class="menu-text">Chapter 6: Simpson’s Paradox</span></a>
   </div>
 </li>
       </ul>
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 7: Decision Analysis &amp; Value of Information</span></a>
+ <span class="menu-text">Chapter 7: Decision Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 10: Structure Learning from Observational Data</span></a>
+ <span class="menu-text">Chapter 10: Structure Learning from Data</span></a>
   </div>
 </li>
       </ul>
@@ -287,10 +287,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#r-code-workshop" id="toc-r-code-workshop" class="nav-link" data-scroll-target="#r-code-workshop">R Code Workshop</a>
   <ul class="collapse">
   <li><a href="#setting-up-the-environment" id="toc-setting-up-the-environment" class="nav-link" data-scroll-target="#setting-up-the-environment">Setting Up the Environment</a></li>
-  <li><a href="#a-simple-mnh-causal-model" id="toc-a-simple-mnh-causal-model" class="nav-link" data-scroll-target="#a-simple-mnh-causal-model">A Simple MNH Causal Model</a></li>
+  <li><a href="#a-simple-3-node-chain" id="toc-a-simple-3-node-chain" class="nav-link" data-scroll-target="#a-simple-3-node-chain">A Simple 3-Node Chain</a></li>
   <li><a href="#a-confounded-model" id="toc-a-confounded-model" class="nav-link" data-scroll-target="#a-confounded-model">A Confounded Model</a></li>
   <li><a href="#finding-adjustment-sets" id="toc-finding-adjustment-sets" class="nav-link" data-scroll-target="#finding-adjustment-sets">Finding Adjustment Sets</a></li>
-  <li><a href="#a-richer-mnh-model" id="toc-a-richer-mnh-model" class="nav-link" data-scroll-target="#a-richer-mnh-model">A Richer MNH Model</a></li>
+  <li><a href="#ethiopias-three-pillar-model" id="toc-ethiopias-three-pillar-model" class="nav-link" data-scroll-target="#ethiopias-three-pillar-model">Ethiopia’s Three-Pillar Model</a></li>
   </ul></li>
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead">Looking Ahead</a></li>
@@ -303,7 +303,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ch01.html">Part I: Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/ch01.html">Chapter 1: Introduction to Causal Analysis</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Chapter 1: Introduction to Causal Analysis</h1>
-<p class="subtitle lead">Situational assessment, managerial intervention, and why correlation ≠ causation</p>
+<p class="subtitle lead">Situational assessment, managerial intervention, and why correlation does not equal causation</p>
 </div>
 
 
@@ -325,23 +325,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="learning-objectives">
 <p>After this chapter, you will be able to:</p>
 <ul>
-<li>Distinguish between <strong>situational assessment</strong> and <strong>managerial intervention</strong></li>
-<li>Explain why <strong>correlation does not imply causation</strong> with real MNH examples</li>
-<li>Identify three classic causal thinking traps: confounding, reverse causation, and selection bias</li>
-<li>Describe the basic elements of a <strong>causal model</strong> (nodes, arrows, directed graphs)</li>
-<li>Articulate why causal thinking is essential for large-scale pooled investment decisions in maternal and newborn health programs</li>
+<li>Distinguish between <strong>situational assessment</strong> (“What is happening?”) and <strong>managerial intervention</strong> (“What should I do?”)</li>
+<li>Explain why <strong>correlation does not imply causation</strong> using real maternal and newborn health examples from Ethiopia</li>
+<li>Identify the three classic causal thinking traps: <strong>confounding</strong>, <strong>reverse causation</strong>, and <strong>selection bias</strong></li>
+<li>Describe the basic building blocks of a <strong>causal model</strong> – nodes, arrows, and directed acyclic graphs (DAGs)</li>
+<li>Explain why causal reasoning matters for designing health programs that actually save lives</li>
 </ul>
 </div>
 </section>
 <section id="key-concepts" class="level2">
 <h2 class="anchored" data-anchor-id="key-concepts">Key Concepts</h2>
-<section id="situational-assessment" class="level4 key-concept">
-<h4 class="anchored" data-anchor-id="situational-assessment">Situational Assessment</h4>
-<p>Using evidence to reason about the current state of a system — determining which variables are in which states, and why. This is the “What is happening?” question every manager faces.</p>
+<section id="situational-assessment-what-is-happening" class="level4 key-concept">
+<h4 class="anchored" data-anchor-id="situational-assessment-what-is-happening">Situational Assessment – “What Is Happening?”</h4>
+<p>Every decision starts with understanding the current state of the world. A doctor examines a patient before prescribing medicine. A mechanic listens to the engine before opening the hood. A health program manager in Ethiopia asks: “Why is neonatal mortality not falling in Somali region – is it a workforce problem, a supply chain problem, or something else entirely?” Situational assessment means using evidence to figure out which variables are in which states, and <em>why</em>. You cannot fix a problem you do not understand.</p>
 </section>
-<section id="managerial-intervention" class="level4 key-concept green">
-<h4 class="anchored" data-anchor-id="managerial-intervention">Managerial Intervention</h4>
-<p>A decision about which objects to control or change — the choice of <em>what</em> to act on, before deciding <em>how</em> to act. Resources are always limited, so every intervention involves trade-offs.</p>
+<section id="managerial-intervention-what-should-i-do" class="level4 key-concept green">
+<h4 class="anchored" data-anchor-id="managerial-intervention-what-should-i-do">Managerial Intervention – “What Should I Do?”</h4>
+<p>Once you understand the situation, you face a choice: which levers should you pull? Resources are always limited – money, time, people, equipment. Spending on training means <em>not</em> spending on equipment. Building a data system means <em>not</em> hiring more midwives. Every intervention involves trade-offs, and choosing wisely requires understanding what causes what. Ethiopia’s Health Extension Program invested across three pillars – People (40,000+ community health workers), Products (essential medicines and equipment), and Systems (DHIS2 and referral networks). The causal question is: how do these three pillars combine to produce better outcomes? Do they work independently, or do they need each other?</p>
 </section>
 <section id="the-three-causal-thinking-traps" class="level4 key-concept red">
 <h4 class="anchored" data-anchor-id="the-three-causal-thinking-traps">The Three Causal Thinking Traps</h4>
@@ -354,32 +354,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th>Trap</th>
-<th>What Happens</th>
-<th>MNH Example</th>
+<th>What Goes Wrong</th>
+<th>Ethiopia Example</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Confounding</strong></td>
-<td>Third variable drives both X and Y</td>
-<td>Disease burden drives both worker deployment and mortality</td>
+<td>A hidden third variable drives both X and Y</td>
+<td>Disease burden drives both health worker deployment and mortality – regions with the most workers have the highest deaths</td>
 </tr>
 <tr class="even">
 <td><strong>Reverse Causation</strong></td>
 <td>Y causes X, not X causes Y</td>
-<td>Mortality attracts funding, not vice versa</td>
+<td>High mortality attracts international funding, not the other way around</td>
 </tr>
 <tr class="odd">
 <td><strong>Selection Bias</strong></td>
-<td>Non-random sample distorts relationship</td>
-<td>Only high-capacity hospitals report data</td>
+<td>Your data sample is not representative</td>
+<td>Only well-resourced hospitals report to DHIS2, so equipment appears unrelated to survival</td>
 </tr>
 </tbody>
 </table>
+<p>All three traps create patterns in data that look like causal effects but are not. The antidote is explicit causal modeling – drawing a picture of what causes what <em>before</em> you analyze the data.</p>
 </section>
-<section id="directed-acyclic-graph-dag" class="level4 key-concept teal">
-<h4 class="anchored" data-anchor-id="directed-acyclic-graph-dag">Directed Acyclic Graph (DAG)</h4>
-<p>A causal diagram with no cycles — you cannot follow arrows from any node back to itself. An arrow from A to B means that changing A can change B, but changing B does <em>not</em> change A. This is the mathematical foundation of causal modeling.</p>
+<section id="directed-acyclic-graphs-dags" class="level4 key-concept teal">
+<h4 class="anchored" data-anchor-id="directed-acyclic-graphs-dags">Directed Acyclic Graphs (DAGs)</h4>
+<p>A causal model is just a diagram that shows what causes what. It has three simple ingredients: <strong>nodes</strong> (the things you care about, drawn as circles or shapes), <strong>arrows</strong> (causal links – “A causes B” is drawn as A to B), and <strong>signs</strong> ([+] or [-] telling you the direction of effect). A DAG is a causal diagram where all arrows point in one direction and there are no loops – you can never follow the arrows from any node back to itself. “Directed” means arrows have a direction. “Acyclic” means no circles. “Graph” is just the math word for a diagram of connected nodes. The no-loops rule matters because loops make it impossible to figure out what causes what.</p>
 </section>
 </section>
 <section id="lecture-slides" class="level2">
@@ -394,54 +395,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="r-code-workshop" class="level2">
 <h2 class="anchored" data-anchor-id="r-code-workshop">R Code Workshop</h2>
-<p>This chapter introduces the core R packages for causal analysis: <code>dagitty</code> for DAG specification and analysis, <code>ggdag</code> for visualization, and <code>ggplot2</code> for general plotting.</p>
+<p>This chapter introduces the core R packages for causal analysis: <code>dagitty</code> for defining and analyzing DAGs, <code>ggdag</code> for drawing them, and <code>ggplot2</code> for general plotting. By the end of this section you will have built three different causal diagrams in code.</p>
 <section id="setting-up-the-environment" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up-the-environment">Setting Up the Environment</h3>
+<p>Before we draw any diagrams, we need to load our tools. Think of these packages as specialized toolboxes: <code>dagitty</code> lets you write down a causal diagram and ask questions about it, <code>ggdag</code> turns the code into a visual picture, and <code>ggplot2</code> powers the drawing engine behind the scenes.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages (run once)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("dagitty", "ggdag", "ggplot2", "bnlearn"))</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages the first time you use them (remove the # to run):</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(c("dagitty", "ggdag", "ggplot2"))</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)    <span class="co"># DAG specification and analysis</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)      <span class="co"># DAG visualization with ggplot2</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)    <span class="co"># General plotting</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the packages into our R session</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)    <span class="co"># Define and analyze causal diagrams (DAGs)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)      <span class="co"># Draw pretty pictures of those DAGs</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)    <span class="co"># General-purpose plotting library</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="a-simple-mnh-causal-model" class="level3">
-<h3 class="anchored" data-anchor-id="a-simple-mnh-causal-model">A Simple MNH Causal Model</h3>
+<section id="a-simple-3-node-chain" class="level3">
+<h3 class="anchored" data-anchor-id="a-simple-3-node-chain">A Simple 3-Node Chain</h3>
+<p>Let’s start with the simplest useful causal model for a health program. We define three nodes – Investment, Coverage, and Mortality – connected by two arrows. Investment increases coverage, and higher coverage reduces mortality. Notice that investment does not directly reduce mortality; it works <em>through</em> coverage.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a simple 3-node DAG</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mnh_simple <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment [pos="0,0"]</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage [pos="1,0"]</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR [pos="2,0"]</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Coverage</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage -&gt; NMR</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(mnh_simple) <span class="sc">+</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simple MNH Causal Model"</span>,</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Investment → Coverage → Neonatal Mortality Rate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a 3-node DAG</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pos="x,y" sets the position on the diagram</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mnh_simple <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment [pos="0,0"]</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage   [pos="1,0"]</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR        [pos="2,0"]</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Coverage</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage -&gt; NMR</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the diagram</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># theme_dag() removes gridlines and axes for a clean look</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(mnh_simple) <span class="sc">+</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Simple MNH Causal Model"</span>,</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Investment -&gt; Coverage -&gt; Neonatal Mortality Rate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>This tiny model already tells us something useful: if investment goes up but coverage does <em>not</em> go up, the money is leaking somewhere in between. The chain helps you find where things break down.</p>
 </section>
 <section id="a-confounded-model" class="level3">
 <h3 class="anchored" data-anchor-id="a-confounded-model">A Confounded Model</h3>
+<p>Now let’s add Complication Severity as a confounder – the hidden variable that creates a misleading correlation between hospital delivery and mortality. This is the classic Ethiopia puzzle: regions where the most health workers are deployed tend to have the highest mortality rates.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hospital delivery and mortality: confounded by complication severity</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>confounded_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Complication_Severity [pos="1,0"]</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Hospital_Delivery [pos="0,1"]</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Neonatal_Mortality [pos="2,1"]</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Hospital_Delivery     [pos="0,1"]</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Neonatal_Mortality    [pos="2,1"]</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Complication_Severity -&gt; Hospital_Delivery</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Complication_Severity -&gt; Neonatal_Mortality</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Hospital_Delivery -&gt; Neonatal_Mortality</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize with exposure and outcome</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Color-code by role: green = exposure, red = outcome, amber = confounder</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag_status</span>(confounded_dag,</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">exposure =</span> <span class="st">"Hospital_Delivery"</span>,</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">outcome =</span> <span class="st">"Neonatal_Mortality"</span>) <span class="sc">+</span></span>
@@ -449,73 +456,78 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"exposure"</span> <span class="ot">=</span> <span class="st">"#83BD00"</span>,</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"outcome"</span> <span class="ot">=</span> <span class="st">"#E24A3F"</span>,</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"other"</span> <span class="ot">=</span> <span class="st">"#F8A623"</span>)) <span class="sc">+</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Confounding in Hospital Delivery Data"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Confounding in Hospital Delivery Data"</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Complication severity drives both delivery location and mortality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Read the picture: Complication Severity sits at the top, sending arrows down to <em>both</em> Hospital Delivery and Neonatal Mortality. That is the fork structure – the classic confounding pattern. Without accounting for severity, you would wrongly conclude that hospital delivery increases mortality.</p>
 </section>
 <section id="finding-adjustment-sets" class="level3">
 <h3 class="anchored" data-anchor-id="finding-adjustment-sets">Finding Adjustment Sets</h3>
+<p>Here is the powerful part. Once we have drawn the diagram, R can tell us <em>exactly</em> which variables we need to control for to get the true causal effect. The <code>adjustmentSets()</code> function does this automatically.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What must we control for to estimate the causal effect</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of hospital delivery on mortality?</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ask dagitty: "What do I need to control for to estimate the</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># causal effect of Hospital_Delivery on Neonatal_Mortality?"</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(confounded_dag,</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Hospital_Delivery"</span>,</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome =</span> <span class="st">"Neonatal_Mortality"</span>)</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns: { Complication_Severity }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns: { Complication_Severity }</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Translation: control for severity, and the confounding goes away</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>To estimate the true causal effect of hospital delivery on neonatal mortality, we must <strong>control for complication severity</strong>. Without this adjustment, the correlation between hospital delivery and mortality is biased by confounding.</p>
+<p>In plain English: if you compare patients who have the <em>same</em> complication severity, then hospital delivery is associated with <em>lower</em> mortality. The confounding disappears once you account for why patients ended up at the hospital in the first place.</p>
 </section>
-<section id="a-richer-mnh-model" class="level3">
-<h3 class="anchored" data-anchor-id="a-richer-mnh-model">A Richer MNH Model</h3>
+<section id="ethiopias-three-pillar-model" class="level3">
+<h3 class="anchored" data-anchor-id="ethiopias-three-pillar-model">Ethiopia’s Three-Pillar Model</h3>
+<p>Let’s build a richer model that captures Ethiopia’s three-pillar approach – People, Products, and Systems – all flowing through Quality of Care, with Disease Burden as a confounder affecting both mortality outcomes.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MNH initiative theory of change</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mnh_toc <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget [pos="0,1"]</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Workforce [pos="1,0"]</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment [pos="1,1"]</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Data_Systems [pos="1,2"]</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality [pos="2,1"]</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR [pos="3,1"]</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Baseline_Burden [pos="1.5,2.5"]</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ethiopia's three-pillar theory of change as a DAG</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ethiopia_toc <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">  People          [pos="1,0"]</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Products        [pos="1,1"]</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Systems         [pos="1,2"]</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality         [pos="2,1"]</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR             [pos="3,0.5"]</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  MMR             [pos="3,1.5"]</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Disease_Burden  [pos="2,2.5"]</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Workforce</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Equipment</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Data_Systems</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Workforce -&gt; Quality</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment -&gt; Quality</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Data_Systems -&gt; Quality</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality -&gt; NMR</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Baseline_Burden -&gt; NMR</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Baseline_Burden -&gt; Budget</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the adjustment set for Budget → NMR</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(mnh_toc,</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Budget"</span>,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome =</span> <span class="st">"NMR"</span>)</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(mnh_toc) <span class="sc">+</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"MNH Initiative: Theory of Change as a DAG"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">  People   -&gt; Quality</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Products -&gt; Quality</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Systems  -&gt; Quality</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality  -&gt; NMR</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality  -&gt; MMR</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Disease_Burden -&gt; NMR</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Disease_Burden -&gt; MMR</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the adjustment set for estimating People -&gt; NMR</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(ethiopia_toc,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"People"</span>,</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the full model</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(ethiopia_toc) <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ethiopia MNH: Three-Pillar Theory of Change"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"People, Products, and Systems -&gt; Quality -&gt; Mortality"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>This model says all three pillars flow into Quality of Care. Quality then reduces both NMR and MMR. Disease Burden affects the outcomes directly – a region with severe malaria burden will have higher mortality even with good care. A trained midwife without a PPH kit cannot stop a hemorrhage. A PPH kit without a trained midwife is just a box on a shelf. People, Products, and Systems are <em>complements</em> – they multiply each other’s effect.</p>
 </section>
 </section>
 <section id="key-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Causal modeling serves two purposes:</strong> situational assessment (What is happening?) and managerial intervention (What should I do?).</p>
-<p><strong>Correlation ≠ causation.</strong> Confounding, reverse causation, and selection bias all create misleading associations.</p>
-<p><strong>A causal model</strong> makes your assumptions explicit, testable, and actionable — essential for allocating large-scale program funding effectively.</p>
+<p><strong>Causal thinking starts with two questions:</strong> “What is happening?” (situational assessment) and “What should I do?” (managerial intervention). You cannot answer the second well without answering the first.</p>
+<p><strong>Correlation does not equal causation.</strong> Three traps – confounding, reverse causation, and selection bias – all create misleading patterns in data. Ethiopia’s 40,000 Health Extension Workers are not causing deaths. Disease burden is confounding the relationship.</p>
+<p><strong>A causal model (DAG)</strong> makes your assumptions visible, testable, and actionable. Draw the diagram. Ask R what to control for. Analyze the data correctly. Make better decisions.</p>
 </div>
 </section>
 <section id="looking-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="looking-ahead">Looking Ahead</h2>
-<p>Next in <strong>Chapter 2 — Qualitative Causal Models</strong>, we learn the formal language of causal diagrams:</p>
+<p>Next in <strong>Chapter 2 – Qualitative Causal Models</strong>, we learn the formal language of causal diagrams:</p>
 <ul>
-<li>Four types of nodes (probabilistic, objective, strategic option, function)</li>
-<li>Directed links with [+] and [−] signs</li>
-<li>The three fundamental triplet structures: serial, diverging, and converging</li>
-<li>How to determine whether two variables are causally independent (d-separation)</li>
+<li>Three types of nodes: probabilistic (ovals), decision (rectangles), and objective (hexagons)</li>
+<li>Signed directed links with [+] and [-] telling you which direction things move</li>
+<li>The three fundamental triplet structures: <strong>chains</strong>, <strong>forks</strong>, and <strong>colliders</strong> – and why colliders behave opposite to everything else</li>
+<li><strong>d-Separation</strong> – the rule that tells you when information flows between variables and when it stops</li>
 </ul>
 
 

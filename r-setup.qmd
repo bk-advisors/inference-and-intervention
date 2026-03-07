@@ -3,6 +3,18 @@ title: "R Environment Setup"
 subtitle: "Installing R, RStudio, and the required packages for this course"
 ---
 
+## First Time Using R?
+
+If you have never used R before, don't worry! R is a free programming tool that helps us create diagrams, run simulations, and analyze data. Think of it as a very powerful calculator that can also draw pictures.
+
+Here is what you need to do:
+
+1. **Download R** — this is the engine that runs the code
+2. **Download RStudio** — this is the app where you type and run your code (like a word processor for code)
+3. **Install packages** — these are add-ons that give R extra powers (like apps on your phone)
+
+Follow the steps below and you will be up and running in about 15 minutes.
+
 ## Required Software
 
 | Software | Version | Download |

@@ -6,9 +6,9 @@ This file documents the patterns, conventions, and decisions made while building
 
 ## 1. Project Overview
 
-- **Source material:** The textbook uses business examples (advertising, market share, ridesharing companies). Every chapter's examples have been adapted to MNH/public health contexts.
-- **Audience:** Future program managers in MNH and Public Health programs in developing countries.
-- **Privacy requirement:** All identifying details from the real organization behind the examples have been removed. See Section 8 (Anonymization) below.
+- **Source material:** The textbook's core concepts (causal models, DAGs, Bayesian networks, decision analysis, game theory) are taught using **new examples** — not the textbook's business cases. All examples are drawn from publicly available MNH data for Ethiopia, Rwanda, Kenya, and Tanzania.
+- **Audience:** High school level learners. Content must be understandable by a motivated student with no statistics background. Conversational but smart tone.
+- **Privacy requirement:** Real country names are used, but all confidential program data (budgets, targets, co-financing, internal strategies) is excluded. Only publicly available data from WHO, UNICEF, DHS, and government reports. See Section 8 (Data & Privacy Rules) below.
 - **10 chapters**, each a standalone deck in its own folder under `inference-and-intervention/`.
 - **Course website** — a Quarto multi-page website tying all 10 chapters together with navigation, companion pages, and supplementary resources.
 
@@ -40,7 +40,10 @@ inference-and-intervention/
   ch09-multi-agent/         # Ch 9 slide deck (standalone)
   ch10-data-driven/         # Ch 10 slide deck (standalone)
   context/                  # Reference PDFs (do not modify)
+  country-plans/            # Source .docx files (reference only — use public data from these)
+  _archive/                 # Archived v1 graduate-level content
   skills.md                 # This file
+  CLAUDE.md                 # Project governance and content rules
   intro-video-speaker-notes.md  # YouTube intro video presenter script
   pre-class-essays.docx     # Pre-class essays Word document (generated)
   generate_essays.py        # Script to regenerate pre-class-essays.docx
@@ -263,56 +266,58 @@ Node type conventions:
 
 ---
 
-## 8. Anonymization Rules (CRITICAL)
+## 8. Data & Privacy Rules
 
-The MNH examples are based on a real organization. All identifying details have been removed. **Never reintroduce any of the following:**
+### Real Country Names — Anonymization Lifted
 
-### Banned Terms (must never appear in any `.qmd` file)
+Use **Ethiopia, Rwanda, Kenya, Tanzania** directly in all content. The old Country A–J anonymization mapping is retired (archived in `_archive/`).
+
+### Public Data Only
+
+All MNH data must come from **publicly available sources**:
+- WHO (World Health Organization) maternal/newborn mortality estimates
+- UNICEF global databases
+- DHS (Demographic and Health Surveys)
+- Lancet publications
+- Government health ministry reports and statistics
+
+When using specific numbers, cite or attribute the source (e.g., "according to WHO estimates" or "based on DHS data").
+
+### Banned Terms (Confidential — must NEVER appear)
 
 | Category | Banned Terms | Generic Replacement |
 |---|---|---|
-| Organization names | Beginnings Fund, Meridian Health Alliance, the Alliance | "the program", "the MNH program", "the donor program", "MNH programs" |
-| Budget amounts | $525M, $525 million | "pooled funding", "the program's total budget", "a substantial investment" |
-| Life-saving targets | 322,000, 322,847 | "hundreds of thousands of lives", "over the program period" |
-| Donor names | CIFF, Delta Philanthropies, ELMA, Gates Foundation, Mohamed bin Zayed | Remove entirely or say "multiple global health foundations" |
-| Governance | Investment Committee | "program leadership", "the leadership team" |
-| Country names | Ethiopia, Tanzania, Kenya, Uganda, Ghana, Malawi, Zimbabwe, Rwanda, Lesotho, Nigeria | Country A through Country J |
-| Phase names | Phase 1, Phase 2 (with specific dates) | "Cohort 1", "Cohort 2", "subsequent cycles", "subsequent funding cycle" |
-| Timeline | 76 months | "the program timeline" |
-| Partner orgs | HaHCo, Fund Two | "The Rideshare Case" (for the textbook case), remove Fund Two |
-| Specific dollar amounts tied to the program | $50M, $15M, $8M, $3M, $20M (program budgets) | Use percentages, "a budget tranche", relative terms |
+| Organization names | Beginnings Fund, Meridian Health Alliance, the Alliance | "a large-scale MNH initiative", "donor-funded health programs" |
+| Donor names | CIFF, Delta Philanthropies, ELMA, Gates Foundation, Mohamed bin Zayed | "global health foundations", "international donors" |
+| Governance | Investment Committee | "program leadership" |
+| Program budgets | $525M, $90M, $35M, $76M, $75M or any specific program allocation | "program funding", "health investment" |
+| Lives-saved targets | 322,000; 322,847; 86,124; 14,585 | Do not reference program-specific targets |
+| Co-financing details | Government co-financing amounts, probabilities, agreements | Use generic framing: "government health spending" |
+| Internal strategies | Phase 1/2, cohort structures, 76 months, facility-count targets | Do not reference internal program structures |
+| Partner orgs | HaHCo, Fund Two | Remove entirely |
 
-### Country Anonymization Mapping
+### No Textbook Examples
 
-Used in ch06 and ch08 (the only chapters with country-level data):
-
-| Original | Anonymous |
-|---|---|
-| Ethiopia | Country A |
-| Tanzania | Country B |
-| Kenya | Country C |
-| Uganda | Country D |
-| Ghana | Country E |
-| Malawi | Country F |
-| Zimbabwe | Country G |
-| Rwanda | Country H |
-| Lesotho | Country I |
-| Nigeria | Country J |
+Do not use examples from Ryall & Bramson directly:
+- ~~Feather Touch / TruSmartz~~ — replaced with new MNH examples
+- ~~Robert Maxwell murder mystery~~ — replaced with new opening stories
+- ~~Slimtree Publishing~~ — replaced with public MNH data examples
+- ~~Hubris Health~~ — replaced with country-based case studies
+- ~~The Rideshare Case~~ — removed
 
 ### What IS Allowed
 
-- MNH-specific clinical terms: NMR, MMR, CPAP, PPH, preterm birth, birth asphyxia, nurse-midwife, DHIS2
+- MNH-specific clinical terms: NMR, MMR, CPAP, PPH, preterm birth, birth asphyxia, nurse-midwife, DHIS2, EmONC
 - Theory of Change structure: People / Products / Systems pathway to impact
-- Generic program descriptions: "large-scale MNH initiative", "multi-country philanthropic program"
-- Pedagogical dollar amounts in teaching examples: cost-per-life-saved figures ($1,050, $14,706), generic pilot costs ($2M)
-- The book's original business examples: Slimtree Publishing, Hubris Health, The Rideshare Case — these are from the textbook and not identifying
+- Generic program descriptions: "large-scale MNH initiative", "multi-country health program"
+- Publicly available statistics: WHO MMR/NMR estimates, UNICEF coverage data, DHS survey results
+- Real country names: Ethiopia, Rwanda, Kenya, Tanzania
+- Pedagogical dollar amounts in hypothetical teaching examples (clearly marked as illustrative)
 
 ### Verification Command
 
-Run this grep to verify no identifying terms remain (covers both `.qmd` slides and `speaker-notes.md`):
-
 ```bash
-rg -i "Meridian|Alliance|Beginnings|Investment Committee|CIFF|Delta Philanthrop|ELMA|Gates Foundation|Mohamed|HaHCo|Fund Two|76 months|\$525|322,000|322,847|Ethiopia|Tanzania|Kenya|Uganda|Ghana|Malawi|Zimbabwe|Rwanda|Lesotho|Nigeria|Phase [12]" inference-and-intervention/**/*.qmd inference-and-intervention/**/speaker-notes.md
+rg -i "Beginnings|Meridian|Alliance|Investment Committee|CIFF|Delta Philanthrop|ELMA|Gates Foundation|Mohamed|HaHCo|Fund Two|76 months|\$525|322,000|322,847|Country [A-J][^a-z]" --glob "*.qmd" --glob "*.md" --glob "*.py" --glob "!_archive/*"
 ```
 
 This should return zero matches.
@@ -363,9 +368,9 @@ These variable names are used across chapters for consistency:
 
 ## 10. Business-to-Public-Health Terminology
 
-The textbook uses business language. We systematically replaced:
+The textbook uses business language. All examples are now **new MNH examples** (not from the textbook). The following terminology mapping still applies when adapting concepts:
 
-| Business Term (Book) | Public Health Replacement |
+| Business Term (Book Concept) | Public Health Equivalent |
 |---|---|
 | Advertising | Mass media campaign / demand generation |
 | Firm / Company | Program / MNH initiative |
@@ -380,7 +385,41 @@ The textbook uses business language. We systematically replaced:
 | Product launch | Intervention rollout |
 | Sales | Service delivery / uptake |
 
-The book's *original* examples (Slimtree Publishing, Hubris Health, The Rideshare Case) are kept as-is in "Book Context" sections, then explicitly mapped to MNH equivalents.
+**No "Book Context" sections.** The old approach of presenting the textbook example first and then mapping it to MNH is retired. All examples are original MNH stories drawn from publicly available data for Ethiopia, Rwanda, Kenya, and Tanzania.
+
+---
+
+## 10b. Simplification Principles
+
+The course is pitched at a high school comprehension level. Follow these principles consistently:
+
+1. **No formulas without a story.** Every mathematical concept must first be introduced via a narrative example. The formula (if retained) comes second.
+2. **Natural frequencies over probabilities.** Instead of P(NMR=High | Staffing=Low) = 0.55, write "Out of 100 facilities with low staffing, about 55 have high neonatal mortality."
+3. **Everyday analogies first.** Before any causal structure concept, give a relatable analogy (rain/umbrella, ice cream/drowning, university admissions). Then bridge to MNH.
+4. **Active voice, short sentences.** "The model tells us X" not "It can be derived from the model that X."
+5. **"Try It" boxes.** Replace formal "Exercise" sections with interactive prompts: "Try It: Draw a diagram for your school cafeteria. What causes long lines? What causes bad food? Are they connected?"
+6. **R code with guard rails.** Every code block preceded by a plain-English paragraph explaining what it does and what to look for. Every non-obvious function gets an inline comment.
+7. **Real names, real numbers.** Ethiopia, not Country A. Public WHO/UNICEF data, not "a substantial investment."
+8. **No confidential data.** No program budgets, targets, co-financing, or internal strategies.
+9. **No LaTeX math blocks** except very simple arithmetic. Use words and natural frequencies.
+10. **At least 2 everyday analogies per chapter** before introducing technical concepts.
+
+### Country-to-Chapter Mapping
+
+Each chapter has a primary country whose public data provides the main examples:
+
+| Chapter | Primary Country | Why |
+|---|---|---|
+| Ch 1 | Ethiopia | Largest CHW program; confounding example (workers go to high-burden regions) |
+| Ch 2 | Rwanda | CHW program structure; Mutuelle de Santé; clear DAG narrative |
+| Ch 3 | Kenya | 47 counties, devolved system; natural interview/diagnostic case |
+| Ch 4 | Tanzania | Facility readiness data; workforce shortage; natural frequency examples |
+| Ch 5 | Ethiopia | Regional variation for diagnostic/belief-updating exercise |
+| Ch 6 | All four | Simpson's Paradox needs cross-country comparison |
+| Ch 7 | Kenya | County-level resource decisions; intensive vs. equity focus |
+| Ch 8 | All four | Multi-country resource allocation |
+| Ch 9 | Rwanda | CHW program + Mutuelle as real commitment devices |
+| Ch 10 | Tanzania | DHIS2/GOTHOMIS data system; structure learning from health data |
 
 ---
 
@@ -535,21 +574,21 @@ A set of 11 pre-class essays — one course introduction plus one per chapter �
 | Ch | Title | Core Insight |
 |---|---|---|
 | Intro | The Gap Between Good Intentions and Good Outcomes | Course roadmap — from correlations to causal decisions in four parts |
-| 1 | The Most Dangerous Number Is a Correlation | The Feather Touch cautionary tale — regressions without causal models recommend the worst option |
+| 1 | The Most Dangerous Number Is a Correlation | Ethiopia health worker puzzle — correlation without causal reasoning leads to bad decisions |
 | 2 | Drawing What You Believe | Implicit vs explicit mental models — putting arrows on a whiteboard is the most productive argument |
 | 3 | The Art of Asking Better Questions | Iterative model-building through interviews — each round reveals what the last model missed |
-| 4 | Putting Numbers on Uncertainty | From "I don't know" to CPTs and Bayes' Rule — quantifying beliefs makes them testable |
+| 4 | Putting Numbers on Uncertainty | From "I don't know" to lookup tables and Bayes' Rule — quantifying beliefs makes them testable |
 | 5 | Running the Model Backwards | Explaining away — observing an outcome creates competition between its causes |
 | 6 | When the Average Lies | Simpson's Paradox and the Prosecutor's Fallacy — aggregated data can recommend the wrong thing |
-| 7 | The Difference Between Watching and Doing | do-calculus and graph surgery — observation ≠ intervention |
-| 8 | Portfolio Thinking for Lives Saved | Markowitz meets MNH — diversification, Monte Carlo, and sequential decisions across countries |
+| 7 | The Difference Between Watching and Doing | Watching vs doing — observation ≠ intervention |
+| 8 | Portfolio Thinking for Lives Saved | Splitting a budget across countries — diversification, Monte Carlo, and sequential decisions |
 | 9 | When the World Pushes Back | Game theory in health funding — free-riding, commitment devices, and incentive-compatible contracts |
-| 10 | Can Data Discover Causes? | Causal discovery algorithms, Markov equivalence, instrumental variables — and why expertise still matters |
+| 10 | Can Data Discover Causes? | Causal discovery algorithms, expert + algorithm — and why expertise still matters |
 
 ### Writing Style (Morgan Housel Pattern)
 
-Each essay (~1,200–1,800 words) follows this structure:
-- **Open with a story or vivid anecdote** drawn from the chapter's examples (Feather Touch, UC Berkeley admissions, Markowitz, the Workforce Absorption Game, etc.)
+Each essay (~800–1,300 words) follows this structure:
+- **Open with a story or vivid anecdote** drawn from the chapter's MNH examples (Ethiopia's health workers, Rwanda's CHW program, UC Berkeley admissions, etc.)
 - **Build to a counterintuitive insight** (correlation ≠ causation, conditioning on colliders opens paths, free-riding is rational, etc.)
 - **Short paragraphs** and conversational "you/we" language throughout
 - **Draw connections to everyday human psychology** — why we fall for these traps
@@ -574,7 +613,7 @@ Requires `python-docx` (`pip install python-docx`). Output is written to `infere
 
 ### Anonymization Note
 
-The essays follow the same anonymization rules as the slides (Section 8). No banned terms appear — the essays use generic references ("a global health organization", "sub-Saharan Africa", "Country A") rather than identifying details. The Feather Touch / TruSmartz example from the textbook is used as-is since it is not identifying.
+The essays follow the same data and privacy rules as the slides (Section 8). No banned terms appear. The essays use real country names (Ethiopia, Rwanda, Kenya, Tanzania) and only publicly available data. Textbook examples (Feather Touch, TruSmartz, etc.) have been replaced with new MNH examples.
 
 ---
 
@@ -646,7 +685,7 @@ A set of three companion materials for recording a YouTube introduction video th
 
 | Section | Duration | Content |
 |---|---|---|
-| Opening Hook | ~30 sec | Feather Touch story — the cost of confusing correlation with causation |
+| Opening Hook | ~30 sec | Ethiopia health worker puzzle — the cost of confusing correlation with causation |
 | What This Course Is About | ~1 min | Causal thinking vs data analysis, the core distinction |
 | The Journey in Four Parts | ~3 min | Walk through 4 phases, referencing whiteboard diagram, with chapter previews |
 | Who This Course Is For | ~30 sec | Program managers, decision-makers; no stats prerequisites |

@@ -1,18 +1,16 @@
 ---
-title: "Chapter 6: Simpson's Paradox & Cost-Effectiveness"
-subtitle: "Aggregation paradoxes, the Prosecutor's Fallacy, and causal reasoning in MNH cost-effectiveness analysis"
+title: "Chapter 6: Simpson's Paradox"
+subtitle: "When aggregated data lies -- and how causal reasoning sets the record straight"
 ---
 
 ## Learning Objectives
 
 ::: {.learning-objectives}
-After this chapter, you will be able to:
-
-- Identify **Simpson's Paradox** and explain why aggregated data can reverse the direction of causal effects
-- Avoid the **Prosecutor's Fallacy** by applying Bayes' rule to distinguish $P(\text{Evidence} \mid \text{Hypothesis})$ from $P(\text{Hypothesis} \mid \text{Evidence})$
-- Apply **causal reasoning** to cost-effectiveness analysis, avoiding naive cross-country comparisons
-- Use R to simulate, visualize, and model data that exhibit these paradoxes
-- Make sound **resource-allocation recommendations** for a large-scale MNH program portfolio
+- Identify **Simpson's Paradox** -- when a trend in aggregated data reverses once you split by a confounding variable
+- Distinguish a **confounder** (condition on it) from a **mediator** (leave it alone) and explain why getting this wrong flips your conclusions
+- Spot the **Prosecutor's Fallacy** -- confusing "how likely is the evidence if the hypothesis is true" with "how likely is the hypothesis given the evidence"
+- Conduct a **cross-country comparison** across Ethiopia, Rwanda, Kenya, and Tanzania that avoids the paradox
+- Use R to simulate, visualize, and correctly analyze data that exhibits these traps
 :::
 
 ## Key Concepts
@@ -20,37 +18,37 @@ After this chapter, you will be able to:
 ::: {.key-concept}
 #### Simpson's Paradox
 
-A trend that appears in aggregated data *reverses* or disappears when the data is disaggregated by a confounding variable. The paradox arises when a lurking variable is associated with both the treatment and the outcome. Decisions based on aggregated data can be exactly wrong; resolution requires causal reasoning, not just statistical adjustment.
+Imagine comparing a health intervention across Ethiopia, Rwanda, Kenya, and Tanzania. In every single country, facilities with the intervention have better outcomes. But when you pool all the data together, the intervention appears to *hurt*. How? Because the intervention was deployed mostly in high-burden countries with worse baseline outcomes. The aggregate mixes apples and oranges. Simpson's Paradox is not rare or exotic -- it lurks in any cross-country or cross-site comparison where a hidden variable drives both the treatment assignment and the outcome. The fix is not more data. It is causal reasoning.
 :::
 
 ::: {.key-concept .green}
-#### Cost Per Life Saved (CPLS)
+#### Confounder vs. Mediator
 
-The total program expenditure divided by the number of additional lives saved attributable to the intervention. Lower CPLS means greater efficiency. Naive comparisons of CPLS across countries can be deeply misleading because baseline severity, health system capacity, and population density confound the treatment-outcome relationship.
-:::
-
-::: {.key-concept .red}
-#### The Prosecutor's Fallacy
-
-Confusing $P(\text{Evidence} \mid \text{Hypothesis})$ with $P(\text{Hypothesis} \mid \text{Evidence})$. The probability of observing the evidence given that a hypothesis is true is not the same as the probability that the hypothesis is true given the evidence. Bayes' rule and the base rate are needed to convert one into the other.
+A **confounder** is a common cause of both the treatment and the outcome -- like disease burden, which determines both where interventions are deployed and how high mortality is. You must condition on confounders to remove the spurious association they create. A **mediator** sits on the causal path between treatment and outcome -- like quality of care, which is *how* the intervention works. You must *not* condition on mediators, because doing so blocks the very effect you are trying to measure. In DAG terms: condition on the fork's center node, leave the chain's middle node alone. Mix them up and you get Simpson's Paradox -- or you erase a real treatment effect.
 :::
 
 ::: {.key-concept .orange}
-#### Confounders vs. Mediators
+#### The Prosecutor's Fallacy
 
-Always condition on **confounders** (common causes of treatment and outcome) to remove spurious associations. Never condition on **mediators** (variables on the causal path between treatment and outcome), because doing so blocks the very causal effect you are trying to estimate. Getting this distinction wrong leads to Simpson's Paradox or underestimation of treatment effects.
+A screening test for birth complications has 90% sensitivity -- it catches 90 out of 100 true cases. A prosecutor might claim: "The test was positive, so there is a 90% chance the complication is present." Wrong. That confuses P(positive test | complication) with P(complication | positive test). If the complication is rare (say 5% prevalence), most positive tests are false alarms. Bayes' rule shows that P(complication | positive test) is only about 24%, not 90%. The base rate matters enormously. This fallacy appears whenever people mistake the likelihood for the posterior -- in courtrooms, in medical screening, and in program evaluation.
+:::
+
+::: {.key-concept .red}
+#### Cross-Country Comparison
+
+Comparing health outcomes across Ethiopia, Rwanda, Kenya, and Tanzania is essential for allocating resources wisely -- but naive comparisons are dangerous. Each country has a different baseline burden, different health system capacity, and different population structure. A country with low cost per outcome might simply have had less severe problems to begin with. Adjusting for confounders -- baseline mortality, urbanization, health worker density -- can completely reverse which country looks most "efficient." The DAG tells you which variables to adjust for and which to leave alone.
 :::
 
 ::: {.key-concept .teal}
-#### Confounder-Adjusted Rankings
+#### Causal Adjustment Fixes the Paradox
 
-Naive ranking of countries by raw CPLS concentrates investment in countries with strong health systems and low mortality burden. Causal ranking, which adjusts for baseline NMR, health system capacity, population size, and existing coverage, targets countries where the causal effect of intervention is greatest. The causal approach can save thousands of additional lives with the same budget.
+Once you draw the DAG, the solution is mechanical. Identify every backdoor path between treatment and outcome. Find the confounders along those paths. Condition on them (stratify, or include them in a regression). The adjusted estimate removes the bias and reveals the true causal effect. In the cross-country case, adjusting for baseline burden shows that the intervention helps in every country -- exactly what the within-country data already showed. The paradox disappears because you are no longer mixing high-burden and low-burden contexts.
 :::
 
 ## Lecture Slides
 
 ::: {.slide-embed}
-<iframe src="../ch06-business-financials/index.html"></iframe>
+<iframe src="../ch06-business-financials/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch06-business-financials/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
@@ -58,248 +56,147 @@ Naive ranking of countries by raw CPLS concentrates investment in countries with
 
 ## R Code Workshop
 
-This chapter uses R to simulate and analyze Simpson's Paradox and the Prosecutor's Fallacy, demonstrating how aggregated data can mislead and how Bayes' rule corrects diagnostic reasoning.
+We simulate a dataset where Simpson's Paradox appears, visualize it, and show how stratifying by the confounder (or using a regression that includes it) recovers the true treatment effect.
 
-### Simulating Simpson's Paradox
+### Simulate the Paradox
 
-We begin by generating an MNH dataset where a confounder (country group) drives both treatment assignment and baseline risk, producing a Simpson's Paradox in the aggregated data.
+We create data for four countries. In every country, the intervention improves survival. But because high-burden countries receive more of the intervention, the pooled data reverses the effect.
 
 ```{r}
-#| label: simulate-simpsons
+#| label: simulate-paradox
 #| echo: true
 
 library(tidyverse)
-
 set.seed(42)
 
-# Simulate MNH data exhibiting Simpson's Paradox
-# Confounder: country_group (high-burden vs low-burden)
 n <- 2000
 
-mnh_data <- tibble(
-  # Confounder: country group determines both treatment and baseline risk
- country_group = sample(c("High-burden", "Low-burden"), n, replace = TRUE,
-                         prob = c(0.6, 0.4)),
-  # Treatment assignment depends on country group (confounder)
-  cpap = case_when(
-    country_group == "High-burden" ~ rbinom(n, 1, 0.75),
-    country_group == "Low-burden"  ~ rbinom(n, 1, 0.25)
-  ),
-  # Outcome depends on BOTH country group and treatment
-  # CPAP has a positive causal effect (+10pp), but high-burden has lower baseline
-  survival_prob = case_when(
-    country_group == "High-burden" & cpap == 1 ~ 0.68,
-    country_group == "High-burden" & cpap == 0 ~ 0.61,
-    country_group == "Low-burden"  & cpap == 1 ~ 0.85,
-    country_group == "Low-burden"  & cpap == 0 ~ 0.82
-  ),
-  survived = rbinom(n, 1, survival_prob)
-)
+sim_data <- tibble(
+  # Confounder: country burden group
+  burden = sample(c("High-burden", "Low-burden"), n, replace = TRUE,
+                  prob = c(0.6, 0.4)),
+  # Treatment is more common in high-burden countries (the confounder at work)
+  treated = case_when(
+    burden == "High-burden" ~ rbinom(n, 1, 0.75),
+    burden == "Low-burden"  ~ rbinom(n, 1, 0.25)),
+  # Outcome depends on BOTH burden and treatment
+  # Treatment always helps (+7pp), but high-burden baseline is worse
+  surv_prob = case_when(
+    burden == "High-burden" & treated == 1 ~ 0.68,
+    burden == "High-burden" & treated == 0 ~ 0.61,
+    burden == "Low-burden"  & treated == 1 ~ 0.85,
+    burden == "Low-burden"  & treated == 0 ~ 0.78),
+  survived = rbinom(n, 1, surv_prob))
 
-# Aggregated result (misleading)
-mnh_data |>
-  group_by(cpap) |>
-  summarise(survival_rate = mean(survived), n = n(), .groups = "drop")
+# Pooled result (misleading -- treatment looks harmful)
+sim_data |> group_by(treated) |>
+  summarise(survival = mean(survived), .groups = "drop")
 
-# Disaggregated result (correct)
-mnh_data |>
-  group_by(country_group, cpap) |>
-  summarise(survival_rate = mean(survived), n = n(), .groups = "drop")
+# Stratified result (correct -- treatment helps in both groups)
+sim_data |> group_by(burden, treated) |>
+  summarise(survival = mean(survived), .groups = "drop")
 ```
 
-### Visualizing Aggregated vs. Stratified Results
+### Visualize Aggregated vs. Stratified
 
-The side-by-side comparison shows how the same data yields opposite conclusions depending on whether you stratify by the confounder.
+Side-by-side bar charts make the paradox unmistakable. Same data, opposite conclusions.
 
 ```{r}
-#| label: visualize-simpsons
+#| label: viz-paradox
 #| echo: true
 #| fig-width: 10
 #| fig-height: 5
 
-library(ggplot2)
+library(patchwork)
 
-# Prepare labels
-mnh_data <- mnh_data |>
-  mutate(cpap_label = ifelse(cpap == 1, "CPAP", "No CPAP"))
+sim_data <- sim_data |>
+  mutate(group = ifelse(treated == 1, "Treated", "Control"))
 
-# Aggregated view (misleading)
-p_agg <- ggplot(mnh_data, aes(x = cpap_label, y = survived, fill = cpap_label)) +
+# Pooled view (misleading)
+p1 <- ggplot(sim_data, aes(x = group, y = survived, fill = group)) +
   stat_summary(fun = mean, geom = "bar", width = 0.6) +
-  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = 0.2) +
-  scale_fill_manual(values = c("CPAP" = "#005CB9", "No CPAP" = "#FA7650")) +
+  scale_fill_manual(values = c("Treated" = "#005CB9", "Control" = "#FA7650")) +
   scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Aggregated: CPAP Looks Harmful",
-       y = "Survival Rate", x = NULL) +
-  theme_minimal(base_size = 14) +
-  theme(legend.position = "none")
+  labs(title = "Pooled: Treatment Looks Harmful", y = "Survival Rate", x = NULL) +
+  theme_minimal(base_size = 14) + theme(legend.position = "none")
 
 # Stratified view (correct)
-p_strat <- ggplot(mnh_data, aes(x = cpap_label, y = survived, fill = cpap_label)) +
+p2 <- ggplot(sim_data, aes(x = group, y = survived, fill = group)) +
   stat_summary(fun = mean, geom = "bar", width = 0.6) +
-  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = 0.2) +
-  facet_wrap(~ country_group) +
-  scale_fill_manual(values = c("CPAP" = "#005CB9", "No CPAP" = "#FA7650")) +
+  facet_wrap(~ burden) +
+  scale_fill_manual(values = c("Treated" = "#005CB9", "Control" = "#FA7650")) +
   scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Stratified: CPAP Helps in BOTH Groups",
-       y = "Survival Rate", x = NULL) +
-  theme_minimal(base_size = 14) +
-  theme(legend.position = "none")
+  labs(title = "Stratified: Treatment Helps Both Groups", y = "Survival Rate", x = NULL) +
+  theme_minimal(base_size = 14) + theme(legend.position = "none")
 
-library(patchwork)
-p_agg + p_strat +
-  plot_annotation(title = "Simpson's Paradox in MNH Data",
-                  subtitle = "Same data, opposite conclusions")
+p1 + p2 + plot_annotation(
+  title = "Simpson's Paradox: Same Data, Opposite Conclusions")
 ```
 
-### Naive vs. Confounder-Adjusted Regression
+### Regression: Naive vs. Adjusted
 
-The naive regression omits the confounder and produces a negative (misleading) CPAP coefficient. The adjusted regression includes the confounder and correctly estimates a positive causal effect.
+The naive regression omits the confounder and gets the sign wrong. The adjusted regression includes it and recovers the true positive effect.
 
 ```{r}
-#| label: regression-comparison
+#| label: regression-fix
 #| echo: true
 
-# Naive regression: ignores confounder
-naive_model <- lm(survived ~ cpap, data = mnh_data)
-summary(naive_model)
-# Expected: CPAP coefficient is NEGATIVE (misleading)
+# Naive: treatment coefficient is NEGATIVE (wrong!)
+naive <- lm(survived ~ treated, data = sim_data)
 
-# Confounder-adjusted regression: includes country_group
-adjusted_model <- lm(survived ~ cpap + country_group, data = mnh_data)
-summary(adjusted_model)
-# Expected: CPAP coefficient is POSITIVE (correct)
+# Adjusted: include the confounder, coefficient is POSITIVE (correct)
+adjusted <- lm(survived ~ treated + burden, data = sim_data)
 
-# Compare coefficients side by side
+# Compare side by side
 tibble(
   Model = c("Naive (no confounder)", "Adjusted (with confounder)"),
-  CPAP_Coefficient = c(coef(naive_model)["cpap"],
-                       coef(adjusted_model)["cpap"]),
-  Interpretation = c("CPAP appears harmful",
-                     "CPAP is beneficial (+7pp)")
-)
-```
-
-### Bayesian Network Encoding the Causal Structure
-
-A Bayesian network that encodes the fork (confounder) structure automatically handles Simpson's Paradox in its queries.
-
-```{r}
-#| label: bn-simpsons
-#| echo: true
-
-library(bnlearn)
-
-# Prepare data for bnlearn (factors required)
-bn_data <- mnh_data |>
-  mutate(
-    country_group = factor(country_group),
-    cpap = factor(cpap, labels = c("No", "Yes")),
-    survived = factor(survived, labels = c("Died", "Survived"))
-  ) |>
-  select(country_group, cpap, survived) |>
-  as.data.frame()
-
-# Define the causal structure (DAG)
-dag <- model2network("[country_group][cpap|country_group][survived|cpap:country_group]")
-plot(dag)
-
-# Fit the BN with maximum likelihood estimates
-fitted_bn <- bn.fit(dag, bn_data)
-
-# Query: P(survived | do(cpap = Yes)) using causal reasoning
-# Marginalizing over country_group (the back-door adjustment)
-cpquery(fitted_bn,
-        event = (survived == "Survived"),
-        evidence = (cpap == "Yes"),
-        n = 100000)
-
-# Compare: P(survived | cpap = Yes, country_group = High-burden)
-cpquery(fitted_bn,
-        event = (survived == "Survived"),
-        evidence = (cpap == "Yes" & country_group == "High-burden"),
-        n = 100000)
-
-# The BN correctly handles the conditioning automatically
+  Treatment_Effect = c(coef(naive)["treated"], coef(adjusted)["treated"]),
+  Verdict = c("Treatment looks harmful", "Treatment is beneficial"))
 ```
 
 ### Prosecutor's Fallacy Calculator
 
-This Bayes' rule calculator demonstrates how the positive predictive value (PPV) of a diagnostic test depends critically on the base rate (prevalence), not just on sensitivity and specificity.
+This function shows how base rate (prevalence) changes the meaning of a positive test result. High sensitivity does not mean high predictive value when the condition is rare.
 
 ```{r}
 #| label: bayes-calculator
 #| echo: true
 
-# Bayes' rule calculator for diagnostic tests
-bayes_diagnostic <- function(sensitivity, specificity, prevalence) {
-  # P(positive | disease) = sensitivity
-  # P(negative | no disease) = specificity
-  # P(positive | no disease) = 1 - specificity (false positive rate)
-  # P(disease) = prevalence
-
-  p_pos_given_disease    <- sensitivity
-  p_pos_given_no_disease <- 1 - specificity
-  p_disease              <- prevalence
-  p_no_disease           <- 1 - prevalence
-
-  # Total probability of a positive test
-  p_positive <- (p_pos_given_disease * p_disease) +
-                (p_pos_given_no_disease * p_no_disease)
-
-  # Bayes' rule: P(disease | positive)
-  p_disease_given_pos <- (p_pos_given_disease * p_disease) / p_positive
-
-  # Return results
+bayes_ppv <- function(sensitivity, specificity, prevalence) {
+  p_pos <- (sensitivity * prevalence) + ((1 - specificity) * (1 - prevalence))
+  ppv   <- (sensitivity * prevalence) / p_pos
   tibble(
-    Metric = c("Sensitivity", "Specificity", "Prevalence",
-               "P(Positive Test)", "P(Disease | Positive) [PPV]",
-               "Prosecutor's Fallacy Would Claim"),
-    Value = c(
-      scales::percent(sensitivity, accuracy = 0.1),
-      scales::percent(specificity, accuracy = 0.1),
-      scales::percent(prevalence, accuracy = 0.1),
-      scales::percent(p_positive, accuracy = 0.1),
-      scales::percent(p_disease_given_pos, accuracy = 0.1),
-      scales::percent(sensitivity, accuracy = 0.1)
-    )
-  )
+    Sensitivity = scales::percent(sensitivity),
+    Specificity = scales::percent(specificity),
+    Prevalence  = scales::percent(prevalence),
+    PPV         = scales::percent(ppv, accuracy = 0.1),
+    Fallacy_Claims = scales::percent(sensitivity))
 }
 
-# Preeclampsia screening example
-bayes_diagnostic(
-  sensitivity = 0.90,
-  specificity = 0.85,
-  prevalence  = 0.05
-)
+# Rare condition (5% prevalence) -- PPV is only ~24%
+bayes_ppv(0.90, 0.85, 0.05)
 
-# What if prevalence is higher (e.g., high-risk population)?
-bayes_diagnostic(
-  sensitivity = 0.90,
-  specificity = 0.85,
-  prevalence  = 0.20
-)
+# Common condition (20% prevalence) -- PPV rises to ~60%
+bayes_ppv(0.90, 0.85, 0.20)
 ```
-
-At 5% prevalence, the PPV is approximately 24%. At 20% prevalence, the PPV rises to approximately 60%. The same test with the same sensitivity and specificity, but the meaning of a positive result depends entirely on the base rate.
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Simpson's Paradox** arises when a confounder creates a fork structure in the DAG. Aggregated data can reverse the true causal effect. Always stratify by confounders, never by mediators.
+**Simpson's Paradox is not a curiosity -- it is a constant threat.** Any time you pool data across groups that differ in baseline risk, the aggregate can reverse the true effect. Draw the DAG first.
 
-**The Prosecutor's Fallacy** confuses $P(E \mid H)$ with $P(H \mid E)$. Base rates matter. Use Bayes' rule to compute the correct posterior probability.
+**Confounders vs. mediators: the most important distinction in causal analysis.** Condition on confounders (common causes). Never condition on mediators (the causal pathway). Mixing them up produces exactly wrong conclusions.
 
-**In MNH cost-effectiveness**, naive cross-country comparisons mislead because baseline severity and health system strength confound the treatment-outcome relationship. Causal adjustment can change which countries and interventions are prioritized -- and save thousands of additional lives.
+**The Prosecutor's Fallacy kills intuition.** A 90% sensitive test does not mean a 90% chance the condition is present. Base rates matter. Always use Bayes' rule.
+
+**Cross-country comparisons require causal adjustment.** Naive rankings by cost or outcomes will send resources to the wrong places. Adjusting for baseline burden and health system capacity can flip the rankings entirely.
 :::
 
 ## Looking Ahead
 
-Next in **Chapter 7 -- Decision Analysis and Value of Information**, we build on the causal models from this chapter to make optimal decisions under uncertainty:
+Next in **Chapter 7 -- Decision Analysis**, we move from inference to action in Kenya:
 
-- **Decision trees** for intervention selection under multiple scenarios
-- **Expected Value of Perfect Information (EVPI):** How much would it be worth to resolve uncertainty before investing?
-- **Sensitivity analysis:** Which uncertain parameters matter most for the allocation decision?
-- **Multi-criteria decision analysis:** Balancing cost-effectiveness with equity, political feasibility, and sustainability
-
-Chapter 6 taught us how to correctly estimate causal effects (avoiding Simpson's Paradox and the Prosecutor's Fallacy). Chapter 7 teaches us how to use those estimates to make optimal decisions about where to invest program resources.
+- **Influence diagrams** -- adding decisions and objectives to causal models
+- **Expected value** -- choosing the intervention that maximizes lives saved under uncertainty
+- **Watching vs. doing** -- why the do-operator matters for real-world decisions
+- **Value of information** -- how much should you pay for a pilot study before committing resources?

@@ -1,100 +1,199 @@
 # Speaker Notes — Chapter 3: The MNH Diagnostic Case Study
 
 ## Overview
-Alright, welcome to Chapter 3. Today is where we roll up our sleeves and actually *do* this. We spent Chapter 2 learning the grammar of causal diagrams — the node types, the arrows, the triplet structures. Now we're going to use all of that in a realistic consulting engagement. We'll build a causal model from scratch, expand it through three rounds of stakeholder interviews, and by the end, we'll have a full diagnostic framework that tells us exactly where the MNH program is breaking down and what to fix first.
+Welcome to Chapter 3. This is where we roll up our sleeves and actually *do* this. In Chapter 1 we learned why causal thinking matters. In Chapter 2 we learned the grammar — nodes, arrows, triplets, d-separation. Now we're going to use all of that to solve a real mystery. We'll build a causal model of Kenya's health system from scratch, expanding it through three rounds of interviews with people who work in the system. By the end, the model will basically write our recommendations for us.
 
 ## Slide: Learning Objectives
-So here are five objectives for today, and notice — every single one of them is about *doing* something, not just understanding a concept. You're going to practice the iterative cycle: form a hypothesis, go interview someone, come back and revise your model. You'll learn to tell the difference between root nodes — which are where you actually intervene — and intermediate nodes, which are just the pathway that effects flow through. And by the time we're done, you'll see how a well-built causal model basically writes your recommendations for you. The priorities fall right out of the structure.
+Five objectives today, and notice — every one is about *doing* something, not just understanding a concept. *(pause)* You'll practice the iterative cycle: form a hypothesis, interview someone, revise your model, repeat. You'll learn to tell apart root nodes — the highest-leverage places to intervene — from intermediate nodes that just pass effects along. You'll see why fixing the supply side alone isn't enough without tackling demand-side barriers. And by the end, you'll see how the structure of a well-built model basically does the prioritization for you.
 
 ## Slide: Chapter Overview
-So this chapter is adapted from the Hubris Health consulting case in Ryall and Bramson's textbook — that's a health insurance company with declining performance. We've taken the same diagnostic methodology and transplanted it into an MNH context. *(pause)* Look at the flow across the bottom of the slide. Five steps: case setup, then three rounds of interviews, then final recommendations. This is how real consulting engagements work. You don't walk in on day one with the answer. You walk in with a simple model, talk to people, and let each conversation tell you what's missing.
+Look at the flow across the bottom. *(pause)* Five steps: case setup, then three rounds of interviews, then final model and recommendations. This is how real consulting work happens. You don't show up on day one with the answer. You show up with a simple model, go talk to people, and let each conversation tell you what you were missing.
+
+And here's the detective metaphor I want you to keep in mind throughout today. Building a causal model from interviews is like solving a mystery. Each conversation reveals new suspects, new motives, new connections. You don't build a 20-node diagram on day one. You start simple and let the evidence guide you.
 
 ## Slide: The Diagnostic Mindset
-Let's talk about the diagnostic mindset — how technical advisors actually build causal models from stakeholder interviews.
+How do consultants and analysts actually build causal models from real conversations?
 
 ## Slide: The Iterative Process
-This right here is the methodological heart of what we're doing today. Look at the definition at the top: diagnostic causal modeling is an iterative cycle of hypothesis, interview, revision, deeper questions, and refinement. *(pause)* The key principle is "start simple and add complexity only when you need it." You do *not* walk into a consultation and build a twenty-node DAG on day one. You start with the most stripped-down model you can — maybe three or four nodes — and you let the interviews tell you what's missing. Every time the model fails to explain what someone is telling you, that's a signal to add a new variable or a new link. The model drives your questions, and the answers drive your model. It's a conversation between your framework and the real world.
+This is the methodological heart of everything we're doing today. *(pause)* Diagnostic causal modeling is an iterative cycle: start with a hypothesis, interview a stakeholder, revise the model, generate sharper questions, and repeat.
 
-## Slide: Key Principles from the Book
-Four principles that guide good diagnostic modeling, straight from the textbook. *(pause)* Look at the top left — focus on significant drivers. Not every variable is equally important. Don't try to model everything; model what matters. Top right — seek sources of common problems. If you find one variable that explains multiple symptoms at the same time, that's gold. That's your highest-leverage intervention point. *(pause)* Bottom left — ask specific questions. General questions get you vague answers. The model helps you generate *specific* hypotheses to test, so you walk into each interview knowing exactly what you need to learn. And bottom right — bring it all together. Your final model should tell a coherent causal story from decisions all the way to outcomes. If it doesn't hang together as a narrative, something's missing. These principles apply whether you're diagnosing an MNH program or a corporate strategy problem.
+The key principle is "start simple." Begin with the most stripped-down model you can draw — maybe three or four nodes. Then talk to someone. Listen for causes, mechanisms, and surprises. Come back and add the new variables their story reveals. The updated model tells you exactly what to ask next. Each round deepens the model and narrows your uncertainty.
+
+Why not just build the big model from the start? *(pause)* Because you don't know what you don't know. The first interview *always* reveals variables you never considered. If you lock in a complex model too early, you'll miss the real story.
+
+## Slide: Key Principles
+Four principles for good diagnostic work. *(pause)* First — focus on significant drivers. Not every variable matters equally. Model what matters, leave out the noise. Second — seek common causes. When one variable drives multiple problems simultaneously, that's a gold mine. That's your highest-leverage intervention point. Third — let the model guide your questions. Vague interviews get vague answers. Use your current diagram to generate *specific* hypotheses for the next conversation. Fourth — supply and demand both matter. A health system has two sides. Improving facility quality is wasted if mothers can't reach the facility.
 
 ## Slide: The Case Setup
-Okay, here's where we set the stage. Country X's MNH program is underperforming. Let's look at what we know.
+Alright, let's set the stage.
 
-## Slide: The Program Brief
-Here's the scenario. The program's leadership team has asked us to evaluate why Country X's MNH program hasn't achieved the mortality reductions it projected, despite a substantial investment over two years. *(pause)* Now look at the table. This is where it gets interesting. Funds disbursed? Ninety-six percent. The money went out the door. But intervention coverage? Forty-two percent against a target of seventy. NMR and MMR are both significantly off track. *(pause)* So the puzzle — and look at the red box at the bottom — the money has been spent, but outcomes haven't improved as projected. Why? That gap between spending and results is the central mystery of this case, and it's what our diagnostic needs to answer.
+## Slide: The Brief: Why Is Maternal Mortality Still So High?
+Here's our case. *(pause)* Kenya — 47 counties with a devolved health system since 2013. Despite a facility delivery rate of roughly 89 percent, the maternal mortality ratio remains around 342 per 100,000, and neonatal mortality sits at about 21 per 1,000.
 
-## Slide: Initial Situational Assessment
-Alright, following the book's approach, let's start by walking backwards from the objective. What causes NMR reduction? Quality of care during labor, delivery, and the neonatal period. What causes quality of care? Intervention coverage — things like the PPH bundle, CPAP, iKMC. What causes coverage? Investment in products, workforce, and systems. *(pause)* But investment *has* been made — nearly all the funds were disbursed. So the break must be somewhere between investment and coverage. This is a simple but powerful deduction. The bottleneck isn't about money. It's about the transmission mechanism. Something between "money spent" and "lives saved" is broken. Look at the orange box — that's our working hypothesis.
+Look at the numbers in the table. 89 percent of women are delivering in health facilities. That's impressive. But mortality is still high. *(pause)* So here's the central question, and I want you to sit with how strange it is: women are reaching facilities, but outcomes aren't improving fast enough. Why? Something is broken between "getting to the facility" and "surviving."
+
+## Slide: County-Level Variation
+One of Kenya's most striking features is how much outcomes vary across its 47 counties. *(pause)* Some counties are doing great — mortality well below the national average, more midwives, functional referral networks. Others — Bungoma, Kakamega, Kilifi — report much higher mortality despite having health facilities in place.
+
+This variation is a clue. *(pause)* If the problem were purely about whether facilities *exist*, every county with facilities would do well. The variation tells us that what happens *inside* the facility — and whether women can reach it *in time* — matters more than whether the building is there.
 
 ## Slide: The Initial (Simple) Model
-Now look at this four-node chain on the slide. Investment flows to Programs Implemented, which flows to Coverage, which reduces NMR. *(pause)* This model is deliberately too simple. And that's the point. I want you to see what's wrong with it. It treats "Programs Implemented" as a single black box. It doesn't tell us *which* programs are failing or *why*. There are no confounders, no common causes. The only decision variable is the initial investment amount. This model tells us almost nothing actionable. We can't make recommendations based on this. We need interviews to crack open that black box. So let's go talk to people.
+Before we talk to anyone, let's draw the simplest model we can. *(pause)* Four nodes in a chain: Facility Access, plus arrow to Facility Births, plus arrow to Quality of Care, minus arrow to Maternal Mortality.
 
-## Slide: Interview Round 1: Ministry of Health
-Time for our first round of interviews — the supply-side view from the Ministry of Health.
+Round 0: 4 nodes, 3 links. The logic seems reasonable, right? More access leads to more facility births, which means better care, which reduces deaths.
 
-## Slide: MOH Director Interview
-So we sit down with the MOH Director of Maternal Health, and she gives us three crucial pieces of information. *(pause)* Look at Quote 1. "We have procured the equipment — CPAP machines, PPH bundles, ultrasound devices. They're in the hospitals. But the staff don't know how to use them properly." That's a competency gap. The equipment is there, but the knowledge isn't. *(pause)* Quote 2: "The training programs ran on schedule. Over three thousand health workers attended workshops. But when I visit hospitals, I see the same old practices." So training happened, but it didn't translate into behavior change. That's a disconnect. *(pause)* And Quote 3: "We have a severe shortage of midwives. The staff-to-patient ratio in neonatal units is one to twenty-two, far worse than the one-to-four standard." A massive staffing shortage. *(pause)* Now, notice how each one of these quotes maps directly to a new variable in our model. That's how interviews expand the DAG.
+But look at the problems. *(pause)* This treats Quality of Care as a black box — what drives it? It assumes getting women to facilities is enough — but Kenya already has 89 percent facility delivery. And there's no detail on the supply side — no staffing, no equipment, no training. We need to go talk to people who actually work in the system.
+
+## Slide: Interview Round 1: County Health Director
+Time for our first interview — the supply-side view.
+
+## Slide: The County Health Director's Perspective
+We sit down with a County Health Director from one of Kenya's high-burden counties. *(pause)*
+
+First quote: "We have 14 health facilities that handle deliveries. But only 4 of them have enough midwives for round-the-clock coverage. The rest rely on general nurses who haven't had emergency obstetric training. When a woman comes in with a hemorrhage at 2 AM, sometimes there's nobody on shift who knows how to manage it." *(pause)* That's a staffing problem.
+
+Second quote: "We received the equipment. But we have one midwife for every 15 deliveries per shift. She's exhausted. She can't monitor a CPAP machine, manage a complicated delivery, and attend to three other women at the same time. The equipment sits there." *(pause)* So equipment without enough staff is useless.
+
+Third quote: "We ran a training last year — 60 health workers attended. But the training was two weeks long and follow-up was weak. I'd estimate maybe a third of them are actually applying what they learned." *(pause)* Training happened, but it didn't translate into practice.
+
+## Slide: What We Learned: Round 1
+The Director revealed three new variables hiding inside our "Quality of Care" black box. *(pause)* Staffing Levels — the ratio of midwives to deliveries is dangerously low. Equipment Availability — it's physically present but not being used effectively because of staffing constraints. Training Effectiveness — workshops were delivered but only a fraction of workers are actually applying new skills.
+
+Each quote mapped to a new node in our model.
 
 ## Slide: Updating the Model: Round 1
-Okay, so we've gone from four nodes to seven. Look at the diagram — on the left, Investment flows into three things: Equipment Procured, Training Delivered, and Staffing Levels. Then those flow into Staff Competency and Equipment Utilization, which feed into Coverage and then NMR. *(pause)* But here's the key insight. Look at the check marks and the X marks. Equipment Procured? Check. Training Delivered? Check. But Staff Competency? X. Equipment Utilization? X. Staffing Levels? X. See the pattern? Things that money can buy directly are fine. Things that require sustained capacity are failing. *(pause)* This reframes the entire problem. It's not "did we invest enough?" It's "are the investments translating into practice?" That's a fundamentally different question.
+New variables: Staffing, Equipment, Training. *(pause)* Now the County Health Budget flows into three channels — Staffing Levels, Equipment Available, and Training Delivered — and all three feed into Quality of Care, which reduces Maternal Mortality.
+
+Round 1: 7 nodes, 6 links. The black box has been cracked open. *(pause)* And here's the key insight: the Director's testimony suggests staffing is the binding constraint. Equipment without staff to operate it is a wasted investment. Training without enough staff to apply it evaporates. Everything keeps pointing back to staffing.
 
 ## Slide: What Questions to Ask Next?
-And this is where the model really earns its keep. Without a model, you'd go into your next round of interviews with general questions — "How's the program going? What are the challenges?" Vague questions, vague answers. *(pause)* But with the model, you know *exactly* what to ask. Why aren't trained health workers applying their training? We need to talk to facility directors. Why is equipment procured but not being used? We need to understand facility-level barriers. Is staffing the binding constraint? We need data on staff-to-patient ratios by facility. *(pause)* Look at the green box. The model converts a vague diagnosis into specific, testable hypotheses. Each hypothesis points you to a specific stakeholder group. In this case, we need to go to the hospitals and talk to the facility directors who see the front-line reality every day.
+Look at what the model tells us to ask. *(pause)* Why is staffing so low — is it a hiring problem, a retention problem, or a deployment problem? Why doesn't training translate into competency — is the training poorly designed, or do trained staff leave? Is the equipment actually functional — the Director said "we have it," but does it work?
 
-## Slide: Interview Round 2: Facility Directors
+Without the model, we'd ask vague questions like "What's going wrong?" With the model, we can ask: "Of the 60 health workers you trained last year, how many are still in your county?" That's a much sharper question. The model guides the next interview.
+
+## Slide: Interview Round 2: Midwife at District Hospital
 Round two — let's go see the front-line reality.
 
-## Slide: Hospital Director Interviews
-So we visit five district hospitals, and what we find is revelatory. *(pause)* Finding 1: Staff Attrition. Out of forty nurses trained on CPAP last year, only eighteen are still there. The rest transferred, emigrated, or left the profession entirely. Staff retention is wiping out training investments. You train them, they leave. *(pause)* Finding 2: Equipment Maintenance. The CPAP machines arrived eight months ago. Two of the four units are already broken. There's no biomedical technician on site, and spare parts take three months to arrive. So equipment maintenance is nonexistent. *(pause)* Finding 3: Referral Failures. When a mother develops eclampsia at a health center, it takes four to six hours to arrange transport to the hospital. Many arrive too late. The referral system is failing as an independent pathway to mortality. *(pause)* Each one of these findings adds a new variable to our model — retention, maintenance, referrals. These are the transmission failures that our initial model completely missed.
+## Slide: The Midwife's Reality
+We visit a district hospital and interview a senior midwife who's worked there for eight years. *(pause)*
+
+First quote: "When I started, we had six midwives in the maternity ward. Now we're three. Two transferred to Nairobi — better pay, better housing. One went to work for an NGO. We were promised replacements, but the county government hasn't hired anyone in two years." *(pause)* Staff retention is wiping out the workforce.
+
+Second quote: "We received two CPAP machines. One broke after three months — the humidifier cracked. There's no biomedical technician in this county. We submitted a repair request, but spare parts have to come from Nairobi. It's been three months and we're still waiting." *(pause)* Equipment breaks and stays broken because there's nobody to fix it.
+
+Third quote: "We're supposed to refer complicated cases to the county hospital. But the ambulance is shared with four facilities. Sometimes we call and it's already out. Last month a woman waited four hours for transport. She didn't survive." *(pause)* Let that sink in. Four hours.
+
+## Slide: Here's What Surprised Us
+The midwife revealed something our Round 1 model completely missed: the transmission problem. *(pause)*
+
+The money went in at the top, but it leaked out — or got stuck. Training was delivered, but trained staff *left* — that's a retention failure. Equipment was procured, but it *broke* and nobody could fix it — that's a maintenance failure. Referral systems were designed, but ambulances weren't available when needed — that's a referral failure.
+
+Three new variables: Staff Retention, Equipment Maintenance, and Referral System. These are the transmission mechanisms between "money spent" and "lives saved," and they're all broken.
 
 ## Slide: Updating the Model: Round 2
-Now we have ten nodes, and a critical pattern is emerging. Look at the diagram. Staff Retention sits below Staff Competency with arrows going both up to Competency and over to Utilization. Equipment Maintenance does the same thing for Equipment Utilization. *(pause)* Why does this matter? Because Staff Retention and Equipment Maintenance are *common causes* — they each affect multiple downstream variables simultaneously. Retention affects both competency, because trained staff leave, *and* utilization, because there aren't enough staff to run the equipment. These are fork structures — diverging triplets from Chapter 2. And that means they're high-leverage intervention points. Fixing retention alone would unblock multiple pathways at once.
+Round 2: 9 nodes, 10 links. *(pause)* Staff Retention now sits between staffing levels and actual competency on the ground. Equipment Maintenance sits between equipment procured and equipment actually working. The Referral System is an independent pathway to mortality.
 
-## Slide: Identifying Triplet Structures
-Now here's where we connect the theory from Chapter 2 to a real-world model. The expanded DAG contains all three triplet types we learned about. *(pause)* Look at the left column. The chain: Training flows to Competency flows to Coverage. Condition on Competency, and the path from Training to Coverage is blocked. That's our serial triplet. *(pause)* The fork: Competency and Utilization are both driven by Retention. Staff retention is the common cause — it drives both low competency and low utilization. Control for Retention, and the association between Competency and Utilization disappears. *(pause)* And the collider — look at the orange box. Staffing and Equipment both flow into Quality. If we observe that Quality is low *and* Equipment is available, we can infer that Staffing must be inadequate. That's the explaining-away effect. *(pause)* Recognizing these structures isn't just academic — it determines what you should and shouldn't control for in your analysis.
+The model is getting richer, and a critical pattern is emerging.
 
-## Slide: Interview Round 3: Community Health Workers
-Round three opens up an entirely new dimension — the demand side.
+## Slide: Spotting the Common Causes
+Here's the discovery that changes everything. *(pause)* Staff Retention is a fork — a common cause. When trained midwives leave, *both* clinical competency drops *and* equipment goes unused because nobody remaining knows how to operate it. Two symptoms, one root cause.
 
-## Slide: Community Health Worker Interviews
-Up to now, we've been entirely focused on the supply side — can hospitals deliver quality care? But the community health worker interviews reveal something we hadn't considered: many mothers never reach the hospital in the first place. *(pause)* Finding 4: Transport barriers. Many mothers in rural areas can't reach the hospital in time. The nearest facility with a neonatal unit is three hours away on foot. Geographic access is a hard constraint. *(pause)* Finding 5: Cultural practices. Some families prefer traditional birth attendants. They only come to the hospital when complications are severe, and by then it's often too late. Health-seeking behavior mediates the whole effect of facility quality — if they don't show up, quality doesn't matter. *(pause)* And Finding 6: Out-of-pocket costs. Even though services are officially free, families pay for transport, food, and supplies during their stay. Many simply can't afford it. Financial barriers reduce effective demand. *(pause)* So here's the big takeaway: supply-side quality improvements don't help if patients can't access them. We'd been looking at half the picture.
+Equipment Maintenance is also a fork. When there's no biomedical technician, *all* equipment degrades — not just one machine. A single maintenance failure ripples through multiple care pathways.
+
+Why does this matter? *(pause)* Common causes are the highest-leverage intervention points in any system. Fixing retention alone could improve both competency *and* utilization at the same time. That's two results for one intervention.
+
+## Slide: Interview Round 3: Community Health Worker
+Round three opens up an entirely new dimension.
+
+## Slide: We'd Been Looking at Half the Picture
+Two rounds of interviews focused entirely on the supply side — what happens inside health facilities. A community health worker based in a rural sub-county opens our eyes to a completely different set of barriers. *(pause)*
+
+First quote: "The nearest facility that handles deliveries is 18 kilometers away. There's no paved road. During the rainy season, a motorcycle ride takes two hours — if you can find a motorcycle. Some women start walking when labor begins, but labor doesn't wait for the road to improve." *(pause)* Geographic access.
+
+Second quote: "The delivery is free, yes. But the motorcycle costs 500 shillings. You need to bring your own basin, your own razor blade, your own cotton wool. For a family earning 200 shillings a day, that's a week's income. Some women just stay home." *(pause)* Financial barriers, even when the service itself is free.
+
+Third quote: "Some older women in the community tell young mothers that hospitals are dangerous. And some women say they were shouted at by nurses during their last delivery. They'd rather deliver at home with a traditional birth attendant who treats them with respect." *(pause)* Trust and past experience shape whether women choose facility care at all.
+
+## Slide: The Demand-Side Revelation
+We'd been looking at half the picture. *(pause)* Kenya's 89 percent facility delivery rate is a national average. In rural sub-counties of high-burden counties, it drops to 50 or 60 percent. And even women who do reach a facility may arrive too late because of transport delays.
+
+Three new demand-side variables: Geographic Access — can she physically get there? Financial Barriers — can her family afford the trip? Health-Seeking Behavior — does she trust the facility enough to go?
 
 ## Slide: Updating the Model: Round 3
-The complete model now has twelve nodes organized in three layers, and you can see them in the two columns on the slide. *(pause)* On the left, the supply side from Rounds 1 and 2: Investment flows through Training to Competency, through Equipment to Utilization, Staff Retention affects both, Equipment Maintenance affects Utilization, and the Referral System affects access. On the right, the demand side from Round 3: Geographic Access, Health-Seeking Behavior, and Financial Barriers all feed into Facility Births. And then Facility Births times Quality determines NMR. *(pause)* The final DAG tells a coherent story. Investment flows through multiple channels but is undermined by staff attrition and equipment breakdown on the supply side, and by geographic, cultural, and financial barriers on the demand side. Both supply and demand have to work for NMR to decline.
+The model now has two distinct halves that converge on the outcome. *(pause)* On the supply side from Rounds 1 and 2: Budget flows through staffing, equipment, and training, but gets undermined by retention failures and equipment breakdowns at the transmission layer. On the demand side from Round 3: geographic access, financial barriers, and health-seeking behavior determine whether women reach facilities at all.
+
+Here's the structural insight: Quality of Care and Facility Births are both parents of Maternal Mortality. Improving quality without improving access doesn't help the women who never arrive. Improving access without improving quality sends more women into facilities that can't save them. *(pause)* Both halves must move together.
 
 ## Slide: The Complete Causal Model
-Let's look at the summary table — this is the diagnostic punchline. *(pause)* Inputs — Investment, Training, Equipment, Staffing — are adequate. Check mark. But the transmission layer — Competency, Utilization, Retention, Maintenance — is broken. X. The demand side — Access, Behavior, Financial Barriers — was underestimated. X. And outcomes — Quality, Coverage, NMR — are below target. X. *(pause)* The bottleneck isn't about how much money was spent. It's about the pathways through which that money was supposed to translate into impact. The money went in at the top, but it leaked out — or got stuck — before it could reach the people it was meant to help.
+Round 3: 12 nodes. *(pause)* Look at it. Supply side on the left, demand side on the right, and they converge on Maternal Mortality at the bottom. Every single arrow tells a part of the story. This is the complete diagnostic picture, built one interview at a time.
 
-## Slide: Model Comparison Across Rounds
-Now let's step back and look at how our understanding evolved across the whole process.
+## Slide: Model Evolution Summary
+Let's see how our understanding grew round by round.
 
 ## Slide: Evolution of the Model
-Look at this evolution table. We went from four nodes to seven to ten to twelve. At each stage, the model told us what was missing and what to ask next. *(pause)* The initial model with four nodes was just Investment to Programs to Coverage to NMR — too simple, no mechanism. Round 1 gave us the supply-side decomposition: training, equipment, staffing, competency. Seven nodes. Round 2 revealed the transmission failures: retention, maintenance, referrals. Ten nodes. Round 3 added the demand-side barriers: access, behavior, financial barriers. Twelve nodes. *(pause)* And look at the green callout at the bottom. This is the core lesson: start with the simplest model and add complexity incrementally. At each stage, the model tells you what questions to ask next. That's the power of the diagnostic causal modeling approach. You should be able to apply this same process to any diagnostic engagement you encounter.
+Look at the table. *(pause)* Round 0 — nobody talked to, 4 nodes, just the basic chain. Round 1 — County Health Director, 7 nodes, added staffing, equipment, training. Round 2 — Senior Midwife, 9 nodes, added retention, maintenance, referral system. Round 3 — Community Health Worker, 12 nodes, added geographic access, financial barriers, health-seeking behavior.
+
+Each round roughly doubled the model's explanatory power. *(pause)* And notice who taught us what. The Director saw the system from the top. The midwife saw it from the front line. The community health worker saw it from the community. Each perspective revealed variables the others couldn't see. This is why you need multiple stakeholders. No single person has the full picture.
 
 ## Slide: Prioritizing Recommendations
-Now here's the payoff. The causal model doesn't just diagnose problems — it prioritizes solutions. *(pause)* Look at the left column — high priority. Number one: Staff Retention Programs. Why? Because retention is a root cause that affects multiple downstream pathways. Invest in housing allowances, career paths, bonding agreements. Number two: Equipment Maintenance Systems. Deploy biomedical technicians, establish spare parts supply chains. Equipment without maintenance is a wasted investment. *(pause)* Now look at the right column — medium priority. Number three: Emergency Referral Networks. That's an independent pathway to mortality reduction. And number four: Demand-Side Interventions — community health workers, transport subsidies, culturally sensitive outreach. *(pause)* Notice how the prioritization follows directly from the DAG structure. Root causes with the most downstream effects get addressed first. The model is doing the prioritization for us.
+Now here's the payoff. The model doesn't just diagnose problems — it tells you where to fix them first.
 
-## Slide: Why Root Nodes Matter
-Root nodes — variables without any parents in the model — are where the highest-leverage interventions live. *(pause)* In our model, the key root nodes are: investment allocation, which is our decision variable, we control it; staff retention, which is not currently addressed and needs a new intervention; equipment maintenance, also not currently addressed; and geographic access, which is a structural constraint that requires referral systems. *(pause)* Now look at the yellow box at the bottom. This is the key takeaway for the whole case. The program invested in the right inputs — training, equipment. Those are fine. But it missed the critical transmission mechanisms — retention and maintenance. Redirecting even a portion of the budget toward these mechanisms could unblock the entire chain from investment to outcomes.
+## Slide: Using Model Structure to Prioritize
+How do we decide where to intervene? We could go with gut instinct, but the model gives us a more disciplined answer. *(pause)*
 
-## Slide: R Workshop: Building Models Iteratively
-Alright, let's move to R and build these models ourselves. We'll use dagitty and ggdag to formalize each round.
+A root node is a node with no parents — nothing in the diagram causes it. Root nodes are the ultimate causes. Intervening on them has the broadest downstream effects because every pathway flows *from* them. The principle: count the downstream paths from each node to the outcome. Nodes with more paths are higher-leverage.
 
-## Slide: R: Round 1 — Simple Model
-Okay, here we're building the seven-node supply-side model in dagitty, based on what we learned from the Round 1 interviews. You can see the code defining each node with its position and the causal arrows connecting them. Investment flows to Training, Equipment, and Staffing, and those feed through Competency and Utilization to Coverage and NMR. Run this and you'll get a clean visualization of the Round 1 model.
+## Slide: The Priority Ranking
+Highest priority — root causes with multiple downstream effects. *(pause)*
+
+Number one: Staff Retention. Root cause affecting *both* competency and equipment utilization. Every midwife who leaves takes her training, her experience, and her equipment skills with her. Invest in housing allowances, career development, rural service incentives.
+
+Number two: Equipment Maintenance. Root cause affecting all equipment pathways. Deploy county-level biomedical technicians and establish spare parts supply chains. Equipment without maintenance is a wasted investment — it breaks, and it stays broken. *(pause)*
+
+Number three: Geographic Access and Referral System. Independent pathway to mortality. Women who can't reach a facility in time die regardless of facility quality. Ambulance networks, maternity waiting homes.
+
+Number four: Demand-side barriers. Financial barriers and health-seeking behavior. Transport subsidies, respectful care training, community health worker engagement.
+
+Notice how the prioritization follows directly from the DAG structure. We didn't guess. The model told us: intervene where the most downstream paths originate.
+
+## Slide: Why Root Nodes Are Highest-Leverage
+Let me show you why root nodes matter so much. *(pause)* Staff Retention is a root node — nothing in our model causes it. But it has at least three downstream effects: Retention affects Competency, which affects Quality, which affects Mortality. Retention affects Equipment Utilization, which affects Quality, which affects Mortality. Retention affects staffing ratios, which affects Quality, which affects Mortality.
+
+Fix retention, and you improve three pathways at once. Fix training alone — a non-root node — and trained staff still leave, so the effect evaporates. *(pause)* The model does the prioritization for you. Count the downstream paths. The variables with the most connections to the outcome are the ones to invest in first.
+
+## Slide: MNH Application: The Full Kenya DAG
+The completed diagnostic model.
+
+## Slide: The Full Kenya MNH Causal Model
+Look at the summary table. *(pause)* Inputs — budget, staffing, equipment, training — are funded and delivered. Check. But the transmission layer — retention, maintenance, referral system — is broken. The demand side — geographic access, financial barriers, health-seeking behavior — was underestimated and missed until Round 3. Outcomes — quality, facility births, maternal mortality — are below target.
+
+The program invested in the right inputs. But it missed the transmission mechanisms and the demand-side barriers. *(pause)* Redirecting even a modest portion of the budget toward these neglected nodes could unblock the entire system. The money went in at the top, but it leaked out before it could reach the people it was meant to help.
+
+## Slide: R Workshop: Building the DAG Iteratively
+Let's move to R and formalize each interview round.
+
+## Slide: R: Round 1 — The Simple Supply-Side Model
+Here we build the 7-node model from Round 1 in dagitty. *(pause)* Budget flows into Staffing, Equipment, and Training. Those feed into Quality, and Quality drives Mortality. Run this code and you'll get a clean picture of the supply-side model the County Health Director helped us build.
 
 ## Slide: R: Round 2 — Adding Transmission Failures
-Now we expand to ten nodes. We're adding Retention, Maintenance, and Referral — the three variables that emerged from the hospital director interviews. Look at the new arrows: Retention feeds into both Competency and Utilization, Maintenance feeds into Utilization, and Referral feeds into Coverage. The model is getting richer, and those common-cause structures we talked about are now formally encoded in the DAG.
+Now we expand to capture what the midwife revealed. *(pause)* Retention feeds into both Competency and Utilization — that's the fork structure, the common cause. Maintenance feeds into Utilization. Referral feeds into Quality. The common-cause structures are now formally encoded in the DAG. Trace the paths and you'll see how retention failures ripple through multiple channels.
 
-## Slide: R: Round 3 — Complete Model
-Here's the full model with fifteen nodes, including all the demand-side variables from Round 3 — Access, Behavior, Financial Barriers, and Facility Births. Now we also have a Quality node that mediates between the supply side and NMR. This is the complete diagnostic framework. Take a moment to trace the paths from Investment all the way to NMR — there are multiple routes, and each one tells a different part of the story.
+## Slide: R: Round 3 — The Complete Model
+Here's the full model with all the demand-side variables from Round 3. *(pause)* Geographic Access, Financial Barriers, and Health-Seeking Behavior all flow into Facility Births. Quality and Facility Births both flow into Mortality. This is the complete diagnostic framework. Take a moment to trace paths from Budget all the way to Mortality — there are multiple routes, and each one tells a different part of the story.
 
-## Slide: R: Identifying What to Measure
-This is where the model gives us concrete, actionable guidance. The adjustmentSets function tells us which variables we *must* measure and control for if we want to estimate the causal effect of Investment on NMR. The impliedConditionalIndependencies function generates testable predictions — if the data violates any of them, our model is wrong and needs revision. And the paths function shows us every route from Investment to NMR. *(pause)* Look at the green box. This is the practical value — the model isn't just a pretty picture. It's telling you what data to collect, what to control for, and what hypotheses you can test. That's the computational payoff of formalizing your reasoning.
+## Slide: R: Analyzing the Complete Model
+Three powerful functions. *(pause)* adjustmentSets tells us which variables we *must* measure to evaluate the program's causal effect. impliedConditionalIndependencies generates testable predictions — when data arrives, we can check each one, and if the data disagrees, our model needs revision. And paths shows every route from Budget to Mortality.
+
+The d-separation test at the bottom — is Retention independent of Maintenance? — checks whether we might be missing a hidden common cause. If the data says they're related and our model says they should be independent, we know where to look for what we missed.
 
 ## Slide: Key Takeaways
-Three things to take away from today. *(pause)* First: build models iteratively. Start simple and add complexity as interviews reveal new variables and mechanisms. Don't try to boil the ocean on day one. *(pause)* Second: root nodes are leverage points. Staff retention and equipment maintenance emerged as critical bottlenecks that the initial investment plan completely overlooked. Those are where the biggest bang for the buck lives. *(pause)* Third: the model guides the analysis. Each round's model told us what questions to ask next, what data to collect, and where the bottlenecks were. That's the practical power of causal modeling for program evaluation. The model isn't just a diagnostic tool — it's a planning tool.
+Four things to take away. *(pause)* Build models iteratively. Start with 3 or 4 nodes and let stakeholder interviews reveal what's missing. You can't build the right model from a desk — you have to talk to people.
+
+Root nodes are leverage points. Staff Retention and Equipment Maintenance emerged as the critical bottlenecks that initial investment plans overlooked. They have the most downstream effects.
+
+Supply and demand both matter. Kenya's 89 percent facility delivery rate masks huge variation. Demand-side barriers are invisible from the supply side.
+
+The model does the prioritization. You don't need to guess which interventions matter most. The structure of the diagram tells you: intervene where the most downstream paths originate.
 
 ## Slide: Looking Ahead
-Next chapter, we add numbers to these qualitative models. Conditional probability tables replace the plus and minus signs, Bayes' rule lets us update our beliefs with evidence, and we get the mathematical machinery for precise inference and decision analysis. We built the skeleton in Chapters 2 and 3. Chapter 4 adds the flesh. See you then.
+Next chapter, we add numbers to these models. *(pause)* Conditional probability tables replace the plus and minus signs with actual probabilities. Bayes' rule lets us update our beliefs when new evidence arrives. We'll compute the probability that mortality is high given specific combinations of supply and demand conditions. The qualitative model tells you *what* affects what. The quantitative model tells you *by how much*. And that's what we need to make real budget allocation decisions. See you in Chapter 4.

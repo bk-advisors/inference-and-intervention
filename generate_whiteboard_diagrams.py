@@ -92,23 +92,23 @@ def save(fig, name):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 1 — Causal Model as Foundation
+# CHAPTER 1 — Introduction to Causal Analysis  (Ethiopia focus, three traps)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch01():
-    fig, ax = new_fig("Ch 1 — Causal Model as Foundation")
+    fig, ax = new_fig("Ch 1 — Introduction to Causal Analysis")
 
     # Foundation bar
     bar = FancyBboxPatch((1.5, 0.6), 7, 0.9,
                          boxstyle="round,pad=0.15", facecolor=BLUE, edgecolor=BLUE, linewidth=2)
     ax.add_patch(bar)
-    t = ax.text(5, 1.05, "CAUSAL  MODEL", ha="center", va="center",
+    t = ax.text(5, 1.05, "CAUSAL  MODEL  (DAG)", ha="center", va="center",
                 fontsize=16, fontweight="bold", color="white", fontfamily="sans-serif")
     t.set_path_effects([])
 
     # Two zones
     rounded_box(ax, 3, 5.0, 3.2, 1.6, "Situational\nAssessment", fc="#E8F0FE", ec=BLUE)
-    ax.text(3, 4.0, "What is happening?", ha="center", va="center",
+    ax.text(3, 4.0, "What is happening\nin Ethiopia?", ha="center", va="center",
             fontsize=9, fontstyle="italic", color=GRAY, fontfamily="sans-serif")
 
     rounded_box(ax, 7, 5.0, 3.2, 1.6, "Managerial\nIntervention", fc="#E8F8E8", ec=GREEN)
@@ -119,7 +119,7 @@ def draw_ch01():
     arrow(ax, 3, 1.6, 3, 3.9, color=BLUE, lw=2.5, style="-|>")
     arrow(ax, 7, 1.6, 7, 3.9, color=GREEN, lw=2.5, style="-|>")
 
-    # Three traps in red
+    # Three traps in red (Ethiopia examples)
     traps = [("Confounding", 2.3), ("Reverse\nCausation", 5.0), ("Selection\nBias", 7.7)]
     for i, (label, xpos) in enumerate(traps):
         circled_num(ax, xpos, 2.7, i + 1, color=RED)
@@ -134,11 +134,11 @@ def draw_ch01():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 2 — Three Triplet Structures
+# CHAPTER 2 — Qualitative Causal Models  (three node types, Rwanda focus)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch02():
-    fig, ax = new_fig("Ch 2 — Three Triplet Structures")
+    fig, ax = new_fig("Ch 2 — Qualitative Causal Models")
 
     structures = [
         {"name": "CHAIN (Serial)", "nodes": ["A", "B", "C"],
@@ -189,38 +189,38 @@ def draw_ch02():
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#FFF9E6" if "OPENS" in s["rule"] else "#F0F8F0",
                           edgecolor=rule_color, linewidth=1.5))
 
-    # Bottom summary
+    # Bottom summary (Rwanda context)
     ax.text(5, 1.2, "These three structures govern ALL information flow",
             ha="center", va="center", fontsize=12, fontweight="bold", color=DARK,
             fontfamily="sans-serif",
             bbox=dict(boxstyle="round,pad=0.4", facecolor="#E8F0FE", edgecolor=BLUE, linewidth=2))
 
-    # Node type legend
+    # Node type legend — three types (probabilistic, decision, objective)
     ax.text(0.3, 0.5, "Node types:", fontsize=8, fontweight="bold", color=GRAY,
             fontfamily="sans-serif")
     legend_items = [("Oval = Probabilistic", BLUE), ("Rect = Decision", ORANGE),
-                    ("Hex = Objective", TEAL), ("Chev = Function", GRAY)]
+                    ("Hex = Objective", TEAL)]
     for i, (label, col) in enumerate(legend_items):
-        ax.text(0.3 + i * 2.5, 0.15, label, fontsize=7, color=col,
+        ax.text(0.3 + i * 3.0, 0.15, label, fontsize=7, color=col,
                 fontfamily="sans-serif")
 
     save(fig, "ch02-whiteboard.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 3 — Iterative Model Building
+# CHAPTER 3 — The MNH Diagnostic Case Study  (Kenya focus)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch03():
-    fig, ax = new_fig("Ch 3 — Iterative Model Building")
+    fig, ax = new_fig("Ch 3 — Diagnostic Case Study (Kenya)")
 
     cx, cy = 5, 3.5
 
     # Three concentric rings
     rings = [
-        (1.0, BLUE, "Round 1", "4 nodes", "MOH Director\nSupply side"),
-        (1.9, TEAL, "Round 2", "8 nodes", "Facility Directors\nTransmission failures"),
-        (2.8, GREEN, "Round 3", "12+ nodes", "Community Health Workers\nDemand side"),
+        (1.0, BLUE, "Round 1", "4 nodes", "County Health Director\nSupply side"),
+        (1.9, TEAL, "Round 2", "8 nodes", "Senior Midwife\nTransmission failures"),
+        (2.8, GREEN, "Round 3", "12+ nodes", "Community Health Worker\nDemand side"),
     ]
 
     for r, color, rlabel, nlabel, desc in rings:
@@ -276,16 +276,16 @@ def draw_ch03():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 4 — From Beliefs to Numbers
+# CHAPTER 4 — Quantitative Causal Models  (Tanzania, "The Key Rule")
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch04():
-    fig, ax = new_fig("Ch 4 — From Beliefs to Numbers")
+    fig, ax = new_fig("Ch 4 — From Beliefs to Numbers (Tanzania)")
 
     steps = [
         ("Probability\nP(X)", BLUE),
         ("Conditional\nProbability\nP(X|Y)", LBLUE),
-        ("CPTs", TEAL),
+        ("Lookup\nTables\n(CPTs)", TEAL),
         ("Bayes'\nRule", GREEN),
         ("Bayesian\nNetwork", AMBER),
     ]
@@ -318,13 +318,13 @@ def draw_ch04():
             arrow(ax, x + w/2 + 0.05, y + 0.2, x2 - w/2 - 0.05, y2 - 0.2,
                   color=DARK, lw=2, style="-|>")
 
-    # Bridge between steps 4 and 5
+    # Bridge between steps 4 and 5 — "The Key Rule" (not "Causal Markov Condition")
     bx1 = x_start + 3 * x_gap + 0.75
     bx2 = x_start + 4 * x_gap - 0.75
     by = y_base + 3.5 * step_h + 0.8
     ax.plot([bx1, bx2], [by, by], color=RED, lw=3, linestyle="-")
-    ax.text((bx1 + bx2) / 2, by + 0.25, "Causal Markov\nCondition", ha="center", va="bottom",
-            fontsize=10, fontweight="bold", color=RED, fontfamily="sans-serif",
+    ax.text((bx1 + bx2) / 2, by + 0.25, "The Key Rule\n(each node depends\nonly on its parents)", ha="center", va="bottom",
+            fontsize=9, fontweight="bold", color=RED, fontfamily="sans-serif",
             bbox=dict(boxstyle="round,pad=0.2", facecolor="#FEECEB", edgecolor=RED, linewidth=1.5))
 
     # Braces / labels
@@ -340,11 +340,11 @@ def draw_ch04():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 5 — Forward & Backward Reasoning
+# CHAPTER 5 — Situational Analysis  (Ethiopia, explaining away emphasis)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch05():
-    fig, ax = new_fig("Ch 5 — Forward & Backward Reasoning")
+    fig, ax = new_fig("Ch 5 — Situational Analysis (Ethiopia)")
 
     # Central DAG nodes
     cx = 5
@@ -389,19 +389,19 @@ def draw_ch05():
     ax.text(9.8, 3.3, "Given outcomes,\nwhat causes\nare most likely?", ha="center", va="center",
             fontsize=8, fontstyle="italic", color=GRAY, fontfamily="sans-serif")
 
-    # Explaining away callout (bottom right)
-    ea_box = FancyBboxPatch((6.5, 0.3), 3.2, 1.0,
-                            boxstyle="round,pad=0.15", facecolor="#FFF3E6", edgecolor=AMBER, linewidth=2)
+    # Explaining away callout (bottom right) — EMPHASIZED
+    ea_box = FancyBboxPatch((6.0, 0.15), 3.8, 1.2,
+                            boxstyle="round,pad=0.15", facecolor="#FFF3E6", edgecolor=AMBER, linewidth=2.5)
     ax.add_patch(ea_box)
-    ax.text(8.1, 0.8, "Explaining Away\nConfirming one cause\nreduces belief in the other",
-            ha="center", va="center", fontsize=8, fontweight="bold", color=DARK,
+    ax.text(7.9, 0.75, "EXPLAINING AWAY\nGood quality + low staffing\n= equipment must be high!\nConfirming one cause\nreduces belief in the other",
+            ha="center", va="center", fontsize=7, fontweight="bold", color=DARK,
             fontfamily="sans-serif")
 
     save(fig, "ch05-whiteboard.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 6 — Simpson's Paradox
+# CHAPTER 6 — Simpson's Paradox  (real country names)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch06():
@@ -430,14 +430,14 @@ def draw_ch06():
     ax.text(5, 5.5, "WHY?", ha="center", fontsize=12,
             fontweight="bold", color=DARK, fontfamily="sans-serif")
 
-    # Confounder DAG (top)
+    # Confounder DAG (top) — real country names
     ax.text(5, 4.9, "Confounder (common cause)", ha="center", fontsize=9,
             fontweight="bold", color=TEAL, fontfamily="sans-serif")
-    dag_node(ax, 5, 4.3, "C", color=AMBER, r=0.28, fontsize=10)
+    dag_node(ax, 5, 4.3, "Burden", color=AMBER, r=0.32, fontsize=8)
     dag_node(ax, 4, 3.5, "Tx", color=BLUE, r=0.28, fontsize=9)
     dag_node(ax, 6, 3.5, "Y", color=TEAL, r=0.28, fontsize=10)
-    arrow(ax, 4.75, 4.15, 4.25, 3.7, color=AMBER, lw=2)
-    arrow(ax, 5.25, 4.15, 5.75, 3.7, color=AMBER, lw=2)
+    arrow(ax, 4.72, 4.15, 4.25, 3.7, color=AMBER, lw=2)
+    arrow(ax, 5.28, 4.15, 5.75, 3.7, color=AMBER, lw=2)
     ax.text(6.7, 4.3, "Adjust!", ha="left", fontsize=10,
             fontweight="bold", color=GREEN, fontfamily="sans-serif")
 
@@ -445,10 +445,10 @@ def draw_ch06():
     ax.text(5, 2.5, "Mediator (on the pathway)", ha="center", fontsize=9,
             fontweight="bold", color=ORANGE, fontfamily="sans-serif")
     dag_node(ax, 3.8, 1.8, "Tx", color=BLUE, r=0.28, fontsize=9)
-    dag_node(ax, 5, 1.8, "M", color=ORANGE, r=0.28, fontsize=10)
+    dag_node(ax, 5, 1.8, "Quality", color=ORANGE, r=0.32, fontsize=8)
     dag_node(ax, 6.2, 1.8, "Y", color=TEAL, r=0.28, fontsize=10)
-    arrow(ax, 4.1, 1.8, 4.7, 1.8, color=DARK, lw=2)
-    arrow(ax, 5.3, 1.8, 5.9, 1.8, color=DARK, lw=2)
+    arrow(ax, 4.1, 1.8, 4.65, 1.8, color=DARK, lw=2)
+    arrow(ax, 5.35, 1.8, 5.9, 1.8, color=DARK, lw=2)
     ax.text(6.7, 1.8, "Don't adjust!", ha="left", fontsize=10,
             fontweight="bold", color=RED, fontfamily="sans-serif")
 
@@ -456,14 +456,14 @@ def draw_ch06():
     ax.text(8.8, 5.5, "STRATIFIED", ha="center", fontsize=11,
             fontweight="bold", color=GREEN, fontfamily="sans-serif")
 
-    # Stratum 1
-    ax.text(8.8, 5.0, "High severity", ha="center", fontsize=7,
+    # Stratum 1 — real country name
+    ax.text(8.8, 5.0, "Ethiopia (high burden)", ha="center", fontsize=7,
             color=GRAY, fontfamily="sans-serif")
     ax.bar(8.3, 2.5, width=0.4, bottom=3.2, color=LBLUE, edgecolor=DARK, linewidth=1, alpha=0.7)
     ax.bar(8.8, 3.2, width=0.4, bottom=3.2, color=TEAL, edgecolor=DARK, linewidth=1, alpha=0.7)
 
-    # Stratum 2
-    ax.text(8.8, 2.8, "Low severity", ha="center", fontsize=7,
+    # Stratum 2 — real country name
+    ax.text(8.8, 2.8, "Rwanda (low burden)", ha="center", fontsize=7,
             color=GRAY, fontfamily="sans-serif")
     ax.bar(8.3, 1.5, width=0.4, bottom=1.0, color=LBLUE, edgecolor=DARK, linewidth=1, alpha=0.7)
     ax.bar(8.8, 2.0, width=0.4, bottom=1.0, color=TEAL, edgecolor=DARK, linewidth=1, alpha=0.7)
@@ -483,14 +483,14 @@ def draw_ch06():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 7 — Observe vs Intervene (Graph Surgery)
+# CHAPTER 7 — Decision Analysis  (Kenya, "Watching vs Doing")
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch07():
-    fig, ax = new_fig("Ch 7 — Observe vs Intervene")
+    fig, ax = new_fig("Ch 7 — Watching vs Doing (Kenya)")
 
-    # ── TOP panel: Observe ──
-    ax.text(5, 5.8, "OBSERVE   P(Y | X = x)", ha="center", fontsize=12,
+    # ── TOP panel: Watch (observe) ──
+    ax.text(5, 5.8, "WATCHING   P(Y | X = x)", ha="center", fontsize=12,
             fontweight="bold", color=BLUE, fontfamily="sans-serif")
 
     # Nodes
@@ -513,13 +513,13 @@ def draw_ch07():
         else:  # oval
             dag_node(ax, nx, ny, label, color=color, r=0.55, fontsize=7)
 
-    # All arrows intact (observe)
+    # All arrows intact (watch)
     arrow(ax, 3.1, top_y, 4.15, top_y, color=DARK, lw=2.5)   # Capacity -> Decision
     arrow(ax, 5.85, top_y, 6.9, top_y, color=DARK, lw=2.5)   # Decision -> Lives
     arrow(ax, 3.0, top_y - 0.45, 6.95, top_y - 0.45, color=GRAY, lw=1.5, style="-|>")  # Capacity -> Lives (direct)
 
-    # ── BOTTOM panel: Intervene ──
-    ax.text(5, 3.1, "INTERVENE   P(Y | do(X = x))", ha="center", fontsize=12,
+    # ── BOTTOM panel: Do (intervene) ──
+    ax.text(5, 3.1, "DOING   P(Y | do(X = x))", ha="center", fontsize=12,
             fontweight="bold", color=RED, fontfamily="sans-serif")
     ax.text(5, 2.7, "Graph Surgery: cut arrows INTO the decision node",
             ha="center", fontsize=8, fontstyle="italic", color=GRAY, fontfamily="sans-serif")
@@ -560,24 +560,25 @@ def draw_ch07():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 8 — Portfolio Allocation
+# CHAPTER 8 — Multi-Country Resource Allocation  (real country names, no Markowitz)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch08():
-    fig, ax = new_fig("Ch 8 — Portfolio Allocation")
+    fig, ax = new_fig("Ch 8 — Multi-Country Resource Allocation")
 
     # Fund circle (left)
     fund = Circle((1.5, 4.5), 0.7, fill=True, facecolor=BLUE, edgecolor=BLUE, linewidth=2)
     ax.add_patch(fund)
-    t = ax.text(1.5, 4.5, "Pooled\nFund", ha="center", va="center",
+    t = ax.text(1.5, 4.5, "Health\nBudget", ha="center", va="center",
                 fontsize=10, fontweight="bold", color="white", fontfamily="sans-serif")
     t.set_path_effects([])
 
-    # Country circles
+    # Country circles — real names
     countries = [
-        (5.5, 5.5, 0.55, "Country A\n(high burden)", BLUE),
-        (5.5, 4.0, 0.45, "Country B\n(medium)", TEAL),
-        (5.5, 2.5, 0.35, "Country C\n(low burden)", GREEN),
+        (5.5, 5.5, 0.55, "Ethiopia\n(high burden)", BLUE),
+        (5.5, 4.0, 0.50, "Tanzania\n(medium)", TEAL),
+        (5.5, 2.5, 0.45, "Kenya\n(medium)", GREEN),
+        (5.5, 1.2, 0.40, "Rwanda\n(lower burden)", AMBER),
     ]
 
     for cx, cy, r, label, color in countries:
@@ -587,7 +588,6 @@ def draw_ch08():
                 fontsize=7, fontweight="bold", color=DARK, fontfamily="sans-serif")
 
         # Arrow from fund to country
-        dx = cx - r - 0.1 - (1.5 + 0.75)
         arrow(ax, 2.25, 4.5 + (cy - 4.5) * 0.3, cx - r - 0.1, cy,
               color=color, lw=2.5, style="-|>")
 
@@ -599,15 +599,32 @@ def draw_ch08():
         ax.plot([cx + r + 0.1, cx + r + 0.3], [cy + 0.3, cy + 0.3],
                 color=AMBER, lw=2)
 
-    ax.text(6.5, 4.0, "uncertainty\nranges", ha="left", va="center",
+    ax.text(6.5, 3.5, "uncertainty\nranges", ha="left", va="center",
             fontsize=7, fontstyle="italic", color=AMBER, fontfamily="sans-serif")
 
+    # Three strategies (right side, replacing crowding labels)
+    ax.text(8.5, 5.8, "Three strategies:", ha="center", fontsize=10,
+            fontweight="bold", color=DARK, fontfamily="sans-serif")
+
+    strategies = [
+        ("Concentrate", "High reward, high risk", RED),
+        ("Spread Equally", "Safer, may waste", TEAL),
+        ("Tiered", "Weight by burden", GREEN),
+    ]
+    for i, (main, sub, col) in enumerate(strategies):
+        ey = 5.2 - i * 0.65
+        circled_num(ax, 7.5, ey, i + 1, color=col, r=0.17, fontsize=9)
+        ax.text(7.85, ey, main, ha="left", fontsize=9,
+                fontweight="bold", color=col, fontfamily="sans-serif")
+        ax.text(7.85, ey - 0.25, sub, ha="left", fontsize=7,
+                fontstyle="italic", color=GRAY, fontfamily="sans-serif")
+
     # Timeline (bottom)
-    tl_y = 1.2
+    tl_y = 0.5
     ax.plot([1, 9], [tl_y, tl_y], color=DARK, lw=2)
 
     phases = [
-        (2.5, "Commit\nseed", BLUE),
+        (2.5, "Pilot\nfirst", BLUE),
         (5.0, "Observe\nresults", TEAL),
         (7.5, "Scale or\nreallocate", GREEN),
     ]
@@ -622,34 +639,24 @@ def draw_ch08():
     for px in [3.75, 6.25]:
         ax.plot([px, px], [tl_y - 0.7, tl_y + 0.7], color=LGRAY, lw=1, linestyle="--")
 
-    # Crowding labels (bottom right)
-    ax.text(8.5, 5.8, "Crowding out (−)", ha="center", fontsize=9,
-            fontweight="bold", color=RED, fontfamily="sans-serif")
-    ax.text(8.5, 5.4, "Gov't reduces spending", ha="center", fontsize=7,
-            fontstyle="italic", color=GRAY, fontfamily="sans-serif")
-    ax.text(8.5, 4.8, "Crowding in (+)", ha="center", fontsize=9,
-            fontweight="bold", color=GREEN, fontfamily="sans-serif")
-    ax.text(8.5, 4.4, "Gov't increases spending", ha="center", fontsize=7,
-            fontstyle="italic", color=GRAY, fontfamily="sans-serif")
-
     save(fig, "ch08-whiteboard.png")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 9 — The Free-Rider Trap
+# CHAPTER 9 — Game Theory & Strategic Interactions  (Rwanda focus, simplified)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch09():
-    fig, ax = new_fig("Ch 9 — The Free-Rider Trap")
+    fig, ax = new_fig("Ch 9 — The Free-Rider Trap (Rwanda)")
 
-    # ── 2×2 Payoff Matrix ──
+    # ── 2x2 Payoff Matrix ──
     mx, my = 3.5, 3.2  # top-left of matrix
     cw, ch_m = 2.0, 1.4  # cell width, cell height
 
-    # Headers
-    ax.text(mx + cw, my + 0.6, "Government", ha="center", fontsize=12,
+    # Headers — simplified labels
+    ax.text(mx + cw, my + 0.6, "Rwanda Gov't", ha="center", fontsize=12,
             fontweight="bold", color=TEAL, fontfamily="sans-serif")
-    ax.text(mx + 0.5 * cw, my + 0.15, "Absorb", ha="center", fontsize=10,
+    ax.text(mx + 0.5 * cw, my + 0.15, "Co-invest", ha="center", fontsize=10,
             fontweight="bold", color=TEAL, fontfamily="sans-serif")
     ax.text(mx + 1.5 * cw, my + 0.15, "Free-Ride", ha="center", fontsize=10,
             fontweight="bold", color=RED, fontfamily="sans-serif")
@@ -667,7 +674,7 @@ def draw_ch09():
     for j in range(3):
         ax.plot([mx + j * cw, mx + j * cw], [my, my - 2 * ch_m], color=DARK, lw=1.5)
 
-    # Cell contents
+    # Cell contents — simplified labels
     cells = [
         (0, 0, "Best for all\n(+10, +10)", "#E8F8E8", GREEN),
         (1, 0, "Trap!\n(+3, +8)", "#FEECEB", RED),
@@ -684,10 +691,10 @@ def draw_ch09():
         ax.text(x + cw / 2, y - ch_m / 2, text, ha="center", va="center",
                 fontsize=8, fontweight="bold", color=tc, fontfamily="sans-serif")
 
-    # Nash equilibrium marker
+    # Nash equilibrium marker — simplified label
     ne_x = mx + 1.5 * cw
     ne_y = my - 0.5 * ch_m
-    ax.text(ne_x + 0.8, ne_y, "Nash\nEquilibrium", ha="left", fontsize=9,
+    ax.text(ne_x + 0.8, ne_y, "Stable but\nbad outcome", ha="left", fontsize=9,
             fontweight="bold", color=RED, fontfamily="sans-serif")
     arrow(ax, ne_x + 0.75, ne_y, ne_x + cw/2 - 0.1, ne_y, color=RED, lw=2, style="-|>")
 
@@ -698,13 +705,13 @@ def draw_ch09():
                 arrowprops=dict(arrowstyle="-|>", color=GREEN, lw=3,
                                 connectionstyle="arc3,rad=0.3"))
 
-    # Escape routes
+    # Escape routes — simplified labels
     ax.text(5.5, 5.8, "Escape routes:", ha="left", fontsize=10,
             fontweight="bold", color=GREEN, fontfamily="sans-serif")
     escapes = [
-        ("Commitment devices", "(milestone payments)"),
-        ("Repeated games", "(reputation)"),
-        ("Matching grants", "(incentive alignment)"),
+        ("Milestone payments", "(release funds on results)"),
+        ("Repeated partnership", "(build trust over time)"),
+        ("Matching grants", "(align incentives)"),
     ]
     for i, (main, sub) in enumerate(escapes):
         ey = 5.3 - i * 0.55
@@ -723,11 +730,11 @@ def draw_ch09():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 10 — Expert + Algorithm + Data
+# CHAPTER 10 — Structure Learning from Data  (Tanzania, simplified labels)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch10():
-    fig, ax = new_fig("Ch 10 — Expert + Algorithm + Data")
+    fig, ax = new_fig("Ch 10 — Expert + Algorithm + Data (Tanzania)")
 
     # Triangle vertices
     top = (5, 5.5)
@@ -748,12 +755,12 @@ def draw_ch10():
         ax.text(nx, ny, label, ha="center", va="center",
                 fontsize=11, fontweight="bold", color=DARK, fontfamily="sans-serif")
 
-    # Subtitles
+    # Subtitles — simplified (no "PC / Hill Climbing")
     ax.text(top[0] - 1.2, top[1] + 0.2, "Proposes\nstructure", ha="center",
             fontsize=9, fontstyle="italic", color=BLUE, fontfamily="sans-serif")
-    ax.text(bl[0] - 0.2, bl[1] - 0.85, "Tests & refines\n(PC / Hill Climbing)", ha="center",
+    ax.text(bl[0] - 0.2, bl[1] - 0.85, "Tests & refines\n(finds patterns)", ha="center",
             fontsize=9, fontstyle="italic", color=ORANGE, fontfamily="sans-serif")
-    ax.text(br[0] + 0.2, br[1] - 0.85, "Reveals\nindependencies", ha="center",
+    ax.text(br[0] + 0.2, br[1] - 0.85, "Reveals which\nvariables are linked", ha="center",
             fontsize=9, fontstyle="italic", color=TEAL, fontfamily="sans-serif")
 
     # Cycle arrows (Expert -> Algorithm -> Data -> Expert)
@@ -769,15 +776,15 @@ def draw_ch10():
               x2 - r * dx/dist, y2 - r * dy/dist,
               color=ec, lw=2.5, style="-|>")
 
-    # Center: CPDAG
+    # Center: "Candidate DAG" (simplified from "CPDAG")
     center = (5, 3.2)
-    cpdag_box = FancyBboxPatch((center[0] - 0.9, center[1] - 0.45), 1.8, 0.9,
+    cpdag_box = FancyBboxPatch((center[0] - 1.0, center[1] - 0.45), 2.0, 0.9,
                                boxstyle="round,pad=0.1", facecolor="#FFF9E6",
                                edgecolor=AMBER, linewidth=2)
     ax.add_patch(cpdag_box)
-    ax.text(center[0], center[1], "CPDAG", ha="center", va="center",
+    ax.text(center[0], center[1], "Candidate\nDAG", ha="center", va="center",
             fontsize=11, fontweight="bold", color=AMBER, fontfamily="sans-serif")
-    ax.text(center[0], center[1] - 0.65, "Some edges remain\nambiguous", ha="center",
+    ax.text(center[0], center[1] - 0.65, "Some arrows remain\nambiguous", ha="center",
             fontsize=8, fontstyle="italic", color=GRAY, fontfamily="sans-serif")
 
     # Exit arrow: Expert -> Oriented DAG
@@ -786,12 +793,12 @@ def draw_ch10():
     arrow(ax, top[0] + node_r + 0.1, top[1], exit_x - 0.7, exit_y,
           color=GREEN, lw=3, style="-|>")
 
-    rounded_box(ax, exit_x, exit_y, 1.8, 0.8, "Oriented\nDAG", fc="#E8F8E8", ec=GREEN, lw=2.5, fontsize=10)
-    ax.text(exit_x, exit_y - 0.6, "Expert resolves\nambiguous edges", ha="center",
+    rounded_box(ax, exit_x, exit_y, 1.8, 0.8, "Final\nDAG", fc="#E8F8E8", ec=GREEN, lw=2.5, fontsize=10)
+    ax.text(exit_x, exit_y - 0.6, "Expert resolves\nambiguous arrows", ha="center",
             fontsize=8, fontstyle="italic", color=GREEN, fontfamily="sans-serif")
 
-    # Bottom annotation
-    ax.text(5, 0.4, "Markov equivalence: data alone cannot distinguish all structures",
+    # Bottom annotation — simplified
+    ax.text(5, 0.4, "Data alone cannot tell all arrows apart -- experts fill the gaps",
             ha="center", fontsize=10, fontweight="bold", color=DARK, fontfamily="sans-serif",
             bbox=dict(boxstyle="round,pad=0.3", facecolor="#FEECEB", edgecolor=RED, linewidth=1.5))
 
@@ -808,11 +815,11 @@ def draw_intro():
     # ── Four-phase pathway flowing left to right ──
     # Phase boxes
     phases = [
-        {"label": "FOUNDATIONS", "sub": "Ch 1–3", "color": BLUE,
+        {"label": "FOUNDATIONS", "sub": "Ch 1-3", "color": BLUE,
          "desc": "Think\nCausally", "y": 4.5, "x": 1.3},
-        {"label": "QUANTIFY", "sub": "Ch 4–6", "color": TEAL,
+        {"label": "QUANTIFY", "sub": "Ch 4-6", "color": TEAL,
          "desc": "Add Numbers\n& Catch Traps", "y": 4.5, "x": 3.9},
-        {"label": "DECIDE", "sub": "Ch 7–9", "color": GREEN,
+        {"label": "DECIDE", "sub": "Ch 7-9", "color": GREEN,
          "desc": "Intervene,\nAllocate, Negotiate", "y": 4.5, "x": 6.5},
         {"label": "DISCOVER", "sub": "Ch 10", "color": AMBER,
          "desc": "Let Data\nRefine the Model", "y": 4.5, "x": 9.1},
@@ -850,9 +857,9 @@ def draw_intro():
 
     # ── Chapter labels underneath each phase ──
     ch_labels = [
-        (1.3, [("1", "Causal\nThinking"), ("2", "Draw\nModels"), ("3", "Interview\n& Build")]),
-        (3.9, [("4", "Probability\n& Bayes"), ("5", "Inference"), ("6", "Simpson's\nParadox")]),
-        (6.5, [("7", "do(X)\nSurgery"), ("8", "Portfolio\nAllocation"), ("9", "Game\nTheory")]),
+        (1.3, [("1", "Causal\nThinking"), ("2", "Draw\nModels"), ("3", "Diagnostic\nCase")]),
+        (3.9, [("4", "Probability\n& Bayes"), ("5", "Situational\nAnalysis"), ("6", "Simpson's\nParadox")]),
+        (6.5, [("7", "Watching\nvs Doing"), ("8", "Resource\nAllocation"), ("9", "Game\nTheory")]),
         (9.1, [("10", "Algorithms\n+ Experts")]),
     ]
 

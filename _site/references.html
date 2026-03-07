@@ -126,6 +126,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#primary-textbook" id="toc-primary-textbook" class="nav-link active" data-scroll-target="#primary-textbook">Primary Textbook</a></li>
+  <li><a href="#public-data-sources" id="toc-public-data-sources" class="nav-link" data-scroll-target="#public-data-sources">Public Data Sources</a></li>
   <li><a href="#causal-inference-literature" id="toc-causal-inference-literature" class="nav-link" data-scroll-target="#causal-inference-literature">Causal Inference Literature</a></li>
   <li><a href="#decision-analysis-game-theory" id="toc-decision-analysis-game-theory" class="nav-link" data-scroll-target="#decision-analysis-game-theory">Decision Analysis &amp; Game Theory</a></li>
   <li><a href="#r-package-references" id="toc-r-package-references" class="nav-link" data-scroll-target="#r-package-references">R Package References</a>
@@ -134,10 +135,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#bnlearn" id="toc-bnlearn" class="nav-link" data-scroll-target="#bnlearn">bnlearn</a></li>
   <li><a href="#ggdag" id="toc-ggdag" class="nav-link" data-scroll-target="#ggdag">ggdag</a></li>
   <li><a href="#ggplot2" id="toc-ggplot2" class="nav-link" data-scroll-target="#ggplot2">ggplot2</a></li>
-  <li><a href="#ivreg" id="toc-ivreg" class="nav-link" data-scroll-target="#ivreg">ivreg</a></li>
   </ul></li>
   <li><a href="#mnh-domain-references" id="toc-mnh-domain-references" class="nav-link" data-scroll-target="#mnh-domain-references">MNH Domain References</a></li>
-  <li><a href="#business-to-public-health-terminology" id="toc-business-to-public-health-terminology" class="nav-link" data-scroll-target="#business-to-public-health-terminology">Business-to-Public-Health Terminology</a></li>
   </ul>
 </nav>
     </div>
@@ -147,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">References</h1>
-<p class="subtitle lead">Textbook, R packages, and supplementary reading</p>
+<p class="subtitle lead">Textbook, data sources, R packages, and supplementary reading</p>
 </div>
 
 
@@ -168,21 +167,57 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="primary-textbook">Primary Textbook</h2>
 <p>Ryall, M. D., &amp; Bramson, A. (2014). <em>Inference and Intervention: Causal Models for Business Analysis</em>. Routledge.</p>
 <div class="callout-box">
-<p>This course adapts all examples from the textbook’s business context (advertising, market share, consulting) to maternal and newborn health (MNH) program analysis. The book’s original examples (Slimtree Publishing, Hubris Health, The Rideshare Case) are preserved in “Book Context” sections for reference.</p>
+<p>This course teaches the core concepts from the textbook using entirely new examples drawn from publicly available MNH data for Ethiopia, Rwanda, Kenya, and Tanzania.</p>
 </div>
+</section>
+<section id="public-data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="public-data-sources">Public Data Sources</h2>
+<p>All MNH examples in this course use data from these publicly available sources:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Source</th>
+<th>What It Provides</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>WHO</td>
+<td>Maternal and newborn mortality estimates</td>
+<td><a href="https://www.who.int/data/gho">who.int</a></td>
+</tr>
+<tr class="even">
+<td>UNICEF</td>
+<td>Child mortality trends and coverage data</td>
+<td><a href="https://data.unicef.org/">data.unicef.org</a></td>
+</tr>
+<tr class="odd">
+<td>DHS Program</td>
+<td>Demographic and Health Surveys by country</td>
+<td><a href="https://dhsprogram.com/">dhsprogram.com</a></td>
+</tr>
+<tr class="even">
+<td>DHIS2</td>
+<td>District Health Information System documentation</td>
+<td><a href="https://dhis2.org/">dhis2.org</a></td>
+</tr>
+<tr class="odd">
+<td>World Bank</td>
+<td>Health expenditure and workforce indicators</td>
+<td><a href="https://data.worldbank.org/">data.worldbank.org</a></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="causal-inference-literature" class="level2">
 <h2 class="anchored" data-anchor-id="causal-inference-literature">Causal Inference Literature</h2>
 <p>Pearl, J. (2009). <em>Causality: Models, Reasoning, and Inference</em> (2nd ed.). Cambridge University Press.</p>
 <p>Pearl, J., Glymour, M., &amp; Jewell, N. P. (2016). <em>Causal Inference in Statistics: A Primer</em>. Wiley.</p>
-<p>Spirtes, P., Glymour, C., &amp; Scheines, R. (2000). <em>Causation, Prediction, and Search</em> (2nd ed.). MIT Press.</p>
-<p>Imbens, G. W., &amp; Rubin, D. B. (2015). <em>Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction</em>. Cambridge University Press.</p>
-<p>Morgan, S. L., &amp; Winship, C. (2015). <em>Counterfactuals and Causal Inference: Methods and Principles for Social Research</em> (2nd ed.). Cambridge University Press.</p>
 <p>Hernán, M. A., &amp; Robins, J. M. (2020). <em>Causal Inference: What If</em>. Chapman &amp; Hall/CRC. Available free at <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">miguelhernan.org</a>.</p>
 </section>
 <section id="decision-analysis-game-theory" class="level2">
 <h2 class="anchored" data-anchor-id="decision-analysis-game-theory">Decision Analysis &amp; Game Theory</h2>
-<p>Raiffa, H. (1968). <em>Decision Analysis: Introductory Lectures on Choices Under Uncertainty</em>. Addison-Wesley.</p>
 <p>Dixit, A. K., &amp; Nalebuff, B. J. (2008). <em>The Art of Strategy: A Game Theorist’s Guide to Success in Business and Life</em>. W.W. Norton.</p>
 </section>
 <section id="r-package-references" class="level2">
@@ -192,7 +227,6 @@ ul.task-list li input[type="checkbox"] {
 <p>Textor, J., van der Zander, B., Gilthorpe, M. S., Liśkiewicz, M., &amp; Ellison, G. T. H. (2016). Robust causal inference using directed acyclic graphs: The R package ‘dagitty’. <em>International Journal of Epidemiology</em>, 45(6), 1887–1894.</p>
 <ul>
 <li>CRAN: <a href="https://cran.r-project.org/package=dagitty">cran.r-project.org/package=dagitty</a></li>
-<li>Documentation: <a href="http://www.dagitty.net/">dagitty.net</a></li>
 </ul>
 </section>
 <section id="bnlearn" class="level3">
@@ -200,7 +234,6 @@ ul.task-list li input[type="checkbox"] {
 <p>Scutari, M. (2010). Learning Bayesian networks with the bnlearn R package. <em>Journal of Statistical Software</em>, 35(3), 1–22.</p>
 <ul>
 <li>CRAN: <a href="https://cran.r-project.org/package=bnlearn">cran.r-project.org/package=bnlearn</a></li>
-<li>Documentation: <a href="https://www.bnlearn.com/">bnlearn.com</a></li>
 </ul>
 </section>
 <section id="ggdag" class="level3">
@@ -217,70 +250,12 @@ ul.task-list li input[type="checkbox"] {
 <li>CRAN: <a href="https://cran.r-project.org/package=ggplot2">cran.r-project.org/package=ggplot2</a></li>
 </ul>
 </section>
-<section id="ivreg" class="level3">
-<h3 class="anchored" data-anchor-id="ivreg">ivreg</h3>
-<p>Fox, J., Kleiber, C., &amp; Zeileis, A. (2023). ivreg: Instrumental-Variables Regression.</p>
-<ul>
-<li>CRAN: <a href="https://cran.r-project.org/package=ivreg">cran.r-project.org/package=ivreg</a></li>
-</ul>
-</section>
 </section>
 <section id="mnh-domain-references" class="level2">
 <h2 class="anchored" data-anchor-id="mnh-domain-references">MNH Domain References</h2>
 <p>World Health Organization. (2023). <em>Trends in Maternal Mortality 2000 to 2020</em>. WHO.</p>
 <p>UNICEF. (2023). <em>Levels and Trends in Child Mortality: Report 2023</em>. UN Inter-agency Group for Child Mortality Estimation.</p>
 <p>Bhutta, Z. A., et al.&nbsp;(2014). Can available interventions end preventable deaths in mothers, newborn babies, and stillbirths, and at what cost? <em>The Lancet</em>, 384(9940), 347–370.</p>
-<p>DHIS2. (2024). <em>District Health Information Software 2</em>. <a href="https://dhis2.org/">dhis2.org</a>.</p>
-</section>
-<section id="business-to-public-health-terminology" class="level2">
-<h2 class="anchored" data-anchor-id="business-to-public-health-terminology">Business-to-Public-Health Terminology</h2>
-<p>The textbook uses business language that has been systematically adapted for MNH contexts:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>Business Term (Book)</th>
-<th>Public Health Replacement</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Advertising</td>
-<td>Mass media campaign / demand generation</td>
-</tr>
-<tr class="even">
-<td>Firm / Company</td>
-<td>Program / MNH initiative</td>
-</tr>
-<tr class="odd">
-<td>Client</td>
-<td>Beneficiary / target population</td>
-</tr>
-<tr class="even">
-<td>ROI</td>
-<td>Cost-effectiveness / lives saved per dollar</td>
-</tr>
-<tr class="odd">
-<td>Revenue</td>
-<td>Lives saved / mortality reduction</td>
-</tr>
-<tr class="even">
-<td>Profit</td>
-<td>Impact / net health benefit</td>
-</tr>
-<tr class="odd">
-<td>Market share</td>
-<td>Coverage rate</td>
-</tr>
-<tr class="even">
-<td>CEO / Board</td>
-<td>Program Director / Leadership</td>
-</tr>
-<tr class="odd">
-<td>Product launch</td>
-<td>Intervention rollout</td>
-</tr>
-</tbody>
-</table>
 
 
 </section>

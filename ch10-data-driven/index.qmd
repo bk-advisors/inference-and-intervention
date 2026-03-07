@@ -1,5 +1,5 @@
 ---
-title: "Chapter 10: Data-Driven Causal Modeling"
+title: "Chapter 10: Structure Learning from Observational Data"
 subtitle: "Inference and Intervention | BK Advisors"
 author: "BK Advisors"
 date: today
@@ -27,76 +27,83 @@ execute:
 After this chapter, you will be able to:
 
 ::: {.incremental}
-- Distinguish between **causal models** and **probabilistic models** (and why it matters)
-- Explain **Markov equivalence** and **observational indistinguishability**
-- Apply **constraint-based** (PC algorithm) and **score-based** structure learning
-- Use **instrumental variables** to identify causal effects from observational data
-- Avoid common regression pitfalls: **bad controls**, **collider bias**, and **mediator adjustment**
+- Explain why **data alone cannot always determine the direction of a causal arrow**
+- Describe what structure-learning algorithms **can do** (narrow possibilities) and what they **cannot** (guarantee the right arrows)
+- Combine **expert knowledge** with algorithmic output to build stronger causal models
+- Describe the **feedback loop** between data and causal models — each improves the other
+- Use `bnlearn::hc()` in R to **learn a DAG from simulated data** and compare it to the truth
 :::
 
 
 ## Chapter Overview
 
 <div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;">Causation vs.<br>Probability</div>
+<div class="step-item" style="border-left: 4px solid #005CB9;">Can Data<br>Find Causes?</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;">Markov<br>Equivalence</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Same Pattern,<br>Different Arrows</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #F8A623;">Structure<br>Learning</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">What Algorithms<br>Can Do</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #E24A3F;">Instrumental<br>Variables</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Expert +<br>Algorithm</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #3E9B6E;">Causal<br>Regression</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">The Feedback<br>Loop</div>
 </div>
 
 . . .
 
 ::: {.callout-box}
-**The final frontier:** Throughout Chapters 1–9, we *assumed* we knew the causal structure (the DAG). This chapter asks: **What if we don't?** Can we *discover* causal structure from data?
+**The final chapter:** Throughout Chapters 1--9, we drew the arrows ourselves based on expert knowledge. This chapter asks: **Can a computer figure out the arrows just from data?** The answer is nuanced — and that nuance is the most important lesson in the course.
 :::
 
 
-# Causation vs. Probability {background-color="#005CB9"}
+# The Big Question {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Can data discover causes?</span>
 
 
-## Two Fundamentally Different Questions
+## Can the Computer Draw the Arrows?
 
 ::: {.columns-equal}
 ::: {.col}
-**Statistical / Probabilistic:**
+::: {.callout-box}
+**What we have been doing (Chapters 1--9)**
 
-"What is the joint distribution of staffing, equipment, and mortality?"
+- An expert draws the DAG based on domain knowledge
+- We assign numbers from data or expert judgment
+- We use the DAG for inference, decisions, and resource allocation
 
-$$P(\text{Staffing}, \text{Equipment}, \text{NMR})$$
-
-- Summarizes *associations* in data
-- Symmetric: P(A|B) tells us about P(B|A) via Bayes' rule
-- Says nothing about what happens under *intervention*
+*The DAG came from human expertise.*
+:::
 :::
 
 ::: {.col}
-**Causal:**
+::: {.callout-box .green}
+**The new question (Chapter 10)**
 
-"If we increase staffing, what happens to mortality?"
+- We have a dataset with many variables
+- Can a computer algorithm figure out which arrows to draw?
+- Can it tell us what causes what — just from patterns in the data?
 
-$$P(\text{NMR} \mid do(\text{Staffing} = \text{Adequate}))$$
-
-- Encodes *mechanisms* generating data
-- Asymmetric: cause → effect, not reverse
-- Tells us what happens under intervention
+*Can the DAG come from the data itself?*
+:::
 :::
 :::
 
 . . .
 
-::: {.callout-box .red}
-**The fundamental problem:** Multiple causal structures can produce the *same* joint probability distribution. Data alone cannot always distinguish them.
+::: {.callout-box .orange}
+**Spoiler alert:** The answer is *partly* yes and *partly* no. Data can narrow down the possibilities dramatically — but it cannot always determine the direction of every arrow. That is why **you** still matter.
 :::
 
 
-## Three DAGs, One Distribution
+# Same Pattern, Different Arrows {background-color="#005CB9"}
 
-Consider three variables: **Staffing (S)**, **Equipment (E)**, **Mortality (M)**
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Why data alone is not enough</span>
+
+
+## Three Simple DAGs
+
+Consider three variables — **Staffing (S)**, **Training (T)**, and **Mortality (M)** — and three ways the arrows could go:
 
 <div style="text-align: center; font-size: 0.7em; margin: 0.6em 0;">
 <table style="width: 90%; margin: 0 auto;">
@@ -105,25 +112,28 @@ Consider three variables: **Staffing (S)**, **Equipment (E)**, **Mortality (M)**
 <strong>DAG 1: Chain</strong><br>
 <span class="dag-node treatment">S</span>
 <span class="dag-arrow">→</span>
-<span class="dag-node confounder">E</span>
+<span class="dag-node confounder">T</span>
 <span class="dag-arrow">→</span>
-<span class="dag-node outcome">M</span>
+<span class="dag-node outcome">M</span><br>
+<span style="font-size: 0.85em;">"Staffing drives Training,<br>which drives Mortality"</span>
 </td>
 <td style="text-align: center; padding: 0.8em; border: 2px solid #83BD00; border-radius: 8px;">
 <strong>DAG 2: Fork</strong><br>
 <span class="dag-node treatment">S</span>
 <span class="dag-arrow">←</span>
-<span class="dag-node confounder">E</span>
+<span class="dag-node confounder">T</span>
 <span class="dag-arrow">→</span>
-<span class="dag-node outcome">M</span>
+<span class="dag-node outcome">M</span><br>
+<span style="font-size: 0.85em;">"Training drives both<br>Staffing and Mortality"</span>
 </td>
 <td style="text-align: center; padding: 0.8em; border: 2px solid #F8A623; border-radius: 8px;">
 <strong>DAG 3: Reverse Chain</strong><br>
 <span class="dag-node treatment">S</span>
 <span class="dag-arrow">←</span>
-<span class="dag-node confounder">E</span>
+<span class="dag-node confounder">T</span>
 <span class="dag-arrow">←</span>
-<span class="dag-node outcome">M</span>
+<span class="dag-node outcome">M</span><br>
+<span style="font-size: 0.85em;">"Mortality drives Training,<br>which drives Staffing"</span>
 </td>
 </tr>
 </table>
@@ -131,527 +141,300 @@ Consider three variables: **Staffing (S)**, **Equipment (E)**, **Mortality (M)**
 
 . . .
 
-All three DAGs encode the **same** conditional independence:
-
-$$S \perp\!\!\!\perp M \mid E$$
-
-. . .
-
-::: {.definition-box}
-**Observational indistinguishability:** If two DAGs encode the same set of conditional independencies, no amount of observational data can distinguish them. They are **Markov equivalent**.
+::: {.callout-box .red}
+**The surprising fact:** All three DAGs produce the *same* statistical pattern in the data. If you know T, then S and M become independent. No amount of data can tell you which of these three is correct.
 :::
 
 
-## When *Can* Data Distinguish DAGs?
+## The Collider Is the Exception
 
-**Colliders are the exception.** Consider:
+Now look at a fourth arrangement:
 
 <div style="text-align: center; margin: 0.6em 0;">
+<table style="width: 40%; margin: 0 auto;">
+<tr>
+<td style="text-align: center; padding: 0.8em; border: 2px solid #E24A3F; border-radius: 8px;">
+<strong>DAG 4: Collider</strong><br>
 <span class="dag-node treatment">S</span>
 <span class="dag-arrow">→</span>
-<span class="dag-node confounder">E</span>
+<span class="dag-node confounder">T</span>
 <span class="dag-arrow">←</span>
-<span class="dag-node outcome">M</span>
+<span class="dag-node outcome">M</span><br>
+<span style="font-size: 0.85em;">"Both Staffing and Mortality<br>independently drive Training"</span>
+</td>
+</tr>
+</table>
 </div>
 
-This **collider** (converging) structure encodes a *different* independence:
+. . .
 
-$$S \perp\!\!\!\perp M \quad \text{(marginally independent)}$$
-$$S \not\perp\!\!\!\perp M \mid E \quad \text{(conditionally dependent)}$$
+This one is **different**. In the collider:
+
+- S and M are independent when you do NOT know T
+- S and M become *dependent* when you DO know T
+- This is the opposite pattern from the chain and fork
 
 . . .
 
 ::: {.callout-box .green}
-**Key insight:** Colliders create a unique independence pattern. If we observe that S and M are marginally independent but become dependent when conditioning on E, we can rule out chain and fork structures. The data **identifies the collider**.
+**Key insight:** The collider creates a unique data fingerprint. If the algorithm detects this pattern, it can determine the arrow direction. Colliders are the one structure that data *can* identify on its own.
 :::
 
 
-# Markov Equivalence {background-color="#005CB9"}
+## The Core Problem: A Summary
 
+<div style="text-align: center; font-size: 0.65em; margin: 0.5em 0;">
+<table style="width: 95%; margin: 0 auto; border-collapse: separate; border-spacing: 0.5em;">
+<tr>
+<th style="text-align: center; padding: 0.5em;">Data Pattern</th>
+<th style="text-align: center; padding: 0.5em;">Compatible DAGs</th>
+<th style="text-align: center; padding: 0.5em;">Can Data Decide?</th>
+</tr>
+<tr>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">S and M independent given T</td>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">S→T→M &nbsp; S←T→M &nbsp; S←T←M</td>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px; color: #E24A3F; font-weight: 700;">No — 3 options remain</td>
+</tr>
+<tr>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">S and M independent, but dependent given T</td>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">S→T←M</td>
+<td style="padding: 0.5em; border: 1px solid #ddd; border-radius: 4px; color: #83BD00; font-weight: 700;">Yes — only 1 option</td>
+</tr>
+</table>
+</div>
 
-## Equivalence Classes
+. . .
 
 ::: {.definition-box}
-**Markov equivalence class:** The set of all DAGs that encode the same conditional independencies. Represented by a **CPDAG** (Completed Partially Directed Acyclic Graph) — a graph where:
-
-- **Directed edges** (→) appear where *all* DAGs in the class agree on direction
-- **Undirected edges** (—) appear where DAGs in the class *disagree* on direction
+**The bottom line:** When two different DAGs produce the same data pattern, they are called **Markov equivalent**. No statistical test — no matter how large the sample — can distinguish between them. Only expert knowledge or experimental data can break the tie.
 :::
 
-. . .
 
-**Example with 4 MNH variables:**
+# What Algorithms Can Do {background-color="#005CB9"}
 
-Staffing, Equipment, Quality of Care, NMR
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Narrowing down the possibilities</span>
+
+
+## From Millions of Options to a Handful
 
 ::: {.columns-equal}
 ::: {.col}
-If data reveals:
+::: {.callout-box .red}
+**Without an algorithm:**
 
-- Staffing ⊥ NMR | Quality
-- Equipment ⊥ NMR | Quality
-- Staffing ⊥⊥ Equipment (dependent!)
-
-Then the CPDAG has:
-
-- Staffing → Quality (or —)
-- Equipment → Quality (or —)
-- Quality → NMR (directed)
+With just 5 variables, there are **29,281** possible DAGs. With 10 variables, the number exceeds **4 trillion**. You could never check them all by hand.
+:::
 :::
 
 ::: {.col}
-::: {.callout-box}
-**What we can learn:** Quality → NMR is **identifiable** (directed in all equivalent DAGs).
-
-**What we cannot:** Whether Staffing causes Equipment, Equipment causes Staffing, or neither — this remains **ambiguous** from observational data alone.
-:::
-:::
-:::
-
-
-## Implications for MNH Analysis
-
-::: {.callout-box .orange}
-**Practical warning:** When we discover a causal model from DHIS2 data, we learn an *equivalence class*, not a unique DAG. Some edges will be directed (certain causal claims), others undirected (ambiguous direction).
-:::
-
-. . .
-
-**To resolve ambiguity, we need:**
-
-1. **Domain knowledge** — Experts tell us that training causes competency (not vice versa)
-2. **Temporal ordering** — Past variables cannot be caused by future variables
-3. **Experimental data** — Randomized trials identify specific edges
-4. **Instrumental variables** — Natural experiments that break symmetry
-
-. . .
-
 ::: {.callout-box .green}
-**The strategy for MNH programs:** Learn the *skeleton* from DHIS2 data (which variables are connected), then use domain expertise and temporal ordering to orient ambiguous edges.
+**With an algorithm:**
+
+The algorithm tests which variables are connected and which are independent. It eliminates the vast majority. You end up with a small set of DAGs — often just a handful — consistent with the data.
+:::
+:::
 :::
 
-
-# Structure Learning {background-color="#005CB9"}
-
-
-## Two Approaches to Learning DAGs
-
-::: {.columns-equal}
-::: {.col}
-### Constraint-Based (PC Algorithm)
-
-**Idea:** Test conditional independencies in data, build skeleton from results
-
-**Steps:**
-
-1. Start with complete undirected graph
-2. For each pair (X, Y): test if X ⊥ Y
-3. Remove edge if independent
-4. For each pair (X, Y): test if X ⊥ Y | Z for each Z
-5. Continue with larger conditioning sets
-6. Orient edges using collider rules
+. . .
 
 ::: {.callout-box}
-**Pro:** Statistically principled, fast for sparse graphs
-**Con:** Sensitive to errors in independence tests
-:::
-:::
-
-::: {.col}
-### Score-Based (Hill Climbing)
-
-**Idea:** Search over DAG space, optimize a scoring function
-
-**Steps:**
-
-1. Start with empty (or random) graph
-2. Propose adding, removing, or reversing an edge
-3. Compute score (e.g., BIC, BDe)
-4. Accept change if score improves
-5. Repeat until no improvement possible
-
-::: {.callout-box}
-**Pro:** Robust to individual test errors, handles small samples
-**Con:** Can get stuck in local optima
-:::
-:::
+**Think of it like a detective.** The algorithm cannot always name the one culprit. But it can narrow the suspect list from thousands down to three or four. That is enormously helpful.
 :::
 
 
-## The PC Algorithm in Detail
+## How the Algorithm Works (Intuition)
+
+You do not need to know the math. Here is the basic idea behind **score-based** structure learning:
+
+. . .
 
 <div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;">Complete<br>graph</div>
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Step 1</strong><br>Start with<br>no arrows</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #E24A3F;">Remove<br>edges</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Step 2</strong><br>Try adding<br>an arrow</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #F8A623;">Find<br>v-structures</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>Step 3</strong><br>Does the DAG<br>fit better?</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;">Orient<br>remaining</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;"><strong>Step 4</strong><br>Keep if yes,<br>discard if no</div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #3E9B6E;">CPDAG</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;"><strong>Step 5</strong><br>Repeat until<br>no improvement</div>
 </div>
-
-. . .
-
-**Edge removal:** For each pair X—Y, search for a set **S** such that X ⊥ Y | S
-
-- If found, remove edge and record S as the **separating set**
-- Start with |S| = 0 (marginal independence), then |S| = 1, 2, ...
-
-. . .
-
-**V-structure detection:** For each unshielded triple X—Z—Y (no edge X—Y):
-
-- If Z is NOT in the separating set of X and Y, orient as X → Z ← Y (collider)
-
-. . .
-
-**Edge propagation:** Apply Meek's rules to orient remaining edges without creating new colliders or cycles.
-
-
-## Score-Based Learning: BIC
-
-::: {.definition-box}
-**Bayesian Information Criterion (BIC):**
-
-$$\text{BIC}(G) = \sum_{i=1}^{p} \left[ \log P(X_i \mid \text{Pa}_G(X_i)) - \frac{d_i}{2} \log n \right]$$
-
-Where $d_i$ = number of parameters for node $i$ and $n$ = sample size.
-:::
-
-. . .
-
-**Interpretation:**
-
-- First term: **fit** — how well the DAG explains the data
-- Second term: **complexity penalty** — penalizes extra edges
-- **BIC balances** fit and parsimony automatically
 
 . . .
 
 ::: {.callout-box}
-**In practice:** Hill-climbing with BIC is the most commonly used structure learning method. The `bnlearn` package implements this as `hc()`.
+**The scoring function** balances two things: how well the DAG explains the data (fit) versus how many arrows it uses (simplicity). The algorithm finds the sweet spot. This is called **hill climbing** — the approach behind `bnlearn::hc()`.
 :::
 
 
-## Assumptions and Limitations
+# What Algorithms Cannot Do {background-color="#005CB9"}
 
-**Both methods assume:**
-
-::: {.incremental}
-1. **Causal sufficiency** — No unobserved common causes (hidden confounders)
-2. **Faithfulness** — The data distribution is faithful to the true DAG (no exact cancellations)
-3. **Correct functional form** — For constraint-based: independence test matches data type
-4. **Sufficient sample size** — Especially for constraint-based methods
-:::
-
-. . .
-
-::: {.callout-box .red}
-**Violation in MNH data:** Causal sufficiency is almost certainly violated — DHIS2 data doesn't capture community-level factors, cultural practices, or household income. **Learned DAGs should be treated as hypotheses, not ground truth.**
-:::
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The limits of data-driven discovery</span>
 
 
-# Instrumental Variables {background-color="#005CB9"}
-
-
-## The Endogeneity Problem
-
-Suppose we want to estimate: **Does midwife density cause lower NMR?**
-
-<div style="text-align: center; margin: 0.6em 0;">
-<span class="dag-node treatment">Midwife Density</span>
-<span class="dag-arrow">→</span>
-<span class="dag-node outcome">NMR</span>
-</div>
-
-**Problem:** There's a confounder (district wealth) that affects both:
-
-<div style="text-align: center; margin: 0.6em 0;">
-<span class="dag-node treatment">Midwife Density</span>
-<span class="dag-arrow">→</span>
-<span class="dag-node outcome">NMR</span>
-<br>
-<span class="dag-node confounder" style="margin-top: 0.3em;">District Wealth</span>
-</div>
-
-<div style="text-align: center; font-size: 0.6em; color: #999;">
-(District Wealth → Midwife Density AND District Wealth → NMR)
-</div>
-
-. . .
-
-::: {.callout-box .red}
-**Naive regression** of NMR on Midwife Density gives a **biased** estimate because wealthier districts have both more midwives AND better outcomes for other reasons.
-:::
-
-
-## The IV Solution
-
-::: {.definition-box}
-**Instrumental Variable (IV):** A variable Z that:
-
-1. **Relevance:** Z is correlated with the treatment (Midwife Density)
-2. **Exclusion:** Z affects the outcome (NMR) *only through* the treatment
-3. **Independence:** Z is independent of the confounders (District Wealth)
-:::
-
-. . .
-
-**MNH Instrument: Distance to nearest training college**
-
-<div style="text-align: center; margin: 0.6em 0; font-size: 0.8em;">
-<span class="dag-node" style="border-color: #3E9B6E; color: #3E9B6E;">Distance to<br>Training College</span>
-<span class="dag-arrow positive">→</span>
-<span class="dag-node treatment">Midwife<br>Density</span>
-<span class="dag-arrow">→</span>
-<span class="dag-node outcome">NMR</span>
-<br>
-<span style="visibility: hidden;">placeholder</span>
-<span class="dag-node confounder" style="margin-top: 0.3em;">District<br>Wealth</span>
-</div>
-
-. . .
-
-::: {.callout-box .green}
-**Why this works:** Distance to training college affects how many midwives work in a district (relevance), but doesn't directly cause neonatal deaths (exclusion), and isn't driven by district wealth (independence — colleges were placed for historical/political reasons).
-:::
-
-
-## Two-Stage Least Squares (2SLS)
+## Three Limitations
 
 ::: {.columns-equal}
 ::: {.col}
-**Stage 1: Predict treatment from instrument**
+**1. Arrow direction (usually)**
 
-$$\text{Midwife}_i = \alpha + \beta_1 \cdot \text{Distance}_i + \epsilon_i$$
-
-Get predicted values: $\widehat{\text{Midwife}}_i$
-
-**Stage 2: Regress outcome on predicted treatment**
-
-$$\text{NMR}_i = \gamma + \delta \cdot \widehat{\text{Midwife}}_i + \nu_i$$
-
-The coefficient $\delta$ is the **causal effect** estimate.
-:::
-
-::: {.col}
-**Why it works:**
-
-- Stage 1 extracts the part of midwife variation that's driven by distance (exogenous)
-- This purges the wealth-driven (endogenous) variation
-- Stage 2 uses only the "clean" variation → unbiased estimate
-
-::: {.callout-box}
-**Intuition:** We're comparing districts that differ in midwife density *because of* training college proximity — not because of wealth.
-:::
-:::
-:::
-
-
-## IV Assumptions: When They Fail
-
-| Assumption | Violation Example | Consequence |
-|-----------|-------------------|-------------|
-| **Relevance** | Distance barely predicts midwife density | Weak instrument → imprecise, biased estimates |
-| **Exclusion** | College towns also have better hospitals | IV estimate captures hospital effect too |
-| **Independence** | Colleges built in wealthy districts | IV is confounded → biased like OLS |
+When two variables are correlated, the algorithm often cannot tell whether A causes B or B causes A. The chain and the reverse chain look identical in the data.
 
 . . .
 
+**2. Hidden variables**
+
+If a confounder is not in your dataset, the algorithm cannot find it. It might draw a direct arrow between two variables that are actually both caused by something unmeasured.
+:::
+
+::: {.col}
+**3. The "why"**
+
+The algorithm tells you that Staffing and NMR are connected. It does not tell you *why* — whether it is because better-staffed facilities provide better emergency care, or because staffing is a proxy for overall facility quality.
+
+. . .
+
+::: {.callout-box .red}
+**A learned DAG is a hypothesis, not a proof.** It tells you what the data is *consistent with*. It does not tell you what is *true*.
+:::
+:::
+:::
+
+
+## When Direction Is Ambiguous
+
+Imagine the algorithm finds that **Training** and **Quality of Care** are strongly associated. It says: "These two are connected." But which arrow is correct?
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Option A:** Training → Quality
+
+Training improves quality. This is the intuitive story — you invest in training *because* you believe it improves care.
+:::
+:::
+
+::: {.col}
 ::: {.callout-box .orange}
-**In practice:** The exclusion restriction is *untestable* — it relies on domain knowledge. The relevance condition *is* testable via the first-stage F-statistic (rule of thumb: F > 10).
+**Option B:** Quality → Training
+
+High-quality facilities attract more training opportunities. They have the reputation and infrastructure that training programs seek out.
+:::
+:::
 :::
 
-
-# Regression with Causal Awareness {background-color="#005CB9"}
-
-
-## Good Controls vs. Bad Controls
-
-Not all control variables improve your estimate. Some make it **worse:**
-
-::: {.columns-equal}
-::: {.col}
-### Good Controls
-
-**Confounders:** Variables that cause both treatment and outcome
-
-<div style="font-size: 0.65em; text-align: center;">
-<span class="dag-node confounder">Z</span>
-→ <span class="dag-node treatment">X</span>
-→ <span class="dag-node outcome">Y</span>
-<br>
-<span class="dag-node confounder">Z</span>
-→ <span class="dag-node outcome">Y</span>
-</div>
+. . .
 
 ::: {.callout-box .green}
-Controlling for Z **removes** the backdoor path and **reduces** bias.
-:::
-:::
-
-::: {.col}
-### Bad Controls
-
-**Mediators:** Variables on the causal path
-
-<div style="font-size: 0.65em; text-align: center;">
-<span class="dag-node treatment">X</span>
-→ <span class="dag-node confounder">M</span>
-→ <span class="dag-node outcome">Y</span>
-</div>
-
-::: {.callout-box .red}
-Controlling for M **blocks** the causal path and **underestimates** the total effect.
-:::
-:::
+**How do you break the tie?** You ask someone who knows the health system. A clinician would tell you: "Training came first — the facilities received training, and *then* quality improved." Expert knowledge resolves the ambiguity that data alone cannot.
 :::
 
 
-## The Collider Bias Trap
+# The Best Approach: Expert + Algorithm {background-color="#005CB9"}
 
-**Controlling for a collider creates spurious association:**
-
-<div style="text-align: center; margin: 0.6em 0;">
-<span class="dag-node treatment">Staffing</span>
-<span class="dag-arrow">→</span>
-<span class="dag-node confounder">Quality Rating</span>
-<span class="dag-arrow">←</span>
-<span class="dag-node outcome">Equipment</span>
-</div>
-
-. . .
-
-- Staffing and Equipment are **independent** (neither causes the other)
-- Quality Rating is a **collider** — caused by both
-- If we condition on Quality Rating (e.g., "among facilities rated Good")...
-
-. . .
-
-::: {.callout-box .red}
-**Collider bias:** Among good-quality facilities, those with low staffing must compensate with better equipment. This creates a *negative* association between Staffing and Equipment — **an artifact of the conditioning**, not a real causal relationship.
-:::
-
-. . .
-
-::: {.callout-box}
-**Rule:** Never control for a variable that is a *descendant* of the treatment unless you have a specific reason (e.g., you want the controlled direct effect, not the total effect).
-:::
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Why humans and computers work better together</span>
 
 
-## Summary: Control Variable Decision Guide
-
-<table style="font-size: 0.58em; width: 100%;">
-<tr><th>Variable Type</th><th>Relationship to X→Y</th><th>Control?</th><th>Why</th></tr>
-<tr><td><strong>Confounder</strong></td><td>Z → X, Z → Y</td><td style="color: #83BD00; font-weight: 700;">Yes</td><td>Blocks backdoor path</td></tr>
-<tr><td><strong>Mediator</strong></td><td>X → M → Y</td><td style="color: #E24A3F; font-weight: 700;">No*</td><td>Blocks causal path; underestimates effect</td></tr>
-<tr><td><strong>Collider</strong></td><td>X → C ← Y</td><td style="color: #E24A3F; font-weight: 700;">No</td><td>Opens spurious path; creates bias</td></tr>
-<tr><td><strong>Instrument</strong></td><td>Z → X, Z ⊥ Y|X</td><td style="color: #F8A623; font-weight: 700;">Use in IV</td><td>Use for 2SLS, not as control</td></tr>
-<tr><td><strong>Precision variable</strong></td><td>Z → Y only</td><td style="color: #83BD00; font-weight: 700;">Yes</td><td>Reduces variance without bias</td></tr>
-</table>
-
-<p style="font-size: 0.5em; color: #999;">*Unless you want the controlled direct effect, not the total effect</p>
-
-. . .
-
-::: {.definition-box}
-**The key principle:** Use your DAG to determine which variables to control. Regression without a causal model is flying blind — you might adjust for something that *increases* bias rather than reducing it.
-:::
-
-
-# MNH Application: DHIS2 Data {background-color="#005CB9"}
-
-
-## The DHIS2 Data Opportunity
-
-**DHIS2** (District Health Information System 2) is used in most MNH program target countries across sub-Saharan Africa.
-
-::: {.columns-equal}
-::: {.col}
-**Available variables:**
-
-- Facility staffing levels (monthly)
-- Equipment inventories (quarterly)
-- Delivery counts by facility
-- C-section rates
-- Neonatal outcomes (live births, stillbirths)
-- Referral patterns
-- Drug stock-out frequency
-:::
-
-::: {.col}
-**The question:**
-
-Can we use DHIS2 data to **discover** the causal structure linking facility characteristics to neonatal outcomes?
-
-::: {.callout-box}
-**Sample:** ~3,000 facilities across 10 countries, monthly data for 5 years = **180,000 facility-months**
-:::
-:::
-:::
-
-
-## Candidate Causal Variables
-
-For structure learning, we select **8 key variables:**
-
-<table style="font-size: 0.58em; width: 100%;">
-<tr><th>Variable</th><th>Type</th><th>Source</th></tr>
-<tr><td><strong>Staffing Adequacy</strong></td><td>Binary (Adequate/Low)</td><td>DHIS2 HR module</td></tr>
-<tr><td><strong>Equipment Index</strong></td><td>Continuous (0-1)</td><td>DHIS2 inventory</td></tr>
-<tr><td><strong>Drug Availability</strong></td><td>Binary (Stocked/Stockout)</td><td>DHIS2 logistics</td></tr>
-<tr><td><strong>Training Completion</strong></td><td>Binary (Yes/No)</td><td>Program records</td></tr>
-<tr><td><strong>C-Section Rate</strong></td><td>Continuous (%)</td><td>DHIS2 delivery data</td></tr>
-<tr><td><strong>Referral Rate</strong></td><td>Continuous (%)</td><td>DHIS2 referrals</td></tr>
-<tr><td><strong>Delivery Volume</strong></td><td>Count</td><td>DHIS2 delivery data</td></tr>
-<tr><td><strong>NMR</strong></td><td>Rate per 1,000</td><td>DHIS2 outcomes</td></tr>
-</table>
-
-
-## Expected Causal Structure (Expert Prior)
-
-Based on domain knowledge, we expect:
+## The Partnership
 
 <div style="text-align: center; font-size: 0.6em; margin: 0.5em 0;">
-<table style="margin: 0 auto; border-collapse: separate; border-spacing: 0.5em;">
+<table style="width: 95%; margin: 0 auto;">
+<tr><th style="padding: 0.5em;">Approach</th><th style="padding: 0.5em;">Strengths</th><th style="padding: 0.5em;">Weaknesses</th></tr>
 <tr>
-<td style="text-align: center;">
-<span class="dag-node treatment">Training</span>
+<td style="padding: 0.5em; border: 1px solid #ddd;"><strong>Expert only</strong></td>
+<td style="padding: 0.5em; border: 1px solid #ddd;">Understands mechanisms, temporal order, context</td>
+<td style="padding: 0.5em; border: 1px solid #ddd;">May miss unexpected connections; biased by prior beliefs</td>
+</tr>
+<tr>
+<td style="padding: 0.5em; border: 1px solid #ddd;"><strong>Algorithm only</strong></td>
+<td style="padding: 0.5em; border: 1px solid #ddd;">Checks every possible connection; finds surprises</td>
+<td style="padding: 0.5em; border: 1px solid #ddd;">Cannot determine all arrow directions; blind to unmeasured variables</td>
+</tr>
+<tr>
+<td style="padding: 0.5em; border: 1px solid #ddd; background-color: rgba(131, 189, 0, 0.1);"><strong>Expert + Algorithm</strong></td>
+<td style="padding: 0.5em; border: 1px solid #ddd; background-color: rgba(131, 189, 0, 0.1);">Human draws DAG; computer checks data; disagreements trigger investigation</td>
+<td style="padding: 0.5em; border: 1px solid #ddd; background-color: rgba(131, 189, 0, 0.1);">Requires both expertise and data — but that is what good research looks like</td>
+</tr>
+</table>
+</div>
+
+. . .
+
+::: {.key-takeaway}
+**The winning strategy:** You draw the DAG from what you know. The computer checks if the data agrees. Where they disagree, you investigate. This is how science actually works — theory and evidence in conversation.
+:::
+
+
+## The Three-Step Workflow
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Step 1: Draw</strong><br>Expert draws DAG<br>from domain knowledge</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Step 2: Learn</strong><br>Algorithm learns DAG<br>from data</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;"><strong>Step 3: Compare</strong><br>Where do they agree?<br>Where do they disagree?</div>
+</div>
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Where they agree:** High confidence. Both theory and data point the same way. Trust the arrow.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Where they disagree:** Investigate. Maybe the expert was wrong. Maybe the data is misleading. Maybe there is a hidden variable. This is where the most interesting discoveries happen.
+:::
+:::
+:::
+
+
+# The Feedback Loop {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Data refines model, model guides data</span>
+
+
+## The Virtuous Cycle
+
+Here is the big-picture conclusion of the entire course:
+
+<div style="text-align: center; margin: 1em 0;">
+<table style="margin: 0 auto; border-collapse: separate; border-spacing: 0.3em; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 0.8em;">
+<div class="dag-node decision rect" style="padding: 0.5em 0.8em; font-size: 1.1em;">Expert<br>Knowledge</div>
+</td>
+<td style="text-align: center; font-size: 1.8em;">→</td>
+<td style="text-align: center; padding: 0.8em;">
+<div class="dag-node" style="padding: 0.5em 0.8em; font-size: 1.1em;">Causal<br>Model</div>
+</td>
+<td style="text-align: center; font-size: 1.8em;">→</td>
+<td style="text-align: center; padding: 0.8em;">
+<div class="dag-node" style="padding: 0.5em 0.8em; font-size: 1.1em; border-color: #83BD00; color: #83BD00;">Testable<br>Predictions</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center; font-size: 1.2em;">↑</td>
+<td></td>
+<td></td>
+<td style="text-align: center; font-size: 1.2em;">↓</td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center; padding: 0.8em;">
+<div class="dag-node" style="padding: 0.5em 0.8em; font-size: 1.1em; border-color: #F8A623; color: #F8A623;">Revised<br>Understanding</div>
+</td>
+<td style="text-align: center; font-size: 1.8em;">←</td>
+<td style="text-align: center; padding: 0.8em;">
+<div class="dag-node" style="padding: 0.5em 0.8em; font-size: 1.1em; border-color: #E24A3F; color: #E24A3F;">Data<br>Collection</div>
 </td>
 <td></td>
-<td style="text-align: center;">
-<span class="dag-node treatment">Drug Availability</span>
-</td>
-</tr>
-<tr>
-<td style="text-align: center;">↓</td>
-<td></td>
-<td style="text-align: center;">↓</td>
-</tr>
-<tr>
-<td style="text-align: center;">
-<span class="dag-node confounder">Staffing</span>
-</td>
-<td style="text-align: center;">→</td>
-<td style="text-align: center;">
-<span class="dag-node confounder">C-Section Rate</span>
-</td>
-</tr>
-<tr>
-<td style="text-align: center;">↓</td>
-<td style="text-align: center;">↘</td>
-<td style="text-align: center;">↓</td>
-</tr>
-<tr>
-<td style="text-align: center;">
-<span class="dag-node confounder">Referral Rate</span>
-</td>
-<td style="text-align: center;">→</td>
-<td style="text-align: center;">
-<span class="dag-node outcome">NMR</span>
-</td>
 </tr>
 </table>
 </div>
@@ -659,338 +442,349 @@ Based on domain knowledge, we expect:
 . . .
 
 ::: {.callout-box}
-**Goal:** Compare this expert-elicited DAG with the data-driven DAG from structure learning. Where they agree → high confidence. Where they disagree → investigate further.
+**The cycle never truly ends.** You start with knowledge, build a model, make predictions, collect data, check the predictions, revise the model, and start again. Each pass makes your understanding sharper and your decisions better.
+:::
+
+
+## What Each Step Does
+
+::: {.incremental}
+1. **Expert Knowledge → Causal Model:** Draw the DAG based on what you know (Chapters 1--3)
+2. **Causal Model → Testable Predictions:** The DAG implies statistical patterns — "If my DAG is right, X and Y should be independent given Z" (Chapters 4--6)
+3. **Testable Predictions → Data Collection:** You know exactly what to measure and look for (Chapters 7--8)
+4. **Data Collection → Revised Understanding:** Data confirms your predictions (good!) or surprises you (even better — you learn something new)
+5. **Revised Understanding → Expert Knowledge:** Update your DAG and start the next cycle stronger
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is the scientific method applied to causal modeling.** It is not a one-time exercise. It is a living process that gets better with every iteration.
+:::
+
+
+# MNH Application: Tanzania's Health Data {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using real health information systems to check our models</span>
+
+
+## Tanzania's Digital Health Infrastructure
+
+::: {.columns-equal}
+::: {.col}
+**DHIS2 & GoTHOMIS:**
+
+- **DHIS2** (District Health Information System 2) covers routine health data at approximately **80% of health facilities**
+- **GoTHOMIS** handles individual-level clinical records
+- Together, they capture staffing, equipment, service delivery, and outcomes
+:::
+
+::: {.col}
+::: {.callout-box}
+**What this means for us:**
+
+Tanzania has the *data infrastructure* to test causal models against real facility-level records.
+
+When we draw a DAG predicting that staffing affects delivery outcomes, we can check: **Does the DHIS2 data agree?**
+
+This is the feedback loop in action.
+:::
+:::
+:::
+
+
+## Testing Predictions with Facility Data
+
+::: {.example-block}
+[MNH Example]{.example-label}
+
+**Expert prediction:** "Adequate staffing reduces neonatal mortality, partly through improved emergency response capability."
+
+**The DAG says:** Staffing → Emergency Response → NMR. This implies that if you know Emergency Response, Staffing and NMR should become less correlated.
+
+**The data test:** Using DHIS2 facility records, check whether the correlation between staffing and neonatal outcomes weakens after controlling for emergency C-section rates (a proxy for emergency response).
+
+**If the data agrees:** Confidence in the DAG goes up.
+
+**If the data disagrees:** Maybe staffing also has a direct effect through other pathways. Revise the DAG.
+:::
+
+
+## What We Can Discover
+
+With large-scale DHIS2 data from Tanzanian facilities, a structure-learning algorithm might discover:
+
+. . .
+
+::: {.incremental}
+- **Expected connections:** Staffing and outcomes are linked (algorithm confirms what experts believe)
+- **Surprising connections:** Drug stock-outs are more strongly linked to mortality than equipment availability — suggesting supply chain might matter more than capital investment
+- **Missing connections:** Training completion does not directly predict outcomes — maybe the link works only through on-the-job practice
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Each surprise is a gift.** The algorithm did not prove the expert wrong — it pointed to exactly where the expert should look more carefully.
 :::
 
 
 # R Workshop: Structure Learning {background-color="#005CB9"}
 
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Learning a DAG from simulated data with bnlearn</span>
 
-## R Block 1: Simulate DHIS2-Like Data
+
+## R Block 1: Simulate Health Facility Data
+
+We create a simulated dataset mimicking DHIS2 data. We know the "true" DAG — so we can see how well the algorithm does.
 
 ```{r}
+#| label: simulate-data
 #| echo: true
 #| eval: false
 library(bnlearn)
-library(tidyverse)
 
 set.seed(42)
-n <- 3000  # facilities
+n <- 1000  # Simulated facilities
 
-# True causal structure (known to us, not the algorithm)
-true_dag <- model2network(paste0(
-  "[Training][DrugAvail][Equipment]",
-  "[Staffing|Training]",
-  "[CSection|Staffing:DrugAvail:Equipment]",
-  "[Referral|Staffing:Equipment]",
-  "[Volume|Staffing:Equipment]",
-  "[NMR|CSection:Referral:Staffing:DrugAvail]"
-))
+# ── The "TRUE" causal structure (known to us, hidden from the algorithm) ──
+# Training → Staffing → NMR;  DrugAvail → NMR
+# Equipment → Referral;  Staffing → Referral
 
-# Simulate from known structure with realistic parameters
 training    <- rbinom(n, 1, 0.6)
 drug_avail  <- rbinom(n, 1, 0.7)
 equipment   <- rnorm(n, 0.5, 0.15) |> pmin(1) |> pmax(0)
-staffing    <- rbinom(n, 1, 0.4 + 0.3 * training)
-csection    <- 5 + 8 * staffing + 3 * drug_avail + 4 * equipment + rnorm(n, 0, 3)
-referral    <- 15 - 5 * staffing - 3 * equipment + rnorm(n, 0, 4)
-volume      <- 50 + 30 * staffing + 20 * equipment + rnorm(n, 0, 15)
-nmr         <- 35 - 8 * staffing - 4 * drug_avail - 3 * (csection > 10) -
-               2 * (referral < 10) + rnorm(n, 0, 5)
+staffing    <- rbinom(n, 1, 0.3 + 0.35 * training)
+referral    <- 20 - 5 * staffing - 4 * equipment + rnorm(n, 0, 3)
+nmr         <- 30 - 6 * staffing - 4 * drug_avail + rnorm(n, 0, 5)
 
-dhis2 <- tibble(
-  Training = factor(training, labels = c("No", "Yes")),
-  DrugAvail = factor(drug_avail, labels = c("Stockout", "Available")),
-  Equipment = equipment,
-  Staffing = factor(staffing, labels = c("Low", "Adequate")),
-  CSection = csection,
-  Referral = referral,
-  Volume = volume,
-  NMR = nmr
+facility_data <- data.frame(
+  Training = training, DrugAvail = drug_avail, Equipment = equipment,
+  Staffing = staffing, Referral = referral, NMR = nmr
 )
 
-head(dhis2)
+cat("Dataset:", n, "facilities,", ncol(facility_data), "variables\n")
+head(facility_data)
 ```
 
+::: {.callout-box}
+**What we built:** A 5-arrow DAG with 6 variables. The algorithm does not know the true structure — it only sees the data.
+:::
 
-## R Block 2: PC Algorithm — Learn Structure from Data
+
+## R Block 2: Learn the DAG and Compare
 
 ```{r}
+#| label: learn-and-compare
 #| echo: true
 #| eval: false
-# Constraint-based structure learning: PC algorithm (stable version)
-# Uses conditional independence tests to discover edges
 
-learned_pc <- pc.stable(dhis2, test = "mi-cg", alpha = 0.05)
-# "mi-cg" = mutual information test for conditional Gaussian (mixed data)
+# Define the TRUE DAG for comparison
+true_dag <- model2network(
+ "[Training][DrugAvail][Equipment][Staffing|Training][Referral|Staffing:Equipment][NMR|Staffing:DrugAvail]"
+)
 
-# Compare learned vs. true structure
-cat("True DAG edges:\n")
-print(arcs(true_dag))
+# Hill Climbing: tries adding, removing, reversing arrows
+# Keeps changes that improve the score
+learned_dag <- hc(facility_data)
 
-cat("\nLearned CPDAG edges:\n")
-print(arcs(learned_pc))
+# ── Compare: which arrows did the algorithm get right? ──
+true_arcs    <- arcs(true_dag)
+learned_arcs <- arcs(learned_dag)
+correct      <- merge(true_arcs, learned_arcs)
 
-# Structural Hamming Distance (SHD) — lower is better
-shd_score <- shd(learned_pc, true_dag)
-cat("\nStructural Hamming Distance:", shd_score, "\n")
+cat("True DAG arrows:", nrow(true_arcs), "\n")
+cat("Learned DAG arrows:", nrow(learned_arcs), "\n")
+cat("Correct arrows:", nrow(correct), "out of", nrow(true_arcs), "\n")
 
-# Which edges were correctly identified?
-true_arcs <- arcs(true_dag)
-learned_arcs <- arcs(learned_pc)
-cat("\nTrue positives:", nrow(merge(true_arcs, learned_arcs)), "\n")
-cat("False positives:", nrow(learned_arcs) - nrow(merge(true_arcs, learned_arcs)), "\n")
-cat("False negatives:", nrow(true_arcs) - nrow(merge(true_arcs, learned_arcs)), "\n")
+# What did it miss or add?
+missed <- true_arcs[!paste(true_arcs[,1], true_arcs[,2]) %in%
+                     paste(learned_arcs[,1], learned_arcs[,2]), ]
+extra  <- learned_arcs[!paste(learned_arcs[,1], learned_arcs[,2]) %in%
+                        paste(true_arcs[,1], true_arcs[,2]), ]
+
+cat("\nMissed arrows:\n"); print(missed)
+cat("\nExtra arrows (false positives):\n"); print(extra)
 ```
 
 
-## R Block 3: Score-Based Learning (Hill Climbing)
+## R Block 3: Visualize the Comparison
 
 ```{r}
+#| label: visualize-comparison
 #| echo: true
 #| eval: false
-# Score-based structure learning: Hill Climbing with BIC
-learned_hc <- hc(dhis2, score = "bic-cg")
-# "bic-cg" = BIC for conditional Gaussian networks
+#| fig-width: 10
+#| fig-height: 5
 
-# Compare all three structures
-cat("=== Structure Comparison ===\n\n")
+# Side-by-side: True DAG vs. Learned DAG
+par(mfrow = c(1, 2))
 
-cat("PC algorithm edges:", nrow(arcs(learned_pc)), "\n")
-cat("Hill climbing edges:", nrow(arcs(learned_hc)), "\n")
-cat("True DAG edges:", nrow(arcs(true_dag)), "\n\n")
+graphviz.plot(true_dag,
+              main = "True DAG (what we built)",
+              shape = "ellipse",
+              highlight = list(nodes = "NMR",
+                               fill = "#E24A3F", col = "#E24A3F"))
 
-cat("SHD (PC vs. true):", shd(learned_pc, true_dag), "\n")
-cat("SHD (HC vs. true):", shd(learned_hc, true_dag), "\n")
-
-# Visualize all three
-par(mfrow = c(1, 3))
-graphviz.plot(true_dag, main = "True DAG", shape = "ellipse",
-              highlight = list(nodes = "NMR", fill = "#E24A3F", col = "#E24A3F"))
-graphviz.plot(learned_pc, main = "PC Algorithm (CPDAG)", shape = "ellipse",
-              highlight = list(nodes = "NMR", fill = "#E24A3F", col = "#E24A3F"))
-graphviz.plot(learned_hc, main = "Hill Climbing (BIC)", shape = "ellipse",
-              highlight = list(nodes = "NMR", fill = "#E24A3F", col = "#E24A3F"))
+graphviz.plot(learned_dag,
+              main = "Learned DAG (what the algorithm found)",
+              shape = "ellipse",
+              highlight = list(nodes = "NMR",
+                               fill = "#E24A3F", col = "#E24A3F"))
 ```
 
+. . .
 
-## Interpreting Structure Learning Results
+::: {.callout-box .green}
+**Typical result with 1,000 observations:** The algorithm gets **4 out of 5 arrows correct**. It finds all the right connections but may reverse one arrow direction. That reversed arrow is exactly where expert knowledge steps in.
+:::
+
+
+## Interpreting the Results
 
 ::: {.columns-equal}
 ::: {.col}
-**What we typically find:**
+**What the algorithm typically gets right:**
 
-- **Skeleton** (which nodes are connected) is usually well-recovered with n > 1000
-- **Edge direction** is harder — many undirected edges in CPDAG
-- **Collider structures** are the best-identified patterns
-- **Long chains** are hardest (each intermediate test adds error)
+- The **connections** (skeleton) — which variables are linked
+- **Collider structures** — where two arrows point in
+- Strong effects with large sample sizes
+
+**What it typically gets wrong:**
+
+- **Arrow direction** in chains — it may flip an arrow
+- Weak effects — small effects may be missed entirely
 :::
 
 ::: {.col}
 ::: {.callout-box}
-**For the MNH program:**
+**The expert's role:**
 
-The learned structure tells us which DHIS2 variables are causally connected. But the *direction* of some edges requires expert input.
+When the algorithm says "Training and Staffing are connected," you ask: "Which came first?"
 
-**Strategy:** Use learned skeleton + expert orientation + temporal ordering to build the final causal model.
+Training programs are *deployed* to improve staffing. Staffing does not create training programs.
+
+**Temporal order resolves the ambiguity.** The arrow must go Training → Staffing.
+:::
+
+::: {.callout-box .green}
+**This is the Expert + Algorithm partnership.** The algorithm found the connection. The expert determined the direction. Together, they are stronger than either alone.
 :::
 :::
 :::
 
 
-## R Block 4: Instrumental Variable Estimation
+# Course Summary {background-color="#005CB9"}
 
-```{r}
-#| echo: true
-#| eval: false
-library(ivreg)  # for 2SLS estimation
-
-# Does midwife density cause lower NMR?
-# Instrument: distance to nearest training college
-
-set.seed(123)
-n_districts <- 500
-
-# Simulate IV scenario
-wealth        <- rnorm(n_districts, 50, 15)           # confounder
-distance      <- runif(n_districts, 5, 200)            # instrument
-midwife_density <- 20 - 0.05 * distance + 0.3 * wealth + rnorm(n_districts, 0, 3)
-nmr_district  <- 40 - 0.4 * midwife_density - 0.2 * wealth + rnorm(n_districts, 0, 5)
-
-iv_data <- tibble(
-  NMR = nmr_district,
-  Midwife = midwife_density,
-  Distance = distance,
-  Wealth = wealth
-)
-
-# Naive OLS (biased — omits wealth)
-ols_naive <- lm(NMR ~ Midwife, data = iv_data)
-
-# OLS with control (correct if we observe wealth)
-ols_controlled <- lm(NMR ~ Midwife + Wealth, data = iv_data)
-
-# 2SLS IV estimation (doesn't need wealth)
-iv_est <- ivreg(NMR ~ Midwife | Distance, data = iv_data)
-
-# Compare all three
-cat("=== Causal Effect of Midwife Density on NMR ===\n")
-cat("True effect:        -0.40\n")
-cat("Naive OLS:         ", round(coef(ols_naive)["Midwife"], 3), "\n")
-cat("Controlled OLS:    ", round(coef(ols_controlled)["Midwife"], 3), "\n")
-cat("IV (2SLS):         ", round(coef(iv_est)["Midwife"], 3), "\n")
-
-# First-stage F-statistic (test instrument strength)
-first_stage <- lm(Midwife ~ Distance, data = iv_data)
-cat("\nFirst-stage F-stat:", summary(first_stage)$fstatistic[1] |> round(1), "\n")
-cat("(Rule of thumb: F > 10 for strong instrument)\n")
-```
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The 10-chapter journey</span>
 
 
-## R Block 5: Good vs. Bad Controls in Regression
-
-```{r}
-#| echo: true
-#| eval: false
-# Demonstrate: controlling for a mediator UNDERESTIMATES the total effect
-# Demonstrate: controlling for a collider CREATES spurious association
-
-set.seed(456)
-n <- 2000
-
-# --- Mediator example ---
-# True DAG: Training → Competency → NMR
-training_m   <- rbinom(n, 1, 0.5)
-competency   <- 0.3 + 0.4 * training_m + rnorm(n, 0, 0.15)
-nmr_m        <- 35 - 15 * competency + rnorm(n, 0, 4)
-
-# Total effect of training (correct)
-cat("=== Mediator Example ===\n")
-cat("Total effect (no mediator control):",
-    round(coef(lm(nmr_m ~ training_m))["training_m"], 2), "\n")
-# Controlled direct effect (blocks causal path!)
-cat("Direct effect (controlling mediator):",
-    round(coef(lm(nmr_m ~ training_m + competency))["training_m"], 2), "\n")
-cat("True total effect: -6.0\n\n")
-
-# --- Collider example ---
-# True DAG: Staffing → Quality ← Equipment; Staffing ⊥ Equipment
-staffing_c   <- rbinom(n, 1, 0.5)
-equipment_c  <- rnorm(n, 0.5, 0.2)
-quality      <- 0.3 * staffing_c + 0.4 * equipment_c + rnorm(n, 0, 0.1)
-
-cat("=== Collider Example ===\n")
-cat("Staffing-Equipment correlation (unconditional):",
-    round(cor(staffing_c, equipment_c), 3), "\n")
-
-# Condition on collider — creates spurious association
-high_quality <- quality > median(quality)
-cat("Staffing-Equipment correlation (among high-quality):",
-    round(cor(staffing_c[high_quality], equipment_c[high_quality]), 3), "\n")
-cat("Expected: ~0 unconditional, negative conditional (collider bias)\n")
-
-# Visualize collider bias
-tibble(Staffing = staffing_c, Equipment = equipment_c,
-       Quality = ifelse(quality > median(quality), "High", "Low")) |>
-  ggplot(aes(x = factor(Staffing), y = Equipment, fill = Quality)) +
-  geom_boxplot(alpha = 0.7) +
-  scale_fill_manual(values = c("High" = "#83BD00", "Low" = "#E24A3F")) +
-  labs(title = "Collider Bias: Conditioning on Quality of Care",
-       subtitle = "Among high-quality facilities, staffing and equipment appear negatively correlated",
-       x = "Staffing (0 = Low, 1 = Adequate)", y = "Equipment Index") +
-  theme_minimal(base_size = 14)
-```
-
-
-## Putting It All Together: The MNH Workflow
+## The Four Pillars of the Course
 
 <div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>1. Learn</strong><br>PC/HC on<br>DHIS2 data</div>
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Think<br>Causally</strong><br><span style="font-size: 0.8em;">Chapters 1--3</span></div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>2. Orient</strong><br>Add expert<br>knowledge</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Add<br>Numbers</strong><br><span style="font-size: 0.8em;">Chapters 4--6</span></div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>3. Validate</strong><br>Test implied<br>independencies</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>Make<br>Decisions</strong><br><span style="font-size: 0.8em;">Chapters 7--9</span></div>
 <div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #3E9B6E;"><strong>4. Estimate</strong><br>IV or adjusted<br>regression</div>
-<div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #E24A3F;"><strong>5. Decide</strong><br>Use for<br>intervention</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;"><strong>Discover<br>from Data</strong><br><span style="font-size: 0.8em;">Chapter 10</span></div>
 </div>
 
 . . .
 
-::: {.callout-box}
-**This workflow combines** data-driven discovery (Ch10) with expert knowledge (Ch2-3), quantitative modeling (Ch4-5), and decision analysis (Ch7-8). The entire book's toolkit comes together here.
+| Phase | Chapters | What You Learned |
+|---|---|---|
+| **Think Causally** | 1--3 | Draw DAGs, identify confounders, conduct causal interviews |
+| **Add Numbers** | 4--6 | Bayesian networks, probability, financial impact |
+| **Make Decisions** | 7--9 | Influence diagrams, resource allocation, game theory |
+| **Discover from Data** | 10 | Structure learning, algorithm limits, expert-data partnership |
+
+
+## The Complete Toolkit
+
+::: {.columns-equal}
+::: {.col}
+**What you can now do:**
+
+1. **Draw a causal model** from expert knowledge (Ch 1--3)
+2. **Add probabilities** from data or expert estimates (Ch 4--5)
+3. **Avoid reasoning traps** — confounding, selection bias, collider bias (Ch 1, 6)
+4. **Calculate the value** of different interventions (Ch 7)
+5. **Allocate resources** optimally across competing options (Ch 8)
+6. **Anticipate strategic responses** from other actors (Ch 9)
+7. **Check your model against data** and refine it (Ch 10)
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**The MNH analyst's workflow:**
+
+1. Interview experts, draw the DAG (Ch 2--3)
+2. Populate it with DHIS2 data (Ch 4--5, 10)
+3. Identify the best intervention targets (Ch 7)
+4. Allocate resources across countries (Ch 8)
+5. Design incentive-compatible contracts (Ch 9)
+6. Collect new data, check predictions, refine (Ch 10)
+
+**This is not a one-time analysis. It is a continuous cycle of learning and improving.**
+:::
+:::
 :::
 
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Data-Driven Causal Modeling**
+**Structure Learning from Observational Data**
 
-1. **Data alone cannot determine causation** — Markov equivalence means multiple DAGs fit the same data. Domain knowledge is essential to resolve ambiguity.
+1. **Data alone cannot always determine causation.** Different causal structures can produce the same data pattern. Only colliders create a unique fingerprint that data can identify.
 
-2. **Structure learning discovers candidate DAGs** — PC algorithm (constraint-based) and hill climbing (score-based) recover the skeleton; colliders are the key to orientation.
+2. **Algorithms narrow down the possibilities dramatically.** From trillions of possible DAGs, the algorithm finds the handful consistent with the data. That is powerful — even if it cannot pick the single right one.
 
-3. **Instrumental variables overcome confounding** — When you can't control for confounders, a valid instrument recovers the causal effect via 2SLS.
+3. **Expert knowledge + algorithm = best answer.** The algorithm finds connections; the expert determines direction. This partnership is stronger than either approach alone.
 
-4. **Not all controls are good controls** — Controlling for mediators underestimates effects; controlling for colliders creates bias. Let the DAG guide your regression specification.
+4. **The feedback loop is the course's central insight.** Data refines your causal model. The model tells you what data to collect next. Each cycle makes your understanding — and your decisions — better.
 :::
 
 
-## Looking Ahead: The Complete Toolkit
+## Congratulations
 
-::: {.columns-equal}
-::: {.col}
-**What you now have:**
+You have completed **Inference and Intervention**.
 
-| Chapter | Tool |
-|---------|------|
-| 1–3 | Qualitative DAGs |
-| 4–5 | Bayesian networks & inference |
-| 6 | Causal reasoning pitfalls |
-| 7 | Decision analysis & do-calculus |
-| 8 | Resource allocation under uncertainty |
-| 9 | Multi-agent game theory |
-| **10** | **Data-driven discovery** |
-:::
-
-::: {.col}
-::: {.callout-box .green}
-**The MNH program analyst's workflow:**
-
-1. Build DAG from expert interviews (Ch2-3)
-2. Quantify with DHIS2 data (Ch4-5, Ch10)
-3. Avoid causal reasoning traps (Ch6)
-4. Make allocation decisions (Ch7-8)
-5. Anticipate strategic responses (Ch9)
-6. Validate and refine with new data (Ch10)
-:::
-:::
-:::
-
-
-## Course Summary
+. . .
 
 ::: {.definition-box}
-**The central message of Inference and Intervention:**
+**The central message of the course:**
 
-Causal models are not just academic abstractions — they are **practical tools** for answering the questions that matter most in global health: *Where should we invest? What should we do? How do we know it will work?*
+Causal models are not just academic diagrams. They are **practical tools** for answering the questions that matter most: *Where should we invest? What will happen if we do? How do we know we are right?*
 
-The combination of **qualitative modeling** (structure), **quantitative analysis** (parameters), and **decision theory** (action) provides a complete framework for evidence-based intervention design.
+The combination of **qualitative modeling**, **quantitative analysis**, **decision theory**, and **data-driven discovery** provides a complete framework for making better decisions under uncertainty.
 :::
 
 . . .
 
 ::: {.callout-box}
-**For MNH program managers:** This toolkit enables rigorous allocation of pooled funding across multiple countries, with clear reasoning about *why* each investment is expected to save lives — and honest acknowledgment of what we don't know.
+**The most important thing you take away** is not any single technique. It is a way of thinking: *always ask what causes what, draw it out, check it against evidence, and be willing to revise when the evidence says you were wrong.*
+
+That is what separates good analysis from great analysis. And great analysis saves lives.
 :::
 
 
-## {background-color="white"}
+##  {background-color="white"}
 
-::: {style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;"}
-![](bka-logo.png){width=280}
+<br><br><br>
 
-<p style="font-size: 0.5em; color: #999; margin-top: 1em;">Inference and Intervention | Chapter 10</p>
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 10: Structure Learning from Observational Data]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+
+<br>
+
+[Thank you for learning with us.]{style="color: #005CB9; font-size: 0.7em; font-style: italic;"}
 :::

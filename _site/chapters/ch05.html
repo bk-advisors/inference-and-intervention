@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 6: Simpson's Paradox &amp; Cost-Effectiveness</span></a>
+ <span class="menu-text">Chapter 6: Simpson’s Paradox</span></a>
   </div>
 </li>
       </ul>
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 7: Decision Analysis &amp; Value of Information</span></a>
+ <span class="menu-text">Chapter 7: Decision Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 10: Structure Learning from Observational Data</span></a>
+ <span class="menu-text">Chapter 10: Structure Learning from Data</span></a>
   </div>
 </li>
       </ul>
@@ -286,11 +286,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link" data-scroll-target="#lecture-slides">Lecture Slides</a></li>
   <li><a href="#r-code-workshop" id="toc-r-code-workshop" class="nav-link" data-scroll-target="#r-code-workshop">R Code Workshop</a>
   <ul class="collapse">
-  <li><a href="#build-a-bayesian-network-with-cpts" id="toc-build-a-bayesian-network-with-cpts" class="nav-link" data-scroll-target="#build-a-bayesian-network-with-cpts">Build a Bayesian Network with CPTs</a></li>
-  <li><a href="#query-with-evidence" id="toc-query-with-evidence" class="nav-link" data-scroll-target="#query-with-evidence">Query with Evidence</a></li>
-  <li><a href="#compare-posterior-vs.-prior" id="toc-compare-posterior-vs.-prior" class="nav-link" data-scroll-target="#compare-posterior-vs.-prior">Compare Posterior vs.&nbsp;Prior</a></li>
-  <li><a href="#visualize-belief-updating" id="toc-visualize-belief-updating" class="nav-link" data-scroll-target="#visualize-belief-updating">Visualize Belief Updating</a></li>
-  <li><a href="#full-district-diagnosis-workflow" id="toc-full-district-diagnosis-workflow" class="nav-link" data-scroll-target="#full-district-diagnosis-workflow">Full District Diagnosis Workflow</a></li>
+  <li><a href="#build-the-ethiopia-network" id="toc-build-the-ethiopia-network" class="nav-link" data-scroll-target="#build-the-ethiopia-network">Build the Ethiopia Network</a></li>
+  <li><a href="#forward-vs.-backward-queries" id="toc-forward-vs.-backward-queries" class="nav-link" data-scroll-target="#forward-vs.-backward-queries">Forward vs.&nbsp;Backward Queries</a></li>
+  <li><a href="#compare-prior-vs.-posterior" id="toc-compare-prior-vs.-posterior" class="nav-link" data-scroll-target="#compare-prior-vs.-posterior">Compare Prior vs.&nbsp;Posterior</a></li>
+  <li><a href="#district-diagnosis-function" id="toc-district-diagnosis-function" class="nav-link" data-scroll-target="#district-diagnosis-function">District Diagnosis Function</a></li>
   </ul></li>
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead">Looking Ahead</a></li>
@@ -303,7 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ch04.html">Part II: Quantitative Analysis</a></li><li class="breadcrumb-item"><a href="../chapters/ch05.html">Chapter 5: Situational Analysis</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Chapter 5: Situational Analysis</h1>
-<p class="subtitle lead">Belief updating, diagnostic inference, and explaining away</p>
+<p class="subtitle lead">Running the model backward – from what you observe to what is probably true</p>
 </div>
 
 
@@ -323,39 +322,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="learning-objectives" class="level2">
 <h2 class="anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
 <div class="learning-objectives">
-<p>After this chapter, you will be able to:</p>
 <ul>
-<li>Compute <strong>marginal probabilities</strong> by summing out variables from joint distributions</li>
-<li><strong>Update beliefs with evidence</strong> using Bayes’ rule and conditional probability</li>
-<li>Perform <strong>inference in serial, diverging, and converging structures</strong> and explain how information flows differently in each</li>
-<li>Apply the <strong>explaining away</strong> phenomenon in converging structures – the most counterintuitive result in causal reasoning</li>
-<li>Conduct a full <strong>district diagnosis</strong> using Bayesian inference on an MNH causal model</li>
+<li>Compute <strong>marginal probabilities</strong> by summing across all possible parent combinations</li>
+<li><strong>Update beliefs with evidence</strong> using Bayes’ rule – start with a prior, see evidence, get a posterior</li>
+<li>Trace how information flows through <strong>serial chains, forks, and colliders</strong> and explain why each behaves differently</li>
+<li>Apply the <strong>explaining away</strong> phenomenon – when two causes compete to explain the same effect</li>
+<li>Run a complete <strong>district diagnosis</strong> in R, ranking the most likely upstream problems given observed outcomes</li>
 </ul>
 </div>
 </section>
 <section id="key-concepts" class="level2">
 <h2 class="anchored" data-anchor-id="key-concepts">Key Concepts</h2>
-<section id="situational-analysis" class="level4 key-concept">
-<h4 class="anchored" data-anchor-id="situational-analysis">Situational Analysis</h4>
-<p>The process of observing outcomes and using a quantitative causal model to infer the most likely state of unobserved causes. Where Chapter 4 ran the model “forward” (given causes, predict effects), situational analysis runs the model “backward” (given effects, infer causes). This backward reasoning – from children to parents – is the heart of diagnostic decision-making.</p>
+<section id="belief-updating" class="level4 key-concept">
+<h4 class="anchored" data-anchor-id="belief-updating">Belief Updating</h4>
+<p>Chapter 4 ran models forward: “If staffing is low, what happens to mortality?” Situational analysis runs them backward: “Mortality is high – what is probably causing it?” This is how doctors diagnose patients, how mechanics troubleshoot engines, and how health program managers in Ethiopia figure out why a district is struggling. You start with a prior belief (your best guess before seeing any data), observe evidence (the outcome data from the district), and compute a posterior belief (your updated guess). Bayes’ rule is the engine that drives this update.</p>
 </section>
-<section id="marginal-probability" class="level4 key-concept green">
-<h4 class="anchored" data-anchor-id="marginal-probability">Marginal Probability</h4>
-<p>The probability of a variable computed by summing out (marginalizing over) all other variables in the joint distribution. It tells us the overall likelihood of an event, averaging across all possible parent combinations weighted by how likely each is. For example, the marginal P(NMR=High) answers: “What is the overall probability that a randomly selected district has high neonatal mortality?” – before any district-specific evidence.</p>
+<section id="marginal-probabilities" class="level4 key-concept green">
+<h4 class="anchored" data-anchor-id="marginal-probabilities">Marginal Probabilities</h4>
+<p>A marginal probability answers: “What is the overall chance of this outcome, before I know anything specific?” To compute it, you sum over all possible parent states, weighting each by how likely that parent state is. For example, P(NMR = High) in Ethiopia averages across districts with good staffing, bad staffing, good equipment, bad equipment – everything. The marginal is your baseline. It is where you start before any district-specific evidence arrives. Once evidence comes in, the marginal gets replaced by a posterior – and the gap between the two tells you how much you learned.</p>
 </section>
-<section id="explaining-away" class="level4 key-concept orange">
+<section id="evidence-flow-in-the-three-triplet-structures" class="level4 key-concept orange">
+<h4 class="anchored" data-anchor-id="evidence-flow-in-the-three-triplet-structures">Evidence Flow in the Three Triplet Structures</h4>
+<p>The three building blocks of every DAG each handle information differently. In a <strong>serial chain</strong> (Staffing -&gt; Quality -&gt; NMR), information flows from end to end – but if you already know Quality, learning about Staffing tells you nothing new about NMR. The chain is blocked. In a <strong>fork</strong> (Quality &lt;- Disease Burden -&gt; Mortality), the common cause creates a spurious link – but conditioning on Disease Burden removes it. In a <strong>collider</strong> (Staffing -&gt; Quality &lt;- Equipment), the two causes are independent by default. But the moment you observe Quality, they become linked. These three rules scale to any size network.</p>
+</section>
+<section id="explaining-away" class="level4 key-concept red">
 <h4 class="anchored" data-anchor-id="explaining-away">Explaining Away</h4>
-<p>The most counterintuitive phenomenon in causal reasoning. In a converging structure (A -&gt; B &lt;- C), when two independent causes compete to explain the same effect, confirming one cause makes the other less likely and disconfirming one makes the other more likely. For example, if a district has good workforce quality despite low staffing, equipment availability must be high – equipment “explains away” what staffing cannot. This only happens when we condition on the common effect (the collider).</p>
+<p>This is the most counterintuitive idea in the entire course. Picture a collider: Staffing -&gt; Quality &lt;- Equipment. Normally, staffing levels and equipment availability have nothing to do with each other. But suppose you learn that a district in Ethiopia has good-quality care despite low staffing. Suddenly, equipment availability must be high – because <em>something</em> has to explain the good quality, and if it is not staffing, it must be equipment. Confirming one cause makes the competing cause less likely. Disconfirming one makes the other more likely. This “explaining away” effect only kicks in when you condition on the collider (the shared effect).</p>
 </section>
-<section id="information-flow-across-structures" class="level4 key-concept red">
-<h4 class="anchored" data-anchor-id="information-flow-across-structures">Information Flow Across Structures</h4>
-<p>The three triplet structures determine how evidence propagates through the model. In <strong>serial chains</strong> (A -&gt; B -&gt; C), observing B blocks information flow from A to C. In <strong>diverging forks</strong> (A &lt;- B -&gt; C), observing the common cause B blocks the spurious correlation between A and C. In <strong>converging colliders</strong> (A -&gt; B &lt;- C), the path is naturally blocked but observing B <em>opens</em> it, creating dependence between the previously independent causes. These rules scale to full graphs via d-separation.</p>
+<section id="diagnostic-inference" class="level4 key-concept teal">
+<h4 class="anchored" data-anchor-id="diagnostic-inference">Diagnostic Inference</h4>
+<p>Diagnostic inference is the practical payoff of everything above. Given an observation – say, a district in Ethiopia’s Amhara region reporting high neonatal mortality – you feed that evidence into the Bayesian network and read off the posterior probabilities for every upstream cause. Which shifted the most from its prior? That is your top suspect. This turns a vague question (“Why is this district struggling?”) into a ranked list of probable causes, ordered by how much the evidence shifted each belief. It is data-driven diagnosis.</p>
 </section>
 </section>
 <section id="lecture-slides" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-slides">Lecture Slides</h2>
 <div class="slide-embed">
-<iframe src="../ch05-situational-analysis/index.html">
+<iframe src="../ch05-situational-analysis/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;">
 </iframe>
 <div class="slide-embed-footer">
 <p><a href="../ch05-situational-analysis/index.html" target="_blank">Open slides full-screen →</a></p>
@@ -364,213 +366,139 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="r-code-workshop" class="level2">
 <h2 class="anchored" data-anchor-id="r-code-workshop">R Code Workshop</h2>
-<p>This chapter implements Bayesian inference in R using <code>bnlearn</code> and <code>gRain</code>, demonstrating how to build a network with CPTs, query it with evidence, compare prior vs.&nbsp;posterior beliefs, and run a full district diagnostic workflow.</p>
-<section id="build-a-bayesian-network-with-cpts" class="level3">
-<h3 class="anchored" data-anchor-id="build-a-bayesian-network-with-cpts">Build a Bayesian Network with CPTs</h3>
-<p>We construct a 5-node Bayesian network (Staffing, Equipment, Training, Quality, NMR) with CPTs calibrated to MNH program data. The Quality node has an 8-row CPT reflecting all combinations of its three parents.</p>
+<p>We build a five-node Bayesian network for Ethiopia’s health system, then use it to diagnose districts – reasoning backward from observed mortality to the most likely upstream problems.</p>
+<section id="build-the-ethiopia-network" class="level3">
+<h3 class="anchored" data-anchor-id="build-the-ethiopia-network">Build the Ethiopia Network</h3>
+<p>Three root nodes (Staffing, Equipment, Training) feed into Quality, which feeds into NMR. The CPTs are calibrated to publicly available data from Ethiopia’s DHS and WHO reports.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bnlearn)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gRain)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the DAG structure</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(<span class="st">"[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define CPTs</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>cpt_s <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.60</span>), <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>)))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cpt_e <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.65</span>), <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>)))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>cpt_t <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.50</span>, <span class="fl">0.50</span>), <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>                <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">"Completed"</span>, <span class="st">"Not_Completed"</span>)))</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Quality CPT: P(Quality | Staffing, Equipment, Training)</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>cpt_q <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">0.05</span>,  <span class="co"># S=Adeq, E=Avail, T=Comp</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.80</span>, <span class="fl">0.20</span>,  <span class="co"># S=Adeq, E=Avail, T=Not</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.65</span>, <span class="fl">0.35</span>,  <span class="co"># S=Adeq, E=Unavail, T=Comp</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.45</span>, <span class="fl">0.55</span>,  <span class="co"># S=Adeq, E=Unavail, T=Not</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.55</span>, <span class="fl">0.45</span>,  <span class="co"># S=Low, E=Avail, T=Comp</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.35</span>, <span class="fl">0.65</span>,  <span class="co"># S=Low, E=Avail, T=Not</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.20</span>, <span class="fl">0.80</span>,  <span class="co"># S=Low, E=Unavail, T=Comp</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.08</span>, <span class="fl">0.92</span>), <span class="co"># S=Low, E=Unavail, T=Not</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>),</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Staffing =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>),</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Equipment =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>),</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Training =</span> <span class="fu">c</span>(<span class="st">"Completed"</span>, <span class="st">"Not_Completed"</span>)))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Five-node DAG for Ethiopia</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Root node CPTs (based on Ethiopia DHS/WHO public data)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>cpt_s <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.60</span>), <span class="at">dim =</span> <span class="dv">2</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>)))</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>cpt_e <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.65</span>), <span class="at">dim =</span> <span class="dv">2</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Equipment =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>)))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>cpt_t <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.50</span>, <span class="fl">0.50</span>), <span class="at">dim =</span> <span class="dv">2</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Training =</span> <span class="fu">c</span>(<span class="st">"Completed"</span>, <span class="st">"Not_Completed"</span>)))</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Quality CPT: 8 rows (2 x 2 x 2 parent combinations)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>cpt_q <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">0.05</span>,  <span class="fl">0.80</span>, <span class="fl">0.20</span>,  <span class="fl">0.65</span>, <span class="fl">0.35</span>,  <span class="fl">0.45</span>, <span class="fl">0.55</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.55</span>, <span class="fl">0.45</span>,  <span class="fl">0.35</span>, <span class="fl">0.65</span>,  <span class="fl">0.20</span>, <span class="fl">0.80</span>,  <span class="fl">0.08</span>, <span class="fl">0.92</span>),</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Staffing =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">Equipment =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">Training =</span> <span class="fu">c</span>(<span class="st">"Completed"</span>, <span class="st">"Not_Completed"</span>)))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># NMR CPT</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>cpt_nmr <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>, <span class="fl">0.30</span>, <span class="fl">0.70</span>), <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">NMR =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"High"</span>), <span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>)))</span>
 <span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># NMR CPT: P(NMR | Quality)</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>cpt_nmr <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>, <span class="fl">0.30</span>, <span class="fl">0.70</span>), <span class="at">ncol =</span> <span class="dv">2</span>,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>                  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">NMR =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"High"</span>),</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>)))</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit the BN with custom CPTs</span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>bn_fit <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(dag, <span class="fu">list</span>(</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">Staffing =</span> cpt_s, <span class="at">Equipment =</span> cpt_e, <span class="at">Training =</span> cpt_t,</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">Quality =</span> cpt_q, <span class="at">NMR =</span> cpt_nmr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Assemble the fitted network</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>bn_eth <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(dag, <span class="fu">list</span>(</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">Staffing =</span> cpt_s, <span class="at">Equipment =</span> cpt_e, <span class="at">Training =</span> cpt_t,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Quality =</span> cpt_q, <span class="at">NMR =</span> cpt_nmr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="query-with-evidence" class="level3">
-<h3 class="anchored" data-anchor-id="query-with-evidence">Query with Evidence</h3>
-<p>The <code>cpquery()</code> function uses likelihood weighting to estimate conditional probabilities. We demonstrate marginal queries (no evidence), forward queries (evidence on root nodes), and backward queries (evidence on outcome nodes – the core of situational analysis).</p>
+<section id="forward-vs.-backward-queries" class="level3">
+<h3 class="anchored" data-anchor-id="forward-vs.-backward-queries">Forward vs.&nbsp;Backward Queries</h3>
+<p>Forward: “Given the cause, predict the effect.” Backward: “Given the effect, infer the cause.” Backward queries are the heart of situational analysis.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Marginal probability (no evidence) ---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_fit,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">event =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">evidence =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ≈ 0.455</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Posterior with evidence: NMR is High ---</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># What is P(Staffing = Low | NMR = High)?</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_fit,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">event =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">evidence =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># ≈ 0.71</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Evidence on a root node ---</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># What is P(NMR = High | Staffing = Low)?</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_fit,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">event =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>),</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ≈ 0.55</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Multiple pieces of evidence ---</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># P(NMR = High | Staffing = Low, Equipment = Unavailable)</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_fit,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">event =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span> <span class="sc">&amp;</span> Equipment <span class="sc">==</span> <span class="st">"Unavailable"</span>),</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># ≈ 0.63</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># FORWARD: P(NMR = High | Staffing = Low)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># "If staffing is low, how likely is high mortality?"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_eth,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">event =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>), <span class="at">n =</span> <span class="fl">1e6</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># BACKWARD: P(Staffing = Low | NMR = High)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># "Mortality is high -- how likely is it that staffing is the problem?"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_eth,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">event =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>), <span class="at">evidence =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">n =</span> <span class="fl">1e6</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Marginal baseline (no evidence at all)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cpquery</span>(bn_eth, <span class="at">event =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">evidence =</span> <span class="cn">TRUE</span>, <span class="at">n =</span> <span class="fl">1e6</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="compare-posterior-vs.-prior" class="level3">
-<h3 class="anchored" data-anchor-id="compare-posterior-vs.-prior">Compare Posterior vs.&nbsp;Prior</h3>
-<p>This block computes posterior probabilities for all root nodes given an NMR observation, allowing us to see which causes shift the most and therefore carry the strongest diagnostic signal.</p>
+<section id="compare-prior-vs.-posterior" class="level3">
+<h3 class="anchored" data-anchor-id="compare-prior-vs.-posterior">Compare Prior vs.&nbsp;Posterior</h3>
+<p>When we observe high NMR in a district, how much does each root cause shift from its baseline? The biggest shift points to the most likely culprit.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to compute posteriors for all root nodes given NMR evidence</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>compute_posteriors <span class="ot">&lt;-</span> <span class="cf">function</span>(bn, nmr_state, <span class="at">n_samples =</span> <span class="fl">1e6</span>) {</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Variable =</span> <span class="fu">c</span>(<span class="st">"Staffing=Low"</span>, <span class="st">"Equipment=Unavail"</span>, <span class="st">"Training=Not_Comp"</span>),</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Prior =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.65</span>, <span class="fl">0.50</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Posterior =</span> <span class="fu">c</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cpquery</span>(bn, (Staffing <span class="sc">==</span> <span class="st">"Low"</span>), (NMR <span class="sc">==</span> nmr_state), <span class="at">n =</span> n_samples),</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cpquery</span>(bn, (Equipment <span class="sc">==</span> <span class="st">"Unavailable"</span>), (NMR <span class="sc">==</span> nmr_state), <span class="at">n =</span> n_samples),</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cpquery</span>(bn, (Training <span class="sc">==</span> <span class="st">"Not_Completed"</span>), (NMR <span class="sc">==</span> nmr_state), <span class="at">n =</span> n_samples)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Posteriors given NMR=High (District Mwanga)</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>post_high <span class="ot">&lt;-</span> <span class="fu">compute_posteriors</span>(bn_fit, <span class="st">"High"</span>)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>post_high<span class="sc">$</span>Shift <span class="ot">&lt;-</span> post_high<span class="sc">$</span>Posterior <span class="sc">-</span> post_high<span class="sc">$</span>Prior</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(post_high)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Posteriors given NMR=Low (District Songea)</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>post_low <span class="ot">&lt;-</span> <span class="fu">compute_posteriors</span>(bn_fit, <span class="st">"Low"</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>post_low<span class="sc">$</span>Shift <span class="ot">&lt;-</span> post_low<span class="sc">$</span>Posterior <span class="sc">-</span> post_low<span class="sc">$</span>Prior</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(post_low)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute posteriors for each root node given NMR = High</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>priors    <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">Staffing =</span> <span class="fl">0.60</span>, <span class="at">Equipment =</span> <span class="fl">0.65</span>, <span class="at">Training =</span> <span class="fl">0.50</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>posteriors <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cpquery</span>(bn_eth, (Staffing <span class="sc">==</span> <span class="st">"Low"</span>), (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">n =</span> <span class="fl">1e6</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cpquery</span>(bn_eth, (Equipment <span class="sc">==</span> <span class="st">"Unavailable"</span>), (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">n =</span> <span class="fl">1e6</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cpquery</span>(bn_eth, (Training <span class="sc">==</span> <span class="st">"Not_Completed"</span>), (NMR <span class="sc">==</span> <span class="st">"High"</span>), <span class="at">n =</span> <span class="fl">1e6</span>))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Side-by-side comparison</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Staffing</span><span class="sc">\n</span><span class="st">(Low)"</span>, <span class="st">"Equipment</span><span class="sc">\n</span><span class="st">(Unavail)"</span>, <span class="st">"Training</span><span class="sc">\n</span><span class="st">(Not Done)"</span>), <span class="dv">2</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">Belief   =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Prior"</span>, <span class="st">"Posterior"</span>), <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Prob     =</span> <span class="fu">c</span>(priors, posteriors))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>Belief <span class="ot">&lt;-</span> <span class="fu">factor</span>(results<span class="sc">$</span>Belief, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Prior"</span>, <span class="st">"Posterior"</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(results, <span class="fu">aes</span>(<span class="at">x =</span> Variable, <span class="at">y =</span> Prob, <span class="at">fill =</span> Belief)) <span class="sc">+</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Prior"</span> <span class="ot">=</span> <span class="st">"#00A1DF"</span>, <span class="st">"Posterior"</span> <span class="ot">=</span> <span class="st">"#E24A3F"</span>)) <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Belief Updating: Prior vs. Posterior Given NMR = High"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"All 'bad' states become more likely after observing high mortality"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Probability"</span>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="visualize-belief-updating" class="level3">
-<h3 class="anchored" data-anchor-id="visualize-belief-updating">Visualize Belief Updating</h3>
-<p>A grouped bar chart comparing prior and posterior probabilities makes the belief shifts visually clear. All “bad” states become more likely after observing high mortality.</p>
+<section id="district-diagnosis-function" class="level3">
+<h3 class="anchored" data-anchor-id="district-diagnosis-function">District Diagnosis Function</h3>
+<p>This reusable function takes a fitted network and a set of observations, then ranks every root node by how much its belief shifted. The biggest movers are your top diagnostic priorities.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine prior and posterior into tidy format</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>viz_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Staffing</span><span class="sc">\n</span><span class="st">(Low)"</span>, <span class="st">"Equipment</span><span class="sc">\n</span><span class="st">(Unavail)"</span>, <span class="st">"Training</span><span class="sc">\n</span><span class="st">(Not Comp)"</span>), <span class="dv">2</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Condition =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Prior"</span>, <span class="st">"Posterior</span><span class="sc">\n</span><span class="st">(NMR=High)"</span>), <span class="at">each =</span> <span class="dv">3</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Probability =</span> <span class="fu">c</span>(</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.60</span>, <span class="fl">0.65</span>, <span class="fl">0.50</span>,          <span class="co"># Priors</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.710</span>, <span class="fl">0.738</span>, <span class="fl">0.573</span>         <span class="co"># Posteriors given NMR=High</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>viz_data<span class="sc">$</span>Condition <span class="ot">&lt;-</span> <span class="fu">factor</span>(viz_data<span class="sc">$</span>Condition,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Prior"</span>, <span class="st">"Posterior</span><span class="sc">\n</span><span class="st">(NMR=High)"</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>diagnose_district <span class="ot">&lt;-</span> <span class="cf">function</span>(bn, evidence_expr, <span class="at">n_samples =</span> <span class="fl">1e6</span>) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  nodes_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">Node =</span> <span class="fu">c</span>(<span class="st">"Staffing"</span>, <span class="st">"Equipment"</span>, <span class="st">"Training"</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Bad_State =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Unavailable"</span>, <span class="st">"Not_Completed"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Prior =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.65</span>, <span class="fl">0.50</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  nodes_info<span class="sc">$</span>Posterior <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cpquery</span>(bn, (Staffing <span class="sc">==</span> <span class="st">"Low"</span>), evidence_expr, <span class="at">n =</span> n_samples),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cpquery</span>(bn, (Equipment <span class="sc">==</span> <span class="st">"Unavailable"</span>), evidence_expr, <span class="at">n =</span> n_samples),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cpquery</span>(bn, (Training <span class="sc">==</span> <span class="st">"Not_Completed"</span>), evidence_expr, <span class="at">n =</span> n_samples))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  nodes_info<span class="sc">$</span>Shift <span class="ot">&lt;-</span> nodes_info<span class="sc">$</span>Posterior <span class="sc">-</span> nodes_info<span class="sc">$</span>Prior</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  nodes_info[<span class="fu">order</span>(<span class="sc">-</span><span class="fu">abs</span>(nodes_info<span class="sc">$</span>Shift)), ]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(viz_data, <span class="fu">aes</span>(<span class="at">x =</span> Variable, <span class="at">y =</span> Probability, <span class="at">fill =</span> Condition)) <span class="sc">+</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="st">"dodge"</span>, <span class="at">width =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"%.1f%%"</span>, Probability <span class="sc">*</span> <span class="dv">100</span>)),</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.6</span>), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.3</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Prior"</span> <span class="ot">=</span> <span class="st">"#00A1DF"</span>, <span class="st">"Posterior</span><span class="sc">\n</span><span class="st">(NMR=High)"</span> <span class="ot">=</span> <span class="st">"#E24A3F"</span>),</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">name =</span> <span class="st">""</span>) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Belief Updating: Prior vs. Posterior Given NMR = High"</span>,</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"All 'bad' states become more likely after observing high mortality"</span>,</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Probability"</span>) <span class="sc">+</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>,</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">color =</span> <span class="st">"#005CB9"</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="full-district-diagnosis-workflow" class="level3">
-<h3 class="anchored" data-anchor-id="full-district-diagnosis-workflow">Full District Diagnosis Workflow</h3>
-<p>This reusable function accepts a fitted Bayesian network and a list of evidence, then computes posterior probabilities for all root nodes and ranks them by the magnitude of their belief shift. This is the complete diagnostic workflow for a district assessment.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Full diagnosis workflow for a district ----</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>diagnose_district <span class="ot">&lt;-</span> <span class="cf">function</span>(bn, evidence_list, <span class="at">n_samples =</span> <span class="fl">1e6</span>) {</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build evidence string</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  ev_expr <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">names</span>(evidence_list), <span class="st">"=="</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">paste0</span>(<span class="st">'"'</span>, evidence_list, <span class="st">'"'</span>), <span class="at">collapse =</span> <span class="st">" &amp; "</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Query each root node</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Node =</span> <span class="fu">c</span>(<span class="st">"Staffing"</span>, <span class="st">"Equipment"</span>, <span class="st">"Training"</span>),</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Bad_State =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Unavailable"</span>, <span class="st">"Not_Completed"</span>),</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Prior =</span> <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.65</span>, <span class="fl">0.50</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  results<span class="sc">$</span>Posterior <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(results), <span class="cf">function</span>(i) {</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cpquery</span>(bn,</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">event =</span> <span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">text =</span> <span class="fu">paste0</span>(results<span class="sc">$</span>Node[i], <span class="st">' == "'</span>,</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                                              results<span class="sc">$</span>Bad_State[i], <span class="st">'"'</span>))),</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">evidence =</span> <span class="fu">eval</span>(<span class="fu">parse</span>(<span class="at">text =</span> ev_expr)),</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> n_samples)</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  results<span class="sc">$</span>Shift <span class="ot">&lt;-</span> results<span class="sc">$</span>Posterior <span class="sc">-</span> results<span class="sc">$</span>Prior</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  results<span class="sc">$</span>Priority <span class="ot">&lt;-</span> <span class="fu">rank</span>(<span class="sc">-</span><span class="fu">abs</span>(results<span class="sc">$</span>Shift))</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  results[<span class="fu">order</span>(results<span class="sc">$</span>Priority), ]</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose District Mwanga (NMR=High)</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"=== District Mwanga Diagnosis ===</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>mwanga <span class="ot">&lt;-</span> <span class="fu">diagnose_district</span>(bn_fit, <span class="fu">list</span>(<span class="at">NMR =</span> <span class="st">"High"</span>))</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mwanga)</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose with additional evidence (NMR=High, Quality=Poor)</span></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=== With additional evidence: Quality=Poor ===</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>mwanga_deep <span class="ot">&lt;-</span> <span class="fu">diagnose_district</span>(bn_fit,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">list</span>(<span class="at">NMR =</span> <span class="st">"High"</span>, <span class="at">Quality =</span> <span class="st">"Poor"</span>))</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(mwanga_deep)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Diagnose a district in Amhara region with high NMR</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">diagnose_district</span>(bn_eth, (NMR <span class="sc">==</span> <span class="st">"High"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
 <section id="key-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Marginal probabilities</strong> tell us baseline expectations. The marginal P(NMR=High) = 45.5% is the starting point before any district-specific evidence.</p>
-<p><strong>Evidence updates beliefs via Bayes’ rule.</strong> Observing NMR=High shifts all root causes toward their “bad” states – with staffing showing the largest shift.</p>
-<p><strong>The three structures determine information flow:</strong> serial and diverging chains are blocked by conditioning on the middle node; converging chains are <em>activated</em> by it.</p>
-<p><strong>Explaining away is the most counterintuitive phenomenon.</strong> In a collider, observing the common effect makes independent causes compete – confirming one reduces belief in the other.</p>
+<p><strong>Situational analysis runs the model backward.</strong> Instead of predicting outcomes from causes, you observe outcomes and infer the most likely causes. This is how real diagnosis works.</p>
+<p><strong>Marginal probabilities are your baseline.</strong> The gap between the marginal (before evidence) and the posterior (after evidence) tells you exactly how much you learned from each observation.</p>
+<p><strong>The three triplet structures control information flow.</strong> Chains and forks are blocked by conditioning on the middle node. Colliders are opened by it. Get this wrong and you introduce bias instead of removing it.</p>
+<p><strong>Explaining away is real and powerful.</strong> When two independent causes share a common effect, observing the effect makes them compete. This is not a bug – it is the correct way to reason under uncertainty.</p>
 </div>
 </section>
 <section id="looking-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="looking-ahead">Looking Ahead</h2>
-<p>Next in <strong>Chapter 6 – Simpson’s Paradox and Cost-Effectiveness</strong>, we apply inference to a critical problem:</p>
+<p>Next in <strong>Chapter 6 – Simpson’s Paradox</strong>, we tackle the most dangerous trap in data analysis:</p>
 <ul>
-<li><strong>Simpson’s Paradox</strong> – when aggregate data reverses the true causal effect</li>
-<li>How conditioning on the wrong variable produces misleading cost-effectiveness estimates</li>
-<li>Why program evaluation in MNH requires causal reasoning, not just data analysis</li>
-<li>Practical implications for how large MNH programs evaluate their country portfolios</li>
+<li>When aggregated data tells you the <em>opposite</em> of the truth</li>
+<li>Why you must always condition on confounders but never on mediators</li>
+<li>The Prosecutor’s Fallacy – confusing P(evidence | hypothesis) with P(hypothesis | evidence)</li>
+<li>A cross-country comparison across Ethiopia, Rwanda, Kenya, and Tanzania that gets the wrong answer without causal reasoning</li>
 </ul>
 
 

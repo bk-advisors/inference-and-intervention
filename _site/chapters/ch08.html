@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 6: Simpson's Paradox &amp; Cost-Effectiveness</span></a>
+ <span class="menu-text">Chapter 6: Simpson’s Paradox</span></a>
   </div>
 </li>
       </ul>
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 7: Decision Analysis &amp; Value of Information</span></a>
+ <span class="menu-text">Chapter 7: Decision Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 10: Structure Learning from Observational Data</span></a>
+ <span class="menu-text">Chapter 10: Structure Learning from Data</span></a>
   </div>
 </li>
       </ul>
@@ -286,10 +286,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#lecture-slides" id="toc-lecture-slides" class="nav-link" data-scroll-target="#lecture-slides">Lecture Slides</a></li>
   <li><a href="#r-code-workshop" id="toc-r-code-workshop" class="nav-link" data-scroll-target="#r-code-workshop">R Code Workshop</a>
   <ul class="collapse">
-  <li><a href="#monte-carlo-simulation-setup" id="toc-monte-carlo-simulation-setup" class="nav-link" data-scroll-target="#monte-carlo-simulation-setup">Monte Carlo Simulation Setup</a></li>
-  <li><a href="#visualizing-strategy-outcomes" id="toc-visualizing-strategy-outcomes" class="nav-link" data-scroll-target="#visualizing-strategy-outcomes">Visualizing Strategy Outcomes</a></li>
-  <li><a href="#optimal-allocation-via-grid-search" id="toc-optimal-allocation-via-grid-search" class="nav-link" data-scroll-target="#optimal-allocation-via-grid-search">Optimal Allocation via Grid Search</a></li>
-  <li><a href="#sensitivity-analysis" id="toc-sensitivity-analysis" class="nav-link" data-scroll-target="#sensitivity-analysis">Sensitivity Analysis</a></li>
+  <li><a href="#setting-up-country-parameters" id="toc-setting-up-country-parameters" class="nav-link" data-scroll-target="#setting-up-country-parameters">Setting Up Country Parameters</a></li>
+  <li><a href="#the-simulation-function" id="toc-the-simulation-function" class="nav-link" data-scroll-target="#the-simulation-function">The Simulation Function</a></li>
+  <li><a href="#comparing-three-strategies" id="toc-comparing-three-strategies" class="nav-link" data-scroll-target="#comparing-three-strategies">Comparing Three Strategies</a></li>
+  <li><a href="#sensitivity-what-if-government-support-changes" id="toc-sensitivity-what-if-government-support-changes" class="nav-link" data-scroll-target="#sensitivity-what-if-government-support-changes">Sensitivity: What If Government Support Changes?</a></li>
   </ul></li>
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead">Looking Ahead</a></li>
@@ -302,7 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ch07.html">Part III: Decision &amp; Strategy</a></li><li class="breadcrumb-item"><a href="../chapters/ch08.html">Chapter 8: Multi-Country Resource Allocation</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Chapter 8: Multi-Country Resource Allocation</h1>
-<p class="subtitle lead">Portfolio optimization under uncertainty, sequential decision making, and Monte Carlo simulation for MNH program allocation</p>
+<p class="subtitle lead">How do you split a limited budget across four countries to save the most lives?</p>
 </div>
 
 
@@ -322,43 +322,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="learning-objectives" class="level2">
 <h2 class="anchored" data-anchor-id="learning-objectives">Learning Objectives</h2>
 <div class="learning-objectives">
-<p>After this chapter, you will be able to:</p>
 <ul>
-<li>Frame a <strong>multi-country resource allocation</strong> problem as a decision under uncertainty</li>
-<li>Build <strong>probability distributions</strong> over government co-financing, intervention coverage, and health outcomes</li>
-<li>Apply <strong>sequential decision making</strong> (commit, observe, scale) with backward induction</li>
-<li>Assess <strong>stakeholder response</strong> (crowding out vs.&nbsp;crowding in) as a strategic variable</li>
-<li>Use <strong>Monte Carlo simulation</strong> in R to compare allocation strategies and quantify confidence intervals</li>
+<li>Explain why <strong>allocating resources across countries</strong> is harder than picking the single best one</li>
+<li>Compare three allocation strategies: <strong>Concentrate</strong>, <strong>Spread Equally</strong>, and <strong>Tiered</strong></li>
+<li>Use <strong>Monte Carlo simulation</strong> to see how uncertainty changes the best strategy</li>
+<li>Understand <strong>sequential decisions</strong> – why you might pilot first and scale later</li>
+<li>Run a Monte Carlo simulation in R and interpret the results</li>
 </ul>
 </div>
 </section>
 <section id="key-concepts" class="level2">
 <h2 class="anchored" data-anchor-id="key-concepts">Key Concepts</h2>
-<section id="multi-country-resource-allocation" class="level4 key-concept">
-<h4 class="anchored" data-anchor-id="multi-country-resource-allocation">Multi-Country Resource Allocation</h4>
-<p>A large-scale MNH program must allocate pooled donor funding across multiple countries, each with different baseline mortality, health system capacity, and government readiness. The optimal allocation depends not just on where lives can be saved most efficiently, but on how uncertain we are about each country’s trajectory.</p>
+<section id="the-allocation-puzzle" class="level4 key-concept">
+<h4 class="anchored" data-anchor-id="the-allocation-puzzle">The Allocation Puzzle</h4>
+<p>Imagine you run a maternal and newborn health program with a fixed budget and four countries to support – say Ethiopia, Tanzania, Rwanda, and Nigeria. Each country has different population sizes, different health system strengths, and different levels of government commitment. You cannot simply rank them and fund the top one, because spreading your investment might reduce the risk that a single country’s problems sink your entire program.</p>
 </section>
-<section id="portfolio-diversification" class="level4 key-concept green">
-<h4 class="anchored" data-anchor-id="portfolio-diversification">Portfolio Diversification</h4>
-<p>Borrowing from financial portfolio theory, a tiered allocation strategy that weights by burden and capacity score (with floors and ceilings per country) can reduce the risk of catastrophic shortfall. Concentrating funds in the highest-burden country maximizes expected value but carries the most variance; spreading funds equally lowers both expected value and risk.</p>
+<section id="three-strategies-concentrate-spread-or-tier" class="level4 key-concept green">
+<h4 class="anchored" data-anchor-id="three-strategies-concentrate-spread-or-tier">Three Strategies: Concentrate, Spread, or Tier</h4>
+<p><strong>Concentrate</strong> means putting most of your budget into the country where you expect the biggest impact per dollar. High reward, but high risk – if that country hits political trouble or a supply chain crisis, you lose big. <strong>Spread</strong> means dividing the budget equally across all four countries. Safer, but you might waste money in countries where it does less good. <strong>Tiered</strong> means weighting the budget by each country’s burden and capacity, with minimum and maximum caps per country. This balances efficiency and safety.</p>
 </section>
-<section id="sequential-decision-making" class="level4 key-concept orange">
-<h4 class="anchored" data-anchor-id="sequential-decision-making">Sequential Decision Making</h4>
-<p>The program does not have to commit all funds on day one. A phased approach (commit seed funding, observe pilot results, then scale or reallocate) enables better-informed decisions. Backward induction solves these multi-stage problems by starting at the terminal outcomes and working backward through each decision point.</p>
+<section id="uncertainty-and-monte-carlo-simulation" class="level4 key-concept orange">
+<h4 class="anchored" data-anchor-id="uncertainty-and-monte-carlo-simulation">Uncertainty and Monte Carlo Simulation</h4>
+<p>You never know exactly how effective your spending will be. Government co-financing might be strong or weak. Drug supply chains might hold up or break down. Monte Carlo simulation handles this by running your model thousands of times, each time drawing random values for the uncertain inputs. Instead of a single “expected lives saved” number, you get a whole distribution – and you can ask questions like “What is the chance we save fewer than 5,000 lives?”</p>
 </section>
-<section id="the-cost-of-delay" class="level4 key-concept red">
-<h4 class="anchored" data-anchor-id="the-cost-of-delay">The Cost of Delay</h4>
-<p>Sequential decision making is valuable but not free. Every month of delay means preventable deaths that could have been averted. The program must balance the information value of waiting against the human cost of inaction – a distinctive feature of public health versus commercial allocation problems.</p>
-</section>
-<section id="crowding-out-vs.-crowding-in" class="level4 key-concept teal">
-<h4 class="anchored" data-anchor-id="crowding-out-vs.-crowding-in">Crowding Out vs.&nbsp;Crowding In</h4>
-<p>When the program invests in a country, other donors and the government may reduce their own spending (crowding out) or increase it (crowding in). On average, these effects may roughly cancel, but the variance matters: in some cases the program’s dollar buys only $0.70 of net new investment.</p>
+<section id="sequential-decisions-pilot-then-scale" class="level4 key-concept red">
+<h4 class="anchored" data-anchor-id="sequential-decisions-pilot-then-scale">Sequential Decisions: Pilot, Then Scale</h4>
+<p>You do not have to commit your entire budget on day one. A smarter approach is to invest a small amount first (a pilot), observe results, and then scale up funding in the countries that performed well. This is called <strong>sequential decision making</strong>. The catch? Every month you spend gathering information is a month when people who could have been helped are not getting help. So there is a real trade-off between learning and acting.</p>
 </section>
 </section>
 <section id="lecture-slides" class="level2">
 <h2 class="anchored" data-anchor-id="lecture-slides">Lecture Slides</h2>
 <div class="slide-embed">
-<iframe src="../ch08-resource-allocation/index.html">
+<iframe src="../ch08-resource-allocation/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;">
 </iframe>
 <div class="slide-embed-footer">
 <p><a href="../ch08-resource-allocation/index.html" target="_blank">Open slides full-screen →</a></p>
@@ -367,182 +362,144 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="r-code-workshop" class="level2">
 <h2 class="anchored" data-anchor-id="r-code-workshop">R Code Workshop</h2>
-<p>This chapter implements Monte Carlo simulation for comparing multi-country allocation strategies, grid search for optimal allocation, and sensitivity analysis of co-financing uncertainty.</p>
-<section id="monte-carlo-simulation-setup" class="level3">
-<h3 class="anchored" data-anchor-id="monte-carlo-simulation-setup">Monte Carlo Simulation Setup</h3>
-<p>We define country parameters (target lives, effectiveness per dollar, uncertainty) and a simulation function that draws government co-financing scenarios and computes total lives saved for a given allocation vector.</p>
+<p>We will build a Monte Carlo simulation to compare allocation strategies across four countries. The idea is simple: define what you know (and what you are uncertain about), then let the computer run thousands of “what if” scenarios.</p>
+<section id="setting-up-country-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="setting-up-country-parameters">Setting Up Country Parameters</h3>
+<p>Each country has three numbers: how many lives per million dollars you expect to save, how uncertain that estimate is (the standard deviation), and how likely the government is to provide strong co-financing.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>n_sims <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Country parameters: target lives, expected lives per $M, sd per $M</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Four countries with public-data-inspired parameters</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>countries <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">country =</span> <span class="fu">c</span>(<span class="st">"Country A"</span>, <span class="st">"Country C"</span>, <span class="st">"Country B"</span>),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">target =</span> <span class="fu">c</span>(<span class="dv">45000</span>, <span class="dv">27000</span>, <span class="dv">38000</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">lives_per_M =</span> <span class="fu">c</span>(<span class="dv">610</span>, <span class="dv">356</span>, <span class="dv">462</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_per_M =</span> <span class="fu">c</span>(<span class="dv">185</span>, <span class="dv">95</span>, <span class="dv">130</span>),  <span class="co"># uncertainty in effectiveness</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_high =</span> <span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>)  <span class="co"># P(high gov co-financing)</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate outcomes for a given allocation (as proportions of budget)</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>simulate_outcomes <span class="ot">&lt;-</span> <span class="cf">function</span>(alloc, countries, n_sims) {</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  total_lives <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    lives <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(countries)) {</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Government co-financing scenario</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      gov <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Med"</span>, <span class="st">"Low"</span>), <span class="dv">1</span>,</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(countries<span class="sc">$</span>p_high[j],</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">1</span> <span class="sc">-</span> countries<span class="sc">$</span>p_high[j] <span class="sc">-</span> <span class="fl">0.10</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">0.10</span>))</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      multiplier <span class="ot">&lt;-</span> <span class="cf">switch</span>(gov, <span class="at">High =</span> <span class="fl">1.0</span>, <span class="at">Med =</span> <span class="fl">0.6</span>, <span class="at">Low =</span> <span class="fl">0.25</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Lives saved = allocation * lives per $M * multiplier + noise</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>      lives_j <span class="ot">&lt;-</span> alloc[j] <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, countries<span class="sc">$</span>lives_per_M[j],</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                                      countries<span class="sc">$</span>sd_per_M[j]) <span class="sc">*</span> multiplier</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>      lives <span class="ot">&lt;-</span> lives <span class="sc">+</span> <span class="fu">max</span>(<span class="dv">0</span>, lives_j)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    total_lives[i] <span class="ot">&lt;-</span> lives</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  total_lives</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Three strategies (as relative allocation units, not dollar amounts)</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>strat_concentrate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">70</span>, <span class="dv">15</span>, <span class="dv">15</span>)   <span class="co"># Heavy Country A</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>strat_spread      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">33</span>, <span class="dv">33</span>, <span class="dv">33</span>)   <span class="co"># Equal</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>strat_tiered      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">23</span>, <span class="dv">32</span>)   <span class="co"># Weighted</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">country    =</span> <span class="fu">c</span>(<span class="st">"Ethiopia"</span>, <span class="st">"Tanzania"</span>, <span class="st">"Rwanda"</span>, <span class="st">"Nigeria"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">lives_per_M =</span> <span class="fu">c</span>(<span class="dv">610</span>, <span class="dv">462</span>, <span class="dv">356</span>, <span class="dv">520</span>),    <span class="co"># expected lives saved per $1M</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sd_per_M    =</span> <span class="fu">c</span>(<span class="dv">185</span>, <span class="dv">130</span>, <span class="dv">95</span>, <span class="dv">160</span>),      <span class="co"># uncertainty in effectiveness</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_high_gov  =</span> <span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.45</span>, <span class="fl">0.50</span>, <span class="fl">0.30</span>) <span class="co"># P(strong gov co-financing)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>countries</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="visualizing-strategy-outcomes" class="level3">
-<h3 class="anchored" data-anchor-id="visualizing-strategy-outcomes">Visualizing Strategy Outcomes</h3>
-<p>A violin plot with embedded box plot shows the full distribution of simulated outcomes for each allocation strategy across 10,000 Monte Carlo draws.</p>
+<section id="the-simulation-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-simulation-function">The Simulation Function</h3>
+<p>This function takes a budget allocation (four numbers that add to 100) and runs <code>n_sims</code> random scenarios. In each scenario, it draws a government co-financing level and a random effectiveness for each country, then totals the lives saved.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run simulations</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>sim_conc   <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_concentrate, countries, n_sims)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>sim_spread <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_spread, countries, n_sims)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>sim_tiered <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_tiered, countries, n_sims)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into data frame</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>sim_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">lives =</span> <span class="fu">c</span>(sim_conc, sim_spread, sim_tiered),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">each =</span> n_sims)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Violin plot with embedded box plot</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_df, <span class="fu">aes</span>(<span class="at">x =</span> strategy, <span class="at">y =</span> lives <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">fill =</span> strategy)) <span class="sc">+</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">draw_quantiles =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)) <span class="sc">+</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Allocation Strategy"</span>,</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Lives Saved (thousands)"</span>,</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Simulated Outcomes: 3-Country Allocation"</span>,</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"10,000 Monte Carlo draws | Violin shows full distribution"</span>) <span class="sc">+</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>simulate_outcomes <span class="ot">&lt;-</span> <span class="cf">function</span>(alloc, countries, n_sims) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  total_lives <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    lives <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(countries)) {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Draw a government co-financing scenario</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      gov <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Med"</span>, <span class="st">"Low"</span>), <span class="dv">1</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(countries<span class="sc">$</span>p_high_gov[j],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                             <span class="dv">1</span> <span class="sc">-</span> countries<span class="sc">$</span>p_high_gov[j] <span class="sc">-</span> <span class="fl">0.10</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                             <span class="fl">0.10</span>))</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      multiplier <span class="ot">&lt;-</span> <span class="cf">switch</span>(gov, <span class="at">High =</span> <span class="fl">1.0</span>, <span class="at">Med =</span> <span class="fl">0.6</span>, <span class="at">Low =</span> <span class="fl">0.25</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Lives saved = allocation share * random effectiveness * multiplier</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      lives_j <span class="ot">&lt;-</span> alloc[j] <span class="sc">*</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rnorm</span>(<span class="dv">1</span>, countries<span class="sc">$</span>lives_per_M[j], countries<span class="sc">$</span>sd_per_M[j]) <span class="sc">*</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        multiplier</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>      lives <span class="ot">&lt;-</span> lives <span class="sc">+</span> <span class="fu">max</span>(<span class="dv">0</span>, lives_j)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    total_lives[i] <span class="ot">&lt;-</span> lives</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  total_lives</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="optimal-allocation-via-grid-search" class="level3">
-<h3 class="anchored" data-anchor-id="optimal-allocation-via-grid-search">Optimal Allocation via Grid Search</h3>
-<p>A grid search over the allocation space (in 5% increments, subject to the constraint that allocations sum to 100%) identifies the best allocation by expected value and by worst-case (maximin) criterion.</p>
+<section id="comparing-three-strategies" class="level3">
+<h3 class="anchored" data-anchor-id="comparing-three-strategies">Comparing Three Strategies</h3>
+<p>Now we define our three strategies and simulate 10,000 outcomes for each. The violin plot shows the full spread of possible results – not just the average, but the best and worst cases too.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grid search over allocation space</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Constraint: a_A + a_C + a_B = 100 (percentage units)</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>grid_step <span class="ot">&lt;-</span> <span class="dv">5</span>  <span class="co"># 5% increments</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (a_A <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, grid_step)) {</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (a_C <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span> <span class="sc">-</span> a_A, grid_step)) {</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    a_B <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">-</span> a_A <span class="sc">-</span> a_C</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    alloc <span class="ot">&lt;-</span> <span class="fu">c</span>(a_A, a_C, a_B)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Quick simulation (fewer draws for speed)</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    sim <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(alloc, countries, <span class="at">n_sims =</span> <span class="dv">2000</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Three allocation strategies (% of budget to each country)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                     Ethiopia  Tanzania  Rwanda  Nigeria</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>strat_concentrate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">55</span>,       <span class="dv">15</span>,       <span class="dv">10</span>,     <span class="dv">20</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>strat_spread      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>,       <span class="dv">25</span>,       <span class="dv">25</span>,     <span class="dv">25</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>strat_tiered      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">35</span>,       <span class="dv">25</span>,       <span class="dv">15</span>,     <span class="dv">25</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Run simulations</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sim_conc   <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_concentrate, countries, n_sims)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>sim_spread <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_spread,      countries, n_sims)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>sim_tiered <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_tiered,      countries, n_sims)</span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">data.frame</span>(</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">a_A =</span> a_A, <span class="at">a_C =</span> a_C, <span class="at">a_B =</span> a_B,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">ev =</span> <span class="fu">mean</span>(sim),</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">sd =</span> <span class="fu">sd</span>(sim),</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">p5 =</span> <span class="fu">quantile</span>(sim, <span class="fl">0.05</span>)  <span class="co"># 5th percentile (worst case)</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Best by expected value</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>best_ev <span class="ot">&lt;-</span> results[<span class="fu">which.max</span>(results<span class="sc">$</span>ev), ]</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Max EV allocation:"</span>, best_ev<span class="sc">$</span>a_A, <span class="st">"/"</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    best_ev<span class="sc">$</span>a_C, <span class="st">"/"</span>, best_ev<span class="sc">$</span>a_B, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Expected lives:"</span>, <span class="fu">round</span>(best_ev<span class="sc">$</span>ev), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Best by worst-case (maximin)</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>best_p5 <span class="ot">&lt;-</span> results[<span class="fu">which.max</span>(results<span class="sc">$</span>p5), ]</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Maximin allocation:"</span>, best_p5<span class="sc">$</span>a_A, <span class="st">"/"</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    best_p5<span class="sc">$</span>a_C, <span class="st">"/"</span>, best_p5<span class="sc">$</span>a_B, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"5th percentile lives:"</span>, <span class="fu">round</span>(best_p5<span class="sc">$</span>p5), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine into a data frame for plotting</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>sim_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">lives    =</span> <span class="fu">c</span>(sim_conc, sim_spread, sim_tiered),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>), <span class="at">each =</span> n_sims)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sim_df, <span class="fu">aes</span>(<span class="at">x =</span> strategy, <span class="at">y =</span> lives <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">fill =</span> strategy)) <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">draw_quantiles =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.5</span>, <span class="fl">0.95</span>)) <span class="sc">+</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Allocation Strategy"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Lives Saved (thousands)"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Monte Carlo Simulation: 4-Country Allocation"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"10,000 scenarios | Lines show 5th, 50th, and 95th percentiles"</span>) <span class="sc">+</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="sensitivity-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="sensitivity-analysis">Sensitivity Analysis</h3>
-<p>This plot shows how varying Country A’s probability of high government co-financing affects the expected lives saved for each strategy. The crossover point identifies the threshold at which concentrating funds in Country A becomes optimal.</p>
+<section id="sensitivity-what-if-government-support-changes" class="level3">
+<h3 class="anchored" data-anchor-id="sensitivity-what-if-government-support-changes">Sensitivity: What If Government Support Changes?</h3>
+<p>The biggest unknown is usually whether a government will step up its own spending. This plot shows how each strategy performs as Ethiopia’s probability of strong co-financing varies from 10% to 80%.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Sensitivity: vary Country A P(High co-financing) from 0.1 to 0.8</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>sens_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p_high_A <span class="cf">in</span> p_seq) {</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Update Country A's co-financing probability</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  countries_mod <span class="ot">&lt;-</span> countries</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  countries_mod<span class="sc">$</span>p_high[<span class="dv">1</span>] <span class="ot">&lt;-</span> p_high_A</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  ev_conc <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_concentrate, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  ev_spr  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_spread, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ev_tier <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_tiered, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  sens_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(sens_results, <span class="fu">data.frame</span>(</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_high =</span> p_high_A,</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Concentrate =</span> ev_conc,</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Spread =</span> ev_spr,</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Tiered =</span> ev_tier</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Pivot to long format and plot</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>sens_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(sens_results, <span class="at">cols =</span> <span class="sc">-</span>p_high,</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                          <span class="at">names_to =</span> <span class="st">"Strategy"</span>, <span class="at">values_to =</span> <span class="st">"EV"</span>)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sens_long, <span class="fu">aes</span>(<span class="at">x =</span> p_high, <span class="at">y =</span> EV <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">color =</span> Strategy)) <span class="sc">+</span></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.40</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"P(High Gov't Co-financing) for Country A"</span>,</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Expected Lives Saved (thousands)"</span>,</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Sensitivity: How Country A's Co-financing Risk Affects Strategy Choice"</span>,</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Dashed line = current estimate (p = 0.40)"</span>) <span class="sc">+</span></span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>p_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>sens_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (p_high <span class="cf">in</span> p_seq) {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  countries_mod <span class="ot">&lt;-</span> countries</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  countries_mod<span class="sc">$</span>p_high_gov[<span class="dv">1</span>] <span class="ot">&lt;-</span> p_high  <span class="co"># vary Ethiopia</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ev_conc <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_concentrate, countries_mod, <span class="dv">3000</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  ev_spr  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_spread,      countries_mod, <span class="dv">3000</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  ev_tier <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_tiered,       countries_mod, <span class="dv">3000</span>))</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  sens_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(sens_results, <span class="fu">data.frame</span>(</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">p_high =</span> p_high,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Concentrate =</span> ev_conc, <span class="at">Spread =</span> ev_spr, <span class="at">Tiered =</span> ev_tier</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>sens_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(sens_results, <span class="at">cols =</span> <span class="sc">-</span>p_high,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                          <span class="at">names_to =</span> <span class="st">"Strategy"</span>, <span class="at">values_to =</span> <span class="st">"EV"</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sens_long, <span class="fu">aes</span>(<span class="at">x =</span> p_high, <span class="at">y =</span> EV <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">color =</span> Strategy)) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.40</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"P(Strong Gov Co-financing) for Ethiopia"</span>,</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Expected Lives Saved (thousands)"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"How Ethiopia's Government Commitment Changes the Best Strategy"</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Dashed line = our current best guess (p = 0.40)"</span>) <span class="sc">+</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Notice how the “Concentrate” line is steepest – it benefits the most when Ethiopia’s government steps up, but it also falls the hardest when support is weak. The “Tiered” strategy is more robust: it does reasonably well no matter what happens.</p>
 </section>
 </section>
 <section id="key-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Resource allocation under uncertainty</strong> requires balancing expected impact against risk. The optimal allocation depends not just on where lives can be saved most efficiently, but on how uncertain we are about each country’s trajectory.</p>
-<p><strong>Portfolio thinking</strong> applies to public health: diversification reduces catastrophic shortfall risk. <strong>Sequential decisions</strong> (pilot then scale) add value by resolving uncertainty, but delay costs lives.</p>
-<p><strong>Government co-financing</strong> is the dominant uncertainty; small shifts in the probability of high co-financing change the optimal strategy. <strong>Monte Carlo simulation</strong> in R makes it possible to quantify confidence intervals and compare strategies rigorously.</p>
+<p><strong>Allocating resources across countries</strong> is not just about picking the most efficient one. Uncertainty means the “best” country might disappoint, so diversification reduces catastrophic risk – just like in a financial portfolio.</p>
+<p><strong>Monte Carlo simulation</strong> lets you explore thousands of possible futures instead of relying on a single “expected” number. It reveals the full range of outcomes, including worst-case scenarios that matter for real decisions.</p>
+<p><strong>Sequential decisions</strong> (pilot first, then scale) are valuable because they let you learn before committing. But delay has a cost measured in lives, so you need to balance the value of information against the urgency of action.</p>
 </div>
 </section>
 <section id="looking-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="looking-ahead">Looking Ahead</h2>
-<p>Next in <strong>Chapter 9 – Game Theory and Strategic Interactions</strong>, we move from treating stakeholders as uncertain variables to modeling them as strategic agents:</p>
+<p>Next in <strong>Chapter 9 – Game Theory and Strategic Interactions</strong>, we stop treating governments and other donors as random variables and start treating them as strategic players with their own goals:</p>
 <ul>
-<li><strong>Nash equilibrium</strong> in donor coordination games</li>
-<li><strong>Commitment devices</strong> that bind government co-financing</li>
-<li><strong>Mechanism design</strong> for aligning incentives across funders</li>
-<li><strong>MNH application:</strong> Designing a co-financing framework that maximizes collective impact</li>
+<li>What happens when multiple players each try to maximize their own payoff?</li>
+<li>Why do rational players sometimes end up in outcomes that are bad for everyone?</li>
+<li>How can you design contracts and incentives that make cooperation the smart choice?</li>
 </ul>
-<p>Chapter 8 solved the allocation problem as if government and donor behavior were exogenous uncertainties. Chapter 9 recognizes that these actors have their own objectives – and designs strategies that account for their rational self-interest.</p>
+<p>Chapter 8 asked “How should we split the budget?” assuming other actors are unpredictable. Chapter 9 recognizes that those actors are making rational choices – and shows how to design strategies that work <em>with</em> their incentives rather than against them.</p>
 
 
 </section>

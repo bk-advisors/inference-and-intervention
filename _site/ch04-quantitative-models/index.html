@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="BK Advisors">
-  <meta name="dcterms.date" content="2026-02-12">
+  <meta name="dcterms.date" content="2026-03-07">
   <title>Chapter 4: Quantitative Causal Models</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -96,7 +96,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-afce544662d4c774d79a6cccbbed54ef.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-6e9afe50719493a7abb77d07998557a4.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -205,60 +205,25 @@ BK Advisors
 </div>
 </div>
 
-  <p class="date">2026-02-12</p>
+  <p class="date">2026-03-07</p>
 </section>
 <section class="slide level2">
 <h2>Learning Objectives</h2>
 <p>After this chapter, you will be able to:</p>
 <ul>
-<li class="fragment">Define <strong>probability distributions</strong> over discrete variable states and apply the basic axioms</li>
-<li class="fragment">Compute <strong>conditional probabilities</strong> and construct <strong>Conditional Probability Tables (CPTs)</strong></li>
-<li class="fragment">Apply <strong>Bayes’ rule</strong> to update beliefs when new evidence arrives</li>
-<li class="fragment">Explain the <strong>Causal Markov Condition</strong> and how a DAG factorizes a joint distribution</li>
-<li class="fragment">Build a <strong>quantitative Bayesian network</strong> in R using <code>bnlearn</code> and query it for MNH policy decisions</li>
+<li class="fragment">Turn real-world counts into <strong>probabilities</strong> using natural frequencies</li>
+<li class="fragment">Read and build <strong>lookup tables</strong> (Conditional Probability Tables) that capture how parent variables shape a child variable</li>
+<li class="fragment">Use <strong>Bayes’ rule</strong> to think backwards – “we see a bad outcome; what probably caused it?”</li>
+<li class="fragment">Explain why each node in a Bayesian network <strong>only depends on its direct parents</strong> and why that simplifies everything</li>
+<li class="fragment">Build and query a <strong>Bayesian network</strong> in R using <code>bnlearn</code></li>
 </ul>
 </section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>From Qualitative to Quantitative</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Structure alone is not enough – we need numbers</span></p>
-</section>
 <section class="slide level2">
-<h2>Why Structure Alone Is Not Enough</h2>
-<p>In Chapters 2 and 3, we built <strong>qualitative</strong> causal models – DAGs with nodes, arrows, and signs.</p>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
+<h2>Chapter Overview – From Arrows to Numbers</h2>
 <div class="callout-box">
-<p><strong>What qualitative models tell us:</strong></p>
-<ul>
-<li>Which variables influence which</li>
-<li>The direction of causal effects ([+] or [-])</li>
-<li>Which paths are open or blocked (d-separation)</li>
-</ul>
-</div>
-</div>
-<div class="col">
-<div class="callout-box orange">
-<p><strong>What qualitative models cannot tell us:</strong></p>
-<ul>
-<li><em>How much</em> does Staffing affect Quality of Care?</li>
-<li><em>How likely</em> is high NMR given equipment shortages?</li>
-<li><em>Which intervention</em> has the largest expected impact?</li>
-</ul>
-</div>
-</div>
-</div>
+<p><strong>Where we are:</strong> In Chapters 2 and 3 we built qualitative causal models – diagrams with arrows and [+]/[-] signs. Those diagrams tell us <em>what affects what</em> and <em>in which direction</em>. But they cannot tell us <em>by how much</em>. This chapter adds numbers.</p>
 </div>
 <div class="fragment">
-<div class="key-takeaway">
-<p><strong>To make decisions, we need to quantify uncertainty.</strong></p>
-<p>Quantitative causal models attach probability distributions to every node in the DAG.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>The Quantitative Upgrade</h2>
 <div class="step-flow">
 <div class="step-item" style="border-left: 4px solid #005CB9;">
 Qualitative DAG<br>(Ch 2-3)
@@ -267,7 +232,7 @@ Qualitative DAG<br>(Ch 2-3)
 +
 </div>
 <div class="step-item" style="border-left: 4px solid #83BD00;">
-Probability<br>Tables
+Lookup<br>Tables
 </div>
 <div class="step-arrow">
 =
@@ -276,240 +241,248 @@ Probability<br>Tables
 Bayesian<br>Network
 </div>
 </div>
-<div class="fragment">
-<div class="example-block">
-<p><span class="example-label">MNH Example</span></p>
-<p><strong>Qualitative:</strong> Staffing –&gt; Quality of Care –&gt; Neonatal Mortality Rate</p>
-<p><strong>Quantitative:</strong> <em>If</em> P(Staffing = Adequate) = 0.40, <em>and</em> P(Quality = Good | Staffing = Adequate) = 0.80, <em>then</em> what is P(NMR = High)?</p>
-<p>Now we can <strong>compute</strong> the answer, not just reason about direction.</p>
-</div>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p>A <strong>Bayesian network</strong> = a DAG + a conditional probability table (CPT) for every node. This chapter teaches you how to build and query one.</p>
+<p>Think of it this way: a qualitative model is like a road map that shows which towns are connected. A <strong>quantitative</strong> model adds the distances between towns – now you can actually plan a trip.</p>
 </div>
 </div>
-</section></section>
+</section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Probability Fundamentals</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The language of quantitative uncertainty</span></p>
+<h1>Counting to Probability</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Start with what you can count</span></p>
 </section>
 <section class="slide level2">
-<h2>Variable States</h2>
-<p>Every variable in our causal model takes on a set of <strong>states</strong> (values).</p>
+<h2>Start with Counts</h2>
+<p>The most natural way to think about uncertainty is to <strong>count things</strong>.</p>
 <div class="fragment">
-<div class="definition-box">
-<p><strong>States</strong> must be <strong>discrete</strong> and <strong>MECE</strong> (Mutually Exclusive, Collectively Exhaustive) – every observation falls into exactly one state.</p>
+<div class="example-block">
+<p><span class="example-label">Tanzania Health Facilities</span></p>
+<p>Tanzania has roughly 8,000 health facilities across 26 regions. The country faces a workforce shortage estimated at about 55% (WHO/Lancet). So:</p>
+<ul>
+<li>Out of <strong>100 health facilities</strong> in rural Tanzania, about <strong>55 have a severe workforce shortage</strong>.</li>
+<li>The other <strong>45</strong> have staffing closer to what is needed.</li>
+</ul>
+<p>That is a fact you can picture: line up 100 facilities, and more than half are short-staffed.</p>
 </div>
 </div>
+<div class="fragment">
+<div class="callout-box">
+<p>These counts – “55 out of 100” – are called <strong>natural frequencies</strong>. They are easier to reason with than abstract decimals, so we will use them as our starting point throughout this chapter.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>From Counts to Probability</h2>
+<p>Probability is just a shorthand for natural frequencies.</p>
 <div class="fragment">
 <table class="caption-top">
 <colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
+<col style="width: 50%">
+<col style="width: 50%">
 </colgroup>
 <thead>
 <tr class="header">
-<th>Variable</th>
-<th>States</th>
-<th>MECE?</th>
+<th>Natural Frequency</th>
+<th>Probability</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Staffing</strong></td>
-<td>{Adequate, Low}</td>
-<td>Yes – every facility is one or the other</td>
+<td>55 out of 100 facilities are short-staffed</td>
+<td>P(Staffing = Low) = 0.55</td>
 </tr>
 <tr class="even">
-<td><strong>CPAP Available</strong></td>
-<td>{Available, Unavailable}</td>
-<td>Yes</td>
+<td>45 out of 100 facilities have adequate staffing</td>
+<td>P(Staffing = Adequate) = 0.45</td>
 </tr>
 <tr class="odd">
-<td><strong>Quality of Care</strong></td>
-<td>{Good, Poor}</td>
-<td>Yes</td>
-</tr>
-<tr class="even">
-<td><strong>NMR</strong></td>
-<td>{High (&gt;25/1000), Low ($$25/1000)}</td>
-<td>Yes</td>
+<td>20 out of 1,000 newborns do not survive the first month</td>
+<td>P(Neonatal Death) = 0.020</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="fragment">
-<div class="callout-box">
-<p><strong>Why discrete?</strong> Continuous variables (exact NMR = 27.3/1000) require density functions. We discretize for tractability – a common and effective practice in applied Bayesian networks.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Events: Sets of States</h2>
 <div class="definition-box">
-<p>An <strong>event</strong> is any subset of states for one or more variables. Events can be combined using set operations.</p>
-</div>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
-<p><strong>Simple events:</strong></p>
-<ul>
-<li><span class="math inline">\(A\)</span> = {Staffing = Adequate}</li>
-<li><span class="math inline">\(B\)</span> = {CPAP = Available}</li>
-<li><span class="math inline">\(C\)</span> = {NMR = High}</li>
-</ul>
-</div>
-<div class="col">
-<p><strong>Compound events:</strong></p>
-<ul>
-<li><span class="math inline">\(A \cap B\)</span> = Adequate staffing <strong>AND</strong> CPAP available</li>
-<li><span class="math inline">\(A \cup C\)</span> = Adequate staffing <strong>OR</strong> high NMR</li>
-<li><span class="math inline">\(\bar{A}\)</span> = Staffing is <strong>NOT</strong> adequate (i.e., Low)</li>
-</ul>
-</div>
+<p><strong>Probability:</strong> The fraction of times something happens out of the total. If 55 of 100 facilities are short-staffed, the probability of picking a short-staffed facility at random is 55/100 = 0.55.</p>
 </div>
 </div>
 <div class="fragment">
-<div class="callout-box">
-<p>For binary variables, knowing one state determines the other: if P(Staffing = Adequate) = 0.40, then P(Staffing = Low) = 1 - 0.40 = 0.60.</p>
+<div class="callout-box green">
+<p><strong>Two ground rules</strong> that always hold:</p>
+<ul>
+<li>Every probability is between 0 (never happens) and 1 (always happens)</li>
+<li>The probabilities of all possible states add up to 1. If P(Low) = 0.55, then P(Adequate) = 1 - 0.55 = 0.45</li>
+</ul>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Probability Axioms</h2>
-<p>The three axioms that all probabilities must satisfy:</p>
-<div class="fragment">
-<div class="math-block">
-<p><strong>Axiom 1 (Non-negativity):</strong> <span class="math inline">\(P(A) \geq 0\)</span> for any event <span class="math inline">\(A\)</span></p>
-</div>
-<div class="math-block">
-<p><strong>Axiom 2 (Normalization):</strong> <span class="math inline">\(P(\Omega) = 1\)</span> where <span class="math inline">\(\Omega\)</span> is the entire sample space</p>
-</div>
-<div class="math-block">
-<p><strong>Axiom 3 (Additivity):</strong> If <span class="math inline">\(A \cap B = \emptyset\)</span>, then <span class="math inline">\(P(A \cup B) = P(A) + P(B)\)</span></p>
-</div>
-</div>
-<div class="fragment">
-<p><strong>Immediate consequences:</strong></p>
-<ul>
-<li class="fragment"><span class="math inline">\(P(\bar{A}) = 1 - P(A)\)</span> (complement rule)</li>
-<li class="fragment"><span class="math inline">\(0 \leq P(A) \leq 1\)</span> (probabilities are bounded)</li>
-<li class="fragment">For a variable with states <span class="math inline">\(\{s_1, s_2, \ldots, s_k\}\)</span>: <span class="math inline">\(\sum_{i=1}^{k} P(s_i) = 1\)</span></li>
-</ul>
-</div>
-</section>
-<section class="slide level2">
-<h2>Frequency vs.&nbsp;Subjective Probability</h2>
+<h2>Where Do These Numbers Come From?</h2>
 <div class="columns-equal">
 <div class="col">
 <div class="callout-box">
-<p><strong>Frequentist interpretation:</strong></p>
-<p>Probability = long-run relative frequency.</p>
-<p>“40% of facilities have adequate staffing” means: if we visit many facilities, about 40% will be adequately staffed.</p>
-<p>Based on <strong>data</strong> (e.g., facility surveys).</p>
+<p><strong>From data:</strong></p>
+<p>Tanzania’s DHIS2 system (used at most facilities) and periodic facility surveys give us real counts – how many facilities have enough staff, how many have essential medicines, how many reported neonatal deaths.</p>
+<p>When data exists, use it.</p>
 </div>
 </div>
 <div class="col">
 <div class="callout-box orange">
-<p><strong>Subjective (Bayesian) interpretation:</strong></p>
-<p>Probability = degree of belief.</p>
-<p>“I believe there’s a 70% chance this district will reduce NMR by 2030” – an expert judgment.</p>
-<p>Based on <strong>evidence + reasoning</strong>.</p>
+<p><strong>From expert judgment:</strong></p>
+<p>Sometimes the data is incomplete or missing. In those cases, experienced health workers, district officers, or program managers provide their best estimates. “I would say about 3 in 10 facilities in this region have functioning CPAP.”</p>
+<p>When data is sparse, informed judgment fills the gap.</p>
 </div>
 </div>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>In practice, we use both.</strong> CPTs combine survey data where available with expert judgment where data is sparse. The Beginnings Fund operates in data-limited settings – subjective priors are unavoidable and valuable.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>MNH Example: Marginal vs.&nbsp;Conditional Probability</h2>
-<p>Consider neonatal mortality and preterm birth in sub-Saharan Africa:</p>
-<div class="fragment">
-<div class="math-block">
-<p><strong>Marginal probability:</strong> <span class="math inline">\(P(\text{Neonatal Death}) \approx 0.025\)</span> (25 per 1,000 live births)</p>
-</div>
-<div class="math-block">
-<p><strong>Conditional probability:</strong> <span class="math inline">\(P(\text{Neonatal Death} \mid \text{Preterm}) \approx 0.10\)</span> (100 per 1,000 preterm births)</p>
-</div>
-</div>
-<div class="fragment">
-<div class="example-block">
-<p><span class="example-label">Key Insight</span></p>
-<p>The probability of neonatal death is <strong>4 times higher</strong> for preterm births than for the general population. This tells us that preterm birth is a strong <strong>risk factor</strong> – but is it a <em>cause</em>?</p>
-<p>To answer that, we need a causal model that separates the direct effect of prematurity from confounders like maternal health, facility quality, and access to care.</p>
+<p><strong>In practice, we use both.</strong> The numbers in this chapter are illustrative – clearly marked as such – but they are grounded in publicly available data on Tanzania’s health system (WHO, DHS, Lancet).</p>
 </div>
 </div>
 </section></section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
 <h1>Conditional Probability</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">P(A|B): The foundation of Bayesian networks</span></p>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Given what we already know, what changes?</span></p>
 </section>
 <section class="slide level2">
-<h2>Definition and Interpretation</h2>
-<div class="definition-box">
-<p><strong>Conditional Probability:</strong> The probability of event <span class="math inline">\(A\)</span> given that event <span class="math inline">\(B\)</span> has occurred (or is known to be true):</p>
-<p><span class="math display">\[P(A \mid B) = \frac{P(A \cap B)}{P(B)}, \quad P(B) &gt; 0\]</span></p>
-</div>
+<h2>The Key Question</h2>
+<p>Plain probability asks: “What fraction of all facilities have high neonatal mortality?”</p>
+<p><strong>Conditional</strong> probability asks a sharper question:</p>
 <div class="fragment">
-<div class="example-block">
-<p><span class="example-label">Intuition</span></p>
-<p><span class="math inline">\(P(A \mid B)\)</span> answers: “Among the cases where <span class="math inline">\(B\)</span> is true, what fraction also have <span class="math inline">\(A\)</span>?”</p>
-<p><span class="math inline">\(P(\text{NMR=High} \mid \text{Staffing=Low})\)</span> = “Among facilities with low staffing, what fraction have high neonatal mortality?”</p>
+<div class="callout-box orange">
+<p><strong>“Given that a facility has low staffing, what fraction have high neonatal mortality?”</strong></p>
 </div>
 </div>
 <div class="fragment">
-<p><strong>Crucial distinction:</strong></p>
-<ul>
-<li><span class="math inline">\(P(\text{NMR=High} \mid \text{Staffing=Low}) = 0.55\)</span> – 55% of under-staffed facilities have high NMR</li>
-<li><span class="math inline">\(P(\text{Staffing=Low} \mid \text{NMR=High}) = 0.75\)</span> – 75% of high-NMR facilities are under-staffed</li>
-</ul>
-<p>These are <strong>not the same</strong> – confusing them is a common and costly error.</p>
+<p>That word <em>given</em> changes everything. We are no longer looking at all 100 facilities. We are zooming in on just the 55 that are short-staffed and asking: among <em>those</em>, how many have high mortality?</p>
 </div>
 </section>
 <section class="slide level2">
-<h2>Stochastic Independence</h2>
-<div class="definition-box">
-<p>Two events <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are <strong>stochastically independent</strong> if and only if:</p>
-<p><span class="math display">\[P(A \mid B) = P(A)\]</span></p>
-<p>Equivalently: <span class="math inline">\(P(A \cap B) = P(A) \times P(B)\)</span></p>
-</div>
+<h2>A 2x2 Table of 100 Facilities</h2>
+<p>Imagine we survey 100 facilities in rural Tanzania and count how many fall into each combination of staffing and neonatal mortality:</p>
 <div class="fragment">
-<p><strong>What independence means:</strong> Knowing <span class="math inline">\(B\)</span> tells you <strong>nothing</strong> about <span class="math inline">\(A\)</span>.</p>
-</div>
-<div class="fragment">
-<div class="example-block">
-<p><span class="example-label">MNH Test</span></p>
-<p>Is Staffing independent of NMR? We check:</p>
-<ul>
-<li><span class="math inline">\(P(\text{NMR=High}) = 0.35\)</span> (overall)</li>
-<li><span class="math inline">\(P(\text{NMR=High} \mid \text{Staffing=Adequate}) = 0.15\)</span></li>
-<li><span class="math inline">\(P(\text{NMR=High} \mid \text{Staffing=Low}) = 0.55\)</span></li>
-</ul>
-<p>Since <span class="math inline">\(0.15 \neq 0.35\)</span> and <span class="math inline">\(0.55 \neq 0.35\)</span>, Staffing and NMR are <strong>not independent</strong>. Staffing is informative about mortality.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Conditional Probability Tables (CPTs)</h2>
-<div class="definition-box">
-<p>A <strong>Conditional Probability Table (CPT)</strong> lists <span class="math inline">\(P(\text{Child} \mid \text{Parents})\)</span> for every combination of parent and child states. Every row sums to 1.</p>
-</div>
-<div class="fragment">
-<p><strong>CPT for Quality of Care</strong> given Staffing and CPAP:</p>
 <table class="caption-top">
 <thead>
 <tr class="header">
+<th></th>
+<th>NMR = High</th>
+<th>NMR = Low</th>
+<th><strong>Row Total</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Staffing = Low</strong></td>
+<td>33</td>
+<td>22</td>
+<td><strong>55</strong></td>
+</tr>
+<tr class="even">
+<td><strong>Staffing = Adequate</strong></td>
+<td>9</td>
+<td>36</td>
+<td><strong>45</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Column Total</strong></td>
+<td><strong>42</strong></td>
+<td><strong>58</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><em>These are illustrative counts designed to reflect publicly available estimates of Tanzania’s ~55% workforce shortage and ~20/1,000 neonatal mortality rate.</em></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Reading the Table</h2>
+<p>Now we can answer both the plain and conditional questions:</p>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box">
+<p><strong>Plain probability:</strong></p>
+<p>P(NMR = High) = 42 / 100 = <strong>0.42</strong></p>
+<p>Overall, 42 out of 100 facilities have high neonatal mortality.</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Conditional probability:</strong></p>
+<p>P(NMR = High | Staffing = Low) = 33 / 55 = <strong>0.60</strong></p>
+<p>Among the 55 short-staffed facilities, 33 have high mortality. That is 60%.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>Compare:</strong> P(NMR = High | Staffing = Adequate) = 9 / 45 = <strong>0.20</strong></p>
+<p>Among adequately staffed facilities, only 20% have high mortality. The gap between 60% and 20% is enormous – 40 percentage points. Staffing matters.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Conditional Probability: The Idea</h2>
+<div class="definition-box">
+<p><strong>Conditional Probability</strong> answers: “Among the cases where B is true, what fraction also have A?”</p>
+<p>P(A | B) = (number with both A and B) / (number with B)</p>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Crucial warning:</strong> P(NMR=High | Staffing=Low) and P(Staffing=Low | NMR=High) are <strong>not the same thing</strong>.</p>
+<ul>
+<li>P(NMR=High | Staffing=Low) = 33/55 = 0.60 – “Of the short-staffed, 60% have high mortality”</li>
+<li>P(Staffing=Low | NMR=High) = 33/42 = 0.79 – “Of the high-mortality facilities, 79% are short-staffed”</li>
+</ul>
+<p>Mixing these up is one of the most common mistakes in health data analysis. Bayes’ rule (coming soon) is the tool that connects them correctly.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Lookup Tables (CPTs)</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Your cheat sheet for how parents shape a child node</span></p>
+</section>
+<section class="slide level2">
+<h2>What Is a Lookup Table?</h2>
+<p>In Chapter 2, we drew arrows like Staffing –&gt; Quality of Care. That arrow says staffing <em>affects</em> quality. But how much? A <strong>lookup table</strong> – formally called a Conditional Probability Table, or CPT – gives us the answer.</p>
+<div class="fragment">
+<div class="definition-box">
+<p><strong>Lookup Table (CPT):</strong> A table that tells you the probability of each state of a child node, for every combination of its parent nodes. Think of it as: “If I know the parents, this table tells me what to expect from the child.”</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>This table is your cheat sheet.</strong> You look up the row that matches what you know about the parent variables, and the table tells you the probability of each outcome for the child variable. Every row adds up to 1.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>CPT for Quality of Care</h2>
+<p>Suppose Quality of Care depends on two parent variables: <strong>Staffing</strong> and <strong>Essential Medicines</strong>. Here is the lookup table:</p>
+<div class="fragment">
+<table class="caption-top">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
 <th>Staffing</th>
-<th>CPAP Available</th>
-<th>P(Quality=Good)</th>
-<th>P(Quality=Poor)</th>
+<th>Essential Medicines</th>
+<th>P(Quality = Good)</th>
+<th>P(Quality = Poor)</th>
 </tr>
 </thead>
 <tbody>
@@ -522,525 +495,388 @@ Bayesian<br>Network
 <tr class="even">
 <td>Adequate</td>
 <td>Unavailable</td>
-<td>0.55</td>
-<td>0.45</td>
+<td>0.50</td>
+<td>0.50</td>
 </tr>
 <tr class="odd">
 <td>Low</td>
 <td>Available</td>
-<td>0.50</td>
-<td>0.50</td>
+<td>0.45</td>
+<td>0.55</td>
 </tr>
 <tr class="even">
 <td>Low</td>
 <td>Unavailable</td>
-<td>0.20</td>
-<td>0.80</td>
+<td>0.15</td>
+<td>0.85</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p>Each row defines a <strong>conditional distribution</strong> over Quality of Care. The table encodes four scenarios – the core of what the Bayesian network “knows.”</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>MNH CPT: Neonatal Outcome Given CPAP and Training</h2>
-<p>A CPT for neonatal outcome given equipment and workforce readiness:</p>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>CPAP Available</th>
-<th>Staff Trained</th>
-<th>P(Outcome=Survival)</th>
-<th>P(Outcome=Death)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Available</td>
-<td>Completed</td>
-<td>0.96</td>
-<td>0.04</td>
-</tr>
-<tr class="even">
-<td>Available</td>
-<td>Not Completed</td>
-<td>0.88</td>
-<td>0.12</td>
-</tr>
-<tr class="odd">
-<td>Unavailable</td>
-<td>Completed</td>
-<td>0.82</td>
-<td>0.18</td>
-</tr>
-<tr class="even">
-<td>Unavailable</td>
-<td>Not Completed</td>
-<td>0.70</td>
-<td>0.30</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>Reading the table:</strong> When both CPAP is available and staff are trained, neonatal survival is 96%. When neither is present, survival drops to 70% – a <strong>26 percentage point</strong> gap. This quantifies the combined effect of equipment and training.</p>
+<p><strong>How to read it:</strong> Find the row that matches the facility’s situation. If a facility has adequate staffing but essential medicines are unavailable, go to row 2: there is a 50/50 chance of good vs.&nbsp;poor quality care. If both staffing and medicines are lacking (row 4), there is only a 15% chance of good quality.</p>
 </div>
 </div>
 <div class="fragment">
 <div class="callout-box orange">
-<p><strong>Note:</strong> These probabilities are illustrative but grounded in the literature on neonatal care in low-resource settings. In practice, CPTs are estimated from facility-level data, expert elicitation, or both.</p>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Joint Probabilities</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">P(X, Y): The full picture of how variables co-occur</span></p>
-</section>
-<section class="slide level2">
-<h2>The Factoring Rule</h2>
-<div class="definition-box">
-<p>The <strong>joint probability</strong> of two events is computed by the product (chain) rule:</p>
-<p><span class="math display">\[P(X, Y) = P(X \mid Y) \times P(Y)\]</span></p>
-<p>This generalizes to any number of variables:</p>
-<p><span class="math display">\[P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i \mid X_1, \ldots, X_{i-1})\]</span></p>
-</div>
-<div class="fragment">
-<div class="example-block">
-<p><span class="example-label">Simple Example</span></p>
-<p><span class="math inline">\(P(\text{Staffing=Low, Quality=Poor})\)</span></p>
-<p><span class="math inline">\(= P(\text{Quality=Poor} \mid \text{Staffing=Low}) \times P(\text{Staffing=Low})\)</span></p>
-<p><span class="math inline">\(= 0.65 \times 0.60 = 0.39\)</span></p>
-<p>About 39% of facilities are <em>both</em> under-staffed <em>and</em> deliver poor quality care.</p>
+<p><em>These probabilities are illustrative but grounded in published literature on care quality in low-resource settings. Tanzania reports low availability of essential medicines in many facilities (WHO Service Availability and Readiness Assessment).</em></p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Joint Probability Tables</h2>
-<p>A <strong>joint probability table</strong> shows <span class="math inline">\(P(X, Y)\)</span> for every combination of states:</p>
+<h2>CPT for Neonatal Mortality</h2>
+<p>Now the second link in the chain. Given quality of care, what is the probability of high vs.&nbsp;low neonatal mortality?</p>
 <div class="fragment">
 <table class="caption-top">
 <thead>
 <tr class="header">
-<th></th>
-<th>Staffing = Adequate</th>
-<th>Staffing = Low</th>
-<th><strong>Row Total</strong></th>
+<th>Quality of Care</th>
+<th>P(NMR = Low)</th>
+<th>P(NMR = High)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Quality = Good</strong></td>
-<td>0.28</td>
-<td>0.21</td>
-<td>0.49</td>
+<td>Good</td>
+<td>0.82</td>
+<td>0.18</td>
 </tr>
 <tr class="even">
-<td><strong>Quality = Poor</strong></td>
-<td>0.12</td>
-<td>0.39</td>
-<td>0.51</td>
+<td>Poor</td>
+<td>0.35</td>
+<td>0.65</td>
 </tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Good quality care:</strong> 82% chance of low NMR. Quality care makes a huge difference.</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Poor quality care:</strong> Only a 35% chance of low NMR. Nearly two in three facilities with poor care have high neonatal mortality.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Notice the structure.</strong> NMR depends <em>only</em> on Quality of Care in this table – not directly on Staffing or Medicines. Those upstream variables affect NMR, but only <em>through</em> Quality. The lookup table respects the arrows in our DAG.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Root Nodes Get Simple Tables</h2>
+<p>Nodes with no parents – root nodes – just need a single probability (no conditioning):</p>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>P(Adequate / Available)</th>
+<th>P(Low / Unavailable)</th>
+</tr>
+</thead>
+<tbody>
 <tr class="odd">
-<td><strong>Column Total</strong></td>
+<td><strong>Staffing</strong></td>
+<td>0.45</td>
+<td>0.55</td>
+</tr>
+<tr class="even">
+<td><strong>Essential Medicines</strong></td>
 <td>0.40</td>
 <td>0.60</td>
-<td><strong>1.00</strong></td>
 </tr>
 </tbody>
 </table>
-</div>
-<div class="fragment">
-<ul>
-<li class="fragment"><strong>Cell values</strong> = joint probabilities: P(Quality=Good, Staffing=Adequate) = 0.28</li>
-<li class="fragment"><strong>Row totals</strong> = marginal probabilities of Quality: P(Quality=Good) = 0.49</li>
-<li class="fragment"><strong>Column totals</strong> = marginal probabilities of Staffing: P(Staffing=Adequate) = 0.40</li>
-<li class="fragment"><strong>Grand total</strong> must equal 1.00 (normalization)</li>
-</ul>
-</div>
-</section>
-<section class="slide level2">
-<h2>Computing Joint Distributions from CPTs</h2>
-<p>Given a Bayesian network’s CPTs, we can compute any joint distribution:</p>
-<div class="fragment">
-<div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;">
-<span class="step-number">1</span><br>Start with marginals<br>P(Staffing)
-</div>
-<div class="step-arrow">
-–&gt;
-</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;">
-<span class="step-number green">2</span><br>Apply CPTs<br>P(Quality | Staffing)
-</div>
-<div class="step-arrow">
-–&gt;
-</div>
-<div class="step-item" style="border-left: 4px solid #FA7650;">
-<span class="step-number orange">3</span><br>Multiply<br>P(Staffing, Quality)
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="math-block">
-<p><span class="math display">\[P(\text{Staffing=Adequate, Quality=Good}) = P(\text{Quality=Good} \mid \text{Staffing=Adequate}) \times P(\text{Staffing=Adequate})\]</span> <span class="math display">\[= 0.70 \times 0.40 = 0.28\]</span></p>
-</div>
-<div class="callout-box">
-<p>This “forward” computation – multiplying marginals by CPTs – is the engine of Bayesian network inference. Software automates it, but understanding the mechanics is essential.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>MNH Example: Three-Variable Joint Distribution</h2>
-<p>Compute the joint distribution across Training, Competency, and Outcome:</p>
-<div class="fragment">
-<p><strong>Given:</strong></p>
-<ul>
-<li><span class="math inline">\(P(\text{Training=Completed}) = 0.45\)</span>, <span class="math inline">\(P(\text{Training=Not}) = 0.55\)</span></li>
-<li>CPT for Competency | Training and CPT for Outcome | Competency</li>
-</ul>
-<table class="caption-top">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Training</th>
-<th>Competency</th>
-<th>P(Outcome=Survival)</th>
-<th>Joint P</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Completed</td>
-<td>High (P=0.80)</td>
-<td>0.96</td>
-<td><span class="math inline">\(0.45 \times 0.80 \times 0.96 = 0.346\)</span></td>
-</tr>
-<tr class="even">
-<td>Completed</td>
-<td>Low (P=0.20)</td>
-<td>0.78</td>
-<td><span class="math inline">\(0.45 \times 0.20 \times 0.78 = 0.070\)</span></td>
-</tr>
-<tr class="odd">
-<td>Not</td>
-<td>High (P=0.30)</td>
-<td>0.96</td>
-<td><span class="math inline">\(0.55 \times 0.30 \times 0.96 = 0.158\)</span></td>
-</tr>
-<tr class="even">
-<td>Not</td>
-<td>Low (P=0.70)</td>
-<td>0.78</td>
-<td><span class="math inline">\(0.55 \times 0.70 \times 0.78 = 0.300\)</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>Overall P(Survival)</strong> = 0.346 + 0.070 + 0.158 + 0.300 = <strong>0.874</strong> (87.4%)</p>
-<p>If training coverage increased from 45% to 80%, P(Survival) rises to <strong>0.914</strong> – an additional 40 lives saved per 1,000 births.</p>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Bayes’ Rule</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Reversing the arrow: from evidence to cause</span></p>
-</section>
-<section class="slide level2">
-<h2>Derivation from Conditional Probability</h2>
-<p>Bayes’ rule follows directly from the definition of conditional probability:</p>
-<div class="fragment">
-<div class="math-block">
-<p>We know: <span class="math inline">\(P(A \mid B) = \frac{P(A \cap B)}{P(B)}\)</span> and <span class="math inline">\(P(B \mid A) = \frac{P(A \cap B)}{P(A)}\)</span></p>
-<p>Both have <span class="math inline">\(P(A \cap B)\)</span> in the numerator, so:</p>
-<p><span class="math display">\[\boxed{P(A \mid B) = \frac{P(B \mid A) \times P(A)}{P(B)}}\]</span></p>
-</div>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>What Bayes’ rule does:</strong> It lets us “flip” the conditioning. If we know <span class="math inline">\(P(\text{Evidence} \mid \text{Cause})\)</span>, Bayes’ rule gives us <span class="math inline">\(P(\text{Cause} \mid \text{Evidence})\)</span>.</p>
-<p>This is the fundamental operation of <strong>situational assessment</strong> – reasoning backward from what we observe to what is likely true.</p>
+<p>These reflect Tanzania’s reality: about 55% of facilities face staffing shortages, and essential medicine availability is low in many rural facilities.</p>
 </div>
-</div>
-</section>
-<section class="slide level2">
-<h2>The Terminology of Bayes’ Rule</h2>
-<p><span class="math display">\[P(\underbrace{A}_{\text{hypothesis}} \mid \underbrace{B}_{\text{evidence}}) = \frac{\overbrace{P(B \mid A)}^{\text{likelihood}} \times \overbrace{P(A)}^{\text{prior}}}{\underbrace{P(B)}_{\text{marginal likelihood}}}\]</span></p>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Term</th>
-<th>Symbol</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Prior</strong></td>
-<td><span class="math inline">\(P(A)\)</span></td>
-<td>What we believed <em>before</em> seeing evidence</td>
-</tr>
-<tr class="even">
-<td><strong>Likelihood</strong></td>
-<td><span class="math inline">\(P(B \mid A)\)</span></td>
-<td>How probable the evidence is <em>if</em> the hypothesis is true</td>
-</tr>
-<tr class="odd">
-<td><strong>Posterior</strong></td>
-<td><span class="math inline">\(P(A \mid B)\)</span></td>
-<td>Updated belief <em>after</em> incorporating evidence</td>
-</tr>
-<tr class="even">
-<td><strong>Marginal likelihood</strong></td>
-<td><span class="math inline">\(P(B)\)</span></td>
-<td>Total probability of the evidence across all hypotheses</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>Posterior <span class="math inline">\(\propto\)</span> Likelihood <span class="math inline">\(\times\)</span> Prior</strong></p>
-<p>Evidence updates our beliefs. Strong evidence (high likelihood ratio) shifts the posterior far from the prior.</p>
+<p><strong>A lookup table for every node = a complete quantitative model.</strong> Root nodes get a simple one-row table. Every other node gets a table conditioned on its parents. Put them all together, and the model can compute any probability you ask it.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Bayes’ Rule – Thinking Backwards</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">We see an outcome. What probably caused it?</span></p>
+</section>
+<section class="slide level2">
+<h2>The Backwards Question</h2>
+<p>So far we have been thinking <strong>forwards</strong>: given the causes, what outcome do we expect?</p>
+<p>But in real life, managers often face the <strong>backwards</strong> question:</p>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>A district in Tanzania has high neonatal mortality. Before checking, you thought there was a 55% chance that any given facility is short-staffed. Now that you know mortality is high – what is the updated chance that staffing is the problem?</strong></p>
+</div>
+</div>
+<div class="fragment">
+<p>This is the kind of question Bayes’ rule answers. Let’s walk through it with natural frequencies – no formulas first, just counting.</p>
+</div>
+</section>
+<section class="slide level2">
+<h2>Step 1: Start with 100 Facilities</h2>
+<p>Imagine 100 facilities. We know that about 55 are short-staffed and 45 have adequate staffing. That is our <strong>starting belief</strong> (before seeing any mortality data).</p>
+<div class="fragment">
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">
+100<br>Facilities
+</div>
+<div class="step-arrow">
+–&gt;
+</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">
+55<br>Low Staffing
+</div>
+<div class="step-arrow">
+
+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">
+45<br>Adequate Staffing
+</div>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Computing P(B): The Law of Total Probability</h2>
-<p>The denominator of Bayes’ rule requires <strong>marginalizing</strong> over all hypotheses:</p>
-<div class="fragment">
-<div class="math-block">
-<p><span class="math display">\[P(B) = \sum_{\text{all } a} P(B \mid A=a) \times P(A=a)\]</span></p>
-</div>
-</div>
-<div class="fragment">
-<div class="example-block">
-<p><span class="example-label">Example with binary hypothesis</span></p>
-<p>If <span class="math inline">\(A\)</span> has states {Yes, No}:</p>
-<p><span class="math inline">\(P(B) = P(B \mid A=\text{Yes}) \times P(A=\text{Yes}) + P(B \mid A=\text{No}) \times P(A=\text{No})\)</span></p>
-<p>This is a <strong>weighted average</strong> of the likelihoods, weighted by the priors.</p>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box">
-<p>The denominator ensures the posterior sums to 1 across all hypotheses. It acts as a normalizing constant.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>MNH Bayes’ Rule: Diagnosing Facility Gaps</h2>
-<p><strong>Question:</strong> A neonatal death has occurred. What is the probability the facility lacked CPAP?</p>
-<div class="fragment">
-<p><strong>Given:</strong></p>
+<h2>Step 2: How Many Have High NMR?</h2>
+<p>From our 2x2 table earlier, we know the mortality rates for each group:</p>
 <ul>
-<li><span class="math inline">\(P(\text{CPAP=Unavailable}) = 0.65\)</span> (prior: 65% of facilities lack CPAP)</li>
-<li><span class="math inline">\(P(\text{Death} \mid \text{CPAP=Unavailable}) = 0.05\)</span> (5% mortality without CPAP)</li>
-<li><span class="math inline">\(P(\text{Death} \mid \text{CPAP=Available}) = 0.015\)</span> (1.5% mortality with CPAP)</li>
+<li>Of the <strong>55 short-staffed</strong> facilities: 60% have high NMR = <strong>33 facilities</strong></li>
+<li>Of the <strong>45 adequately staffed</strong> facilities: 20% have high NMR = <strong>9 facilities</strong></li>
 </ul>
+<div class="fragment">
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #E24A3F;">
+55 Low Staffing<br><small>33 High NMR</small><br><small>22 Low NMR</small>
+</div>
+<div class="step-arrow">
+
+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">
+45 Adequate<br><small>9 High NMR</small><br><small>36 Low NMR</small>
+</div>
+</div>
 </div>
 <div class="fragment">
-<div class="math-block">
-<p><strong>Step 1: Compute</strong> <span class="math inline">\(P(\text{Death})\)</span></p>
-<p><span class="math inline">\(P(\text{Death}) = 0.05 \times 0.65 + 0.015 \times 0.35 = 0.0325 + 0.00525 = 0.03775\)</span></p>
-</div>
-</div>
-<div class="fragment">
-<div class="math-block">
-<p><strong>Step 2: Apply Bayes’ rule</strong></p>
-<p><span class="math display">\[P(\text{CPAP=Unavailable} \mid \text{Death}) = \frac{0.05 \times 0.65}{0.03775} = \frac{0.0325}{0.03775} = 0.861\]</span></p>
-</div>
+<p><strong>Total with high NMR:</strong> 33 + 9 = <strong>42 facilities</strong></p>
 </div>
 </section>
 <section class="slide level2">
-<h2>MNH Bayes’ Rule: Interpreting the Result</h2>
-<div class="math-block">
-<p><span class="math display">\[P(\text{CPAP=Unavailable} \mid \text{Death}) = 0.861\]</span></p>
+<h2>Step 3: Among High-NMR Facilities, How Many Are Short-Staffed?</h2>
+<p>Now comes the key move. We have 42 facilities with high NMR. We zoom in on <em>just those 42</em> and ask: how many are short-staffed?</p>
+<div class="fragment">
+<div class="callout-box red">
+<p><strong>Answer:</strong> 33 out of 42 = <strong>0.79 (79%)</strong></p>
+</div>
 </div>
 <div class="fragment">
 <div class="columns-equal">
 <div class="col">
 <div class="callout-box">
-<p><strong>Prior:</strong> P(No CPAP) = 0.65</p>
-<p>Before learning about the death, we estimated a 65% chance the facility lacked CPAP.</p>
+<p><strong>Before</strong> seeing the mortality data:</p>
+<p>P(Low Staffing) = 55/100 = <strong>0.55</strong></p>
+<p>We started with a 55% belief that a facility is short-staffed.</p>
 </div>
 </div>
 <div class="col">
 <div class="callout-box red">
-<p><strong>Posterior:</strong> P(No CPAP | Death) = 0.86</p>
-<p>After learning of the death, the probability the facility lacked CPAP rises to 86%.</p>
+<p><strong>After</strong> learning NMR is high:</p>
+<p>P(Low Staffing | NMR = High) = 33/42 = <strong>0.79</strong></p>
+<p>The evidence pushed our belief up to 79%.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>The evidence shifted our belief by 21 percentage points.</strong></p>
-<p>Observing a neonatal death is strong evidence of CPAP absence. This is the logic behind mortality audits – deaths are diagnostic signals that help us identify facility-level gaps.</p>
+<p><strong>That is Bayes’ rule in action.</strong> Seeing high mortality is strong evidence of a staffing problem. Our belief jumped from 55% to 79% – a 24 percentage-point shift. No formulas needed, just careful counting.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>The Tree Diagram</h2>
+<p>Here is the same logic drawn as a tree – a picture that makes the counting visible:</p>
+<div class="fragment">
+<pre><code>                        100 Facilities
+                       /              \
+              55 Low Staffing    45 Adequate Staffing
+              /          \          /          \
+        33 High NMR  22 Low NMR  9 High NMR  36 Low NMR
+
+  Total High NMR = 33 + 9 = 42
+
+  P(Low Staffing | High NMR) = 33 / 42 = 0.79</code></pre>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>The tree diagram approach:</strong> Start at the top with your total. Branch by the <em>cause</em> you are interested in. Then branch again by the <em>evidence</em> you observed. Count the relevant leaves. Divide.</p>
+<p>This is the same thing as Bayes’ formula, but you never have to memorize a formula. You just draw the tree and count.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Why Does This Matter?</h2>
+<div class="example-block">
+<p><span class="example-label">Policy Implication</span></p>
+<p>A district health officer in one of Tanzania’s 26 regions sees that a cluster of facilities has high neonatal mortality. The natural question is: <em>why?</em></p>
+<p>Before any investigation, the officer knows that staffing shortages affect about 55% of facilities nationally. But after seeing the mortality data, Bayes’ rule tells them: <strong>there is now a 79% chance the problem is staffing</strong>.</p>
+<p>That updated belief can guide where to send the audit team first – and that matters when audit resources are scarce.</p>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>This is the logic behind mortality audits.</strong> Deaths are diagnostic signals. Bayes’ rule tells you how to update your beliefs about upstream causes when you observe a downstream outcome. It turns outcome data into actionable intelligence about what went wrong.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Bayes’ Rule: The General Pattern</h2>
+<p>For those who want to see the formula, here it is. But notice – it is just a compact way of writing the tree:</p>
+<div class="fragment">
+<div class="definition-box">
+<p><strong>Bayes’ Rule:</strong></p>
+<p>P(Cause | Evidence) = P(Evidence | Cause) x P(Cause) / P(Evidence)</p>
+<p>In our example:</p>
+<ul>
+<li>P(Cause) = P(Low Staffing) = 0.55 – our starting belief</li>
+<li>P(Evidence | Cause) = P(High NMR | Low Staffing) = 0.60 – how likely is the evidence if the cause is present</li>
+<li>P(Evidence) = P(High NMR) = 0.42 – the total chance of seeing this evidence</li>
+<li>P(Cause | Evidence) = (0.60 x 0.55) / 0.42 = 0.33 / 0.42 = <strong>0.79</strong> – our updated belief</li>
+</ul>
 </div>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>Policy implication:</strong> Mortality audit data can be used to prioritize CPAP distribution – target facilities where deaths are occurring, since Bayes’ rule tells us these are disproportionately the facilities lacking equipment.</p>
+<p><strong>You do not need to memorize this formula.</strong> If you can draw the tree and count, you get the same answer. The formula is just the shortcut.</p>
 </div>
 </div>
 </section></section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Factorization &amp; the Causal Markov Condition</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">How DAGs simplify probability</span></p>
+<h1>Smart Diagrams – Bayesian Networks</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A DAG that does math for you</span></p>
 </section>
 <section class="slide level2">
-<h2>DAG Implies Factorization</h2>
+<h2>What Is a Bayesian Network?</h2>
 <div class="definition-box">
-<p><strong>Causal Markov Condition:</strong> Each variable in a DAG is conditionally independent of its non-descendants, given its parents.</p>
+<p><strong>Bayesian Network:</strong> A DAG (the arrows from Chapters 2-3) plus a lookup table (CPT) for every node. Together, they form a model that can answer probability questions automatically.</p>
 </div>
 <div class="fragment">
-<p>This means the full joint distribution <strong>factorizes</strong> according to the DAG:</p>
-<div class="math-block">
-<p><span class="math display">\[P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i \mid \text{Parents}(X_i))\]</span></p>
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">
+DAG<br>(arrows)
+</div>
+<div class="step-arrow">
++
+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">
+Lookup Tables<br>(CPTs)
+</div>
+<div class="step-arrow">
+=
+</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">
+Bayesian<br>Network
+</div>
+</div>
+</div>
+<div class="fragment">
+<p>Think of it this way: the DAG is the <strong>skeleton</strong> of the model – it shows the shape of the causal relationships. The lookup tables are the <strong>muscle</strong> – they give the model the numbers it needs to compute things. Put them together and you have a smart diagram that can answer “what if” questions.</p>
+</div>
+</section>
+<section class="slide level2">
+<h2>What Can a Bayesian Network Do?</h2>
+<p>Once you have a Bayesian network, you can ask it questions like:</p>
+<div class="fragment">
+<ul>
+<li class="fragment"><strong>Forward:</strong> “If we improve staffing to adequate levels across the district, what happens to expected neonatal mortality?”</li>
+<li class="fragment"><strong>Backward:</strong> “We observe high mortality. What is the most likely cause – staffing, medicines, or both?”</li>
+<li class="fragment"><strong>What-if:</strong> “If essential medicines suddenly become available (but staffing stays low), how much does mortality improve?”</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p>The network computes the answers using the lookup tables and the arrows. You do not have to do the math by hand – software (like R’s <code>bnlearn</code> package) handles it. But understanding the logic helps you trust the answers and catch mistakes.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>The Key Rule</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Each node only depends on its direct parents</span></p>
+</section>
+<section class="slide level2">
+<h2>The Rule That Simplifies Everything</h2>
+<p>Here is the single most important idea that makes Bayesian networks practical:</p>
+<div class="fragment">
+<div class="key-takeaway">
+<p><strong>Each node only depends on its direct parents.</strong></p>
+<p>Once you know the parents of a node, nothing else in the network gives you additional information about that node.</p>
 </div>
 </div>
 <div class="fragment">
 <div class="example-block">
-<p><span class="example-label">Illustration</span></p>
-<p>For the DAG: Staffing –&gt; Quality –&gt; NMR</p>
-<p><span class="math inline">\(P(\text{Staffing, Quality, NMR}) = P(\text{Staffing}) \times P(\text{Quality} \mid \text{Staffing}) \times P(\text{NMR} \mid \text{Quality})\)</span></p>
-<p>Note: NMR depends on Quality <strong>only</strong>, not directly on Staffing. The DAG tells us Staffing’s effect on NMR is fully mediated by Quality.</p>
+<p><span class="example-label">Think of It This Way</span></p>
+<p>Consider the chain: <strong>Staffing –&gt; Quality of Care –&gt; NMR</strong></p>
+<p>If you already know that Quality of Care is Poor, does it matter <em>why</em> it is poor? Whether it was caused by low staffing, missing medicines, or both – the probability of high NMR is the same. Quality of Care “screens off” everything upstream from NMR.</p>
+<p>That is why the NMR lookup table only has a Quality column – not a Staffing column.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Why Factorization Matters</h2>
-<p><strong>Without the DAG</strong> (brute-force joint distribution):</p>
-<ul>
-<li>4 binary variables = <span class="math inline">\(2^4 = 16\)</span> entries in the joint table</li>
-<li>10 binary variables = <span class="math inline">\(2^{10} = 1{,}024\)</span> entries</li>
-<li>20 binary variables = <span class="math inline">\(2^{20} = 1{,}048{,}576\)</span> entries</li>
-</ul>
+<h2>Why This Rule Matters: Fewer Numbers to Specify</h2>
+<p>Without this rule, we would need a huge table listing every possible combination of every variable:</p>
 <div class="fragment">
-<p><strong>With the DAG</strong> (factorized CPTs):</p>
-<ul>
-<li>Each node only needs a CPT conditioned on its <strong>parents</strong> (typically 1–3 variables)</li>
-<li>20 binary variables with max 3 parents each = at most <span class="math inline">\(20 \times 2^3 = 160\)</span> parameters</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="key-takeaway">
-<p><strong>The DAG reduces complexity exponentially.</strong></p>
-<p>Instead of specifying a million probabilities, the causal structure tells us most variables are conditionally independent, letting us specify just a few hundred. This is why causal models are <em>computationally tractable</em>.</p>
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box red">
+<p><strong>Without the rule (brute force):</strong></p>
+<p>4 variables, each with 2 states = 2 x 2 x 2 x 2 = <strong>16</strong> rows in a giant table.</p>
+<p>10 variables? <strong>1,024</strong> rows.</p>
+<p>20 variables? Over <strong>1 million</strong> rows.</p>
 </div>
 </div>
-</section>
-<section class="slide level2">
-<h2>Independence from the DAG</h2>
-<p>The Causal Markov Condition gives us testable independence predictions:</p>
-<div class="fragment">
-<table style="width: 90%; margin: 0.4em auto; font-size: 0.55em;">
-<tbody><tr>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node treatment" style="padding: 0.4em 0.7em;">
-Staffing
+<div class="col">
+<div class="callout-box green">
+<p><strong>With the rule (Bayesian network):</strong></p>
+<p>Each node only needs parents in its table. Typical nodes have 1-3 parents, so each table has 2-8 rows.</p>
+<p>20 variables with up to 3 parents each? About <strong>160</strong> rows total.</p>
 </div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive" style="font-size: 1.6em;">–&gt;</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node" style="padding: 0.4em 0.7em;">
-Quality<br>of Care
 </div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow negative" style="font-size: 1.6em;">–&gt;</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node outcome" style="padding: 0.4em 0.7em;">
-NMR
 </div>
-</td>
-</tr>
-</tbody></table>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Statement</th>
-<th>True?</th>
-<th>Why?</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Staffing <span class="math inline">\(\perp\)</span> NMR</td>
-<td>No</td>
-<td>Connected via open path through Quality</td>
-</tr>
-<tr class="even">
-<td>Staffing <span class="math inline">\(\perp\)</span> NMR <span class="math inline">\(\mid\)</span> Quality</td>
-<td><strong>Yes</strong></td>
-<td>Conditioning on Quality blocks the only path</td>
-</tr>
-</tbody>
-</table>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>Implication:</strong> Once we know Quality of Care, learning about Staffing tells us nothing additional about NMR. The DAG encodes this independence, and the CPTs respect it – <span class="math inline">\(P(\text{NMR} \mid \text{Quality})\)</span> has no Staffing column.</p>
+<p><strong>The DAG structure tells us which probabilities we can skip.</strong> Most variables are not directly connected, so we do not need to specify every possible combination. The causal structure does the work of simplifying the numbers.</p>
 </div>
 </div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>MNH Application: Quantifying the Model</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Adding numbers to the MNH causal model</span></p>
 </section>
 <section class="slide level2">
-<h2>The Quantified MNH DAG</h2>
-<p>We take the qualitative model from Ch 2 and attach CPTs to each node:</p>
+<h2>The Rule in Our Tanzania Model</h2>
+<p>Let’s see this in our MNH example:</p>
+<div class="fragment">
 <table style="width: 85%; margin: 0.4em auto; font-size: 0.5em;">
 <tbody><tr>
 <td style="text-align: center; padding: 0.6em;">
 <div class="dag-node treatment rect" style="padding: 0.5em 0.8em;">
-Staffing<br><small>P(Adequate)=0.40</small>
+Staffing<br><small>P(Adequate)=0.45</small>
 </div>
 </td>
 <td>
 </td>
 <td style="text-align: center; padding: 0.6em;">
 <div class="dag-node decision rect" style="padding: 0.5em 0.8em;">
-Equipment<br><small>P(Available)=0.35</small>
+Essential<br>Medicines<br><small>P(Available)=0.40</small>
 </div>
 </td>
 <td>
@@ -1102,45 +938,118 @@ NMR<br><small>CPT: 2 rows</small>
 </td>
 </tr>
 </tbody></table>
+</div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>Four nodes, three CPTs</strong> (root nodes only need marginals). This compact representation encodes the full joint distribution over <span class="math inline">\(2^4 = 16\)</span> combinations of states.</p>
+<p><strong>Quality of Care</strong> depends on Staffing and Medicines (its parents) – so its lookup table has 4 rows (2 x 2 combinations). <strong>NMR</strong> depends only on Quality (its sole parent) – so its table has just 2 rows. NMR does <em>not</em> need to know about Staffing or Medicines directly. The rule keeps things manageable.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>MNH Application: Tanzania’s Health System</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Building a Bayesian network with real-world structure</span></p>
+</section>
+<section class="slide level2">
+<h2>Tanzania at a Glance</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Indicator</th>
+<th>Value</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Maternal Mortality Ratio</strong></td>
+<td>~238 per 100,000 live births</td>
+<td>WHO</td>
+</tr>
+<tr class="even">
+<td><strong>Neonatal Mortality Rate</strong></td>
+<td>~20 per 1,000 live births</td>
+<td>WHO</td>
+</tr>
+<tr class="odd">
+<td><strong>Regions</strong></td>
+<td>26</td>
+<td>Government of Tanzania</td>
+</tr>
+<tr class="even">
+<td><strong>Health workforce gap</strong></td>
+<td>~55% shortage</td>
+<td>WHO / Lancet</td>
+</tr>
+<tr class="odd">
+<td><strong>Health information system</strong></td>
+<td>DHIS2 / GOTHOMIS at most facilities</td>
+<td>MoH Tanzania</td>
+</tr>
+<tr class="even">
+<td><strong>Essential medicine availability</strong></td>
+<td>Low in many rural facilities</td>
+<td>WHO SARA</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<div class="callout-box">
+<p>Tanzania has made real progress – but significant gaps remain, especially in rural areas. The numbers below are illustrative, grounded in these publicly available estimates.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Full CPTs for the MNH Model</h2>
-<p><strong>Root nodes (marginal distributions):</strong></p>
+<h2>The Tanzania MNH Bayesian Network</h2>
+<p>We build a 4-node network with lookup tables for each node:</p>
+<div class="fragment">
+<p><strong>Nodes:</strong></p>
+<ul>
+<li class="fragment"><strong>Staffing</strong> {Adequate, Low} – root node</li>
+<li class="fragment"><strong>Essential Medicines</strong> {Available, Unavailable} – root node</li>
+<li class="fragment"><strong>Quality of Care</strong> {Good, Poor} – depends on Staffing and Medicines</li>
+<li class="fragment"><strong>Neonatal Mortality</strong> {Low, High} – depends on Quality</li>
+</ul>
+</div>
+</section>
+<section class="slide level2">
+<h2>Full Lookup Tables</h2>
+<p><strong>Root nodes (starting probabilities):</strong></p>
 <table class="caption-top">
 <thead>
 <tr class="header">
 <th>Variable</th>
-<th>P(Adequate/Available)</th>
-<th>P(Low/Unavailable)</th>
+<th>P(Adequate / Available)</th>
+<th>P(Low / Unavailable)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Staffing</strong></td>
-<td>0.40</td>
-<td>0.60</td>
+<td>0.45</td>
+<td>0.55</td>
 </tr>
 <tr class="even">
-<td><strong>Equipment</strong></td>
-<td>0.35</td>
-<td>0.65</td>
+<td><strong>Essential Medicines</strong></td>
+<td>0.40</td>
+<td>0.60</td>
 </tr>
 </tbody>
 </table>
 <div class="fragment">
-<p><strong>Quality of Care | Staffing, Equipment:</strong></p>
+<p><strong>Quality of Care | Staffing, Essential Medicines:</strong></p>
 <table class="caption-top">
 <thead>
 <tr class="header">
 <th>Staffing</th>
-<th>Equipment</th>
-<th>P(Good)</th>
-<th>P(Poor)</th>
+<th>Medicines</th>
+<th>P(Quality = Good)</th>
+<th>P(Quality = Poor)</th>
 </tr>
 </thead>
 <tbody>
@@ -1153,20 +1062,20 @@ NMR<br><small>CPT: 2 rows</small>
 <tr class="even">
 <td>Adequate</td>
 <td>Unavailable</td>
-<td>0.55</td>
-<td>0.45</td>
+<td>0.50</td>
+<td>0.50</td>
 </tr>
 <tr class="odd">
 <td>Low</td>
 <td>Available</td>
-<td>0.50</td>
-<td>0.50</td>
+<td>0.45</td>
+<td>0.55</td>
 </tr>
 <tr class="even">
 <td>Low</td>
 <td>Unavailable</td>
-<td>0.20</td>
-<td>0.80</td>
+<td>0.15</td>
+<td>0.85</td>
 </tr>
 </tbody>
 </table>
@@ -1177,20 +1086,20 @@ NMR<br><small>CPT: 2 rows</small>
 <thead>
 <tr class="header">
 <th>Quality</th>
-<th>P(NMR=Low)</th>
-<th>P(NMR=High)</th>
+<th>P(NMR = Low)</th>
+<th>P(NMR = High)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Good</td>
-<td>0.85</td>
-<td>0.15</td>
+<td>0.82</td>
+<td>0.18</td>
 </tr>
 <tr class="even">
 <td>Poor</td>
-<td>0.40</td>
-<td>0.60</td>
+<td>0.35</td>
+<td>0.65</td>
 </tr>
 </tbody>
 </table>
@@ -1198,57 +1107,72 @@ NMR<br><small>CPT: 2 rows</small>
 </section>
 <section class="slide level2">
 <h2>Querying the Model: Best vs.&nbsp;Worst Case</h2>
-<p><strong>Best case:</strong> Staffing = Adequate, Equipment = Available</p>
-<div class="math-block">
-<p><span class="math inline">\(P(\text{Quality=Good} \mid \text{Adequate, Available}) = 0.85\)</span></p>
-<p><span class="math inline">\(P(\text{NMR=High}) = P(\text{High} \mid \text{Good}) \times 0.85 + P(\text{High} \mid \text{Poor}) \times 0.15\)</span> <span class="math inline">\(= 0.15 \times 0.85 + 0.60 \times 0.15 = 0.1275 + 0.09 = \mathbf{0.2175}\)</span></p>
-</div>
+<p>What can this network tell us? Let’s compare the best and worst scenarios:</p>
 <div class="fragment">
-<p><strong>Worst case:</strong> Staffing = Low, Equipment = Unavailable</p>
-<div class="math-block">
-<p><span class="math inline">\(P(\text{Quality=Good} \mid \text{Low, Unavailable}) = 0.20\)</span></p>
-<p><span class="math inline">\(P(\text{NMR=High}) = 0.15 \times 0.20 + 0.60 \times 0.80 = 0.03 + 0.48 = \mathbf{0.51}\)</span></p>
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Best case:</strong> Staffing = Adequate, Medicines = Available</p>
+<p>P(Quality = Good) = 0.85</p>
+<p>P(NMR = High) = 0.18 x 0.85 + 0.65 x 0.15</p>
+<p>= 0.153 + 0.098 = <strong>0.25</strong></p>
+<p>About 1 in 4 facilities still has high NMR – care is complex even in the best conditions.</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Worst case:</strong> Staffing = Low, Medicines = Unavailable</p>
+<p>P(Quality = Good) = 0.15</p>
+<p>P(NMR = High) = 0.18 x 0.15 + 0.65 x 0.85</p>
+<p>= 0.027 + 0.553 = <strong>0.58</strong></p>
+<p>Nearly 3 in 5 facilities have high NMR when both inputs are missing.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>P(NMR=High) ranges from 21.8% (best case) to 51.0% (worst case).</strong></p>
-<p>The combined effect of adequate staffing and available equipment reduces the probability of high NMR by <strong>29.2 percentage points</strong>.</p>
+<p><strong>The gap is 33 percentage points.</strong> Moving from worst case to best case cuts the probability of high NMR from 58% to 25%. That is the combined payoff of adequate staffing and available medicines.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Sensitivity Analysis: Which Parent Matters More?</h2>
-<p>We isolate each parent’s effect by varying one while holding the other at its less favorable level:</p>
+<h2>Which Parent Matters More?</h2>
+<p>We can isolate each parent’s effect by fixing one and changing the other:</p>
 <div class="fragment">
 <table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
 <thead>
 <tr class="header">
 <th>Scenario</th>
-<th>P(NMR=High)</th>
-<th>Change vs.&nbsp;Worst Case</th>
+<th>P(NMR = High)</th>
+<th>Change vs.&nbsp;Worst</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Worst:</strong> Low Staff, No Equipment</td>
-<td>0.510</td>
+<td><strong>Worst:</strong> Low Staff, No Medicines</td>
+<td>0.58</td>
 <td>–</td>
 </tr>
 <tr class="even">
-<td><strong>Fix Staffing only:</strong> Adequate Staff, No Equipment</td>
-<td>0.333</td>
-<td>-0.177</td>
+<td><strong>Fix Staffing only:</strong> Adequate Staff, No Medicines</td>
+<td>0.37</td>
+<td><strong>-0.21</strong></td>
 </tr>
 <tr class="odd">
-<td><strong>Fix Equipment only:</strong> Low Staff, Has Equipment</td>
-<td>0.375</td>
-<td>-0.135</td>
+<td><strong>Fix Medicines only:</strong> Low Staff, Has Medicines</td>
+<td>0.44</td>
+<td><strong>-0.14</strong></td>
 </tr>
 <tr class="even">
-<td><strong>Best:</strong> Adequate Staff, Has Equipment</td>
-<td>0.218</td>
-<td>-0.293</td>
+<td><strong>Best:</strong> Adequate Staff, Has Medicines</td>
+<td>0.25</td>
+<td><strong>-0.33</strong></td>
 </tr>
 </tbody>
 </table>
@@ -1257,214 +1181,289 @@ NMR<br><small>CPT: 2 rows</small>
 <div class="columns-equal">
 <div class="col">
 <div class="callout-box green">
-<p><strong>Staffing has the larger marginal effect</strong> (-17.7 pp) compared to Equipment (-13.5 pp). In resource-constrained settings, investing in workforce may yield greater returns.</p>
+<p><strong>Staffing has the larger individual effect</strong> – a 21 percentage-point reduction compared to 14 for medicines. In resource-constrained settings, workforce investment may yield greater returns.</p>
 </div>
 </div>
 <div class="col">
 <div class="callout-box orange">
-<p><strong>But the effects are synergistic:</strong> fixing both produces a 29.3 pp reduction – greater than the sum of the individual effects (17.7 + 13.5 = 31.2 pp, but there is overlap).</p>
+<p><strong>But fixing both is better than the sum of fixing each alone.</strong> The combined improvement (33 pp) shows that staffing and medicines reinforce each other. A trained midwife with the right medicines can do far more than either resource alone.</p>
 </div>
 </div>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Exercise: Compute the Probabilities</h2>
+<h2>Exercise: Try It Yourself</h2>
 <div class="callout-box">
-<p><strong>Your turn:</strong> Using the CPTs from the previous slides, compute:</p>
+<p><strong>Your turn:</strong> Using the lookup tables from the previous slides, answer these questions:</p>
 <ol type="1">
-<li><p><span class="math inline">\(P(\text{Quality=Good})\)</span> – the marginal probability of good quality across all facilities</p></li>
-<li><p><span class="math inline">\(P(\text{NMR=High})\)</span> – the overall probability of high NMR</p></li>
-<li><p><span class="math inline">\(P(\text{Staffing=Low} \mid \text{NMR=High})\)</span> – using Bayes’ rule, the probability that a high-NMR facility has low staffing</p></li>
+<li><p>What is the <strong>overall</strong> P(Quality = Good) across all 100 facilities? (Hint: there are 4 types of facility – weight each by how common it is.)</p></li>
+<li><p>What is the <strong>overall</strong> P(NMR = High)?</p></li>
+<li><p>Using Bayes’ rule (or the tree approach): if a facility has high NMR, what is the probability it has <strong>low staffing</strong>?</p></li>
 </ol>
 </div>
 <div class="fragment">
 <p><strong>Hints:</strong></p>
 <ul>
-<li class="fragment">For (1): Marginalize over all 4 combinations of Staffing <span class="math inline">\(\times\)</span> Equipment</li>
-<li class="fragment">For (2): Use your answer to (1) and the NMR|Quality CPT</li>
-<li class="fragment">For (3): Apply Bayes’ rule – you’ll need P(NMR=High | Staffing=Low), P(Staffing=Low), and P(NMR=High) from parts (1) and (2)</li>
+<li class="fragment">For (1): Multiply each row’s P(Quality = Good) by the probability of that row’s combination of parents, then add them up</li>
+<li class="fragment">For (2): Use your answer to (1) with the NMR|Quality table</li>
+<li class="fragment">For (3): Draw the tree! Start with 100 facilities, split by staffing, then split by NMR</li>
 </ul>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>Answers will be revealed in the R workshop section below!</strong></p>
+<p><strong>Answers will be computed in the R workshop below – no peeking until you try!</strong></p>
 </div>
 </div>
 </section></section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>R Code Workshop</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Building and querying a Bayesian network in R</span></p>
+<h1>R Workshop: Building a Bayesian Network</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using bnlearn to build, fill, and query the Tanzania model</span></p>
 </section>
 <section class="slide level2">
 <h2>R Block 1: Define the Network Structure</h2>
+<p>We start by telling R which nodes exist and which arrows connect them – the DAG skeleton.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">library</span>(bnlearn)</span>
-<span id="cb1-2"><a href=""></a></span>
-<span id="cb1-3"><a href=""></a><span class="co"># Define the DAG structure using bnlearn's model string syntax</span></span>
-<span id="cb1-4"><a href=""></a><span class="co"># [Node] means no parents; [Node|Parent1:Parent2] means conditional on parents</span></span>
-<span id="cb1-5"><a href=""></a>dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(</span>
-<span id="cb1-6"><a href=""></a>  <span class="st">"[Staffing][Equipment][Quality|Staffing:Equipment][NMR|Quality]"</span></span>
-<span id="cb1-7"><a href=""></a>)</span>
-<span id="cb1-8"><a href=""></a></span>
-<span id="cb1-9"><a href=""></a><span class="co"># Inspect the structure</span></span>
-<span id="cb1-10"><a href=""></a>dag</span>
-<span id="cb1-11"><a href=""></a><span class="fu">nodes</span>(dag)    <span class="co"># "Staffing" "Equipment" "Quality" "NMR"</span></span>
-<span id="cb1-12"><a href=""></a><span class="fu">arcs</span>(dag)     <span class="co"># Shows the 3 directed edges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Load the bnlearn package (install it first if needed:</span></span>
+<span id="cb2-2"><a href=""></a><span class="co"># install.packages("bnlearn"))</span></span>
+<span id="cb2-3"><a href=""></a><span class="fu">library</span>(bnlearn)</span>
+<span id="cb2-4"><a href=""></a></span>
+<span id="cb2-5"><a href=""></a><span class="co"># Define the DAG using a model string.</span></span>
+<span id="cb2-6"><a href=""></a><span class="co"># Square brackets hold node names.</span></span>
+<span id="cb2-7"><a href=""></a><span class="co"># A vertical bar "|" means "depends on."</span></span>
+<span id="cb2-8"><a href=""></a><span class="co"># A colon ":" separates multiple parents.</span></span>
+<span id="cb2-9"><a href=""></a><span class="co">#</span></span>
+<span id="cb2-10"><a href=""></a><span class="co"># [Staffing]              = root node, no parents</span></span>
+<span id="cb2-11"><a href=""></a><span class="co"># [Medicines]             = root node, no parents</span></span>
+<span id="cb2-12"><a href=""></a><span class="co"># [Quality|Staffing:Medicines] = Quality depends on Staffing AND Medicines</span></span>
+<span id="cb2-13"><a href=""></a><span class="co"># [NMR|Quality]           = NMR depends on Quality only</span></span>
+<span id="cb2-14"><a href=""></a></span>
+<span id="cb2-15"><a href=""></a>dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(</span>
+<span id="cb2-16"><a href=""></a>  <span class="st">"[Staffing][Medicines][Quality|Staffing:Medicines][NMR|Quality]"</span></span>
+<span id="cb2-17"><a href=""></a>)</span>
+<span id="cb2-18"><a href=""></a></span>
+<span id="cb2-19"><a href=""></a><span class="co"># Check what we built</span></span>
+<span id="cb2-20"><a href=""></a>dag                <span class="co"># prints the structure</span></span>
+<span id="cb2-21"><a href=""></a><span class="fu">nodes</span>(dag)         <span class="co"># "Staffing" "Medicines" "Quality" "NMR"</span></span>
+<span id="cb2-22"><a href=""></a><span class="fu">arcs</span>(dag)          <span class="co"># shows the 3 directed edges</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>Reading the model string:</strong></p>
-<ul>
-<li><code>[Staffing]</code> – root node, no parents</li>
-<li><code>[Equipment]</code> – root node, no parents</li>
-<li><code>[Quality|Staffing:Equipment]</code> – Quality depends on both Staffing and Equipment</li>
-<li><code>[NMR|Quality]</code> – NMR depends on Quality only</li>
-</ul>
+<p><strong>Reading the model string:</strong> Each <code>[...]</code> block defines one node. If a node has parents, they appear after <code>|</code>. This is how bnlearn knows the shape of the DAG.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>R Block 2: Specify CPTs</h2>
+<h2>R Block 2: Fill In the Lookup Tables</h2>
+<p>Now we attach the CPTs we built on the earlier slides. Each lookup table is an R array.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Define CPTs using arrays (states must match exactly)</span></span>
-<span id="cb2-2"><a href=""></a>cpt_staffing <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.60</span>), <span class="at">dim =</span> <span class="dv">2</span>,</span>
-<span id="cb2-3"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>)))</span>
-<span id="cb2-4"><a href=""></a></span>
-<span id="cb2-5"><a href=""></a>cpt_equipment <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.65</span>), <span class="at">dim =</span> <span class="dv">2</span>,</span>
-<span id="cb2-6"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Equipment =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>)))</span>
-<span id="cb2-7"><a href=""></a></span>
-<span id="cb2-8"><a href=""></a>cpt_quality <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
-<span id="cb2-9"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>,  <span class="co"># Adequate + Available</span></span>
-<span id="cb2-10"><a href=""></a>    <span class="fl">0.50</span>, <span class="fl">0.50</span>,  <span class="co"># Low + Available</span></span>
-<span id="cb2-11"><a href=""></a>    <span class="fl">0.55</span>, <span class="fl">0.45</span>,  <span class="co"># Adequate + Unavailable</span></span>
-<span id="cb2-12"><a href=""></a>    <span class="fl">0.20</span>, <span class="fl">0.80</span>), <span class="co"># Low + Unavailable</span></span>
-<span id="cb2-13"><a href=""></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb2-14"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb2-15"><a href=""></a>    <span class="at">Quality   =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>),</span>
-<span id="cb2-16"><a href=""></a>    <span class="at">Staffing  =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>),</span>
-<span id="cb2-17"><a href=""></a>    <span class="at">Equipment =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>)))</span>
-<span id="cb2-18"><a href=""></a></span>
-<span id="cb2-19"><a href=""></a>cpt_nmr <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
-<span id="cb2-20"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>,  <span class="co"># Good quality</span></span>
-<span id="cb2-21"><a href=""></a>    <span class="fl">0.40</span>, <span class="fl">0.60</span>), <span class="co"># Poor quality</span></span>
-<span id="cb2-22"><a href=""></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb2-23"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">NMR =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"High"</span>), <span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>)))</span>
-<span id="cb2-24"><a href=""></a></span>
-<span id="cb2-25"><a href=""></a><span class="co"># Combine into a fitted BN</span></span>
-<span id="cb2-26"><a href=""></a>bn_mnh <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(dag, <span class="fu">list</span>(</span>
-<span id="cb2-27"><a href=""></a>  <span class="at">Staffing =</span> cpt_staffing, <span class="at">Equipment =</span> cpt_equipment,</span>
-<span id="cb2-28"><a href=""></a>  <span class="at">Quality =</span> cpt_quality, <span class="at">NMR =</span> cpt_nmr))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># --- Root nodes: just a simple probability for each state ---</span></span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a>cpt_staffing <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb3-4"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.45</span>, <span class="fl">0.55</span>),                    <span class="co"># P(Adequate), P(Low)</span></span>
+<span id="cb3-5"><a href=""></a>  <span class="at">dim =</span> <span class="dv">2</span>,</span>
+<span id="cb3-6"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>))</span>
+<span id="cb3-7"><a href=""></a>)</span>
+<span id="cb3-8"><a href=""></a></span>
+<span id="cb3-9"><a href=""></a>cpt_medicines <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb3-10"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.60</span>),                    <span class="co"># P(Available), P(Unavailable)</span></span>
+<span id="cb3-11"><a href=""></a>  <span class="at">dim =</span> <span class="dv">2</span>,</span>
+<span id="cb3-12"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Medicines =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>))</span>
+<span id="cb3-13"><a href=""></a>)</span>
+<span id="cb3-14"><a href=""></a></span>
+<span id="cb3-15"><a href=""></a><span class="co"># --- Quality of Care: depends on Staffing and Medicines ---</span></span>
+<span id="cb3-16"><a href=""></a><span class="co"># Each pair of numbers = P(Good), P(Poor) for one parent combo</span></span>
+<span id="cb3-17"><a href=""></a><span class="co"># The order follows R's array filling: Staffing changes fastest</span></span>
+<span id="cb3-18"><a href=""></a></span>
+<span id="cb3-19"><a href=""></a>cpt_quality <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb3-20"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.85</span>, <span class="fl">0.15</span>,    <span class="co"># Adequate staffing + Available medicines</span></span>
+<span id="cb3-21"><a href=""></a>    <span class="fl">0.45</span>, <span class="fl">0.55</span>,    <span class="co"># Low staffing      + Available medicines</span></span>
+<span id="cb3-22"><a href=""></a>    <span class="fl">0.50</span>, <span class="fl">0.50</span>,    <span class="co"># Adequate staffing + Unavailable medicines</span></span>
+<span id="cb3-23"><a href=""></a>    <span class="fl">0.15</span>, <span class="fl">0.85</span>),   <span class="co"># Low staffing      + Unavailable medicines</span></span>
+<span id="cb3-24"><a href=""></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb3-25"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb3-26"><a href=""></a>    <span class="at">Quality   =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>),</span>
+<span id="cb3-27"><a href=""></a>    <span class="at">Staffing  =</span> <span class="fu">c</span>(<span class="st">"Adequate"</span>, <span class="st">"Low"</span>),</span>
+<span id="cb3-28"><a href=""></a>    <span class="at">Medicines =</span> <span class="fu">c</span>(<span class="st">"Available"</span>, <span class="st">"Unavailable"</span>)</span>
+<span id="cb3-29"><a href=""></a>  )</span>
+<span id="cb3-30"><a href=""></a>)</span>
+<span id="cb3-31"><a href=""></a></span>
+<span id="cb3-32"><a href=""></a><span class="co"># --- NMR: depends on Quality only ---</span></span>
+<span id="cb3-33"><a href=""></a></span>
+<span id="cb3-34"><a href=""></a>cpt_nmr <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb3-35"><a href=""></a>  <span class="fu">c</span>(<span class="fl">0.82</span>, <span class="fl">0.18</span>,    <span class="co"># Good quality -&gt; P(Low NMR), P(High NMR)</span></span>
+<span id="cb3-36"><a href=""></a>    <span class="fl">0.35</span>, <span class="fl">0.65</span>),   <span class="co"># Poor quality -&gt; P(Low NMR), P(High NMR)</span></span>
+<span id="cb3-37"><a href=""></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb3-38"><a href=""></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
+<span id="cb3-39"><a href=""></a>    <span class="at">NMR     =</span> <span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"High"</span>),</span>
+<span id="cb3-40"><a href=""></a>    <span class="at">Quality =</span> <span class="fu">c</span>(<span class="st">"Good"</span>, <span class="st">"Poor"</span>)</span>
+<span id="cb3-41"><a href=""></a>  )</span>
+<span id="cb3-42"><a href=""></a>)</span>
+<span id="cb3-43"><a href=""></a></span>
+<span id="cb3-44"><a href=""></a><span class="co"># --- Combine everything into a fitted Bayesian network ---</span></span>
+<span id="cb3-45"><a href=""></a></span>
+<span id="cb3-46"><a href=""></a>bn_tz <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(dag, <span class="fu">list</span>(</span>
+<span id="cb3-47"><a href=""></a>  <span class="at">Staffing  =</span> cpt_staffing,</span>
+<span id="cb3-48"><a href=""></a>  <span class="at">Medicines =</span> cpt_medicines,</span>
+<span id="cb3-49"><a href=""></a>  <span class="at">Quality   =</span> cpt_quality,</span>
+<span id="cb3-50"><a href=""></a>  <span class="at">NMR       =</span> cpt_nmr</span>
+<span id="cb3-51"><a href=""></a>))</span>
+<span id="cb3-52"><a href=""></a></span>
+<span id="cb3-53"><a href=""></a><span class="co"># Check one of the tables</span></span>
+<span id="cb3-54"><a href=""></a>bn_tz<span class="sc">$</span>Quality    <span class="co"># prints the Quality lookup table</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
 <h2>R Block 3: Query the Network</h2>
+<p>Now comes the payoff. We ask the network questions and it computes the answers.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Query: P(NMR = High | Staffing = Low)</span></span>
-<span id="cb3-2"><a href=""></a><span class="fu">cpquery</span>(bn_mnh,</span>
-<span id="cb3-3"><a href=""></a>  <span class="at">event  =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb3-4"><a href=""></a>  <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>),</span>
-<span id="cb3-5"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb3-6"><a href=""></a><span class="co"># Expected: ~0.44</span></span>
-<span id="cb3-7"><a href=""></a></span>
-<span id="cb3-8"><a href=""></a><span class="co"># Query: P(NMR = High | Staffing = Adequate, Equipment = Available)</span></span>
-<span id="cb3-9"><a href=""></a><span class="fu">cpquery</span>(bn_mnh,</span>
-<span id="cb3-10"><a href=""></a>  <span class="at">event  =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
-<span id="cb3-11"><a href=""></a>  <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Adequate"</span> <span class="sc">&amp;</span> Equipment <span class="sc">==</span> <span class="st">"Available"</span>),</span>
-<span id="cb3-12"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span>)</span>
-<span id="cb3-13"><a href=""></a><span class="co"># Expected: ~0.22</span></span>
-<span id="cb3-14"><a href=""></a></span>
-<span id="cb3-15"><a href=""></a><span class="co"># Exact inference using grain (junction tree)</span></span>
-<span id="cb3-16"><a href=""></a><span class="fu">library</span>(gRain)</span>
-<span id="cb3-17"><a href=""></a>bn_grain <span class="ot">&lt;-</span> <span class="fu">as.grain</span>(bn_mnh)</span>
-<span id="cb3-18"><a href=""></a><span class="fu">querygrain</span>(bn_grain, <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span>
-<span id="cb3-19"><a href=""></a><span class="co"># Returns marginal P(NMR) across all facilities</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>Answer to Exercise Q2:</strong> <code>querygrain()</code> returns P(NMR=High) <span class="math inline">\(\approx\)</span> 0.393 – about 39% of facilities have high NMR under current conditions.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>R Block 4: Visualize the Network</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co"># Option 1: bnlearn's built-in plot (uses Rgraphviz)</span></span>
-<span id="cb4-2"><a href=""></a><span class="fu">graphviz.plot</span>(bn_mnh, <span class="at">main =</span> <span class="st">"MNH Bayesian Network"</span>,</span>
-<span id="cb4-3"><a href=""></a>  <span class="at">shape =</span> <span class="st">"rectangle"</span>,</span>
-<span id="cb4-4"><a href=""></a>  <span class="at">highlight =</span> <span class="fu">list</span>(<span class="at">nodes =</span> <span class="st">"NMR"</span>, <span class="at">col =</span> <span class="st">"#E24A3F"</span>, <span class="at">fill =</span> <span class="st">"#E24A3F"</span>))</span>
-<span id="cb4-5"><a href=""></a></span>
-<span id="cb4-6"><a href=""></a><span class="co"># Option 2: ggdag for publication-quality figures</span></span>
-<span id="cb4-7"><a href=""></a><span class="fu">library</span>(ggdag)</span>
-<span id="cb4-8"><a href=""></a><span class="fu">library</span>(dagitty)</span>
-<span id="cb4-9"><a href=""></a></span>
-<span id="cb4-10"><a href=""></a>mnh_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb4-11"><a href=""></a><span class="st">  Staffing [pos="0,0"]</span></span>
-<span id="cb4-12"><a href=""></a><span class="st">  Equipment [pos="2,0"]</span></span>
-<span id="cb4-13"><a href=""></a><span class="st">  Quality [pos="1,1"]</span></span>
-<span id="cb4-14"><a href=""></a><span class="st">  NMR [pos="1,2"]</span></span>
-<span id="cb4-15"><a href=""></a><span class="st">  Staffing -&gt; Quality</span></span>
-<span id="cb4-16"><a href=""></a><span class="st">  Equipment -&gt; Quality</span></span>
-<span id="cb4-17"><a href=""></a><span class="st">  Quality -&gt; NMR</span></span>
-<span id="cb4-18"><a href=""></a><span class="st">}'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co"># ----- Question 1: Overall probability of high NMR -----</span></span>
+<span id="cb4-2"><a href=""></a><span class="co"># cpquery() uses simulation (sampling) to estimate probabilities.</span></span>
+<span id="cb4-3"><a href=""></a><span class="co"># We set n = 1,000,000 samples for a stable answer.</span></span>
+<span id="cb4-4"><a href=""></a></span>
+<span id="cb4-5"><a href=""></a><span class="fu">cpquery</span>(bn_tz,</span>
+<span id="cb4-6"><a href=""></a>  <span class="at">event    =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),       <span class="co"># What we want to know</span></span>
+<span id="cb4-7"><a href=""></a>  <span class="at">evidence =</span> <span class="cn">TRUE</span>,                  <span class="co"># No conditions -- overall</span></span>
+<span id="cb4-8"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span></span>
+<span id="cb4-9"><a href=""></a>)</span>
+<span id="cb4-10"><a href=""></a><span class="co"># Expected: around 0.44 (44% of facilities have high NMR)</span></span>
+<span id="cb4-11"><a href=""></a></span>
+<span id="cb4-12"><a href=""></a><span class="co"># ----- Question 2: P(NMR = High | Staffing = Low) -----</span></span>
+<span id="cb4-13"><a href=""></a><span class="fu">cpquery</span>(bn_tz,</span>
+<span id="cb4-14"><a href=""></a>  <span class="at">event    =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
+<span id="cb4-15"><a href=""></a>  <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>),</span>
+<span id="cb4-16"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span></span>
+<span id="cb4-17"><a href=""></a>)</span>
+<span id="cb4-18"><a href=""></a><span class="co"># Expected: around 0.52</span></span>
 <span id="cb4-19"><a href=""></a></span>
-<span id="cb4-20"><a href=""></a><span class="fu">ggdag</span>(mnh_dag) <span class="sc">+</span></span>
-<span id="cb4-21"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb4-22"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"MNH Causal Model (4 Nodes)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section class="slide level2">
-<h2>R Block 5: Interventional Queries</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># Simulate do(Staffing = Adequate) by mutilating the network</span></span>
-<span id="cb5-2"><a href=""></a>bn_do_adequate <span class="ot">&lt;-</span> <span class="fu">mutilated</span>(bn_mnh, <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="st">"Adequate"</span>))</span>
-<span id="cb5-3"><a href=""></a></span>
-<span id="cb5-4"><a href=""></a><span class="co"># P(NMR | do(Staffing = Adequate))</span></span>
-<span id="cb5-5"><a href=""></a><span class="fu">querygrain</span>(<span class="fu">as.grain</span>(bn_do_adequate), <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span>
-<span id="cb5-6"><a href=""></a></span>
-<span id="cb5-7"><a href=""></a><span class="co"># Compare scenarios</span></span>
-<span id="cb5-8"><a href=""></a>scenarios <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb5-9"><a href=""></a>  <span class="at">Scenario =</span> <span class="fu">c</span>(<span class="st">"Status Quo"</span>, <span class="st">"do(Staff=Adequate)"</span>,</span>
-<span id="cb5-10"><a href=""></a>               <span class="st">"do(Equip=Available)"</span>, <span class="st">"do(Both)"</span>),</span>
-<span id="cb5-11"><a href=""></a>  <span class="at">P_NMR_High =</span> <span class="fu">c</span>(</span>
-<span id="cb5-12"><a href=""></a>    <span class="fu">querygrain</span>(<span class="fu">as.grain</span>(bn_mnh),</span>
-<span id="cb5-13"><a href=""></a>               <span class="at">nodes =</span> <span class="st">"NMR"</span>)<span class="sc">$</span>NMR[<span class="st">"High"</span>],</span>
-<span id="cb5-14"><a href=""></a>    <span class="fu">querygrain</span>(<span class="fu">as.grain</span>(</span>
-<span id="cb5-15"><a href=""></a>      <span class="fu">mutilated</span>(bn_mnh, <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="st">"Adequate"</span>))),</span>
-<span id="cb5-16"><a href=""></a>               <span class="at">nodes =</span> <span class="st">"NMR"</span>)<span class="sc">$</span>NMR[<span class="st">"High"</span>],</span>
-<span id="cb5-17"><a href=""></a>    <span class="fu">querygrain</span>(<span class="fu">as.grain</span>(</span>
-<span id="cb5-18"><a href=""></a>      <span class="fu">mutilated</span>(bn_mnh, <span class="fu">list</span>(<span class="at">Equipment =</span> <span class="st">"Available"</span>))),</span>
-<span id="cb5-19"><a href=""></a>               <span class="at">nodes =</span> <span class="st">"NMR"</span>)<span class="sc">$</span>NMR[<span class="st">"High"</span>],</span>
-<span id="cb5-20"><a href=""></a>    <span class="fu">querygrain</span>(<span class="fu">as.grain</span>(</span>
-<span id="cb5-21"><a href=""></a>      <span class="fu">mutilated</span>(bn_mnh, <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="st">"Adequate"</span>,</span>
-<span id="cb5-22"><a href=""></a>                              <span class="at">Equipment =</span> <span class="st">"Available"</span>))),</span>
-<span id="cb5-23"><a href=""></a>               <span class="at">nodes =</span> <span class="st">"NMR"</span>)<span class="sc">$</span>NMR[<span class="st">"High"</span>]))</span>
-<span id="cb5-24"><a href=""></a></span>
-<span id="cb5-25"><a href=""></a><span class="co"># Display comparison</span></span>
-<span id="cb5-26"><a href=""></a>scenarios<span class="sc">$</span>Reduction <span class="ot">&lt;-</span> scenarios<span class="sc">$</span>P_NMR_High[<span class="dv">1</span>] <span class="sc">-</span> scenarios<span class="sc">$</span>P_NMR_High</span>
-<span id="cb5-27"><a href=""></a><span class="fu">print</span>(scenarios)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-20"><a href=""></a><span class="co"># ----- Question 3: P(NMR = High | Adequate staff + Available meds) -----</span></span>
+<span id="cb4-21"><a href=""></a><span class="fu">cpquery</span>(bn_tz,</span>
+<span id="cb4-22"><a href=""></a>  <span class="at">event    =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),</span>
+<span id="cb4-23"><a href=""></a>  <span class="at">evidence =</span> (Staffing <span class="sc">==</span> <span class="st">"Adequate"</span> <span class="sc">&amp;</span> Medicines <span class="sc">==</span> <span class="st">"Available"</span>),</span>
+<span id="cb4-24"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span></span>
+<span id="cb4-25"><a href=""></a>)</span>
+<span id="cb4-26"><a href=""></a><span class="co"># Expected: around 0.25</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>This is the payoff of quantitative causal modeling.</strong> The <code>mutilated()</code> function implements the <strong>do-operator</strong> from Ch 2 – it severs incoming arrows to the intervention variable and sets it to a fixed value, giving us the <em>causal</em> effect rather than a mere correlation.</p>
+<p><strong>Exercise answers:</strong> Question 2 from the exercise = the first query above. The overall P(NMR = High) is about 0.44 – nearly half of facilities. The Bayesian network computed that by combining all four lookup tables automatically.</p>
 </div>
+</div>
+</section>
+<section class="slide level2">
+<h2>R Block 4: Bayes’ Rule in Action</h2>
+<p>Let’s use the network to answer our backwards question: given high NMR, what is the chance of low staffing?</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># ----- Bayes' rule query -----</span></span>
+<span id="cb5-2"><a href=""></a><span class="co"># "Given that we observe high NMR, what is the probability</span></span>
+<span id="cb5-3"><a href=""></a><span class="co">#  that staffing is low?"</span></span>
+<span id="cb5-4"><a href=""></a></span>
+<span id="cb5-5"><a href=""></a><span class="fu">cpquery</span>(bn_tz,</span>
+<span id="cb5-6"><a href=""></a>  <span class="at">event    =</span> (Staffing <span class="sc">==</span> <span class="st">"Low"</span>),    <span class="co"># Cause we are asking about</span></span>
+<span id="cb5-7"><a href=""></a>  <span class="at">evidence =</span> (NMR <span class="sc">==</span> <span class="st">"High"</span>),        <span class="co"># Evidence we observed</span></span>
+<span id="cb5-8"><a href=""></a>  <span class="at">n =</span> <span class="fl">1e6</span></span>
+<span id="cb5-9"><a href=""></a>)</span>
+<span id="cb5-10"><a href=""></a><span class="co"># Expected: around 0.68-0.70</span></span>
+<span id="cb5-11"><a href=""></a></span>
+<span id="cb5-12"><a href=""></a><span class="co"># Compare to the prior (before seeing any evidence):</span></span>
+<span id="cb5-13"><a href=""></a><span class="co"># P(Staffing = Low) = 0.55</span></span>
+<span id="cb5-14"><a href=""></a></span>
+<span id="cb5-15"><a href=""></a><span class="co"># The evidence (high NMR) shifted our belief upward --</span></span>
+<span id="cb5-16"><a href=""></a><span class="co"># from 55% to about 69%. High mortality is a signal</span></span>
+<span id="cb5-17"><a href=""></a><span class="co"># that staffing is likely the problem.</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Note:</strong> <code>cpquery()</code> uses random sampling, so answers vary slightly each run. For exact answers, you can use the <code>gRain</code> package (shown in the next block). Both give the same result – <code>cpquery()</code> is simpler, <code>gRain</code> is exact.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>R Block 5: Exact Inference and Scenario Comparison</h2>
+<p>For precise answers (no randomness), we convert to the gRain package and compare intervention scenarios.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="co"># Load gRain for exact probability calculations</span></span>
+<span id="cb6-2"><a href=""></a><span class="fu">library</span>(gRain)</span>
+<span id="cb6-3"><a href=""></a></span>
+<span id="cb6-4"><a href=""></a><span class="co"># Convert our bnlearn network to a gRain object</span></span>
+<span id="cb6-5"><a href=""></a>bn_grain <span class="ot">&lt;-</span> <span class="fu">as.grain</span>(bn_tz)</span>
+<span id="cb6-6"><a href=""></a></span>
+<span id="cb6-7"><a href=""></a><span class="co"># ----- Overall marginal probabilities -----</span></span>
+<span id="cb6-8"><a href=""></a><span class="fu">querygrain</span>(bn_grain, <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb6-9"><a href=""></a><span class="fu">querygrain</span>(bn_grain, <span class="at">nodes =</span> <span class="st">"Quality"</span>)</span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a><span class="co"># ----- Scenario comparison: what if we intervene? -----</span></span>
+<span id="cb6-12"><a href=""></a><span class="co"># "What if we ensure adequate staffing everywhere?"</span></span>
+<span id="cb6-13"><a href=""></a><span class="co"># mutilated() sets a variable to a fixed value (the do-operator)</span></span>
+<span id="cb6-14"><a href=""></a></span>
+<span id="cb6-15"><a href=""></a>bn_do_staff <span class="ot">&lt;-</span> <span class="fu">mutilated</span>(bn_tz,</span>
+<span id="cb6-16"><a href=""></a>  <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="st">"Adequate"</span>))</span>
+<span id="cb6-17"><a href=""></a><span class="fu">querygrain</span>(<span class="fu">as.grain</span>(bn_do_staff), <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb6-18"><a href=""></a></span>
+<span id="cb6-19"><a href=""></a><span class="co"># "What if we ensure medicines are available everywhere?"</span></span>
+<span id="cb6-20"><a href=""></a>bn_do_meds <span class="ot">&lt;-</span> <span class="fu">mutilated</span>(bn_tz,</span>
+<span id="cb6-21"><a href=""></a>  <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Medicines =</span> <span class="st">"Available"</span>))</span>
+<span id="cb6-22"><a href=""></a><span class="fu">querygrain</span>(<span class="fu">as.grain</span>(bn_do_meds), <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb6-23"><a href=""></a></span>
+<span id="cb6-24"><a href=""></a><span class="co"># "What if we fix both?"</span></span>
+<span id="cb6-25"><a href=""></a>bn_do_both <span class="ot">&lt;-</span> <span class="fu">mutilated</span>(bn_tz,</span>
+<span id="cb6-26"><a href=""></a>  <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Staffing =</span> <span class="st">"Adequate"</span>,</span>
+<span id="cb6-27"><a href=""></a>                  <span class="at">Medicines =</span> <span class="st">"Available"</span>))</span>
+<span id="cb6-28"><a href=""></a><span class="fu">querygrain</span>(<span class="fu">as.grain</span>(bn_do_both), <span class="at">nodes =</span> <span class="st">"NMR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>This is the payoff of the whole chapter.</strong> The <code>mutilated()</code> function implements the do-operator – it simulates an intervention by forcing a variable to a specific value. We can now compare “do nothing” vs.&nbsp;“fix staffing” vs.&nbsp;“fix medicines” vs.&nbsp;“fix both” and see exactly how much each intervention reduces the probability of high NMR.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>R Block 6: Visualize the Network</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a><span class="co"># Option 1: bnlearn's built-in plot</span></span>
+<span id="cb7-2"><a href=""></a><span class="fu">graphviz.plot</span>(bn_tz,</span>
+<span id="cb7-3"><a href=""></a>  <span class="at">main =</span> <span class="st">"Tanzania MNH Bayesian Network"</span>,</span>
+<span id="cb7-4"><a href=""></a>  <span class="at">shape =</span> <span class="st">"rectangle"</span>,</span>
+<span id="cb7-5"><a href=""></a>  <span class="at">highlight =</span> <span class="fu">list</span>(</span>
+<span id="cb7-6"><a href=""></a>    <span class="at">nodes =</span> <span class="st">"NMR"</span>,</span>
+<span id="cb7-7"><a href=""></a>    <span class="at">col =</span> <span class="st">"#E24A3F"</span>,</span>
+<span id="cb7-8"><a href=""></a>    <span class="at">fill =</span> <span class="st">"#E24A3F"</span></span>
+<span id="cb7-9"><a href=""></a>  )</span>
+<span id="cb7-10"><a href=""></a>)</span>
+<span id="cb7-11"><a href=""></a></span>
+<span id="cb7-12"><a href=""></a><span class="co"># Option 2: dagitty + ggdag for publication-quality figures</span></span>
+<span id="cb7-13"><a href=""></a><span class="fu">library</span>(dagitty)</span>
+<span id="cb7-14"><a href=""></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb7-15"><a href=""></a></span>
+<span id="cb7-16"><a href=""></a>tz_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb7-17"><a href=""></a><span class="st">  Staffing  [pos="0,0"]</span></span>
+<span id="cb7-18"><a href=""></a><span class="st">  Medicines [pos="2,0"]</span></span>
+<span id="cb7-19"><a href=""></a><span class="st">  Quality   [pos="1,1"]</span></span>
+<span id="cb7-20"><a href=""></a><span class="st">  NMR       [pos="1,2"]</span></span>
+<span id="cb7-21"><a href=""></a><span class="st">  Staffing  -&gt; Quality</span></span>
+<span id="cb7-22"><a href=""></a><span class="st">  Medicines -&gt; Quality</span></span>
+<span id="cb7-23"><a href=""></a><span class="st">  Quality   -&gt; NMR</span></span>
+<span id="cb7-24"><a href=""></a><span class="st">}'</span>)</span>
+<span id="cb7-25"><a href=""></a></span>
+<span id="cb7-26"><a href=""></a><span class="fu">ggdag</span>(tz_dag) <span class="sc">+</span></span>
+<span id="cb7-27"><a href=""></a>  <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb7-28"><a href=""></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Tanzania MNH Causal Model (4 Nodes)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
 <h2>Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Quantitative causal models = DAG + CPTs = Bayesian Network.</strong></p>
-<p>They allow us to compute exact probabilities, update beliefs with Bayes’ rule, and compare interventions using the do-operator.</p>
+<p><strong>Bayesian network = DAG + lookup tables.</strong> The DAG gives you the shape. The lookup tables give you the numbers. Together, they answer probability questions automatically.</p>
 </div>
 <div class="fragment">
 <ul>
-<li class="fragment"><strong>Probability fundamentals:</strong> States must be MECE; probabilities must sum to 1</li>
-<li class="fragment"><strong>Conditional probability tables</strong> encode the quantitative relationships in the DAG</li>
-<li class="fragment"><strong>Bayes’ rule</strong> lets us reason backward from evidence to causes – essential for situational assessment</li>
-<li class="fragment"><strong>The Causal Markov Condition</strong> simplifies computation from exponential to manageable</li>
-<li class="fragment"><strong>R + bnlearn</strong> provides a complete toolkit for building, querying, and visualizing Bayesian networks</li>
-<li class="fragment"><strong>Sensitivity analysis</strong> reveals which interventions have the largest expected impact</li>
+<li class="fragment"><strong>Natural frequencies</strong> make probability intuitive: “55 out of 100 facilities are short-staffed”</li>
+<li class="fragment"><strong>Conditional probability</strong> sharpens our questions: “among short-staffed facilities, what fraction have high mortality?”</li>
+<li class="fragment"><strong>Lookup tables (CPTs)</strong> are your cheat sheets: find the row, read the probability</li>
+<li class="fragment"><strong>Bayes’ rule</strong> lets you think backwards: “we see a bad outcome; what probably caused it?” – use the tree diagram</li>
+<li class="fragment"><strong>The key rule</strong> – each node depends only on its direct parents – keeps the model manageable even as it grows</li>
+<li class="fragment"><strong>R + bnlearn</strong> lets you build, query, and compare intervention scenarios in a few lines of code</li>
 </ul>
 </div>
 </section>
@@ -1472,17 +1471,17 @@ NMR<br><small>CPT: 2 rows</small>
 <h2>Looking Ahead</h2>
 <div class="callout-box">
 <p><strong>Next: Chapter 5 – Situational Analysis</strong></p>
-<p>Now that we can build and query quantitative causal models, we turn to their first major application:</p>
+<p>Now that we can build and query quantitative models, we turn to their first major application:</p>
 <ul>
-<li><strong>Updating beliefs with multiple evidence streams</strong> – combining DHIS2 data, facility surveys, and expert judgment</li>
-<li><strong>Diagnostic inference</strong> – given observed outcomes, which upstream causes are most likely?</li>
+<li><strong>Updating beliefs with evidence</strong> – combining facility surveys, DHIS2 data, and expert judgment</li>
+<li><strong>Diagnostic inference</strong> – given high mortality in a district, which upstream causes are most likely?</li>
 <li><strong>Explaining away</strong> – how one piece of evidence changes the relevance of another</li>
-<li><strong>MNH application</strong> – analyzing why NMR remains high in a specific country using real-world data patterns</li>
+<li><strong>Full district diagnosis</strong> – walking through a realistic case using Bayesian inference</li>
 </ul>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>From Ch 4 to Ch 5:</strong> We built the engine (Bayesian network). Now we learn to drive it – using evidence to diagnose problems before prescribing interventions.</p>
+<p><strong>From Ch 4 to Ch 5:</strong> We built the engine (a Bayesian network). Now we learn to drive it – using evidence to diagnose problems before prescribing interventions.</p>
 </div>
 </div>
 </section>

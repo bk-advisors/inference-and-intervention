@@ -1,56 +1,54 @@
 ---
 title: "Chapter 9: Game Theory & Strategic Interactions"
-subtitle: "Nash equilibrium, extensive-form games, commitment devices, and incentive design for multi-agent MNH programs"
+subtitle: "When everyone acts in their own interest, how do you get cooperation in Rwanda?"
 ---
 
 ## Learning Objectives
 
 ::: {.learning-objectives}
-After this chapter, you will be able to:
-
-- Define **games** with players, strategies, and payoffs in the context of global health
-- Find **Nash equilibria** in normal-form (matrix) games
-- Analyze **sequential (extensive-form) games** using backward induction
-- Represent multi-agent problems as **causal-form games** and strategy tables
-- Apply game theory to **donor-government interactions** in an MNH program portfolio
+- Explain what a **game** is in the formal sense: players, strategies, and payoffs
+- Read and interpret a **payoff matrix** to find each player's best response
+- Find the **Nash Equilibrium** -- the outcome where nobody wants to change their move
+- Recognize the **free-rider problem** and explain why it leads to bad outcomes
+- Describe how **commitment devices** (like milestone-based contracts) can fix the problem
 :::
 
 ## Key Concepts
 
 ::: {.key-concept}
-#### Nash Equilibrium
+#### Strategic Interactions
 
-A strategy profile where no player can improve their payoff by unilaterally changing their strategy, holding all other players' strategies fixed. In MNH contexts, Nash equilibria often reveal free-riding behavior: the donor funds generously and the government reduces its own co-financing because individual incentives push toward a suboptimal collective outcome.
+In Chapter 8, we treated government co-financing as a random variable -- something uncertain but not strategic. In reality, governments are rational actors making deliberate choices. When a large donor announces generous funding for Rwanda's health sector, the Rwandan government might think: "Great, we can redirect our own health budget to roads." This is not random -- it is a strategic response. Game theory gives us the tools to anticipate and shape these responses.
 :::
 
 ::: {.key-concept .green}
-#### Extensive-Form Games and Backward Induction
+#### Payoff Matrices
 
-A game represented as a tree showing the sequence of moves, information available at each decision point, and payoffs at terminal nodes. Backward induction solves the game by starting at terminal nodes and working backward. The order of moves matters: when the donor commits first without conditions, the government can observe and free-ride.
+A payoff matrix is a table that shows what happens for every possible combination of choices. Imagine a donor and the Rwandan government each have two options: invest heavily or invest lightly in newborn health. The matrix has four cells, one for each combination. Each cell contains two numbers: the donor's payoff and the government's payoff. Reading the matrix tells you what each player should do given what the other player does.
 :::
 
 ::: {.key-concept .orange}
-#### Commitment Devices and Mechanism Design
+#### Nash Equilibrium
 
-Contract structures that change the payoff matrix so that cooperation becomes the dominant strategy. Milestone-based payments, bonding agreements, and conditional funding triggers are all commitment devices. They work by making free-riding costly and cooperation genuinely attractive for both sides. Credibility is essential: conditionalities only work if the donor would actually withhold funding when milestones are missed.
+A Nash Equilibrium is a combination of strategies where neither player wants to change their choice, given what the other player is doing. Think of it as the "stable" outcome -- once both players land there, nobody has a reason to move. The problem is that the Nash Equilibrium is not always the best outcome for everyone. In many health funding games, the equilibrium involves the donor paying generously while the government free-rides.
 :::
 
 ::: {.key-concept .red}
-#### Causal-Form Games
+#### The Free-Rider Problem
 
-A multi-agent influence diagram where each player has their own decision node and objective node, and the causal structure shows how decisions interact to produce outcomes. The causal form connects game theory to the DAG-based causal models of earlier chapters, making explicit why payoffs have their values and how decisions flow through intermediate variables to outcomes.
+Free-riding happens when one player benefits from the other's effort without contributing their fair share. If the donor will fund Rwanda's neonatal health program regardless of what the government does, the government's best move is to spend its money elsewhere. This is individually rational but collectively harmful -- total investment in health ends up lower than it should be.
 :::
 
 ::: {.key-concept .teal}
-#### Strategy Tables
+#### Commitment Devices
 
-A complete enumeration of contingent plans specifying what a player will do at every decision point, contingent on what they observe. With 2 information sets and 2 actions each, a player has $2^2 = 4$ possible strategies. Conditional strategies such as "Match" (cooperate if and only if the other player cooperates) are central to designing effective funding agreements.
+A commitment device is a contract structure that changes the payoff matrix so that cooperation becomes the smart choice for both sides. Milestone-based payments are a classic example: the donor commits funding, but each tranche is released only when the government hits specific targets (like training a certain number of midwives). This makes free-riding costly and cooperation genuinely attractive. The key is credibility -- the donor must actually withhold funds when milestones are missed, or the threat is empty.
 :::
 
 ## Lecture Slides
 
 ::: {.slide-embed}
-<iframe src="../ch09-multi-agent/index.html"></iframe>
+<iframe src="../ch09-multi-agent/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch09-multi-agent/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
@@ -58,155 +56,52 @@ A complete enumeration of contingent plans specifying what a player will do at e
 
 ## R Code Workshop
 
-This chapter implements game theory analysis in R, including Nash equilibrium computation, payoff matrix visualization, backward induction for extensive-form games, and simulation of repeated games with conditional strategies.
+We will build a payoff matrix in R, find the Nash Equilibrium, and then simulate a repeated game to see how tit-for-tat can induce cooperation.
 
-### Representing and Solving a 2x2 Game
+### Building a Payoff Matrix and Finding Nash Equilibrium
 
-We define the Workforce Absorption Game as payoff matrices and implement a general Nash equilibrium finder using the best-response method.
+Each player can "Invest High" or "Invest Low" in neonatal health. The donor cares about lives saved; the government balances health against other priorities.
 
 ```{r}
-#| label: nash-equilibrium
+#| label: payoff-and-nash
 #| echo: true
 
-# Define the Workforce Absorption Game (2-player, 2x3 reduced to 2x2)
-# Payoffs: list(Donor, Government)
+# Donor payoffs (lives saved, in hundreds)
+donor_payoffs <- matrix(
+  c(24, 18, 5, 8), nrow = 2, ncol = 2,
+  dimnames = list(Donor = c("Invest High", "Invest Low"),
+                  Rwanda = c("Invest High", "Invest Low")))
 
-# Donor strategies: Full Funding, Reduced Funding (rows)
-# Gov strategies: Full Absorb, No Absorb (columns, simplified)
-
-donor_payoffs <- matrix(c(4500, 2200,   # Full Absorb column
-                          500,  300),    # No Absorb column
-                        nrow = 2, ncol = 2,
-                        dimnames = list(
-                          Donor = c("Full Funding", "Reduced"),
-                          Gov = c("Full Absorb", "No Absorb")))
-
-gov_payoffs <- matrix(c(600, 400,     # Full Absorb column
-                        1000, 800),   # No Absorb column
-                      nrow = 2, ncol = 2,
-                      dimnames = list(
-                        Donor = c("Full Funding", "Reduced"),
-                        Gov = c("Full Absorb", "No Absorb")))
+# Government payoffs (composite score)
+gov_payoffs <- matrix(
+  c(7, 5, 10, 6), nrow = 2, ncol = 2,
+  dimnames = list(Donor = c("Invest High", "Invest Low"),
+                  Rwanda = c("Invest High", "Invest Low")))
 
 # Find Nash Equilibria by checking best responses
 find_nash <- function(p1, p2) {
-  nr <- nrow(p1); nc <- ncol(p1)
   nash <- list()
-  for (i in 1:nr) {
-    for (j in 1:nc) {
-      # Is i a best response for Player 1 given Player 2 plays j?
-      p1_br <- p1[i, j] == max(p1[, j])
-      # Is j a best response for Player 2 given Player 1 plays i?
-      p2_br <- p2[i, j] == max(p2[i, ])
-      if (p1_br & p2_br) {
+  for (i in 1:nrow(p1))
+    for (j in 1:ncol(p1))
+      if (p1[i, j] == max(p1[, j]) & p2[i, j] == max(p2[i, ]))
         nash <- c(nash, list(c(row = i, col = j)))
-      }
-    }
-  }
   nash
 }
 
 ne <- find_nash(donor_payoffs, gov_payoffs)
-cat("Nash Equilibria:\n")
-for (eq in ne) {
-  cat(sprintf("  (%s, %s) -> Donor: %d, Gov: %d\n",
+for (eq in ne)
+  cat(sprintf("Nash Equilibrium: (%s, %s) -> Donor: %d, Gov: %d\n",
               rownames(donor_payoffs)[eq[1]],
               colnames(donor_payoffs)[eq[2]],
-              donor_payoffs[eq[1], eq[2]],
-              gov_payoffs[eq[1], eq[2]]))
-}
-# Expected output: (Full Funding, No Absorb) -> Donor: 500, Gov: 1000
+              donor_payoffs[eq[1], eq[2]], gov_payoffs[eq[1], eq[2]]))
+# Expected: (Invest High, Invest Low) -- the free-rider outcome
 ```
 
-### Payoff Matrix Heatmap
+The equilibrium is (Invest High, Invest Low) -- the donor funds generously and the government free-rides. Both could do better by cooperating, but neither has an individual reason to change.
 
-A heatmap visualization of the full 2x3 payoff matrix for the Workforce Absorption Game, with cell labels showing both players' payoffs and color encoding the donor's outcome.
+### Simulating a Repeated Game with Tit-for-Tat
 
-```{r}
-#| label: payoff-heatmap
-#| echo: true
-#| fig-width: 10
-#| fig-height: 5
-
-library(ggplot2)
-library(tidyr)
-
-# Build tidy data for both players
-game_df <- expand.grid(
-  Donor = c("Full Funding", "Reduced"),
-  Gov = c("Full Absorb", "Partial Absorb", "No Absorb")
-)
-game_df$Donor_Payoff <- c(4500, 2200, 2800, 1500, 500, 300)
-game_df$Gov_Payoff   <- c(600,  400,  900,  700,  1000, 800)
-game_df$Total        <- game_df$Donor_Payoff + game_df$Gov_Payoff
-game_df$Label <- paste0("D: ", game_df$Donor_Payoff,
-                        "\nG: ", game_df$Gov_Payoff)
-
-# Factor ordering
-game_df$Donor <- factor(game_df$Donor,
-                        levels = c("Full Funding", "Reduced"))
-game_df$Gov   <- factor(game_df$Gov,
-                        levels = c("Full Absorb", "Partial Absorb",
-                                   "No Absorb"))
-
-ggplot(game_df, aes(x = Gov, y = Donor, fill = Donor_Payoff)) +
-  geom_tile(color = "white", linewidth = 2) +
-  geom_text(aes(label = Label), size = 5, fontface = "bold") +
-  scale_fill_gradient2(low = "#E24A3F", mid = "#FED141",
-                       high = "#83BD00", midpoint = 2000,
-                       name = "Donor\nPayoff") +
-  labs(title = "Workforce Absorption Game: Payoff Matrix",
-       x = "Government Strategy", y = "Donor Strategy") +
-  theme_minimal(base_size = 16) +
-  theme(panel.grid = element_blank(),
-        plot.title = element_text(color = "#005CB9", face = "bold"))
-```
-
-### Extensive Form -- Backward Induction
-
-We solve the sequential version of the game where the donor moves first and the government observes the donor's choice before responding. Backward induction reveals the subgame perfect equilibrium.
-
-```{r}
-#| label: backward-induction
-#| echo: true
-
-# Extensive form: Donor moves first, Government observes and responds
-# Define terminal payoffs: (Donor, Gov)
-terminal <- list(
-  "Full->FullAbsorb"    = c(D = 4500, G = 600),
-  "Full->PartialAbsorb" = c(D = 2800, G = 900),
-  "Full->NoAbsorb"      = c(D = 500,  G = 1000),
-  "Reduced->FullAbsorb"    = c(D = 2200, G = 400),
-  "Reduced->PartialAbsorb" = c(D = 1500, G = 700),
-  "Reduced->NoAbsorb"      = c(D = 300,  G = 800)
-)
-
-# Step 1: Government's best response at each information set
-gov_after_full <- terminal[grep("^Full->", names(terminal))]
-gov_br_full <- names(which.max(sapply(gov_after_full, `[`, "G")))
-cat("Gov best response after Full Funding:", gov_br_full, "\n")
-cat("  Payoffs:", gov_after_full[[gov_br_full]], "\n\n")
-
-gov_after_reduced <- terminal[grep("^Reduced->", names(terminal))]
-gov_br_reduced <- names(which.max(sapply(gov_after_reduced, `[`, "G")))
-cat("Gov best response after Reduced:", gov_br_reduced, "\n")
-cat("  Payoffs:", gov_after_reduced[[gov_br_reduced]], "\n\n")
-
-# Step 2: Donor anticipates and chooses
-donor_full    <- gov_after_full[[gov_br_full]]["D"]
-donor_reduced <- gov_after_reduced[[gov_br_reduced]]["D"]
-cat("Donor payoff if Full:", donor_full, "\n")
-cat("Donor payoff if Reduced:", donor_reduced, "\n")
-cat("Donor optimal choice:",
-    ifelse(donor_full >= donor_reduced, "Full Funding", "Reduced"), "\n")
-
-# SPE: (Full Funding, Gov always plays No Absorb)
-# Donor gets 500 lives — motivating the need for conditionality
-```
-
-### Simulating a Repeated Game
-
-A repeated-game simulation compares unconditional funding (always fund high) versus a tit-for-tat conditional strategy. The tit-for-tat approach induces government cooperation over time by punishing free-riding with reduced funding in the following round.
+In a one-shot game, free-riding wins. But over 20 rounds, a tit-for-tat donor -- who matches the government's previous move -- can punish free-riding and reward cooperation.
 
 ```{r}
 #| label: repeated-game
@@ -215,97 +110,88 @@ A repeated-game simulation compares unconditional funding (always fund high) ver
 #| fig-height: 5
 
 library(ggplot2)
-
-# Simulate repeated interaction with tit-for-tat strategy
-# Donor uses conditional strategy: fund high if Gov cooperated last round
 set.seed(42)
-n_rounds <- 20
 
-# Strategy profiles
 simulate_repeated <- function(donor_strategy, n = 20) {
-  donor_action <- character(n)
-  gov_action   <- character(n)
-  donor_payoff <- numeric(n)
-  gov_payoff   <- numeric(n)
-
-  # Payoffs per round (lives saved in hundreds)
-  payoff_matrix <- list(
-    "High_High" = c(D = 24, G = 7),
-    "High_Low"  = c(D = 5,  G = 10),
-    "Low_High"  = c(D = 18, G = 5),
-    "Low_Low"   = c(D = 8,  G = 6)
-  )
-
+  d_act <- g_act <- character(n)
+  d_pay <- g_pay <- numeric(n)
+  payoffs <- list("High_High" = c(D=24,G=7), "High_Low" = c(D=5,G=10),
+                  "Low_High"  = c(D=18,G=5), "Low_Low"  = c(D=8,G=6))
   for (t in 1:n) {
-    # Donor strategy
-    if (donor_strategy == "unconditional") {
-      donor_action[t] <- "High"
-    } else if (donor_strategy == "tit_for_tat") {
-      donor_action[t] <- if (t == 1) "High"
-                          else if (gov_action[t-1] == "High") "High"
-                          else "Low"
-    }
-    # Government: rational, but learns from consequences
-    # Starts by free-riding, switches to cooperate if punished
-    if (t <= 3) {
-      gov_action[t] <- "Low"  # Test the donor
-    } else if (donor_strategy == "tit_for_tat" &
-               donor_action[t] == "Low") {
-      gov_action[t] <- "High"  # Cooperate after punishment
-    } else {
-      gov_action[t] <- "Low"   # Free-ride if no punishment
-    }
-
-    key <- paste0(donor_action[t], "_", gov_action[t])
-    donor_payoff[t] <- payoff_matrix[[key]]["D"]
-    gov_payoff[t]   <- payoff_matrix[[key]]["G"]
+    d_act[t] <- if (donor_strategy == "always_high") "High"
+                else if (t == 1) "High"
+                else if (g_act[t-1] == "High") "High" else "Low"
+    g_act[t] <- if (t <= 3) "Low"
+                else if (donor_strategy == "tit_for_tat" & d_act[t] == "Low") "High"
+                else "Low"
+    p <- payoffs[[paste0(d_act[t], "_", g_act[t])]]
+    d_pay[t] <- p["D"]; g_pay[t] <- p["G"]
   }
-
-  data.frame(round = 1:n, donor_action, gov_action,
-             donor_payoff, gov_payoff)
+  data.frame(round=1:n, gov_action=g_act, donor_payoff=d_pay)
 }
 
-# Compare unconditional vs tit-for-tat
-uncond <- simulate_repeated("unconditional")
-uncond$strategy <- "Unconditional"
-tft <- simulate_repeated("tit_for_tat")
-tft$strategy <- "Tit-for-Tat"
-results <- rbind(uncond, tft)
+always <- simulate_repeated("always_high"); always$strategy <- "Always Fund High"
+tft    <- simulate_repeated("tit_for_tat"); tft$strategy    <- "Tit-for-Tat"
+results <- rbind(always, tft)
 
-ggplot(results, aes(x = round, y = cumsum(donor_payoff),
-                    color = strategy)) +
-  geom_line(linewidth = 1.2) +
-  geom_point(aes(shape = gov_action), size = 2.5) +
-  scale_color_manual(values = c("#E24A3F", "#83BD00")) +
-  scale_shape_manual(values = c(High = 16, Low = 4),
-                     name = "Gov Action") +
-  labs(title = "Repeated Game: Cumulative Donor Payoff",
-       subtitle = "Tit-for-tat induces Government cooperation over time",
-       x = "Funding Round", y = "Cumulative Lives Saved (hundreds)",
-       color = "Donor Strategy") +
-  theme_minimal(base_size = 14) +
-  theme(plot.title = element_text(color = "#005CB9", face = "bold"))
+ggplot(results, aes(x=round, y=cumsum(donor_payoff), color=strategy)) +
+  geom_line(linewidth=1.2) +
+  geom_point(aes(shape=gov_action), size=2.5) +
+  scale_color_manual(values=c("#E24A3F","#83BD00")) +
+  scale_shape_manual(values=c(High=16, Low=4), name="Gov Action") +
+  labs(title="Repeated Game: Does Conditional Funding Work?",
+       subtitle="Tit-for-tat punishes free-riding and rewards cooperation",
+       x="Funding Round (Year)", y="Cumulative Lives Saved (hundreds)",
+       color="Donor Strategy") +
+  theme_minimal(base_size=14) +
+  theme(plot.title=element_text(color="#005CB9", face="bold"))
+```
+
+The unconditional donor gets exploited every round. The tit-for-tat donor takes a short-term hit when it punishes, but cooperation kicks in and cumulative lives saved climb faster.
+
+### Payoff Matrix Heatmap
+
+A heatmap shows which outcomes are good for the donor (green) and which are bad (red).
+
+```{r}
+#| label: payoff-heatmap
+#| echo: true
+#| fig-width: 9
+#| fig-height: 5
+
+game_df <- expand.grid(Donor=c("Invest High","Invest Low"),
+                       Rwanda=c("Invest High","Invest Low"))
+game_df$Donor_Payoff <- c(24,18,5,8)
+game_df$Gov_Payoff   <- c(7,5,10,6)
+game_df$Label <- paste0("Donor: ",game_df$Donor_Payoff,
+                        "\nRwanda: ",game_df$Gov_Payoff)
+
+ggplot(game_df, aes(x=Rwanda, y=Donor, fill=Donor_Payoff)) +
+  geom_tile(color="white", linewidth=2) +
+  geom_text(aes(label=Label), size=5, fontface="bold") +
+  scale_fill_gradient2(low="#E24A3F", mid="#FED141", high="#83BD00",
+                       midpoint=14, name="Donor\nPayoff") +
+  labs(title="Rwanda Health Funding Game: Payoff Matrix",
+       x="Rwanda Government Strategy", y="Donor Strategy") +
+  theme_minimal(base_size=16) + theme(panel.grid=element_blank())
 ```
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Game theory** models strategic interaction among multiple agents -- essential when governments, donors, and partners all make interdependent choices.
+**Game theory** helps you think about what happens when multiple players each pursue their own interests. In health funding, this often means donors pay and governments redirect money elsewhere.
 
-**Nash equilibrium** reveals the stable outcome when each agent optimizes individually. In MNH, this often means free-riding unless contracts are designed carefully.
+**Nash Equilibrium** is the stable outcome, but it is not always the best outcome. The free-rider equilibrium wastes resources and costs lives.
 
-**Extensive-form analysis** and backward induction show how the sequence of moves matters. Conditional commitments (milestone payments) transform the game's equilibrium.
-
-**Strategy tables** and the **causal form** connect game theory to the influence diagrams of Chapters 7--8, providing a unified framework for multi-agent decision problems.
+**Commitment devices** like milestone-based contracts change the payoff matrix so that cooperation becomes each player's best response. In a repeated game, tit-for-tat strategies can build cooperation over time -- but only if the threat of punishment is credible.
 :::
 
 ## Looking Ahead
 
-Next in **Chapter 10 -- Structure Learning from Observational Data**, we return from theory to practice with real data:
+Next in **Chapter 10 -- Structure Learning from Data**, we ask whether computers can discover causal relationships on their own:
 
-- Learning causal structure from MNH datasets
-- Bayesian network parameter estimation
-- Combining expert knowledge with data
-- Validation and sensitivity analysis for policy recommendations
+- Can an algorithm look at health data from Tanzania and figure out what causes what?
+- Where do algorithms succeed, and where do they need human experts to fill in the gaps?
+- How do you combine data-driven discovery with the expert knowledge we have been building all course?
 
-Chapters 1--6 built causal models (inference). Chapters 7--9 used them for decisions (intervention). Chapter 10 grounds everything in data, closing the loop between theory and evidence.
+Chapter 9 showed how to think about strategic actors. Chapter 10 returns to the data and asks the ultimate question: can we let the evidence tell us the causal structure, or do we always need a human in the loop?

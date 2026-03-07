@@ -1,56 +1,48 @@
 ---
 title: "Chapter 8: Multi-Country Resource Allocation"
-subtitle: "Portfolio optimization under uncertainty, sequential decision making, and Monte Carlo simulation for MNH program allocation"
+subtitle: "How do you split a limited budget across four countries to save the most lives?"
 ---
 
 ## Learning Objectives
 
 ::: {.learning-objectives}
-After this chapter, you will be able to:
-
-- Frame a **multi-country resource allocation** problem as a decision under uncertainty
-- Build **probability distributions** over government co-financing, intervention coverage, and health outcomes
-- Apply **sequential decision making** (commit, observe, scale) with backward induction
-- Assess **stakeholder response** (crowding out vs. crowding in) as a strategic variable
-- Use **Monte Carlo simulation** in R to compare allocation strategies and quantify confidence intervals
+- Explain why **allocating resources across countries** is harder than picking the single best one
+- Compare three allocation strategies: **Concentrate**, **Spread Equally**, and **Tiered**
+- Use **Monte Carlo simulation** to see how uncertainty changes the best strategy
+- Understand **sequential decisions** -- why you might pilot first and scale later
+- Run a Monte Carlo simulation in R and interpret the results
 :::
 
 ## Key Concepts
 
 ::: {.key-concept}
-#### Multi-Country Resource Allocation
+#### The Allocation Puzzle
 
-A large-scale MNH program must allocate pooled donor funding across multiple countries, each with different baseline mortality, health system capacity, and government readiness. The optimal allocation depends not just on where lives can be saved most efficiently, but on how uncertain we are about each country's trajectory.
+Imagine you run a maternal and newborn health program with a fixed budget and four countries to support -- say Ethiopia, Tanzania, Rwanda, and Nigeria. Each country has different population sizes, different health system strengths, and different levels of government commitment. You cannot simply rank them and fund the top one, because spreading your investment might reduce the risk that a single country's problems sink your entire program.
 :::
 
 ::: {.key-concept .green}
-#### Portfolio Diversification
+#### Three Strategies: Concentrate, Spread, or Tier
 
-Borrowing from financial portfolio theory, a tiered allocation strategy that weights by burden and capacity score (with floors and ceilings per country) can reduce the risk of catastrophic shortfall. Concentrating funds in the highest-burden country maximizes expected value but carries the most variance; spreading funds equally lowers both expected value and risk.
+**Concentrate** means putting most of your budget into the country where you expect the biggest impact per dollar. High reward, but high risk -- if that country hits political trouble or a supply chain crisis, you lose big. **Spread** means dividing the budget equally across all four countries. Safer, but you might waste money in countries where it does less good. **Tiered** means weighting the budget by each country's burden and capacity, with minimum and maximum caps per country. This balances efficiency and safety.
 :::
 
 ::: {.key-concept .orange}
-#### Sequential Decision Making
+#### Uncertainty and Monte Carlo Simulation
 
-The program does not have to commit all funds on day one. A phased approach (commit seed funding, observe pilot results, then scale or reallocate) enables better-informed decisions. Backward induction solves these multi-stage problems by starting at the terminal outcomes and working backward through each decision point.
+You never know exactly how effective your spending will be. Government co-financing might be strong or weak. Drug supply chains might hold up or break down. Monte Carlo simulation handles this by running your model thousands of times, each time drawing random values for the uncertain inputs. Instead of a single "expected lives saved" number, you get a whole distribution -- and you can ask questions like "What is the chance we save fewer than 5,000 lives?"
 :::
 
 ::: {.key-concept .red}
-#### The Cost of Delay
+#### Sequential Decisions: Pilot, Then Scale
 
-Sequential decision making is valuable but not free. Every month of delay means preventable deaths that could have been averted. The program must balance the information value of waiting against the human cost of inaction -- a distinctive feature of public health versus commercial allocation problems.
-:::
-
-::: {.key-concept .teal}
-#### Crowding Out vs. Crowding In
-
-When the program invests in a country, other donors and the government may reduce their own spending (crowding out) or increase it (crowding in). On average, these effects may roughly cancel, but the variance matters: in some cases the program's dollar buys only $0.70 of net new investment.
+You do not have to commit your entire budget on day one. A smarter approach is to invest a small amount first (a pilot), observe results, and then scale up funding in the countries that performed well. This is called **sequential decision making**. The catch? Every month you spend gathering information is a month when people who could have been helped are not getting help. So there is a real trade-off between learning and acting.
 :::
 
 ## Lecture Slides
 
 ::: {.slide-embed}
-<iframe src="../ch08-resource-allocation/index.html"></iframe>
+<iframe src="../ch08-resource-allocation/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch08-resource-allocation/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
@@ -58,201 +50,164 @@ When the program invests in a country, other donors and the government may reduc
 
 ## R Code Workshop
 
-This chapter implements Monte Carlo simulation for comparing multi-country allocation strategies, grid search for optimal allocation, and sensitivity analysis of co-financing uncertainty.
+We will build a Monte Carlo simulation to compare allocation strategies across four countries. The idea is simple: define what you know (and what you are uncertain about), then let the computer run thousands of "what if" scenarios.
 
-### Monte Carlo Simulation Setup
+### Setting Up Country Parameters
 
-We define country parameters (target lives, effectiveness per dollar, uncertainty) and a simulation function that draws government co-financing scenarios and computes total lives saved for a given allocation vector.
+Each country has three numbers: how many lives per million dollars you expect to save, how uncertain that estimate is (the standard deviation), and how likely the government is to provide strong co-financing.
 
 ```{r}
-#| label: monte-carlo-sim
+#| label: setup-countries
 #| echo: true
 
 set.seed(42)
 n_sims <- 10000
 
-# Country parameters: target lives, expected lives per $M, sd per $M
+# Four countries with public-data-inspired parameters
 countries <- data.frame(
-  country = c("Country A", "Country C", "Country B"),
-  target = c(45000, 27000, 38000),
-  lives_per_M = c(610, 356, 462),
-  sd_per_M = c(185, 95, 130),  # uncertainty in effectiveness
-  p_high = c(0.40, 0.50, 0.45)  # P(high gov co-financing)
+  country    = c("Ethiopia", "Tanzania", "Rwanda", "Nigeria"),
+  lives_per_M = c(610, 462, 356, 520),    # expected lives saved per $1M
+  sd_per_M    = c(185, 130, 95, 160),      # uncertainty in effectiveness
+  p_high_gov  = c(0.40, 0.45, 0.50, 0.30) # P(strong gov co-financing)
 )
 
-# Simulate outcomes for a given allocation (as proportions of budget)
+countries
+```
+
+### The Simulation Function
+
+This function takes a budget allocation (four numbers that add to 100) and runs `n_sims` random scenarios. In each scenario, it draws a government co-financing level and a random effectiveness for each country, then totals the lives saved.
+
+```{r}
+#| label: simulate-function
+#| echo: true
+
 simulate_outcomes <- function(alloc, countries, n_sims) {
   total_lives <- numeric(n_sims)
   for (i in 1:n_sims) {
     lives <- 0
     for (j in 1:nrow(countries)) {
-      # Government co-financing scenario
+      # Draw a government co-financing scenario
       gov <- sample(c("High", "Med", "Low"), 1,
-                    prob = c(countries$p_high[j],
-                             1 - countries$p_high[j] - 0.10,
+                    prob = c(countries$p_high_gov[j],
+                             1 - countries$p_high_gov[j] - 0.10,
                              0.10))
       multiplier <- switch(gov, High = 1.0, Med = 0.6, Low = 0.25)
-      # Lives saved = allocation * lives per $M * multiplier + noise
-      lives_j <- alloc[j] * rnorm(1, countries$lives_per_M[j],
-                                      countries$sd_per_M[j]) * multiplier
+
+      # Lives saved = allocation share * random effectiveness * multiplier
+      lives_j <- alloc[j] *
+        rnorm(1, countries$lives_per_M[j], countries$sd_per_M[j]) *
+        multiplier
       lives <- lives + max(0, lives_j)
     }
     total_lives[i] <- lives
   }
   total_lives
 }
-
-# Three strategies (as relative allocation units, not dollar amounts)
-strat_concentrate <- c(70, 15, 15)   # Heavy Country A
-strat_spread      <- c(33, 33, 33)   # Equal
-strat_tiered      <- c(45, 23, 32)   # Weighted
 ```
 
-### Visualizing Strategy Outcomes
+### Comparing Three Strategies
 
-A violin plot with embedded box plot shows the full distribution of simulated outcomes for each allocation strategy across 10,000 Monte Carlo draws.
+Now we define our three strategies and simulate 10,000 outcomes for each. The violin plot shows the full spread of possible results -- not just the average, but the best and worst cases too.
 
 ```{r}
-#| label: visualize-strategies
+#| label: compare-strategies
 #| echo: true
 #| fig-width: 10
 #| fig-height: 5
 
 library(ggplot2)
 
+# Three allocation strategies (% of budget to each country)
+#                     Ethiopia  Tanzania  Rwanda  Nigeria
+strat_concentrate <- c(55,       15,       10,     20)
+strat_spread      <- c(25,       25,       25,     25)
+strat_tiered      <- c(35,       25,       15,     25)
+
 # Run simulations
 sim_conc   <- simulate_outcomes(strat_concentrate, countries, n_sims)
-sim_spread <- simulate_outcomes(strat_spread, countries, n_sims)
-sim_tiered <- simulate_outcomes(strat_tiered, countries, n_sims)
+sim_spread <- simulate_outcomes(strat_spread,      countries, n_sims)
+sim_tiered <- simulate_outcomes(strat_tiered,      countries, n_sims)
 
-# Combine into data frame
+# Combine into a data frame for plotting
 sim_df <- data.frame(
-  lives = c(sim_conc, sim_spread, sim_tiered),
-  strategy = rep(c("Concentrate", "Spread", "Tiered"),
-                 each = n_sims)
+  lives    = c(sim_conc, sim_spread, sim_tiered),
+  strategy = rep(c("Concentrate", "Spread", "Tiered"), each = n_sims)
 )
 
-# Violin plot with embedded box plot
 ggplot(sim_df, aes(x = strategy, y = lives / 1000, fill = strategy)) +
-  geom_violin(alpha = 0.6, draw_quantiles = c(0.025, 0.5, 0.975)) +
+  geom_violin(alpha = 0.6, draw_quantiles = c(0.05, 0.5, 0.95)) +
   geom_boxplot(width = 0.15, alpha = 0.8, outlier.shape = NA) +
   scale_fill_manual(values = c("#005CB9", "#83BD00", "#FA7650")) +
   labs(x = "Allocation Strategy",
        y = "Total Lives Saved (thousands)",
-       title = "Simulated Outcomes: 3-Country Allocation",
-       subtitle = "10,000 Monte Carlo draws | Violin shows full distribution") +
+       title = "Monte Carlo Simulation: 4-Country Allocation",
+       subtitle = "10,000 scenarios | Lines show 5th, 50th, and 95th percentiles") +
   theme_minimal(base_size = 14) +
   theme(legend.position = "none")
 ```
 
-### Optimal Allocation via Grid Search
+### Sensitivity: What If Government Support Changes?
 
-A grid search over the allocation space (in 5% increments, subject to the constraint that allocations sum to 100%) identifies the best allocation by expected value and by worst-case (maximin) criterion.
-
-```{r}
-#| label: grid-search
-#| echo: true
-
-# Grid search over allocation space
-# Constraint: a_A + a_C + a_B = 100 (percentage units)
-grid_step <- 5  # 5% increments
-results <- data.frame()
-
-for (a_A in seq(0, 100, grid_step)) {
-  for (a_C in seq(0, 100 - a_A, grid_step)) {
-    a_B <- 100 - a_A - a_C
-    alloc <- c(a_A, a_C, a_B)
-
-    # Quick simulation (fewer draws for speed)
-    sim <- simulate_outcomes(alloc, countries, n_sims = 2000)
-
-    results <- rbind(results, data.frame(
-      a_A = a_A, a_C = a_C, a_B = a_B,
-      ev = mean(sim),
-      sd = sd(sim),
-      p5 = quantile(sim, 0.05)  # 5th percentile (worst case)
-    ))
-  }
-}
-
-# Best by expected value
-best_ev <- results[which.max(results$ev), ]
-cat("Max EV allocation:", best_ev$a_A, "/",
-    best_ev$a_C, "/", best_ev$a_B, "\n")
-cat("Expected lives:", round(best_ev$ev), "\n")
-
-# Best by worst-case (maximin)
-best_p5 <- results[which.max(results$p5), ]
-cat("\nMaximin allocation:", best_p5$a_A, "/",
-    best_p5$a_C, "/", best_p5$a_B, "\n")
-cat("5th percentile lives:", round(best_p5$p5), "\n")
-```
-
-### Sensitivity Analysis
-
-This plot shows how varying Country A's probability of high government co-financing affects the expected lives saved for each strategy. The crossover point identifies the threshold at which concentrating funds in Country A becomes optimal.
+The biggest unknown is usually whether a government will step up its own spending. This plot shows how each strategy performs as Ethiopia's probability of strong co-financing varies from 10% to 80%.
 
 ```{r}
-#| label: sensitivity-analysis
+#| label: sensitivity
 #| echo: true
 #| fig-width: 10
 #| fig-height: 5
 
 library(tidyr)
 
-# Sensitivity: vary Country A P(High co-financing) from 0.1 to 0.8
 p_seq <- seq(0.1, 0.8, by = 0.05)
 sens_results <- data.frame()
 
-for (p_high_A in p_seq) {
-  # Update Country A's co-financing probability
+for (p_high in p_seq) {
   countries_mod <- countries
-  countries_mod$p_high[1] <- p_high_A
+  countries_mod$p_high_gov[1] <- p_high  # vary Ethiopia
 
   ev_conc <- mean(simulate_outcomes(strat_concentrate, countries_mod, 3000))
-  ev_spr  <- mean(simulate_outcomes(strat_spread, countries_mod, 3000))
-  ev_tier <- mean(simulate_outcomes(strat_tiered, countries_mod, 3000))
+  ev_spr  <- mean(simulate_outcomes(strat_spread,      countries_mod, 3000))
+  ev_tier <- mean(simulate_outcomes(strat_tiered,       countries_mod, 3000))
 
   sens_results <- rbind(sens_results, data.frame(
-    p_high = p_high_A,
-    Concentrate = ev_conc,
-    Spread = ev_spr,
-    Tiered = ev_tier
+    p_high = p_high,
+    Concentrate = ev_conc, Spread = ev_spr, Tiered = ev_tier
   ))
 }
 
-# Pivot to long format and plot
 sens_long <- pivot_longer(sens_results, cols = -p_high,
                           names_to = "Strategy", values_to = "EV")
 
 ggplot(sens_long, aes(x = p_high, y = EV / 1000, color = Strategy)) +
-  geom_line(size = 1.2) +
+  geom_line(linewidth = 1.2) +
   geom_vline(xintercept = 0.40, linetype = "dashed", alpha = 0.5) +
   scale_color_manual(values = c("#005CB9", "#83BD00", "#FA7650")) +
-  labs(x = "P(High Gov't Co-financing) for Country A",
+  labs(x = "P(Strong Gov Co-financing) for Ethiopia",
        y = "Expected Lives Saved (thousands)",
-       title = "Sensitivity: How Country A's Co-financing Risk Affects Strategy Choice",
-       subtitle = "Dashed line = current estimate (p = 0.40)") +
+       title = "How Ethiopia's Government Commitment Changes the Best Strategy",
+       subtitle = "Dashed line = our current best guess (p = 0.40)") +
   theme_minimal(base_size = 14)
 ```
+
+Notice how the "Concentrate" line is steepest -- it benefits the most when Ethiopia's government steps up, but it also falls the hardest when support is weak. The "Tiered" strategy is more robust: it does reasonably well no matter what happens.
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Resource allocation under uncertainty** requires balancing expected impact against risk. The optimal allocation depends not just on where lives can be saved most efficiently, but on how uncertain we are about each country's trajectory.
+**Allocating resources across countries** is not just about picking the most efficient one. Uncertainty means the "best" country might disappoint, so diversification reduces catastrophic risk -- just like in a financial portfolio.
 
-**Portfolio thinking** applies to public health: diversification reduces catastrophic shortfall risk. **Sequential decisions** (pilot then scale) add value by resolving uncertainty, but delay costs lives.
+**Monte Carlo simulation** lets you explore thousands of possible futures instead of relying on a single "expected" number. It reveals the full range of outcomes, including worst-case scenarios that matter for real decisions.
 
-**Government co-financing** is the dominant uncertainty; small shifts in the probability of high co-financing change the optimal strategy. **Monte Carlo simulation** in R makes it possible to quantify confidence intervals and compare strategies rigorously.
+**Sequential decisions** (pilot first, then scale) are valuable because they let you learn before committing. But delay has a cost measured in lives, so you need to balance the value of information against the urgency of action.
 :::
 
 ## Looking Ahead
 
-Next in **Chapter 9 -- Game Theory and Strategic Interactions**, we move from treating stakeholders as uncertain variables to modeling them as strategic agents:
+Next in **Chapter 9 -- Game Theory and Strategic Interactions**, we stop treating governments and other donors as random variables and start treating them as strategic players with their own goals:
 
-- **Nash equilibrium** in donor coordination games
-- **Commitment devices** that bind government co-financing
-- **Mechanism design** for aligning incentives across funders
-- **MNH application:** Designing a co-financing framework that maximizes collective impact
+- What happens when multiple players each try to maximize their own payoff?
+- Why do rational players sometimes end up in outcomes that are bad for everyone?
+- How can you design contracts and incentives that make cooperation the smart choice?
 
-Chapter 8 solved the allocation problem as if government and donor behavior were exogenous uncertainties. Chapter 9 recognizes that these actors have their own objectives -- and designs strategies that account for their rational self-interest.
+Chapter 8 asked "How should we split the budget?" assuming other actors are unpredictable. Chapter 9 recognizes that those actors are making rational choices -- and shows how to design strategies that work *with* their incentives rather than against them.

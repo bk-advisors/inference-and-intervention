@@ -1,145 +1,157 @@
 # Speaker Notes — Chapter 1: Introduction to Causal Analysis
 
 ## Overview
-Welcome to the course. Today we're going to talk about a deceptively simple idea — one that will change how you think about data, decisions, and program design. The idea is this: if you want to make good decisions about where to invest scarce resources, you need to understand what *causes* what, not just what correlates with what. That distinction is going to be at the center of everything we do together.
+Welcome, everyone. Today I'm going to show you a puzzle that should genuinely bother you — and then we're going to learn the thinking tools to solve it. The big idea is simple: if you want to make smart decisions about where to put scarce resources, you need to know what actually *causes* what, not just what happens to show up alongside what. By the end of this session, you'll never look at a graph or a statistic the same way again.
 
 ## Slide: Learning Objectives
-So here are the five things I want you to walk away with today. *(pause)* First, we'll learn to distinguish between two things every manager does — assessing a situation and choosing an intervention. Then we'll work through some real MNH examples that show why correlation is not causation — and how that confusion can lead to catastrophically wrong decisions. We'll look at three specific traps that trip people up, introduce the basic building blocks of causal models, and by the end, you should have a clear sense of *why* this toolkit matters. The "how" — that's what the rest of the course is for.
+Here are five things I want you to walk away with today. *(pause)* First, we'll learn to tell apart two jobs every decision-maker has — figuring out what's going on, and deciding what to do about it. Then we'll work through real examples from Ethiopia that show why "correlation is not causation" isn't just a bumper sticker — getting it wrong can lead to exactly the wrong decision. We'll name the three classic traps that fool people, introduce the basic pieces of a causal model — nodes, arrows, and DAGs — and by the end you'll see why all of this matters when real lives are on the line.
 
 ## Slide: Chapter Overview
-Think of this as our roadmap for today. We're going to move from the philosophical — "What does a manager actually do?" — to the practical — "Here's a diagram that can save you from a billion-dollar mistake." *(pause)* See the five steps up there? Assessment, Intervention, Correlation traps, Causal framework, MNH application. That mirrors the journey every analyst goes through when they encounter a new problem. And notice the core insight at the bottom — in a world of scarce resources, figuring out *which* program elements to focus on has to come before deciding *how* to implement them. That requires understanding causality.
+Think of this as today's roadmap. We're going from "What does a manager actually do?" all the way to "Here's a diagram that can keep you from making a terrible mistake." *(pause)* See the five steps up there? Assessment, Intervention, Correlation traps, Causal framework, and then a real application in Ethiopia. And look at the big idea at the bottom — when resources are scarce, and they always are, you need to know what causes what before you decide what to do. That's the thread running through everything today.
 
 ## Slide: Situational Assessment
-Alright, let's start with the first big idea.
+Alright, let's jump in with the first big idea.
+
+## Slide: Here's the Puzzle
+Here's a puzzle that should make you uncomfortable. *(pause)* Ethiopia has one of the biggest community health worker programs in Africa — over 40,000 Health Extension Workers spread across the country. That's amazing. But here's the strange part: the regions where the *most* health workers are deployed tend to have the *highest* mortality rates. *(pause)* So... does deploying health workers cause deaths? Obviously not. But if you just looked at the numbers — workers deployed versus mortality rates — that's exactly what the data would seem to say. *(pause)* This is the kind of puzzle that causal thinking solves. The data isn't lying. But it's not telling the whole story, either. Stick with me, and by the end of this chapter you'll be able to explain exactly what's going on here.
 
 ## Slide: The Manager's Two Questions
-This is the foundation of the whole course. Every manager — whether you're running a hospital, overseeing a district health program, or managing a multinational MNH initiative — faces exactly two questions. *(pause)* Look at the two boxes. On the left: "What is happening?" That's situational assessment — it's detective work. On the right: "What should I do about it?" That's intervention — choosing which levers to pull.
+This is the foundation of the whole course. Every decision-maker faces exactly two questions. *(pause)* Look at the two boxes. On the left: "What is happening?" That's what we call situational assessment — it's detective work. On the right: "What should I do about it?" That's intervention — choosing which levers to pull.
 
-Here's the critical insight: you can't answer the second question well without answering the first one properly. And answering the first one properly? That requires causal thinking. If you misdiagnose *why* neonatal mortality is high in a district, you're going to prescribe the wrong intervention. It's like a doctor treating the wrong disease.
+Here's the key insight, and I want you to really let this sink in: you cannot answer Question 2 well until you've answered Question 1 well. Acting without understanding causes is like a doctor prescribing medicine without a diagnosis. You might get lucky, or you might make things worse.
 
-## Slide: Situational Assessment in Practice
-So what does situational assessment actually look like in practice? *(pause)* Look at the examples as they come up. A police inspector weighing evidence about a cause of death. A technical advisor trying to figure out why health outcomes are declining in a particular region. A program director asking, "Why isn't the neonatal mortality rate going down in this country despite everything we've invested?"
+## Slide: What Is Situational Assessment?
+So what does this detective work actually look like? *(pause)* Think about a doctor examining a patient — what symptoms are there, and what do they point to? Or a mechanic diagnosing a car — the engine's overheating, but is it the coolant, the fan, or a cracked gasket? Same thing with a health program manager in Ethiopia asking, "Why isn't neonatal mortality falling in this region — is it a staffing problem, a supply chain problem, or something else entirely?"
 
-They're all doing the same thing — gathering evidence and reasoning about causes. The difference is, they're usually doing it in their heads, with all the biases and blind spots that implies. What causal models do is make that reasoning explicit and shareable. Instead of two people arguing from gut feel, you put the diagram on the table and debate the *structure* of the argument.
+In every case, the person is trying to figure out what's causing what before deciding how to act. Causal models give us a systematic way to do that, instead of just guessing.
 
-## Slide: The Maxwell Example
-Now, the textbook by Ryall and Bramson opens with a really compelling example, and I want to walk you through it. *(pause)* Robert Maxwell — big media mogul — was found dead off his yacht in 1991. Now, the classic McKinsey-style approach would be to build an issue tree. How did he die? Break it into MECE categories: heart attack, suicide, murder. Check them off systematically.
+## Slide: Ethiopia's Health Challenge: The Numbers
+Let me show you the situation Ethiopia faces. *(pause)* Look at these numbers. Maternal mortality is about 267 per 100,000 live births. Neonatal mortality is about 28 per 1,000. They've got over 40,000 Health Extension Workers deployed. About 74 percent of pregnant women get at least one check-up visit.
 
-But causal thinking asks a fundamentally different question. Not just "what are the categories?" but "what *caused* each possibility, and what *evidence* would each cause produce?" *(pause)* See the difference? The issue tree organizes information. The causal model actually reasons about it. It helps you trace causes backward — what could have led to this? — and predict evidence forward — if this was the cause, what should we expect to find? That's a much more powerful way to think.
+Now, here's the thing — Ethiopia has made *enormous* progress. Maternal mortality used to be over 1,000 per 100,000 back in the 1990s. So they've come a really long way. But there's still far to go, and figuring out where to invest next depends on understanding what's *causing* the remaining deaths.
 
 ## Slide: Managerial Intervention
-Okay, now let's move to the second big question — what should I do about it?
+Okay, let's move to the second big question — what should I actually do?
 
 ## Slide: Managers Manage Scarce Resources
-This slide makes a point that sounds obvious but has really profound implications. *(pause)* Resources are always limited. Money, time, personnel, equipment — you never have enough. And that means every intervention involves trade-offs. Every dollar you spend on CPAP machines is a dollar you didn't spend on training midwives. Every month you invest in building data systems is a month you're not spending on direct service delivery.
+Here's a point that sounds obvious but has huge consequences. *(pause)* Resources are always limited. Money, time, people, equipment — you never have enough of everything. That means every investment involves trade-offs. Every dollar you spend on training midwives is a dollar you didn't spend on buying equipment. Every month you spend building a data system is a month you're not spending on direct care.
 
-Now think about a large-scale MNH initiative — pooled investments across multiple countries. The stakes are enormous. Every dollar matters, and those dollars represent lives. So which interventions will actually *cause* the greatest reduction in mortality? *(pause)* If you don't know the answer to that causal question, you're just guessing. And guessing with millions of dollars and thousands of lives on the line — that's not a position anyone wants to be in.
+So which investments will actually *cause* the biggest drop in mortality? If you don't know the answer to that causal question, you're basically guessing.
 
-## Slide: The Feather Touch Cautionary Tale
-Okay, now I want to scare you a little. *(pause)* This is my "scare them straight" example, and it comes from the textbook, adapted to our MNH context.
+## Slide: The Trade-Off
+Look at these three options. *(pause)* Option A: invest in People — train 5,000 more midwives. Option B: invest in Products — buy CPAP machines and emergency kits for every district hospital. Option C: invest in Systems — build a real-time data dashboard and a referral transport network.
 
-Here's the setup. A consulting organization — let's call them TruSmartz — analyzes data on an MNH program across multiple countries. And they find something surprising. Countries with more demand generation for health services actually show *lower* service utilization. Countries running subsidy programs also show lower utilization. So what does the regression model recommend? *(pause)* Stop doing demand generation. Cut the subsidies. That's what the data says, right?
+All three sound reasonable, right? But you can't do all three equally well. So which one will *cause* the greatest reduction in mortality? *(pause)* That's a causal question, and you can't answer it just by looking at a spreadsheet full of correlations.
 
-Now, look at the red box at the bottom. What went wrong? The regression captured *correlations in the data*, not *causal effects*. What was actually happening is that program managers were treating demand generation and subsidies as substitutes. When they ran one, they didn't run the other. So the negative correlation between demand generation and utilization wasn't a causal relationship — it was an artifact of how managers were making decisions. And if you followed TruSmartz's recommendation, you'd be cutting programs that actually work.
+## Slide: Why You Need Causal Thinking to Decide
+Here's what happens when you skip the causal reasoning and just look at the data. *(pause)* You might see that regions with the most equipment have the lowest mortality. So you say, "Buy more equipment!" But wait — those regions are also the wealthiest and most urban. They'd have had lower mortality anyway. The equipment isn't causing the low mortality. Wealth is causing both.
 
-## Slide: The Causal Truth
-Now let's look at what was actually going on. *(pause)* Look at the diagram. See how demand generation and subsidy decisions are linked? Managers treated them as substitutes — when one was active, the other wasn't. That creates a negative correlation between them in the data. But look at the arrows going right — subsidies drive care-seeking behavior, which drives service utilization. Both are positive effects.
+That's huge. Let that sink in. *(pause)* Without causal thinking, data can lead you to exactly the wrong decision.
 
-So the correct recommendation isn't to stop demand generation — it's to run subsidies *alongside* demand generation, not as a replacement for it. The single-stage regression got the sign completely wrong. The causal model gets it right. *(pause)* This is the single most important example in this chapter, because it shows concretely how a causal model corrects a dangerous error.
+## Slide: Correlation ≠ Causation
+Now let's dig into *why* correlations mislead us. There are three specific traps, and we're going to name each one.
 
-## Slide: Regression vs. Causal Model: The Numbers
-And now let's put hard numbers on it. *(pause)* Look at this table carefully. The single-stage regression — that's the TruSmartz approach — literally recommends the worst option. It says stop subsidies for +73 impact units, stop demand generation for +282. But the true causal effect? Stopping subsidies costs you -832 impact units. Running both together gives you +816.
+## Slide: The Ice Cream Problem
+Before we get back to health data, here's a classic example everyone can relate to. *(pause)* On days when ice cream sales are high, drowning deaths are also high. So... does ice cream cause drowning? *(pause)* Of course not. Hot weather causes both. People eat more ice cream in summer, and people swim more in summer. Summer heat is the hidden third variable connecting both.
 
-That's a swing of over 1,600 impact units between what the regression recommends and what you should actually do. *(pause)* In the MNH context, those units represent lives. Let that sink in. The naive regression doesn't just get it a little wrong — it recommends the exact opposite of the right answer.
-
-## Slide: Correlation Does Not Equal Causation
-Now let's dig into *why* correlations mislead us. There are three classic traps, and we're going to walk through each one.
+This hidden-third-variable problem has a name: confounding. And it's just one of three traps that make people confuse correlation with causation.
 
 ## Slide: Trap 1: Confounding
-First up: confounding. *(pause)* This happens when a hidden third variable drives both the thing you think is the cause and the thing you think is the effect.
+Confounding happens when a third variable influences both the supposed cause and the supposed effect. *(pause)* Remember our Ethiopia puzzle? Regions with more Health Extension Workers have higher mortality. Does that mean health workers cause deaths? No — more workers get deployed to the sickest regions. Disease burden is the confounder. It drives both where workers go *and* where mortality is high.
 
-Here's the MNH example. Look at the data: countries with more health workers deployed have *higher* neonatal mortality. So... does deploying health workers cause deaths? *(pause)* Of course not. What's happening is that health workers get sent to the sickest areas. Disease burden is the confounder — it drives both where workers are deployed *and* where mortality is high. Look at the diagram at the bottom: Disease Burden has arrows going to both Health Worker Deployment and Neonatal Mortality. If you don't account for it, you get the relationship completely backwards.
+Look at the diagram. See how Disease Burden sends arrows to both Health Worker Deployment and Neonatal Mortality? That shared cause creates a correlation between workers and mortality, even though workers actually *help*. Same data, totally misleading conclusion — unless you think causally.
 
 ## Slide: Trap 2: Reverse Causation
-Second trap: reverse causation. This one trips people up constantly in development work. *(pause)*
+Second trap. *(pause)* Countries that receive more international health funding tend to have higher mortality rates. So does foreign aid increase mortality? *(pause)* No. High mortality *attracts* funding. Donors send money to the countries with the worst outcomes. The causal arrow runs from mortality to funding, not the other way around.
 
-Look at the example. Countries receiving more donor funding have higher mortality rates. Does funding cause death? No — high mortality attracts funding. The causal arrow runs in the opposite direction from what the naive analysis suggests. See the two models side by side? The assumed model says "Donor Funding leads to Higher Mortality." The actual model says "Higher Mortality leads to More Donor Funding." Same data, completely opposite causal story. *(pause)* This is why you can't just look at correlations and draw policy conclusions.
+Think of it this way: seeing more firefighters at bigger fires doesn't mean firefighters cause fires. They're *responding* to them. Same logic.
 
 ## Slide: Trap 3: Selection Bias
-Third trap, and this one is subtler than the other two. Selection bias. *(pause)*
+Third trap, and this one is sneaky. *(pause)* Imagine you look at data from hospitals that report to Ethiopia's health information system. Among those hospitals, CPAP machines don't seem related to survival. So equipment doesn't matter, right?
 
-The issue here is that the data you're looking at isn't a random sample — it's been filtered by some selection process. In this MNH example, think about DHIS2 data. Only well-resourced hospitals report to DHIS2. So when you analyze that data, you're only seeing hospitals that are already doing relatively well. The facilities where an intervention like CPAP would make the biggest difference — the under-resourced ones — are invisible in your dataset. Your analysis is biased before you even start, and you might not even realize it.
+Not so fast. Only well-resourced hospitals report data consistently. The hospitals where CPAP machines would make the *biggest* difference — small, under-resourced facilities — are missing from the data entirely. You're drawing conclusions from a biased sample. The danger? You might conclude equipment doesn't matter, when actually it matters enormously for the facilities you can't see.
 
-## Slide: Three Traps Summary
-Okay, let's pull it all together. *(pause)* Look at this summary table — it's worth memorizing. All three traps share a common thread: they create statistical associations that look like causal effects but aren't. Confounding, reverse causation, and selection bias each fool you in a different way, but the antidote is the same — explicit causal modeling that forces you to think about *why* the association exists, not just *that* it exists.
+## Slide: Three Traps: Summary
+Let's pull it together. Look at the summary table. *(pause)* Confounding — a hidden third variable. Reverse causation — the arrow points the wrong way. Selection bias — your data sample isn't representative. All three create patterns that look like real causal effects but aren't.
 
-That bottom line is the key takeaway: the antidote is explicit causal modeling. And that's exactly what we're going to build next.
+The antidote? Explicit causal modeling — drawing a picture of what causes what *before* you analyze the data. And that's exactly what we're building next.
 
 ## Slide: The Causal Model Framework
-Alright, now here's where it gets interesting. We've talked about why you need causal thinking. Now let's talk about the actual tools.
+Alright, now here's where it gets really interesting.
 
-## Slide: Elements of a Causal Model
-So what *is* a causal model? *(pause)* It's actually simpler than you might think. It's a directed graph — just nodes and arrows. Nodes represent variables in your system. Arrows represent causal relationships. And signs — plus or minus — tell you the direction of the effect.
+## Slide: What Is a Causal Model?
+Think of a causal model as just a diagram that shows what causes what. *(pause)* It has three simple ingredients. Nodes — the things you care about, drawn as shapes. Arrows — causal links from one thing to another. And signs — plus or minus — telling you which direction the effect goes.
 
-Now, there's one critical rule, and I want you to really internalize this. An arrow from A to B means that changing A can change B. But it does *not* mean changing B changes A. Causation has a direction. *(pause)* And see the definition at the bottom? DAG — Directed Acyclic Graph. "Acyclic" means no feedback loops, at least in this framework. You can't follow arrows from any node back to itself. That's deliberate — it forces you to think very carefully about which direction causation runs.
+Here's the one rule I want you to remember: an arrow from A to B means that *changing* A can change B. But changing B does not change A. Arrows have a direction, and the direction matters.
 
-## Slide: A Simple MNH Causal Model
-Here's our first causal model, and it couldn't be simpler. Three nodes in a chain. *(pause)* Investment goes to Coverage, Coverage goes to Neonatal Mortality Rate. More money increases coverage — that's the plus sign. Higher coverage reduces mortality — that's the minus sign.
+## Slide: What Is a DAG?
+DAG stands for Directed Acyclic Graph. *(pause)* "Directed" means arrows have a direction. "Acyclic" means no loops — you can never follow the arrows from any node back to itself. "Graph" is just the math word for a diagram of connected things.
 
-Now, notice something important. Investment doesn't directly reduce mortality. It works *through* coverage. That's the mediator. And that tells you something actionable: if coverage isn't increasing, throwing more money at the problem won't help. You need to figure out *why* coverage isn't responding to investment.
+Look at the two examples. The valid DAG goes A to B to C — you can follow the arrows forward but never get back to where you started. The invalid one goes A to B to C and back to A — that's a loop, and it breaks the whole thing. *(pause)* Why does this matter? Because loops make it impossible to figure out what causes what — everything causes everything. DAGs force you to be clear about direction.
 
-But clearly this model is too simple, right? What about confounders? What about quality of care? What about all the complexity of real health systems? *(pause)* That's exactly what the rest of the course is about. We're going to build richer and more realistic models chapter by chapter.
+## Slide: A Simple 3-Node Chain
+Here's the simplest useful causal model for a health program. *(pause)* Investment goes to Coverage, and Coverage goes to Mortality. More investment increases coverage — that's the plus sign. Higher coverage reduces mortality — that's the minus sign.
 
-## Slide: Preview: What's Coming
-Speaking of which, here's your roadmap for the full course. *(pause)* Chapters 2 and 3 build qualitative models — that's learning to draw the diagrams and doing a real case study. Chapters 4 and 5 add numbers — probability tables, Bayes' rule, situational analysis. Chapter 6 tackles a common analytical trap called Simpson's Paradox. Chapters 7 through 9 move to decision-making — choosing optimal interventions, allocating resources, even game theory for when donors and governments interact strategically. And Chapter 10 circles back to learning causal structure from data.
+Notice that Investment doesn't directly reduce mortality. It works *through* coverage. That's what we call a chain. And it already tells us something useful: if investment goes up but coverage does *not* go up, the money is being wasted somewhere in between. The chain helps you find where things break down.
 
-Each piece builds on the last. By the end, you'll have a complete toolkit for going from raw data and expert interviews to actionable investment decisions.
+## Slide: But Wait — It Is Not That Simple
+Obviously, three nodes is too simple. What about confounders like disease burden? What about multiple pathways — investment might improve training, equipment, *and* data systems, each affecting mortality differently? What about quality of care?
 
-## Slide: MNH Application
-Now let's ground all of this in the real problem we're here to solve.
+That's what the rest of the course is about. *(pause)* In Chapter 2, we'll learn the formal rules for building these diagrams. In later chapters, we'll add numbers and use the models to make actual decisions. For now, just make sure you've got the basic building blocks: nodes, arrows, and direction.
 
-## Slide: The MNH Investment Challenge
-Look at these numbers. *(pause)* 182,000 maternal deaths per year in sub-Saharan Africa — that's 70% of the global total. 950,000 newborn deaths. 1.2 million stillbirths. The target for a large-scale MNH initiative is to save hundreds of thousands of lives over the program period.
+## Slide: Preview: A Richer Model
+Here's a taste of where we're headed. *(pause)* Look at this diagram. Investment on the left flows through three channels — Workforce Training, Equipment Supply, and Data Systems. Those all feed into Quality of Care, which then drives Mortality Reduction.
 
-At that scale, getting the causal analysis wrong doesn't just waste money — it costs lives that could have been saved. That's why everything we've been talking about today matters. This isn't abstract statistics. It's the difference between effective programs and wasted resources.
+Investment is a decision node — that's the rectangle, meaning we control it. What's missing? Confounders. We'll add those in Chapter 2. But even this preview shows you how much richer the picture gets when you think in terms of multiple pathways.
 
-## Slide: The Causal Investment Question
-So where does the money go? *(pause)* A typical MNH initiative invests across three pillars. People — the health workforce. Products — MNH innovations and equipment. Systems — data and referral infrastructure.
+## Slide: MNH Application: Ethiopia
+Now let's apply all of this to a real health system.
 
-And the fundamental question is right there in the orange box: which combination of investments across these three pillars will *cause* the greatest reduction in mortality? *(pause)* Notice the emphasis on *cause*. Correlation analysis might tell you which countries happen to have the best outcomes. But it can't tell you which investments will actually move the needle. That requires causal reasoning.
+## Slide: Ethiopia's Three-Pillar Approach
+Ethiopia's Health Extension Program has invested across three pillars. *(pause)* People — over 40,000 Health Extension Workers. Products — essential medicines, equipment, supplies. Systems — data tracking, referral networks, supervision.
 
-## Slide: Why Naive Data Analysis Fails
-Let me show you exactly how this goes wrong. *(pause)* Suppose you compare spending versus outcomes across your target countries. Look at the left column — the naive correlation. Country A receives the most funding and has the highest absolute deaths. "More spending equals more deaths!" Sounds damning, right?
+Here's the causal question: how do these three pillars combine to produce better outcomes? Think of it this way: a trained midwife without emergency equipment can't stop a hemorrhage. Emergency equipment without a trained midwife is just a box on a shelf. And neither one helps if the mother can't get to the facility. People, Products, and Systems are complements — they multiply each other's effect.
 
-Now look at the right column — the causal reasoning. Country A has the highest burden *and* the greatest potential for lives saved. The investment is targeted at the cause of mortality. It's not correlated with mortality by accident — it's directed there on purpose. *(pause)* Same data, opposite conclusions. Which analysis would you want to base a major investment on?
+## Slide: Ethiopia's Causal Chain
+Look at the diagram. All three pillars flow into Quality of Care. Quality then reduces both Maternal Mortality and Neonatal Mortality. *(pause)* Notice that Quality is the bottleneck — the place where everything converges. If quality is poor, no amount of spending on any single pillar will fix the outcomes. Everything has to come together at that node.
 
-## Slide: Building a Richer Causal Model
-Okay, now let's sketch out what a more realistic model looks like. *(pause)* Look at this diagram. Budget allocation is on the left — that's a decision node, the rectangle, meaning we control it. It flows through three mediating pathways: workforce training, equipment supply, and data systems. Those all feed into quality of care, which then drives mortality reduction.
+## Slide: Why the Numbers Mislead
+Now let's go back to our opening puzzle. *(pause)* If you looked at raw data across Ethiopia's regions, you'd see that regions with the most Health Extension Workers also have the highest mortality. A naive analyst might say, "These investments aren't working!"
 
-This is still a simplification, but it's already much richer than the three-node chain we started with. And notice the bullet point about confounders we haven't drawn yet — baseline disease burden, government capacity, political stability. Those all matter, and they'll be added in the coming chapters. The point for now is that even a relatively simple causal diagram gives you a much clearer picture of how investment translates into outcomes.
+But here's what the causal model reveals: the regions with the highest disease burden receive the most resources *because* they have the worst outcomes. Confounding by disease burden creates a positive correlation between resources and mortality, even when resources are saving lives. *(pause)* This is exactly Trap 1 in action. Same data, different conclusion — because we thought causally.
 
-## Slide: R Workshop
-Now let's get our hands dirty with some code.
+## Slide: ANC Coverage: A Closer Look
+Ethiopia's antenatal care coverage shows how much progress has been made and how far there is to go. *(pause)* About 74 percent of pregnant women get at least one visit, but only about 43 percent complete the recommended four visits. Urban coverage is much higher than rural coverage — yet another confounder.
+
+Here's the causal chain: ANC visits lead to early detection of complications, which leads to timely referral, which leads to skilled treatment, which leads to survival. Every link has to work. If *any* one link breaks — a missed visit, a failed referral, an absent midwife, a missing drug — the outcome can be death. *(pause)* That's why causal models matter for real decisions. A naive analysis might say "check-ups don't help" if coverage goes up but deaths stay constant. A causal model asks: where in the chain is it breaking?
+
+## Slide: R Workshop: Your First Causal Diagrams
+Alright, now let's get our hands on some code.
 
 ## Slide: Setting Up the R Environment
-Alright, first things first — let's get our tools installed. You'll need three packages: dagitty for specifying and analyzing DAGs, ggdag for making nice visualizations, and ggplot2 for general plotting. If you haven't installed them yet, uncomment that first line and run it. Otherwise, just load the libraries. *(pause)* These three packages are going to be our core toolkit throughout the entire course, so make sure they're working before we move on.
+First things first — we need to load our tools. Three packages: dagitty for defining and analyzing causal diagrams, ggdag for drawing pictures of those diagrams, and ggplot2 which powers the visuals behind the scenes. *(pause)* If you haven't installed them yet, uncomment that first line and run it. These three packages are going to be our toolkit throughout the whole course, so make sure they're working.
 
-## Slide: R: A Simple MNH Causal Model
-Now let's build our first DAG in code. *(pause)* Look at the dagitty syntax — it's pretty intuitive. We define three nodes: Investment, Coverage, and NMR. We specify their positions so they lay out nicely. Then we draw the arrows: Investment causes Coverage, Coverage causes NMR. That's it — that's our three-node chain from earlier, but now it's in R where we can analyze it computationally. The ggdag call at the bottom renders it as a plot.
+## Slide: R: Drawing Our Simple 3-Node Chain
+Let's build our first diagram in code. *(pause)* Look at the dagitty syntax — it's pretty straightforward. We define three nodes: Investment, Coverage, and Mortality. We set their positions so they lay out in a nice row. Then we draw the arrows: Investment causes Coverage, Coverage causes Mortality. That's our three-node chain from earlier, except now it's in R where we can actually analyze it. The ggdag call at the bottom turns it into a picture. Notice the arrows only go left to right — that direction matters.
 
-## Slide: R: A Confounded Model
-Now let's make things more interesting. *(pause)* Here we're building a confounded DAG. We have Hospital Delivery and Neonatal Mortality — and sitting above both of them is Complication Severity. Severity causes both hospital delivery decisions *and* mortality outcomes. That's our confounder. Notice how we use ggdag_status to color-code the exposure and outcome — green for Hospital Delivery, red for Neonatal Mortality, amber for the confounder. Makes the structure really pop visually.
+## Slide: R: Adding a Confounder
+Now let's add Disease Burden as a confounder. *(pause)* This is the hidden variable that was creating the misleading correlation between health workers and mortality. Look at the code — Disease Burden sits at the top and sends arrows down to *both* Health Workers and Mortality. That's the fork structure — the classic confounding pattern we talked about. We use color coding to make it pop: green for the thing we think is the cause, red for the outcome, amber for the confounder.
 
-## Slide: R: Finding Adjustment Sets
-And here's the computational payoff. *(pause)* We call adjustmentSets on our confounded DAG, telling it we want the causal effect of Hospital Delivery on Neonatal Mortality. And what does it return? Complication Severity. The DAG is telling us: "If you want to estimate the true causal effect, you *must* control for complication severity." Without that adjustment, your estimate is biased by confounding. *(pause)* This is incredibly powerful — the DAG does the statistical thinking for you.
+## Slide: R: What Do We Need to Control For?
+Here's the powerful part. *(pause)* Once we've drawn the diagram, R can tell us *exactly* which variables we need to control for. We call adjustmentSets, and it returns: Disease Burden. That's it. Control for disease burden, and the confounding goes away.
 
-## Slide: R: A Richer MNH Model
-Finally, let's build the full theory-of-change DAG. *(pause)* We've got Budget flowing to Workforce, Equipment, and Data Systems. Those three feed into Quality, which drives NMR. And we've added Baseline Burden as a confounder that affects both NMR directly and Budget allocation decisions. When we ask for adjustment sets for the Budget-to-NMR relationship, dagitty tells us exactly what we need to control for. Go ahead and run this code and see what it returns.
+In plain English? If you compare regions that have the *same* disease burden, the regions with more health workers will have *lower* mortality. *(pause)* This is the whole point of the course in one slide. Draw the diagram. Ask R what to control for. Analyze correctly. Make better decisions.
+
+## Slide: R: Ethiopia's Three-Pillar Model
+Now let's build the richer model with all three pillars — People, Products, and Systems — plus Disease Burden as a confounder. *(pause)* Look at how the code defines each node and each arrow. All three pillars flow into Quality. Quality reduces both NMR and MMR. Disease Burden affects outcomes directly. Run this code, look at the picture, and trace the pathways from any starting point to any outcome. This is how investment translates into results.
+
+## Slide: R: Finding All the Paths
+We can ask R to show us every causal pathway from a starting point to an endpoint. *(pause)* The paths function shows all the routes from People to NMR — every different way that a workforce investment could affect mortality. And adjustmentSets tells us what we'd need to control for to isolate that effect. Try modifying the code to look at paths from Systems to MMR instead. How many routes are there? What do you need to control for?
 
 ## Slide: Key Takeaways
-Alright, let's wrap up with the three things I want you to remember from today. *(pause)* First, causal modeling serves two purposes: understanding what's happening — that's assessment — and deciding what to do about it — that's intervention. Second, correlation is not causation. Confounding, reverse causation, and selection bias all create misleading associations. And third, a causal model makes your assumptions explicit, testable, and actionable.
+Let's wrap up with the big ideas. *(pause)* Causal thinking starts with two questions: "What is happening?" and "What should I do?" You can't answer the second without the first. Correlation does not equal causation — confounding, reverse causation, and selection bias all create misleading patterns. A causal model makes your assumptions visible, testable, and actionable. It tells you what to control for, where the chain breaks, and which interventions will actually work.
 
-This isn't just theory. When you're allocating program funding at scale, getting the causal structure right is the difference between saving lives and wasting resources.
+And Ethiopia's 40,000 Health Extension Workers are not causing deaths. Disease burden is confounding the relationship. Causal models help us see through the numbers to the truth.
 
 ## Slide: Looking Ahead
-Next time, we're going to learn the formal language of causal diagrams. *(pause)* Four node types, signed directed links, and the three fundamental triplet structures that govern how information flows through any causal model. That's where we go from "causal thinking is important" to "here's exactly how to do it." See you then.
+Next time, we learn the formal grammar of causal diagrams. *(pause)* Three types of nodes, signed links, and the three fundamental structures — chains, forks, and colliders. Colliders are the most surprising one, and they trip up even experienced analysts. That's where we go from "causal thinking is important" to "here's exactly how to do it." See you in Chapter 2.

@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch06.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 6: Simpson's Paradox &amp; Cost-Effectiveness</span></a>
+ <span class="menu-text">Chapter 6: Simpson’s Paradox</span></a>
   </div>
 </li>
       </ul>
@@ -237,7 +237,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch07.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 7: Decision Analysis &amp; Value of Information</span></a>
+ <span class="menu-text">Chapter 7: Decision Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/ch10.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Chapter 10: Structure Learning from Observational Data</span></a>
+ <span class="menu-text">Chapter 10: Structure Learning from Data</span></a>
   </div>
 </li>
       </ul>
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#round-1-simple-supply-side-model" id="toc-round-1-simple-supply-side-model" class="nav-link" data-scroll-target="#round-1-simple-supply-side-model">Round 1: Simple Supply-Side Model</a></li>
   <li><a href="#round-2-adding-transmission-failures" id="toc-round-2-adding-transmission-failures" class="nav-link" data-scroll-target="#round-2-adding-transmission-failures">Round 2: Adding Transmission Failures</a></li>
   <li><a href="#round-3-complete-model-with-demand-side" id="toc-round-3-complete-model-with-demand-side" class="nav-link" data-scroll-target="#round-3-complete-model-with-demand-side">Round 3: Complete Model with Demand Side</a></li>
-  <li><a href="#identifying-what-to-measure" id="toc-identifying-what-to-measure" class="nav-link" data-scroll-target="#identifying-what-to-measure">Identifying What to Measure</a></li>
+  <li><a href="#analyzing-the-complete-model" id="toc-analyzing-the-complete-model" class="nav-link" data-scroll-target="#analyzing-the-complete-model">Analyzing the Complete Model</a></li>
   </ul></li>
   <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
   <li><a href="#looking-ahead" id="toc-looking-ahead" class="nav-link" data-scroll-target="#looking-ahead">Looking Ahead</a></li>
@@ -302,7 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/ch01.html">Part I: Foundations</a></li><li class="breadcrumb-item"><a href="../chapters/ch03.html">Chapter 3: The MNH Diagnostic Case Study</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">Chapter 3: The MNH Diagnostic Case Study</h1>
-<p class="subtitle lead">Iterative model building from stakeholder interviews</p>
+<p class="subtitle lead">Iterative model building from stakeholder interviews in Kenya</p>
 </div>
 
 
@@ -324,11 +324,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="learning-objectives">
 <p>After this chapter, you will be able to:</p>
 <ul>
-<li>Apply the <strong>iterative model-building process</strong> used in program evaluations</li>
-<li>Start with a simple model and <strong>expand it systematically</strong> through interviews</li>
-<li>Identify <strong>root nodes</strong> (levers) vs.&nbsp;<strong>intermediate nodes</strong> in a causal system</li>
-<li>Use a causal model to <strong>prioritize recommendations</strong> and structure analysis</li>
-<li>Build a comprehensive MNH causal model through a simulated diagnostic case study</li>
+<li>Apply the <strong>iterative model-building process</strong> – hypothesis, interview, revision – to a real health system</li>
+<li>Start with a simple 3-4 node model and <strong>expand it systematically</strong> through stakeholder conversations</li>
+<li>Explain why both <strong>supply-side</strong> improvements (staffing, equipment, training) and <strong>demand-side</strong> factors (geographic access, cost, trust) must work together for outcomes to improve</li>
+<li>Identify <strong>root nodes</strong> as the highest-leverage intervention points in a causal system</li>
+<li>Use a completed causal model to <strong>prioritize recommendations</strong> based on structure, not gut feeling</li>
 </ul>
 </div>
 </section>
@@ -336,19 +336,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="key-concepts">Key Concepts</h2>
 <section id="diagnostic-causal-modeling" class="level4 key-concept">
 <h4 class="anchored" data-anchor-id="diagnostic-causal-modeling">Diagnostic Causal Modeling</h4>
-<p>An iterative cycle of hypothesis, stakeholder interview, model revision, deeper questions, and refinement. The process begins with the simplest possible model and adds complexity only as interviews reveal new variables and mechanisms. At each stage, the model tells you what questions to ask next – this is the power of structured causal thinking.</p>
+<p>Building a causal model from interviews is like solving a mystery. You do not start with a massive 20-node diagram on day one. You start with the simplest possible model – maybe three or four nodes – and let each conversation reveal what is missing. The cycle goes: draw a simple model, interview a stakeholder, listen for new variables and mechanisms, revise the model, then use the updated model to generate sharper questions for the next conversation. Each round deepens your understanding. In Kenya’s case, three rounds of interviews – with a county health director, a senior midwife, and a community health worker – transformed a naive 4-node chain into a rich 12-node model that told a coherent causal story.</p>
 </section>
 <section id="the-four-diagnostic-principles" class="level4 key-concept green">
 <h4 class="anchored" data-anchor-id="the-four-diagnostic-principles">The Four Diagnostic Principles</h4>
-<p>The diagnostic approach follows four key principles. First, <strong>focus on significant drivers</strong> – not all variables matter equally, so identify those with the largest causal effects on the objective. Second, <strong>seek sources of common problems</strong> – look for common causes that explain multiple symptoms, as these are high-leverage intervention points. Third, <strong>ask specific questions</strong> – use the model to generate targeted hypotheses rather than open-ended inquiries. Fourth, <strong>bring it all together</strong> – the final model should tell a coherent causal story linking decisions to outcomes.</p>
+<p>The diagnostic approach follows four key principles. First, <strong>focus on significant drivers</strong> – not all variables matter equally, so identify the factors with the largest causal effects on the outcome and leave out the noise. Second, <strong>seek common causes</strong> – when one variable drives multiple problems simultaneously, that is a high-leverage intervention point (look for the forks in your diagram). Third, <strong>ask specific questions</strong> – use the model to generate targeted hypotheses rather than open-ended inquiries like “What is going wrong?”. A sharper question: “Of the 60 health workers you trained last year, how many are still in your county?” Fourth, <strong>bring it all together</strong> – the final model should tell a coherent causal story linking decisions to outcomes, with clear recommendations about where to intervene.</p>
 </section>
 <section id="supply-side-vs.-demand-side" class="level4 key-concept orange">
 <h4 class="anchored" data-anchor-id="supply-side-vs.-demand-side">Supply Side vs.&nbsp;Demand Side</h4>
-<p>A complete diagnostic model must capture both supply-side and demand-side factors. On the supply side, investment flows through channels like training, equipment, and staffing but can be undermined by transmission failures such as staff attrition, equipment breakdown, and referral gaps. On the demand side, geographic access, health-seeking behavior, and financial barriers determine whether communities actually benefit from facility-level improvements. Both sides must work together to reduce mortality.</p>
+<p>A complete diagnostic model must capture both halves of the health system. On the <strong>supply side</strong>, investment flows through channels like staffing, equipment, and training – but can be undermined by transmission failures such as staff attrition, equipment breakdown, and referral gaps. On the <strong>demand side</strong>, geographic access, financial barriers, and health-seeking behavior determine whether communities actually benefit from facility-level improvements. Kenya illustrates this perfectly: the national facility delivery rate is roughly 89% (DHS/WHO), but in rural sub-counties of high-burden areas, the rate can drop to 50-60%. Improving facility quality without improving access does not help the women who never arrive. Improving access without improving quality sends more women into facilities that cannot save them. Both halves must move together.</p>
 </section>
 <section id="root-nodes-as-leverage-points" class="level4 key-concept teal">
 <h4 class="anchored" data-anchor-id="root-nodes-as-leverage-points">Root Nodes as Leverage Points</h4>
-<p>Root nodes are variables without any parents in the causal model – they are ultimate causes. Intervening on root nodes has the broadest downstream effects. In the MNH diagnostic case, staff retention and equipment maintenance emerged as critical root-level bottlenecks that the initial investment plan had overlooked. The model reveals that investing in the right inputs (training, equipment) is necessary but not sufficient when transmission mechanisms are broken.</p>
+<p>Root nodes are variables without any parents in the causal model – nothing in the diagram causes them. They are the ultimate upstream causes. Intervening on a root node has the broadest downstream effects because every pathway in the model flows <em>from</em> these nodes. In the Kenya diagnostic case, <strong>staff retention</strong> and <strong>equipment maintenance</strong> emerged as critical root-level bottlenecks that the initial investment plan had overlooked. Staff retention alone had at least three downstream effects: it shaped competency, equipment utilization, and effective staffing ratios – all feeding into quality of care and then mortality. Fix retention, and you improve three pathways at once. Fix training alone (a non-root node), and trained staff still leave – so the effect evaporates.</p>
 </section>
 </section>
 <section id="lecture-slides" class="level2">
@@ -363,164 +363,179 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="r-code-workshop" class="level2">
 <h2 class="anchored" data-anchor-id="r-code-workshop">R Code Workshop</h2>
-<p>This chapter demonstrates how to formalize each round of the diagnostic interview process in R, building progressively more complex DAGs with <code>dagitty</code> and <code>ggdag</code>.</p>
+<p>This chapter demonstrates how to formalize each round of the diagnostic interview process in R, building progressively more complex DAGs with <code>dagitty</code> and <code>ggdag</code>. We start with the simplest supply-side model and expand it round by round, exactly as the consulting engagement unfolded in Kenya.</p>
+<p>Kenya’s vital statistics set the stage: a maternal mortality ratio of approximately 342 per 100,000 live births (WHO), a neonatal mortality rate of roughly 21 per 1,000 (WHO), and a devolved health system spread across 47 counties with enormous variation in outcomes.</p>
 <section id="round-1-simple-supply-side-model" class="level3">
 <h3 class="anchored" data-anchor-id="round-1-simple-supply-side-model">Round 1: Simple Supply-Side Model</h3>
-<p>After the initial interviews with the ministry of health, we decompose the investment-to-outcome chain into its supply-side components: training, equipment, staffing, competency, and utilization.</p>
+<p>After the initial interview with a county health director, we decompose the investment-to-outcome chain into its supply-side components. The director revealed that quality of care is not a single black box – it depends on staffing levels, equipment availability, and training. But at this stage, our model is still relatively simple.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dagitty)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdag)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 1: Simple supply-side model</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>round1 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment [pos="0,1"]</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Training [pos="1,0"]</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment [pos="1,1"]</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing [pos="1,2"]</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency [pos="2,0.5"]</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization [pos="2,1.5"]</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage [pos="3,1"]</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR [pos="4,1"]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 1: After interviewing the County Health Director</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple supply-side decomposition (7 nodes)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>round1 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget     [pos="0,1"]</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing   [pos="1,0"]</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment  [pos="1,1"]</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Training   [pos="1,2"]</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality    [pos="2,1"]</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Fac_Births [pos="3,1"]</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Mortality  [pos="4,1"]</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Training</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Equipment</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Staffing</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Training -&gt; Competency</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing -&gt; Competency</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment -&gt; Utilization</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing -&gt; Utilization</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency -&gt; Coverage</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization -&gt; Coverage</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage -&gt; NMR</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round1) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 1: Supply-Side Model (7 nodes)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Staffing</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Equipment</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget -&gt; Training</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing  -&gt; Quality</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment -&gt; Quality</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Training  -&gt; Quality</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality   -&gt; Mortality</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the Round 1 model</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round1) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 1: Supply-Side Model (7 nodes)"</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"After interviewing the County Health Director"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>This model already raises specific questions for the next interview: Why is staffing so low even though the budget funds positions? Why does training not seem to translate into better competency? Is the equipment actually working?</p>
 </section>
 <section id="round-2-adding-transmission-failures" class="level3">
 <h3 class="anchored" data-anchor-id="round-2-adding-transmission-failures">Round 2: Adding Transmission Failures</h3>
-<p>Facility director interviews revealed that staff retention, equipment maintenance, and referral system gaps are critical missing variables. These common causes explain why inputs were delivered but effective use remains low.</p>
+<p>The senior midwife’s interview revealed the “transmission problem” – why inputs were delivered but effective use remained low. Trained midwives transferred to Nairobi for better pay. CPAP machines broke and nobody could repair them. Ambulances were shared across multiple facilities and unavailable when needed. Three new variables enter the model: Retention, Maintenance, and Referral.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 2: Add retention, maintenance, referral</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>round2 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment [pos="0,1"]</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Training [pos="1,0"]</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment [pos="1,2"]</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing [pos="1,1"]</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention [pos="1.5,0.5"]</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance [pos="1.5,2.5"]</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral [pos="1.5,3"]</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency [pos="2,0.5"]</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization [pos="2,2"]</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage [pos="3,1"]</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR [pos="4,1"]</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Training</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Equipment</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Staffing</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Referral</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Training -&gt; Competency</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing -&gt; Competency</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Competency</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Utilization</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment -&gt; Utilization</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance -&gt; Utilization</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency -&gt; Coverage</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization -&gt; Coverage</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral -&gt; Coverage</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="st">  Coverage -&gt; NMR</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round2) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 2: Adding Transmission Failures (10 nodes)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 2: After interviewing the Senior Midwife</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Transmission failures emerge (11 nodes)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>round2 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget      [pos="0,1"]</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing    [pos="1,0"]</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment   [pos="1,1"]</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Training    [pos="1,2"]</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention   [pos="1.5,0.3"]</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance [pos="1.5,1.3"]</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral    [pos="1.5,2.3"]</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency  [pos="2,0.5"]</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization [pos="2,1.5"]</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality     [pos="3,1"]</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Mortality   [pos="4,1"]</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Staffing</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Equipment</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Training</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Referral</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing  -&gt; Retention</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Training  -&gt; Competency</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Competency</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Utilization</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment   -&gt; Utilization</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance -&gt; Utilization</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency  -&gt; Quality</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization -&gt; Quality</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral    -&gt; Quality</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality     -&gt; Mortality</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the Round 2 model</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round2) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 2: Adding Transmission Failures (11 nodes)"</span>,</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"After interviewing the Senior Midwife"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>Notice that Retention and Maintenance are <strong>common causes</strong> – forks that affect multiple downstream variables at once. When trained midwives leave, <em>both</em> clinical competency drops <em>and</em> equipment goes unused (because nobody remaining knows how to operate it). Two symptoms, one root cause. This is exactly the kind of pattern that makes a variable a high-leverage intervention point.</p>
 </section>
 <section id="round-3-complete-model-with-demand-side" class="level3">
 <h3 class="anchored" data-anchor-id="round-3-complete-model-with-demand-side">Round 3: Complete Model with Demand Side</h3>
-<p>Community health worker interviews added demand-side variables: geographic access, health-seeking behavior, and financial barriers. These factors determine whether communities benefit from improved facility quality.</p>
+<p>The community health worker opened our eyes to a completely different set of barriers. Geographic access, financial costs (despite free maternity policies), and health-seeking behavior all determine whether women reach facilities in time. These demand-side variables create a second pathway to mortality that is entirely independent of facility quality.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 3: Add demand-side variables</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>round3 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment [pos="0,1.5"]</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Training [pos="1,0"]</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment [pos="1,2"]</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing [pos="1,1"]</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention [pos="1.5,0.5"]</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance [pos="1.5,2.5"]</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral [pos="1.5,3.5"]</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency [pos="2,0.5"]</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization [pos="2,2"]</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Access [pos="2,3.5"]</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Behavior [pos="2,4.5"]</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Fin_Barriers [pos="2,5.5"]</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="st">  Facility_Births [pos="3,4"]</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality [pos="3,1.5"]</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">  NMR [pos="4,2.5"]</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Training</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Equipment</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Staffing</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Investment -&gt; Referral</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="st">  Training -&gt; Competency</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing -&gt; Competency</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Competency</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Utilization</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment -&gt; Utilization</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance -&gt; Utilization</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency -&gt; Quality</span></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization -&gt; Quality</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral -&gt; Access</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">  Access -&gt; Facility_Births</span></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">  Behavior -&gt; Facility_Births</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">  Fin_Barriers -&gt; Facility_Births</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality -&gt; NMR</span></span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  Facility_Births -&gt; NMR</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round3) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 3: Complete Model (15 nodes)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Round 3: After interviewing the Community Health Worker</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Demand-side variables added (15 nodes)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>round3 <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget         [pos="0,1"]</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing       [pos="1,0"]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment      [pos="1,1"]</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Training       [pos="1,2"]</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention      [pos="1.5,0.3"]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance    [pos="1.5,1.3"]</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral       [pos="1.5,2.3"]</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency     [pos="2,0.5"]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization    [pos="2,1.5"]</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality        [pos="3,1"]</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">  Geo_Access     [pos="1,3.5"]</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="st">  Fin_Barriers   [pos="1,4.5"]</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="st">  Health_Seeking [pos="1,5.5"]</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="st">  Fac_Births     [pos="2.5,4.5"]</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="st">  Mortality      [pos="4,3"]</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Staffing</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Equipment</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Training</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="st">  Budget    -&gt; Referral</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="st">  Staffing  -&gt; Retention</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="st">  Training  -&gt; Competency</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Competency</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="st">  Retention -&gt; Utilization</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="st">  Equipment   -&gt; Utilization</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="st">  Maintenance -&gt; Utilization</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="st">  Competency  -&gt; Quality</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="st">  Utilization -&gt; Quality</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="st">  Referral    -&gt; Quality</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="st">  Geo_Access     -&gt; Fac_Births</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="st">  Fin_Barriers   -&gt; Fac_Births</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="st">  Health_Seeking -&gt; Fac_Births</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="st">  Quality    -&gt; Mortality</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="st">  Fac_Births -&gt; Mortality</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw the complete model</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(round3) <span class="sc">+</span> <span class="fu">theme_dag</span>() <span class="sc">+</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Round 3: Complete Kenya MNH Model (15 nodes)"</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Supply + Demand after all three interviews"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<p>The complete model now has two distinct halves converging on the outcome. The supply side flows from Budget through staffing, equipment, and training – filtered by retention and maintenance – into Quality of Care. The demand side flows from geographic access, financial barriers, and health-seeking behavior into Facility Births. Both Quality and Facility Births are parents of Mortality.</p>
 </section>
-<section id="identifying-what-to-measure" class="level3">
-<h3 class="anchored" data-anchor-id="identifying-what-to-measure">Identifying What to Measure</h3>
-<p>The final model’s structure tells us which variables must be measured and controlled for in any evaluation, what conditional independencies the model predicts, and which causal paths connect investment to mortality outcomes.</p>
+<section id="analyzing-the-complete-model" class="level3">
+<h3 class="anchored" data-anchor-id="analyzing-the-complete-model">Analyzing the Complete Model</h3>
+<p>With the full model in hand, we can ask R to tell us what to control for, what the model predicts about the data, and how many causal pathways connect the budget to mortality.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What must we control for to estimate the causal effect</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of investment on NMR?</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># of Budget on Mortality?</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(round3,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Investment"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome =</span> <span class="st">"NMR"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Budget"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome =</span> <span class="st">"Mortality"</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># What are the implied conditional independencies?</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># These are testable predictions of the model</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">impliedConditionalIndependencies</span>(round3)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># What are all paths from Investment to NMR?</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(round3,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="st">"Investment"</span>,</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="st">"NMR"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># How many paths connect Budget to Mortality?</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Each path is a different route the investment takes</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(round3,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">from =</span> <span class="st">"Budget"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="at">to =</span> <span class="st">"Mortality"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># What are all the testable predictions of the model?</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># If Kenya's DHIS2 data violates any, the model needs revision</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">impliedConditionalIndependencies</span>(round3)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Key structural question: Is Retention d-separated from Maintenance?</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># If not, they may share a hidden common cause we missed</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="fu">dseparated</span>(round3, <span class="st">"Retention"</span>, <span class="st">"Maintenance"</span>, <span class="fu">c</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The <code>adjustmentSets()</code> function tells us which variables we must measure and control for in our evaluation. The <code>impliedConditionalIndependencies()</code> function generates testable predictions – if the data violates them, our model is wrong and needs revision.</p>
+<p>The <code>adjustmentSets()</code> function tells us which variables we <em>must</em> measure to evaluate the program’s causal effect. The implied conditional independencies generate testable predictions – when Kenya’s DHIS2 data arrives, we can check each one. If the data violates any of them, our model needs revision. And the d-separation test between Retention and Maintenance checks whether our model is missing a connection between these two critical bottlenecks.</p>
 </section>
 </section>
 <section id="key-takeaways" class="level2">
 <h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Build models iteratively.</strong> Start simple and add complexity as interviews reveal new variables and mechanisms.</p>
-<p><strong>Root nodes are leverage points.</strong> Staff retention and equipment maintenance emerged as critical bottlenecks that the initial investment plan overlooked.</p>
-<p><strong>The model guides the analysis.</strong> Each round’s model tells you what questions to ask next, what data to collect, and where the bottlenecks are.</p>
+<p><strong>Build models iteratively.</strong> Start with 3-4 nodes and let stakeholder interviews reveal what is missing. You cannot build the right model from a desk – you have to talk to people. Each perspective (director, midwife, community health worker) reveals variables the others cannot see.</p>
+<p><strong>Root nodes are leverage points.</strong> Staff retention and equipment maintenance emerged as the critical bottlenecks that initial investment plans overlooked. They sit upstream and affect multiple pathways at once.</p>
+<p><strong>Supply and demand both matter.</strong> Kenya’s 89% facility delivery rate masks huge rural variation. Demand-side barriers – geography, cost, trust – are invisible if you only look at the supply side.</p>
+<p><strong>The model does the prioritization.</strong> Count the downstream paths from each node to the outcome. The variables with the most connections are the ones to invest in first.</p>
 </div>
 </section>
 <section id="looking-ahead" class="level2">
 <h2 class="anchored" data-anchor-id="looking-ahead">Looking Ahead</h2>
-<p>Next in <strong>Chapter 4 – Quantitative Causal Models</strong>, we take the qualitative models built in this chapter and add numbers:</p>
+<p>Next in <strong>Chapter 4 – Quantitative Causal Models</strong>, we take the qualitative diagrams built in this chapter and add numbers:</p>
 <ul>
-<li>Conditional probability tables (CPTs) for each node</li>
-<li>Joint probability distributions</li>
-<li>Bayes’ rule for updating beliefs with evidence</li>
-<li>The mathematical foundation for precise inference and decision analysis</li>
+<li>Replacing [+] and [-] signs with actual <strong>conditional probability tables</strong> (CPTs) for each node</li>
+<li>Computing <strong>joint probability distributions</strong> across the full network</li>
+<li>Using <strong>Bayes’ rule</strong> to update beliefs when new evidence arrives – for instance, what is the probability that mortality is high given that staffing is low <em>and</em> equipment maintenance is poor?</li>
+<li>Building the mathematical foundation for precise inference and budget allocation decisions</li>
 </ul>
 
 

@@ -22,52 +22,103 @@ execute:
   warning: false
 ---
 
+
 ## Learning Objectives
 
 After this chapter, you will be able to:
 
 ::: {.incremental}
-- Compute **marginal probabilities** by summing out variables from joint distributions
-- **Update beliefs with evidence** using Bayes' rule and conditional probability
-- Perform **inference in serial, diverging, and converging structures** and explain how information flows differently in each
-- Apply the **explaining away** phenomenon in converging structures — the most counterintuitive result in causal reasoning
-- Conduct a full **district diagnosis** using Bayesian inference on an MNH causal model
+- Explain **belief updating** in plain language -- "updating your best guess when you learn something new"
+- Compute **marginal probabilities** by averaging across possibilities you have not yet observed
+- Trace how **evidence flows** through chains, forks, and colliders -- and know when the flow stops
+- Apply the **explaining away** phenomenon -- the crown jewel of causal inference -- to real health-system puzzles
+- Use a Bayesian network to **diagnose** why an Ethiopian region has high neonatal mortality
 :::
 
 
-## Chapter Overview
+## Chapter Overview -- Running the Model Backwards
 
 <div class="step-flow">
-<div class="step-item" style="border-left: 4px solid #005CB9;">Marginal<br>Probabilities</div>
-<div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #83BD00;">Evidence &<br>Updating</div>
-<div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #F8A623;">Serial &<br>Diverging</div>
-<div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #E24A3F;">Converging &<br>Explaining Away</div>
-<div class="step-arrow">→</div>
-<div class="step-item" style="border-left: 4px solid #3E9B6E;">District<br>Diagnosis</div>
+<div class="step-item" style="border-left: 4px solid #005CB9;">The Detective's<br>Question</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Averaging Across<br>Possibilities</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Updating Your<br>Best Guess</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">How Evidence<br>Flows</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">Explaining<br>Away</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Ethiopian Region<br>Diagnosis</div>
 </div>
 
 . . .
 
 ::: {.callout-box}
-**Core Insight:** In Chapter 4 we learned to build quantitative models *forward* — specifying how causes produce effects. In Chapter 5 we run the model **backwards** — observing outcomes and inferring what caused them. This is the heart of situational analysis.
+**The big idea:** In Chapter 4 we built the model *forward* -- starting from causes and predicting outcomes. Now we run it **backwards**. We see the outcome and ask: *What caused this?* This is how managers, doctors, and detectives actually think.
 :::
 
 
-# The Manager's Inference Problem {background-color="#005CB9"}
+# The Detective's Question {background-color="#005CB9"}
 
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Running the model backwards</span>
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">You see the outcome. Now work backwards to figure out what caused it.</span>
 
 
-## From Forward to Backward Reasoning
+## The Wet Sidewalk
 
-::: {.definition-box}
-**Situational Analysis:** The process of observing outcomes and using a quantitative causal model to *infer* the most likely state of unobserved causes. We run the model "backwards" — from effects to causes.
+You walk outside and the sidewalk is wet. What happened?
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Possibility 1: It rained.**
+
+Rain would explain the wet sidewalk. But you were asleep, so you did not see it.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Possibility 2: The sprinklers went off.**
+
+The neighbor's sprinkler system runs at 5 AM. That could also explain it.
+:::
+:::
 :::
 
 . . .
+
+::: {.key-takeaway}
+**This is the detective's question.** You see the result (wet sidewalk). You did not see the cause. You have to reason *backwards* -- from effect to cause -- using what you know about how the world works.
+:::
+
+
+## The Same Logic, Applied to Health
+
+Here is the detective question for a health program manager:
+
+. . .
+
+::: {.example-block}
+[The Manager's Puzzle]{.example-label}
+
+An Ethiopian region reports a neonatal mortality rate of 35 per 1,000 live births -- well above the national average of about 28 per 1,000. The program director asks:
+
+**"What is most likely going wrong? Is it staffing? Equipment? The referral system? All three?"**
+
+You cannot visit every facility. But you have a model. You can run it backwards.
+:::
+
+. . .
+
+::: {.callout-box}
+This chapter teaches you the mechanics of running the model backwards. There are exactly three skills: averaging across possibilities, updating your best guess, and understanding how evidence flows through different structures.
+:::
+
+
+## From Forward to Backward
 
 ::: {.columns-equal}
 ::: {.col}
@@ -76,62 +127,632 @@ After this chapter, you will be able to:
 
 Given causes, predict effects:
 
-"*If* staffing is low and equipment unavailable, *what is the probability* of high NMR?"
+"*If* staffing is low and equipment is unavailable, *what is the probability* of high mortality?"
 
-Direction: Parents → Children
+Direction: Cause --> Effect
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Chapter 5 (Backward)**
+
+Given effects, infer causes:
+
+"We *observe* high mortality in a region. *What does this tell us* about staffing and equipment?"
+
+Direction: Effect --> Cause
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .green}
+Both directions use the same model. The math is the same. The difference is what you know and what you want to find out.
+:::
+
+
+# Averaging Across Possibilities {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">If you do not know the cause, average across the possibilities</span>
+
+
+## When You Do Not Know
+
+Suppose you want to predict mortality in a region, but you have no idea whether staffing is adequate or low.
+
+. . .
+
+::: {.example-block}
+[A Simple Two-Option Example]{.example-label}
+
+You know two things from your model:
+
+- If staffing is **adequate**, probability of high mortality = 20%
+- If staffing is **low**, probability of high mortality = 55%
+
+And you know from national data that about 40% of Ethiopian health facilities have adequate staffing.
+:::
+
+. . .
+
+So what is your overall best guess for mortality?
+
+. . .
+
+::: {.callout-box}
+**You average across the two possibilities, weighted by how likely each one is:**
+
+Overall P(High Mortality) = 0.40 x 0.20 + 0.60 x 0.55 = 0.08 + 0.33 = **0.41**
+
+Your best guess is a 41% chance of high mortality -- a weighted average of the two scenarios.
+:::
+
+
+## The Weighted Average in Pictures
+
+Think of it like mixing two buckets of paint:
+
+. . .
+
+| Scenario | How Likely? | P(High Mortality) | Contribution |
+|---|---|---|---|
+| Staffing = Adequate | 40% | 20% | 0.40 x 0.20 = 0.08 |
+| Staffing = Low | 60% | 55% | 0.60 x 0.55 = 0.33 |
+| **Overall** | **100%** | | **0.41** |
+
+. . .
+
+::: {.callout-box .green}
+**The fancy name for this is "marginal probability."** It means the overall probability of something when you do not know -- and therefore average across -- one or more other variables. But "weighted average across possibilities" is all it really is.
+:::
+
+
+## Averaging with Two Unknown Parents
+
+Now suppose you also do not know whether equipment is available. You average across *all four* combinations:
+
+. . .
+
+| Staffing | Equipment | Weight | P(High Mortality) | Contribution |
+|---|---|---|---|---|
+| Adequate | Available | 0.40 x 0.35 = 0.14 | 0.15 | 0.021 |
+| Adequate | Unavailable | 0.40 x 0.65 = 0.26 | 0.30 | 0.078 |
+| Low | Available | 0.60 x 0.35 = 0.21 | 0.40 | 0.084 |
+| Low | Unavailable | 0.60 x 0.65 = 0.39 | 0.60 | 0.234 |
+| | | **1.00** | | **0.417** |
+
+. . .
+
+::: {.key-takeaway}
+**P(High Mortality) = 41.7% before we learn anything about this region.**
+
+This is our starting point -- our "before" number. Everything that follows is about how this number changes when evidence comes in.
+:::
+
+
+# Updating Your Best Guess {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">New evidence shifts your beliefs</span>
+
+
+## Before and After
+
+Here is the core idea of this chapter, in one sentence:
+
+. . .
+
+::: {.key-takeaway}
+**When you learn something new, your estimates change.**
+
+Your "before" beliefs are called the **prior**. Your "after" beliefs -- after incorporating evidence -- are called the **posterior**. The shift from prior to posterior is **belief updating**.
+:::
+
+. . .
+
+::: {.example-block}
+[Wet Sidewalk, Revisited]{.example-label}
+
+- **Before** looking outside: 50% chance it rained last night (your prior)
+- You look outside and see the sidewalk is wet
+- **After** seeing the wet sidewalk: 75% chance it rained (your posterior)
+
+The wet sidewalk shifted your belief by 25 percentage points.
+:::
+
+
+## Updating in the MNH Model
+
+Let us apply this to a real problem.
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**BEFORE (Prior)**
+
+We know nothing about this specific Ethiopian region.
+
+- P(Staffing = Low) = **60%**
+- P(Equipment = Unavailable) = **65%**
+
+These are national averages from Ethiopia's HMIS data.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**AFTER (Posterior)**
+
+We learn the region has **high neonatal mortality**.
+
+- P(Staffing = Low | High NMR) = **73%**
+- P(Equipment = Unavailable | High NMR) = **74%**
+
+Both bad explanations became more likely.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**What just happened?** High mortality is *more consistent* with low staffing than with adequate staffing. So observing high mortality shifts our belief toward the "low staffing" explanation. The same logic applies to equipment.
+:::
+
+
+## How Much Does Evidence Shift Your Beliefs?
+
+The size of the shift depends on how *diagnostic* the evidence is:
+
+. . .
+
+| Variable | Prior | Posterior (given NMR=High) | Shift |
+|---|---|---|---|
+| P(Staffing = Low) | 0.60 | 0.73 | **+13 points** |
+| P(Equipment = Unavailable) | 0.65 | 0.74 | **+9 points** |
+| P(Referral = Weak) | 0.50 | 0.58 | **+8 points** |
+
+. . .
+
+::: {.callout-box .green}
+**Staffing shifted the most.** This tells us that in our model, staffing has the strongest connection to mortality. If you can only investigate one thing, start with staffing.
+
+This is the power of running the model backwards -- it tells you *where to look first*.
+:::
+
+
+## The Updating Rule in Plain English
+
+::: {.definition-box}
+**Belief Updating (Bayes' Rule in Plain English)**
+
+1. Start with your best guess about a cause (the prior)
+2. Ask: "How likely is the evidence I just observed, under each possible state of the cause?"
+3. The state that makes the evidence *more likely* gets a boost; the other state gets downgraded
+4. Normalize so your beliefs still add up to 100%
+
+That is it. That is all Bayes' rule does.
+:::
+
+. . .
+
+::: {.callout-box}
+You have already seen the formal math in Chapter 4. Here, we focus on the *logic*: evidence that is more likely under one explanation than another shifts your beliefs toward that explanation.
+:::
+
+
+# How Evidence Flows {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Revisiting the three triplets from Chapter 2</span>
+
+
+## The Three Structures, Revisited
+
+In Chapter 2, you learned three patterns that every causal diagram is built from. Now we ask a new question: **How does evidence travel through each one?**
+
+. . .
+
+| # | Name | Shape | Evidence Flow Rule |
+|---|---|---|---|
+| 1 | **Chain** | A --> B --> C | Flows along the chain... unless B is known |
+| 2 | **Fork** | A <-- B --> C | Flows through the common cause... unless B is known |
+| 3 | **Collider** | A --> B <-- C | **BLOCKED** by default... unless B is known |
+
+. . .
+
+::: {.callout-box .orange}
+Chains and forks behave the same way: evidence flows freely, but conditioning on the middle node *blocks* it. Colliders are the rebel: evidence is blocked by default, but conditioning on the middle node *opens* it.
+:::
+
+
+## Chain: Evidence Flows Along the Path
+
+<table style="width: 70%; margin: 0.5em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Training</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">--> [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node">Competency</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow negative">--> [-]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Competency is unknown:**
+
+You learn that mortality is high. This is bad news about competency, which is bad news about training. Evidence flows the whole way along the chain.
+
+"High mortality? Probably low competency. Probably inadequate training."
 :::
 :::
 
 ::: {.col}
 ::: {.callout-box .orange}
-**Chapter 5 (Backward)**
+**Competency is known:**
 
-Given effects, infer causes:
+You already know competency is low. Now learning that mortality is high tells you nothing *new* about training -- competency already explained everything.
 
-"We *observe* high NMR in a district — *what does this tell us* about staffing and equipment?"
-
-Direction: Children → Parents
+The chain is **blocked**.
 :::
 :::
 :::
 
 
-## The MNH Inference Model
+## Fork: Evidence Flows Through the Common Cause
 
-We use a simplified model throughout this chapter:
-
-<table style="width: 85%; margin: 0.5em auto; font-size: 0.5em;">
+<table style="width: 75%; margin: 0.5em auto; font-size: 0.55em;">
 <tr>
 <td style="text-align: center; padding: 0.6em;">
-<div class="dag-node treatment rect">Staffing<br>(S)</div>
+<div class="dag-node outcome">PPH Detection</div>
 </td>
-<td style="text-align: center;"><span class="dag-arrow">↘</span></td>
-<td></td>
-<td style="text-align: center;"><span class="dag-arrow">↙</span></td>
+<td style="text-align: center;">
+<span class="dag-arrow positive"><-- [+]</span>
+</td>
 <td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder">Workforce Quality</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">--> [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Newborn Resuscitation</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Quality is unknown:**
+
+A region is bad at PPH detection. This suggests low workforce quality, which suggests they are also bad at newborn resuscitation. Evidence flows through the common cause.
+
+"Bad at PPH detection? Probably bad at resuscitation too."
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Quality is known:**
+
+You already know workforce quality is good. Now learning about PPH detection tells you nothing new about resuscitation -- the common cause is accounted for.
+
+The fork is **blocked**.
+:::
+:::
+:::
+
+
+## Collider: Evidence is BLOCKED by Default
+
+<table style="width: 75%; margin: 0.5em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Staffing</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">--> [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node" style="border-width: 3px;">Neonatal<br>Outcome</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive"><-- [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Equipment</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Outcome is unknown:**
+
+Staffing and equipment are independent decisions. Knowing one tells you nothing about the other. The collider **blocks** the flow.
+
+"Staffing is low? That tells me nothing about equipment."
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Outcome is known:**
+
+You learn the newborn survived. Now staffing and equipment are *connected* -- they compete to explain the good outcome. The collider is **opened**.
+
+This is **explaining away**.
+:::
+:::
+:::
+
+
+## Summary: The Three Rules
+
+::: {.key-takeaway}
+**Burn these three rules into your memory:**
+
+- **Chain (A --> B --> C):** Evidence flows... unless B is known. Then it stops.
+- **Fork (A <-- B --> C):** Evidence flows... unless B is known. Then it stops.
+- **Collider (A --> B <-- C):** Evidence is BLOCKED... unless B is known. Then it flows!
+
+Chains and forks: conditioning blocks. Colliders: conditioning opens. The collider is the rebel.
+:::
+
+
+# Explaining Away -- The Crown Jewel {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">One cause explains away the other</span>
+
+
+## The Setup
+
+Here is a scenario that will stick with you.
+
+. . .
+
+::: {.example-block}
+[A Newborn Survives Against the Odds]{.example-label}
+
+A health facility in a remote Ethiopian region -- where outcomes are usually poor -- reports that a newborn with respiratory distress **survived**. This is great news, but surprising.
+
+Two things could explain it:
+
+- **Amazing staff** who performed skilled resuscitation
+- **Great equipment** -- a functioning CPAP machine was available
+
+Or maybe both.
+:::
+
+. . .
+
+<table style="width: 70%; margin: 0.5em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Staffing<br>Quality</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">--> [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node" style="border-width: 3px;">Newborn<br>Outcome</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive"><-- [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Equipment<br>Quality</div>
+</td>
+</tr>
+</table>
+
+
+## The Twist
+
+You investigate further and learn that the CPAP machine was **broken** that day. The equipment was NOT available.
+
+. . .
+
+Now think about what happens to your belief about the staff.
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Before learning about equipment:**
+
+"The baby survived. Could be good staff, could be good equipment, could be both."
+
+P(Staff = Skilled) = moderately high
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**After learning equipment was broken:**
+
+"The baby survived *without* equipment?! The staff must have been incredible."
+
+P(Staff = Skilled) = **MUCH higher**
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**This is explaining away.** When you rule out one cause of a good outcome, you become *even more* convinced the other cause must be present. One explanation crowds out the other.
+:::
+
+
+## Why This Matters So Much
+
+Explaining away is not just a curiosity. It changes how you diagnose problems.
+
+. . .
+
+::: {.example-block}
+[The Reverse Direction]{.example-label}
+
+A region has **high** neonatal mortality. You learn that staffing is actually **adequate**.
+
+What happens to your belief about equipment?
+
+**It gets worse.** If staffing is fine but outcomes are still bad, then equipment must be the problem. Good staffing "explains away" the possibility that staffing caused the bad outcome, leaving equipment as the prime suspect.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The management insight:** Every time you confirm that one potential cause is in good shape, the spotlight shifts more intensely to the remaining causes. Explaining away focuses your attention.
+:::
+
+
+## Explaining Away: The Numbers
+
+Let us make it concrete with a simplified model:
+
+. . .
+
+**Prior beliefs (before any evidence):**
+
+- P(Staff = Skilled) = 40%
+- P(Equipment = Available) = 35%
+
+. . .
+
+**Now we observe: the newborn survived.**
+
+| Condition | P(Staff = Skilled) | P(Equipment = Available) |
+|---|---|---|
+| **Prior** (no evidence) | 40% | 35% |
+| **Given survival** | 52% | 47% |
+| **Given survival AND equipment broken** | **71%** | -- |
+| **Given survival AND staff is unskilled** | -- | **68%** |
+
+. . .
+
+::: {.callout-box .orange}
+**Look at the jumps.** Knowing the baby survived raises both estimates modestly. But ruling out one cause makes the remaining cause shoot up dramatically. That is explaining away -- and it is the most powerful diagnostic tool in your toolkit.
+:::
+
+
+## Everyday Explaining Away
+
+::: {.example-block}
+[Examples You Already Know]{.example-label}
+
+- **University admissions:** A student got into a top university. Was it grades or athletics? If you learn the student has average grades, you become *very* confident they are a star athlete.
+
+- **A restaurant is packed.** Is the food amazing, or is it the only option nearby? If you learn there are ten other restaurants on the same block, you become *more* convinced the food must be exceptional.
+
+- **Your internet is slow.** Is it your router or the provider? You restart the router and it is still slow. Now you are *much more sure* the problem is the provider.
+:::
+
+. . .
+
+::: {.callout-box}
+Explaining away happens every time two independent causes compete to explain the same result. It is everywhere once you start looking for it.
+:::
+
+
+# MNH Application: Diagnosing an Ethiopian Region {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using the model to figure out what went wrong</span>
+
+
+## Ethiopia: The Context
+
+| Indicator | Value | Source |
+|---|---|---|
+| Neonatal Mortality Rate (NMR) | ~28 per 1,000 live births | WHO |
+| Maternal Mortality Ratio (MMR) | ~267 per 100,000 live births | WHO |
+| Antenatal care coverage (1+ visit) | ~74% | DHS/WHO |
+| Health Extension Workers | ~38,000+ across 8+ regions | Gov't of Ethiopia |
+| Facility delivery rate | ~50% (wide regional variation) | DHS |
+| Skilled birth attendance | ~28% (national, with huge regional gaps) | WHO |
+
+. . .
+
+::: {.callout-box}
+Ethiopia has made remarkable progress through its Health Extension Worker (HEW) program, which deploys community health workers to rural areas. But regional variation is enormous -- some regions perform far better than others.
+:::
+
+
+## The Diagnostic Scenario
+
+::: {.callout-box .red}
+**Alert:** A region in rural Ethiopia reports NMR of 35 per 1,000 -- well above the national average. Despite receiving program resources, mortality has not improved. The program director asks: **"What is going wrong?"**
+:::
+
+. . .
+
+**We will use our Bayesian network to diagnose the problem -- one piece of evidence at a time.**
+
+. . .
+
+**The model:**
+
+<table style="width: 85%; margin: 0.3em auto; font-size: 0.45em;">
+<tr>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node treatment rect">HEW Staffing<br>(S)</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.4em;">
 <div class="dag-node treatment rect">Equipment<br>(E)</div>
 </td>
-</tr>
-<tr>
 <td></td>
-<td></td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node">Workforce<br>Quality (Q)</div>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node treatment rect">Referral<br>System (R)</div>
 </td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="dag-arrow positive">|</span></td>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow positive">|</span></td>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow positive">|</span></td>
+</tr>
+<tr>
+<td colspan="5" style="text-align: center; padding: 0.4em;">
+<div class="dag-node" style="padding: 0.5em 0.8em;">Quality of Care (Q)</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow negative">|</span></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
 <td></td>
 <td></td>
-<td style="text-align: center;"><span class="dag-arrow">↓</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td style="text-align: center; padding: 0.6em;">
+<td style="text-align: center; padding: 0.4em;">
 <div class="dag-node outcome">Neonatal Mortality<br>Rate (NMR)</div>
 </td>
 <td></td>
@@ -139,819 +760,405 @@ We use a simplified model throughout this chapter:
 </tr>
 </table>
 
-. . .
 
-**Prior probabilities (from Chapter 4):**
+## Step 1: Start with Priors
+
+Before learning anything about this specific region, our best guesses come from national data:
+
+. . .
 
 | Variable | States | Prior |
 |---|---|---|
-| **Staffing (S)** | Adequate / Low | 0.40 / 0.60 |
+| **HEW Staffing (S)** | Adequate / Low | 0.40 / 0.60 |
 | **Equipment (E)** | Available / Unavailable | 0.35 / 0.65 |
-| **Training (T)** | Completed / Not Completed | 0.50 / 0.50 |
-
-
-# Marginal Probabilities {background-color="#005CB9"}
-
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What is the overall probability of an outcome?</span>
-
-
-## What Is a Marginal Probability?
-
-::: {.definition-box}
-**Marginal Probability:** The probability of a variable computed by **summing out** (marginalizing over) all other variables in the joint distribution. It tells us the overall likelihood of an event, averaging across all possible parent combinations.
-:::
-
-. . .
-
-::: {.math-block}
-$$P(X) = \sum_{\text{all other variables}} P(X, Y_1, Y_2, \ldots, Y_n)$$
-:::
+| **Referral System (R)** | Functional / Weak | 0.30 / 0.70 |
 
 . . .
 
 ::: {.callout-box}
-**Intuition:** "What is the overall probability that NMR is High in a randomly selected district?" We don't know the district's staffing or equipment — so we average over *all possible* staffing/equipment combinations, weighted by how likely each combination is.
+These priors reflect typical conditions across Ethiopian regions -- roughly 40% of facilities have adequate HEW staffing, only 35% have functioning essential equipment, and about 30% have reliable referral pathways. These come from publicly available HMIS and survey data.
 :::
 
 
-## Computing Marginal NMR
+## Step 2: First Evidence -- NMR is High
 
-**CPT for Quality given Staffing and Equipment:**
+We observe: **NMR = High** (35/1,000).
 
-| Staffing | Equipment | P(Q=Good) | P(Q=Poor) |
+. . .
+
+Using the model, we update all three root causes:
+
+| Variable | Prior | Posterior (NMR=High) | Shift |
 |---|---|---|---|
-| Adequate | Available | 0.90 | 0.10 |
-| Adequate | Unavailable | 0.60 | 0.40 |
-| Low | Available | 0.50 | 0.50 |
-| Low | Unavailable | 0.15 | 0.85 |
+| P(Staffing = Low) | 0.60 | **0.72** | +12 points |
+| P(Equipment = Unavailable) | 0.65 | **0.74** | +9 points |
+| P(Referral = Weak) | 0.70 | **0.78** | +8 points |
 
 . . .
 
-**CPT for NMR given Quality:**
-
-| Quality | P(NMR=Low) | P(NMR=High) |
-|---|---|---|
-| Good | 0.85 | 0.15 |
-| Poor | 0.30 | 0.70 |
-
-
-## Marginal P(NMR=High): The Calculation
-
-We sum over all paths through the network:
-
-::: {.math-block}
-$$P(\text{NMR=High}) = \sum_{s,e,q} P(S=s) \cdot P(E=e) \cdot P(Q=q \mid S=s, E=e) \cdot P(\text{NMR=High} \mid Q=q)$$
-:::
-
-. . .
-
-| S | E | P(S) | P(E) | P(Q=Good) | P(NMR=H \| Good) | P(NMR=H \| Poor) | Contribution |
-|---|---|---|---|---|---|---|---|
-| Adeq | Avail | 0.40 | 0.35 | 0.90 | 0.15 | 0.70 | 0.029 |
-| Adeq | Unavail | 0.40 | 0.65 | 0.60 | 0.15 | 0.70 | 0.097 |
-| Low | Avail | 0.60 | 0.35 | 0.50 | 0.15 | 0.70 | 0.089 |
-| Low | Unavail | 0.60 | 0.65 | 0.15 | 0.15 | 0.70 | 0.240 |
-
-. . .
-
-::: {.key-takeaway}
-**P(NMR=High) = 0.455**
-
-Without any evidence, there is a 45.5% baseline probability that a randomly selected district has high neonatal mortality.
-:::
-
-
-# Evidence and Updating {background-color="#005CB9"}
-
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">How observations change our beliefs</span>
-
-
-## What Does "Evidence" Mean?
-
-::: {.definition-box}
-**Evidence (Observation):** Learning the actual state of one or more variables in the model. Mathematically, this means *conditioning* the joint distribution on the observed values.
-:::
-
-. . .
-
-::: {.columns-equal}
-::: {.col}
-::: {.callout-box}
-**Before evidence (prior):**
-
-$P(\text{Staffing=Low}) = 0.60$
-
-This is our general belief across all districts.
-:::
-:::
-
-::: {.col}
 ::: {.callout-box .orange}
-**After evidence (posterior):**
-
-$P(\text{Staffing=Low} \mid \text{NMR=High}) = \; ?$
-
-Observing high NMR in a specific district — what does this tell us about staffing?
-:::
-:::
+**All three causes shifted toward their "bad" states.** This makes sense -- high mortality is more consistent with poor inputs than good inputs. But staffing shifted the most, suggesting it is the strongest suspect.
 :::
 
 
-## Bayes' Rule: The Engine of Updating
+## Step 3: Second Evidence -- Equipment is Adequate
 
-::: {.math-block}
-$$P(\text{Staffing=Low} \mid \text{NMR=High}) = \frac{P(\text{NMR=High} \mid \text{Staffing=Low}) \cdot P(\text{Staffing=Low})}{P(\text{NMR=High})}$$
-:::
+A field visit reveals that equipment is actually in decent shape -- CPAP machines are available, essential drugs are stocked.
 
 . . .
 
-**Step 1:** Compute $P(\text{NMR=High} \mid \text{Staffing=Low})$ by marginalizing over Equipment and Quality:
+**Now we update again, adding this evidence:**
 
-$$P(\text{NMR=H} \mid S=\text{Low}) = \sum_{e,q} P(E=e) \cdot P(Q=q \mid S=\text{Low}, E=e) \cdot P(\text{NMR=H} \mid Q=q) = 0.549$$
-
-. . .
-
-**Step 2:** Apply Bayes' rule:
-
-$$P(S=\text{Low} \mid \text{NMR=H}) = \frac{0.549 \times 0.60}{0.455} = 0.724$$
-
-. . .
-
-::: {.callout-box .red}
-**Belief shift:** Observing high NMR increases our belief that staffing is low from **60% → 72.4%**. The evidence makes the "low staffing" explanation more likely.
-:::
-
-
-## The General Pattern of Updating
-
-::: {.example-block}
-[Belief Updating Rule]{.example-label}
-
-Evidence that is **more likely** under hypothesis A than hypothesis B **increases** our belief in A relative to B. This is the likelihood ratio at work.
-:::
-
-. . .
-
-| Variable | Prior | Posterior (given NMR=High) | Shift |
+| Variable | After NMR=High only | After NMR=High AND Equip=Available | Shift |
 |---|---|---|---|
-| P(Staffing=Low) | 0.60 | 0.724 | +0.124 ↑ |
-| P(Staffing=Adequate) | 0.40 | 0.276 | −0.124 ↓ |
-| P(Equipment=Unavailable) | 0.65 | 0.741 | +0.091 ↑ |
-| P(Equipment=Available) | 0.35 | 0.259 | −0.091 ↓ |
-
-. . .
-
-::: {.callout-box .green}
-**Both parent nodes shift toward "bad" states** when we observe a bad outcome. But staffing shifts *more* — suggesting it has a stronger causal connection to NMR in this model.
-:::
-
-
-# Inference in Serial Structures {background-color="#005CB9"}
-
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A → B → C: Chains and blocking</span>
-
-
-## Serial Structure: The Chain
-
-::: {.definition-box}
-**Serial Structure (Chain):** A → B → C. Information flows from A through B to C. A and C are *marginally dependent* but become **conditionally independent given B**.
-:::
-
-. . .
-
-**MNH Example:**
-
-<table style="width: 70%; margin: 0.5em auto; font-size: 0.55em;">
-<tr>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node treatment rect">Training<br>(T)</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive">→ [+]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node">Competency<br>(C)</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow negative">→ [−]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node outcome">Mortality<br>(M)</div>
-</td>
-</tr>
-</table>
-
-. . .
-
-::: {.incremental}
-- Training **causes** competency, which **causes** (lower) mortality
-- If we observe competency directly, training gives us **no additional information** about mortality
-- Conditioning on the intermediate node **blocks** the chain
-:::
-
-
-## Serial: CPTs and Priors
-
-**Conditional probability tables for the serial chain:**
-
-| Training | P(C=High) | P(C=Low) |
-|---|---|---|
-| Completed | 0.80 | 0.20 |
-| Not Completed | 0.30 | 0.70 |
-
-| Competency | P(M=Low) | P(M=High) |
-|---|---|---|
-| High | 0.85 | 0.15 |
-| Low | 0.35 | 0.65 |
-
-. . .
-
-**Prior:** $P(T=\text{Completed}) = 0.50$, $P(T=\text{Not Completed}) = 0.50$
-
-**Marginal competency:**
-
-$$P(C=\text{High}) = 0.50 \times 0.80 + 0.50 \times 0.30 = 0.55$$
-
-
-## Serial: Worked Bayesian Calculation
-
-**Scenario:** We observe that Mortality is High. What can we infer about Training?
-
-. . .
-
-**Step 1:** Marginal $P(M=\text{High})$:
-
-$$P(M=H) = P(C=H) \cdot P(M=H \mid C=H) + P(C=L) \cdot P(M=H \mid C=L)$$
-$$= 0.55 \times 0.15 + 0.45 \times 0.65 = 0.375$$
-
-. . .
-
-**Step 2:** $P(M=H \mid T=\text{Completed})$:
-
-$$= 0.80 \times 0.15 + 0.20 \times 0.65 = 0.250$$
-
-**Step 3:** Bayes' rule:
-
-$$P(T=\text{Completed} \mid M=H) = \frac{0.250 \times 0.50}{0.375} = 0.333$$
-
-. . .
-
-::: {.callout-box .red}
-**Result:** Observing high mortality shifts our belief about training from 50% → 33.3% completed. High mortality is evidence *against* training having been completed.
-:::
-
-
-## Serial: Blocking by Conditioning
-
-**Now suppose we also know that Competency is Low.** Does Training still matter?
-
-. . .
-
-$$P(T=\text{Completed} \mid M=H, C=\text{Low}) = P(T=\text{Completed} \mid C=\text{Low})$$
-
-Since $T \perp\!\!\!\perp M \mid C$ in a serial chain, mortality gives **no additional information** once competency is known.
-
-$$P(T=\text{Comp} \mid C=\text{Low}) = \frac{P(C=\text{Low} \mid T=\text{Comp}) \cdot P(T=\text{Comp})}{P(C=\text{Low})} = \frac{0.20 \times 0.50}{0.45} = 0.222$$
+| P(Staffing = Low) | 0.72 | **0.81** | +9 points |
+| P(Referral = Weak) | 0.78 | **0.84** | +6 points |
 
 . . .
 
 ::: {.key-takeaway}
-**Blocking in serial chains:** Once we observe the intermediate node (Competency), the downstream outcome (Mortality) tells us nothing new about the upstream cause (Training). The chain is blocked.
+**Explaining away in action!** We ruled out equipment as the problem. But mortality is still high. So our belief that staffing and referrals are causing the problem *intensified*. Equipment being adequate makes the other causes *more* suspect, not less.
 :::
 
 
-# Inference in Diverging Structures {background-color="#005CB9"}
+## Step 4: Third Evidence -- Referral System is Functional
 
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A ← B → C: Common cause correlation</span>
-
-
-## Diverging Structure: The Fork
-
-::: {.definition-box}
-**Diverging Structure (Fork):** A ← B → C. B is a **common cause** of both A and C. A and C are marginally dependent (correlated through B) but become **conditionally independent given B**.
-:::
+Deeper investigation shows the referral system actually works -- ambulances are available and the regional hospital accepts referrals promptly.
 
 . . .
 
-**MNH Example:**
-
-<table style="width: 75%; margin: 0.5em auto; font-size: 0.55em;">
-<tr>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node outcome">PPH<br>Detection</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive">← [+]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node confounder">Workforce<br>Quality</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive">→ [+]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node outcome">CPAP<br>Usage</div>
-</td>
-</tr>
-</table>
-
-. . .
-
-::: {.incremental}
-- **Workforce Quality** drives *both* PPH detection and CPAP usage
-- PPH detection and CPAP usage are correlated — districts good at one tend to be good at the other
-- This correlation is **not causal** — improving PPH detection does not improve CPAP usage
-- Conditioning on Quality **blocks** the spurious correlation
-:::
-
-
-## Diverging: CPTs and Setup
-
-**CPTs for the diverging structure:**
-
-| Quality | P(PPH_Det=Good) | P(PPH_Det=Poor) |
-|---|---|---|
-| Good | 0.90 | 0.10 |
-| Poor | 0.35 | 0.65 |
-
-| Quality | P(CPAP=Proper) | P(CPAP=Improper) |
-|---|---|---|
-| Good | 0.85 | 0.15 |
-| Poor | 0.25 | 0.75 |
-
-. . .
-
-**Prior:** $P(Q=\text{Good}) = 0.45$ (from marginal calculation in our model)
-
-**Marginals:**
-
-$$P(\text{PPH=Good}) = 0.45 \times 0.90 + 0.55 \times 0.35 = 0.598$$
-$$P(\text{CPAP=Proper}) = 0.45 \times 0.85 + 0.55 \times 0.25 = 0.520$$
-
-
-## Diverging: Inference from One Child to Another
-
-**Scenario:** We observe PPH Detection is Poor in a district. What does this tell us about CPAP Usage?
-
-. . .
-
-**Step 1:** Update belief about Quality given PPH=Poor:
-
-$$P(Q=\text{Good} \mid \text{PPH=Poor}) = \frac{0.10 \times 0.45}{0.402} = 0.112$$
-
-. . .
-
-**Step 2:** Use updated Quality to predict CPAP:
-
-$$P(\text{CPAP=Proper} \mid \text{PPH=Poor}) = 0.112 \times 0.85 + 0.888 \times 0.25 = 0.317$$
+| Variable | After NMR=H + Equip OK | After NMR=H + Equip OK + Referral OK | Shift |
+|---|---|---|---|
+| P(Staffing = Low) | 0.81 | **0.91** | +10 points |
 
 . . .
 
 ::: {.callout-box .red}
-**Result:** Observing poor PPH detection drops our belief that CPAP usage is proper from **52.0% → 31.7%**. Information flows from one effect to another through the common cause — even though there is no direct causal link.
-:::
-
-
-## Diverging: Blocking by Conditioning on Common Cause
-
-**Now suppose we know that Quality is Good.** Does PPH detection still tell us about CPAP?
-
-. . .
-
-$$P(\text{CPAP=Proper} \mid \text{PPH=Poor}, Q=\text{Good}) = P(\text{CPAP=Proper} \mid Q=\text{Good}) = 0.85$$
-
-Since $\text{PPH} \perp\!\!\!\perp \text{CPAP} \mid Q$ in a diverging structure, PPH detection is **irrelevant** once we know Quality.
-
-. . .
-
-::: {.key-takeaway}
-**Blocking in diverging structures:** Once we observe the common cause (Quality), knowing one effect (PPH Detection) tells us nothing about the other effect (CPAP Usage). The fork is blocked.
+**The diagnosis is clear.** We have ruled out equipment and referrals. The model now says there is a **91% probability** that staffing is the root cause. Each piece of evidence that ruled out an alternative cause made staffing *more* likely -- classic explaining away.
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**Management implication:** If you can directly measure workforce quality, you don't need to infer it from proxy indicators. Direct measurement blocks the indirect reasoning path and gives sharper diagnoses.
+**Recommendation:** Prioritize an HEW staffing review for this region. The model points to a workforce gap as the primary driver of high mortality, even though equipment and referrals appear adequate.
 :::
 
 
-# Inference in Converging Structures {background-color="#005CB9"}
-
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A → B ← C: The explaining away phenomenon</span>
-
-
-## Converging Structure: The Collider
-
-::: {.definition-box}
-**Converging Structure (Collider):** A → B ← C. B is a **common effect** of A and C. Unlike serial and diverging structures, A and C are *marginally independent* but become **dependent when we condition on B**. This is the most counterintuitive pattern in causal reasoning.
-:::
-
-. . .
-
-**MNH Example:**
-
-<table style="width: 75%; margin: 0.5em auto; font-size: 0.55em;">
-<tr>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node treatment rect">Staffing<br>(S)</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive">→ [+]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node">Workforce<br>Quality (Q)</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow positive">← [+]</span>
-</td>
-<td style="text-align: center; padding: 0.6em;">
-<div class="dag-node treatment rect">Equipment<br>(E)</div>
-</td>
-</tr>
-</table>
-
-. . .
-
-::: {.callout-box .red}
-**The counterintuitive part:** Staffing and Equipment are *independent* causes — knowing one tells you nothing about the other. **But** once we observe their common effect (Quality), they become dependent. Learning about one *changes* our belief about the other.
-:::
-
-
-## Explaining Away: The Core Idea
-
-::: {.example-block}
-[The Explaining Away Intuition]{.example-label}
-
-**Scenario:** You observe that a district has **Good** workforce quality. This is surprising — it could be because staffing is adequate, OR because equipment is available, OR both.
-
-**Now you learn** that staffing is **Low**. What happens to your belief about equipment?
-
-**Answer:** Equipment must be **Available** — because *something* has to explain the good quality, and staffing can't be the explanation. Equipment "explains away" what staffing cannot.
-:::
-
-. . .
-
-::: {.callout-box .orange}
-**This is called "explaining away":** When two independent causes compete to explain the same effect, confirming one cause makes the other *less* likely (and disconfirming one makes the other *more* likely).
-:::
-
-
-## Converging: Worked Calculation
-
-**CPT for Quality (from our model):**
-
-| Staffing | Equipment | P(Q=Good) | P(Q=Poor) |
-|---|---|---|---|
-| Adequate | Available | 0.90 | 0.10 |
-| Adequate | Unavailable | 0.60 | 0.40 |
-| Low | Available | 0.50 | 0.50 |
-| Low | Unavailable | 0.15 | 0.85 |
-
-. . .
-
-**Step 1:** Observe Q=Good. Update belief about Equipment:
-
-$$P(E=\text{Avail} \mid Q=\text{Good}) = \frac{P(Q=\text{Good} \mid E=\text{Avail}) \cdot P(E=\text{Avail})}{P(Q=\text{Good})}$$
-
-$$P(Q=\text{Good} \mid E=\text{Avail}) = 0.40 \times 0.90 + 0.60 \times 0.50 = 0.660$$
-
-$$P(Q=\text{Good}) = 0.35 \times 0.660 + 0.65 \times (0.40 \times 0.60 + 0.60 \times 0.15) = 0.35 \times 0.660 + 0.65 \times 0.330 = 0.446$$
-
-$$P(E=\text{Avail} \mid Q=\text{Good}) = \frac{0.660 \times 0.35}{0.446} = 0.518$$
-
-
-## Converging: The Explaining Away Effect
-
-**Step 2:** Now *also* observe S=Low. Update belief about Equipment:
-
-$$P(E=\text{Avail} \mid Q=\text{Good}, S=\text{Low}) = \frac{P(Q=\text{Good} \mid S=\text{Low}, E=\text{Avail}) \cdot P(E=\text{Avail})}{P(Q=\text{Good} \mid S=\text{Low})}$$
-
-$$P(Q=\text{Good} \mid S=\text{Low}) = 0.35 \times 0.50 + 0.65 \times 0.15 = 0.273$$
-
-$$P(E=\text{Avail} \mid Q=\text{Good}, S=\text{Low}) = \frac{0.50 \times 0.35}{0.273} = 0.642$$
-
-. . .
-
-| Condition | P(Equipment=Available) |
-|---|---|
-| **Prior** (no evidence) | 0.350 |
-| **Given Q=Good** | 0.518 |
-| **Given Q=Good AND S=Low** | 0.642 |
-
-. . .
-
-::: {.key-takeaway}
-**Explaining away in action:** Learning that staffing is low — when quality is good — *increases* our belief that equipment must be available from 51.8% to 64.2%. Equipment must be compensating for the staffing deficit.
-:::
-
-
-# MNH Application: District Diagnosis {background-color="#005CB9"}
-
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A complete worked example with realistic data</span>
-
-
-## The Diagnostic Scenario
-
-::: {.callout-box .red}
-**Alert:** District Mwanga reports a neonatal mortality rate of 35 per 1,000 live births — well above the national average of 25 per 1,000. The program's country director asks: **What is most likely going wrong?**
-:::
-
-. . .
-
-**Available evidence:**
-
-::: {.incremental}
-- NMR = High (35/1,000 vs. target of 25/1,000)
-- No direct observation of staffing, equipment, training, or quality
-- We have the national-level causal model with CPTs
-:::
-
-. . .
-
-**Our task:** Use Bayesian inference to update beliefs about *all* parent nodes, identify the most likely root cause, and recommend targeted investigation.
-
-
-## Step 1: Establish the Full Model
-
-<table style="width: 90%; margin: 0.3em auto; font-size: 0.42em;">
-<tr>
-<td style="text-align: center; padding: 0.4em;">
-<div class="dag-node treatment rect">Staffing (S)<br>P(Adeq)=0.40</div>
-</td>
-<td></td>
-<td style="text-align: center; padding: 0.4em;">
-<div class="dag-node treatment rect">Equipment (E)<br>P(Avail)=0.35</div>
-</td>
-<td></td>
-<td style="text-align: center; padding: 0.4em;">
-<div class="dag-node treatment rect">Training (T)<br>P(Comp)=0.50</div>
-</td>
-</tr>
-<tr>
-<td style="text-align: center;"><span class="dag-arrow">↘</span></td>
-<td></td>
-<td style="text-align: center;"><span class="dag-arrow">↓</span></td>
-<td></td>
-<td style="text-align: center;"><span class="dag-arrow">↙</span></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td style="text-align: center; padding: 0.4em;">
-<div class="dag-node">Quality (Q)</div>
-</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td style="text-align: center;"><span class="dag-arrow">↓</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td style="text-align: center; padding: 0.4em;">
-<div class="dag-node outcome">NMR</div>
-</td>
-<td></td>
-<td></td>
-</tr>
-</table>
-
-. . .
-
-**Extended CPT for Quality (adding Training):**
-
-| S | E | T | P(Q=Good) | P(Q=Poor) |
-|---|---|---|---|---|
-| Adeq | Avail | Comp | 0.95 | 0.05 |
-| Adeq | Avail | Not | 0.80 | 0.20 |
-| Adeq | Unavail | Comp | 0.65 | 0.35 |
-| Adeq | Unavail | Not | 0.45 | 0.55 |
-| Low | Avail | Comp | 0.55 | 0.45 |
-| Low | Avail | Not | 0.35 | 0.65 |
-| Low | Unavail | Comp | 0.20 | 0.80 |
-| Low | Unavail | Not | 0.08 | 0.92 |
-
-
-## Step 2: Compute Posterior Probabilities
-
-Given NMR=High, we apply Bayes' rule to each root node:
-
-. . .
-
-::: {.math-block}
-$$P(S=\text{Low} \mid \text{NMR=H}) = \frac{\sum_{e,t,q} P(S=\text{Low}) \cdot P(E=e) \cdot P(T=t) \cdot P(Q=q \mid S=\text{Low},e,t) \cdot P(\text{NMR=H} \mid q)}{P(\text{NMR=H})}$$
-:::
-
-. . .
-
-**Results (computed across all 8 parent combinations):**
-
-| Root Node | Prior | Posterior (NMR=High) | Shift |
-|---|---|---|---|
-| P(Staffing=Low) | 0.600 | 0.710 | **+0.110 ↑** |
-| P(Equipment=Unavail) | 0.650 | 0.738 | **+0.088 ↑** |
-| P(Training=Not Comp) | 0.500 | 0.573 | **+0.073 ↑** |
-| P(Quality=Poor) | — | 0.682 | — |
-
-. . .
-
-::: {.callout-box .orange}
-**Staffing has the largest posterior shift** — it moves from 60% to 71%. This suggests staffing is the most informative variable to investigate first in District Mwanga.
-:::
-
-
-## Step 3: Identify the Most Likely Configuration
-
-Which combination of root causes is most probable given NMR=High?
-
-. . .
-
-**Top 4 configurations (posterior probability):**
-
-| Rank | Staffing | Equipment | Training | P(config \| NMR=H) |
-|---|---|---|---|---|
-| **1** | Low | Unavailable | Not Comp | **0.284** |
-| 2 | Low | Unavailable | Completed | 0.194 |
-| 3 | Low | Available | Not Comp | 0.098 |
-| 4 | Adequate | Unavailable | Not Comp | 0.087 |
-
-. . .
-
-::: {.key-takeaway}
-**Most likely diagnosis:** All three root causes are in their "bad" state — low staffing, unavailable equipment, incomplete training. This configuration is 2.8x more likely than the second-ranked option.
-:::
-
-
-## Step 4: Compare with a "Healthy" District
-
-**District Songea reports NMR=Low (18/1,000).** How do beliefs differ?
-
-. . .
-
-| Root Node | Prior | Posterior (NMR=High) | Posterior (NMR=Low) |
-|---|---|---|---|
-| P(Staffing=Low) | 0.600 | 0.710 | 0.508 |
-| P(Equip=Unavail) | 0.650 | 0.738 | 0.576 |
-| P(Training=Not Comp) | 0.500 | 0.573 | 0.439 |
-
-. . .
-
-::: {.columns-equal}
-::: {.col}
-::: {.callout-box .red}
-**District Mwanga (NMR=High)**
-
-All causes shift toward bad states. Staffing is the strongest signal. Recommend immediate staffing audit.
-:::
-:::
-
-::: {.col}
-::: {.callout-box .green}
-**District Songea (NMR=Low)**
-
-All causes shift toward good states. Equipment shows the most improvement. This district is likely well-resourced.
-:::
-:::
-:::
+## The Diagnosis Pathway -- Summary
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><span class="step-number">1</span><br>Prior<br>P(Staff Low) = 60%</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #FA7650;"><span class="step-number orange">2</span><br>NMR is High<br>P(Staff Low) = 72%</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><span class="step-number amber">3</span><br>Equip is OK<br>P(Staff Low) = 81%</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;"><span class="step-number red">4</span><br>Referral is OK<br>P(Staff Low) = 91%</div>
+</div>
 
 . . .
 
 ::: {.callout-box}
-**The power of the model:** The same framework that diagnoses problems also identifies what's working well. Both directions inform resource allocation.
+**Notice the pattern:** Each time we *ruled out* a possible cause, the remaining causes became more suspect. This is explaining away applied sequentially -- a diagnostic workflow. The model did the hard reasoning for us.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is situational analysis.** You observe outcomes, gather evidence, and use the model to progressively narrow down the root cause. It is exactly what a good doctor does -- and now you can do it for an entire health system.
 :::
 
 
-# R Code Workshop {background-color="#005CB9"}
+# R Workshop {background-color="#005CB9"}
 
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Bayesian inference with bnlearn</span>
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Bayesian inference with bnlearn::cpquery()</span>
 
 
-## R Block 1: Build a BN with CPTs
+## R Block 1: Build the Ethiopian MNH Model
 
 ```{r}
 #| label: bn-build
 #| echo: true
 
+# -------------------------------------------------------
+# Chapter 5 R Workshop: Situational Analysis
+# We build a Bayesian network for an Ethiopian region
+# and use cpquery() to diagnose problems by running
+# the model backwards.
+# -------------------------------------------------------
+
 library(bnlearn)
-library(gRain)
 
-# Define the DAG structure
-dag <- model2network("[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]")
+# Step 1: Define the DAG structure.
+# [Staffing], [Equipment], [Referral] are root nodes (no parents).
+# [Quality] depends on all three.
+# [NMR] depends on Quality.
+dag <- model2network(
+  "[Staffing][Equipment][Referral][Quality|Staffing:Equipment:Referral][NMR|Quality]"
+)
 
-# Define CPTs
-cpt_s <- matrix(c(0.40, 0.60), ncol = 2,
-                dimnames = list(NULL, c("Adequate", "Low")))
-
-cpt_e <- matrix(c(0.35, 0.65), ncol = 2,
-                dimnames = list(NULL, c("Available", "Unavailable")))
-
-cpt_t <- matrix(c(0.50, 0.50), ncol = 2,
-                dimnames = list(NULL, c("Completed", "Not_Completed")))
-
-# Quality CPT: P(Quality | Staffing, Equipment, Training)
-cpt_q <- array(
-  c(0.95, 0.05,  # S=Adeq, E=Avail, T=Comp
-    0.80, 0.20,  # S=Adeq, E=Avail, T=Not
-    0.65, 0.35,  # S=Adeq, E=Unavail, T=Comp
-    0.45, 0.55,  # S=Adeq, E=Unavail, T=Not
-    0.55, 0.45,  # S=Low, E=Avail, T=Comp
-    0.35, 0.65,  # S=Low, E=Avail, T=Not
-    0.20, 0.80,  # S=Low, E=Unavail, T=Comp
-    0.08, 0.92), # S=Low, E=Unavail, T=Not
-  dim = c(2, 2, 2, 2),
-  dimnames = list(Quality = c("Good", "Poor"),
-                  Staffing = c("Adequate", "Low"),
-                  Equipment = c("Available", "Unavailable"),
-                  Training = c("Completed", "Not_Completed")))
-
-# NMR CPT: P(NMR | Quality)
-cpt_nmr <- matrix(c(0.85, 0.15, 0.30, 0.70), ncol = 2,
-                  dimnames = list(NMR = c("Low", "High"),
-                                  Quality = c("Good", "Poor")))
-
-# Fit the BN with custom CPTs
-bn_fit <- custom.fit(dag, list(
-  Staffing = cpt_s, Equipment = cpt_e, Training = cpt_t,
-  Quality = cpt_q, NMR = cpt_nmr))
+# Quick check: print the arcs to confirm the structure
+arcs(dag)
+# Should show 4 arcs:
+#   Staffing  -> Quality
+#   Equipment -> Quality
+#   Referral  -> Quality
+#   Quality   -> NMR
 ```
 
 
-## R Block 2: Query with Evidence
+## R Block 2: Specify the CPTs
 
 ```{r}
-#| label: bn-query
+#| label: bn-cpts
 #| echo: true
 
-# --- Marginal probability (no evidence) ---
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = TRUE,
-        n = 1e6)
-# ≈ 0.455
+# -------------------------------------------------------
+# Root nodes: these are the prior probabilities.
+# Based on publicly available Ethiopian health data.
+# -------------------------------------------------------
 
-# --- Posterior with evidence: NMR is High ---
-# What is P(Staffing = Low | NMR = High)?
-cpquery(bn_fit,
-        event = (Staffing == "Low"),
-        evidence = (NMR == "High"),
-        n = 1e6)
-# ≈ 0.71
+# 40% of facilities have adequate HEW staffing
+cpt_staffing <- array(c(0.40, 0.60), dim = 2,
+  dimnames = list(Staffing = c("Adequate", "Low")))
 
-# --- Evidence on a root node ---
-# What is P(NMR = High | Staffing = Low)?
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = (Staffing == "Low"),
-        n = 1e6)
-# ≈ 0.55
+# 35% have functioning essential equipment
+cpt_equipment <- array(c(0.35, 0.65), dim = 2,
+  dimnames = list(Equipment = c("Available", "Unavailable")))
 
-# --- Multiple pieces of evidence ---
-# P(NMR = High | Staffing = Low, Equipment = Unavailable)
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = (Staffing == "Low" & Equipment == "Unavailable"),
-        n = 1e6)
-# ≈ 0.63
+# 30% have reliable referral pathways
+cpt_referral <- array(c(0.30, 0.70), dim = 2,
+  dimnames = list(Referral = c("Functional", "Weak")))
+
+# -------------------------------------------------------
+# Quality of Care depends on all three root nodes.
+# 8 rows (2 x 2 x 2 parent combinations).
+# Each row: P(Good), P(Poor). Rows must sum to 1.
+# -------------------------------------------------------
+
+cpt_quality <- array(
+  c(
+    # Staffing=Adequate, Equipment=Available, Referral=Functional
+    0.92, 0.08,
+    # Staffing=Low, Equipment=Available, Referral=Functional
+    0.55, 0.45,
+    # Staffing=Adequate, Equipment=Unavailable, Referral=Functional
+    0.65, 0.35,
+    # Staffing=Low, Equipment=Unavailable, Referral=Functional
+    0.25, 0.75,
+    # Staffing=Adequate, Equipment=Available, Referral=Weak
+    0.78, 0.22,
+    # Staffing=Low, Equipment=Available, Referral=Weak
+    0.40, 0.60,
+    # Staffing=Adequate, Equipment=Unavailable, Referral=Weak
+    0.50, 0.50,
+    # Staffing=Low, Equipment=Unavailable, Referral=Weak
+    0.12, 0.88
+  ),
+  dim = c(2, 2, 2, 2),
+  dimnames = list(
+    Quality   = c("Good", "Poor"),
+    Staffing  = c("Adequate", "Low"),
+    Equipment = c("Available", "Unavailable"),
+    Referral  = c("Functional", "Weak")
+  )
+)
+
+# -------------------------------------------------------
+# NMR depends on Quality only.
+# Good quality -> mostly low mortality.
+# Poor quality -> mostly high mortality.
+# -------------------------------------------------------
+
+cpt_nmr <- array(
+  c(0.85, 0.15,   # Quality = Good
+    0.30, 0.70),  # Quality = Poor
+  dim = c(2, 2),
+  dimnames = list(
+    NMR     = c("Low", "High"),
+    Quality = c("Good", "Poor")
+  )
+)
+
+# -------------------------------------------------------
+# Combine everything into a fitted Bayesian network
+# -------------------------------------------------------
+
+bn_ethiopia <- custom.fit(dag, list(
+  Staffing  = cpt_staffing,
+  Equipment = cpt_equipment,
+  Referral  = cpt_referral,
+  Quality   = cpt_quality,
+  NMR       = cpt_nmr
+))
 ```
 
 
-## R Block 3: Compare Posterior vs. Prior
+## R Block 3: Baseline Query -- What Do We Expect?
+
+```{r}
+#| label: bn-baseline
+#| echo: true
+
+# -------------------------------------------------------
+# QUERY 1: What is the overall P(NMR = High)?
+# This is the marginal -- averaging across all
+# possible staffing, equipment, and referral states.
+# "Before we learn anything, what is our best guess?"
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (NMR == "High"),
+  evidence = TRUE,            # No evidence -- marginal query
+  n = 1e6                     # Use 1 million samples for accuracy
+)
+# Expected: approximately 0.42
+# "About a 42% chance of high NMR in a random region."
+```
+
+. . .
+
+::: {.callout-box}
+**What cpquery() does:** It simulates a million hypothetical regions from the model, then counts how many have NMR = High. The fraction is the marginal probability. The `evidence = TRUE` means "no conditions -- just give me the overall average."
+:::
+
+
+## R Block 4: Running the Model Backwards
+
+```{r}
+#| label: bn-backwards
+#| echo: true
+
+# -------------------------------------------------------
+# QUERY 2: We observe NMR = High.
+# "What does this tell us about staffing?"
+# This is the detective question -- reasoning backwards.
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (Staffing == "Low"),
+  evidence = (NMR == "High"),
+  n = 1e6
+)
+# Expected: approximately 0.72
+# Prior was 0.60; posterior is ~0.72.
+# "High mortality makes low staffing more likely."
+
+# -------------------------------------------------------
+# QUERY 3: Same question for equipment.
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (Equipment == "Unavailable"),
+  evidence = (NMR == "High"),
+  n = 1e6
+)
+# Expected: approximately 0.74
+# Prior was 0.65; posterior is ~0.74.
+
+# -------------------------------------------------------
+# QUERY 4: And for the referral system.
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (Referral == "Weak"),
+  evidence = (NMR == "High"),
+  n = 1e6
+)
+# Expected: approximately 0.78
+# Prior was 0.70; posterior is ~0.78.
+```
+
+
+## R Block 5: Explaining Away in Action
+
+```{r}
+#| label: bn-explaining-away
+#| echo: true
+
+# -------------------------------------------------------
+# QUERY 5: Explaining away!
+# NMR is high AND equipment is OK.
+# "What happens to our belief about staffing?"
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (Staffing == "Low"),
+  evidence = (NMR == "High" & Equipment == "Available"),
+  n = 1e6
+)
+# Expected: approximately 0.81
+# Was 0.72 with just NMR=High.
+# Ruling out equipment made staffing MORE suspect!
+
+# -------------------------------------------------------
+# QUERY 6: Full explaining away.
+# NMR is high, equipment is OK, AND referral is OK.
+# Now staffing is the only suspect left.
+# -------------------------------------------------------
+
+cpquery(bn_ethiopia,
+  event    = (Staffing == "Low"),
+  evidence = (NMR == "High" &
+              Equipment == "Available" &
+              Referral == "Functional"),
+  n = 1e6
+)
+# Expected: approximately 0.91
+# The more causes we rule out, the more certain
+# we become about the remaining cause.
+# This is explaining away -- the crown jewel.
+```
+
+
+## R Block 6: Comparing Two Regions
 
 ```{r}
 #| label: bn-compare
 #| echo: true
 
-# Function to compute posteriors for all root nodes given NMR evidence
-compute_posteriors <- function(bn, nmr_state, n_samples = 1e6) {
+# -------------------------------------------------------
+# Compare a struggling region (NMR=High) with a
+# well-performing one (NMR=Low).
+# "What does the model infer about each?"
+# -------------------------------------------------------
+
+compare_regions <- function(bn, nmr_state) {
   data.frame(
-    Variable = c("Staffing=Low", "Equipment=Unavail", "Training=Not_Comp"),
-    Prior = c(0.60, 0.65, 0.50),
+    Variable = c("P(Staffing=Low)",
+                 "P(Equipment=Unavail)",
+                 "P(Referral=Weak)"),
+    Prior = c(0.60, 0.65, 0.70),
     Posterior = c(
-      cpquery(bn, (Staffing == "Low"), (NMR == nmr_state), n = n_samples),
-      cpquery(bn, (Equipment == "Unavailable"), (NMR == nmr_state), n = n_samples),
-      cpquery(bn, (Training == "Not_Completed"), (NMR == nmr_state), n = n_samples)
+      cpquery(bn, (Staffing == "Low"),
+              (NMR == nmr_state), n = 1e6),
+      cpquery(bn, (Equipment == "Unavailable"),
+              (NMR == nmr_state), n = 1e6),
+      cpquery(bn, (Referral == "Weak"),
+              (NMR == nmr_state), n = 1e6)
     )
   )
 }
 
-# Posteriors given NMR=High (District Mwanga)
-post_high <- compute_posteriors(bn_fit, "High")
-post_high$Shift <- post_high$Posterior - post_high$Prior
-print(post_high)
+# Struggling region
+cat("=== Region with High NMR ===\n")
+high_region <- compare_regions(bn_ethiopia, "High")
+high_region$Shift <- high_region$Posterior - high_region$Prior
+print(high_region)
 
-# Posteriors given NMR=Low (District Songea)
-post_low <- compute_posteriors(bn_fit, "Low")
-post_low$Shift <- post_low$Posterior - post_low$Prior
-print(post_low)
+# Well-performing region
+cat("\n=== Region with Low NMR ===\n")
+low_region <- compare_regions(bn_ethiopia, "Low")
+low_region$Shift <- low_region$Posterior - low_region$Prior
+print(low_region)
+
+# The shifts should go in opposite directions:
+# High NMR -> causes shift toward "bad" states
+# Low NMR  -> causes shift toward "good" states
 ```
 
 
-## R Block 4: Visualize Belief Updating
+## R Block 7: Visualize the Belief Updating
 
 ```{r}
 #| label: bn-viz
@@ -960,110 +1167,86 @@ print(post_low)
 #| fig-height: 5
 
 library(ggplot2)
-library(tidyr)
 
-# Combine prior and posterior into tidy format
-viz_data <- data.frame(
-  Variable = rep(c("Staffing\n(Low)", "Equipment\n(Unavail)", "Training\n(Not Comp)"), 2),
-  Condition = rep(c("Prior", "Posterior\n(NMR=High)"), each = 3),
-  Probability = c(
-    0.60, 0.65, 0.50,          # Priors
-    0.710, 0.738, 0.573         # Posteriors given NMR=High
-  )
+# -------------------------------------------------------
+# Visualize how beliefs shift as evidence accumulates.
+# This shows the "explaining away" diagnostic pathway.
+# -------------------------------------------------------
+
+pathway <- data.frame(
+  Step = factor(
+    c("1. Prior", "2. NMR=High", "3. + Equip OK", "4. + Referral OK"),
+    levels = c("1. Prior", "2. NMR=High", "3. + Equip OK", "4. + Referral OK")
+  ),
+  P_Staffing_Low = c(0.60, 0.72, 0.81, 0.91)
 )
-viz_data$Condition <- factor(viz_data$Condition,
-                              levels = c("Prior", "Posterior\n(NMR=High)"))
 
-ggplot(viz_data, aes(x = Variable, y = Probability, fill = Condition)) +
-  geom_col(position = "dodge", width = 0.6) +
-  geom_text(aes(label = sprintf("%.1f%%", Probability * 100)),
-            position = position_dodge(width = 0.6), vjust = -0.3, size = 4) +
-  scale_fill_manual(values = c("Prior" = "#00A1DF", "Posterior\n(NMR=High)" = "#E24A3F"),
-                    name = "") +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Belief Updating: Prior vs. Posterior Given NMR = High",
-       subtitle = "All 'bad' states become more likely after observing high mortality",
-       x = NULL, y = "Probability") +
+ggplot(pathway, aes(x = Step, y = P_Staffing_Low)) +
+  geom_col(fill = c("#005CB9", "#FA7650", "#F8A623", "#E24A3F"),
+           width = 0.6) +
+  geom_text(aes(label = paste0(P_Staffing_Low * 100, "%")),
+            vjust = -0.5, size = 5, fontface = "bold") +
+  scale_y_continuous(labels = scales::percent,
+                     limits = c(0, 1)) +
+  labs(
+    title = "Explaining Away: P(Staffing = Low) as Evidence Accumulates",
+    subtitle = "Each ruled-out cause makes staffing MORE suspect",
+    x = NULL,
+    y = "P(Staffing = Low)"
+  ) +
   theme_minimal(base_size = 14) +
-  theme(legend.position = "top",
-        plot.title = element_text(color = "#005CB9", face = "bold"))
-```
-
-
-## R Block 5: Full District Diagnosis Workflow
-
-```{r}
-#| label: bn-diagnosis
-#| echo: true
-
-# ---- Full diagnosis workflow for a district ----
-
-diagnose_district <- function(bn, evidence_list, n_samples = 1e6) {
-  # Build evidence string
-  ev_expr <- paste(names(evidence_list), "==",
-                   paste0('"', evidence_list, '"'), collapse = " & ")
-
-  # Query each root node
-  results <- data.frame(
-    Node = c("Staffing", "Equipment", "Training"),
-    Bad_State = c("Low", "Unavailable", "Not_Completed"),
-    Prior = c(0.60, 0.65, 0.50)
+  theme(
+    plot.title = element_text(color = "#005CB9", face = "bold"),
+    plot.subtitle = element_text(color = "#666")
   )
-
-  results$Posterior <- sapply(1:nrow(results), function(i) {
-    cpquery(bn,
-            event = eval(parse(text = paste0(results$Node[i], ' == "',
-                                              results$Bad_State[i], '"'))),
-            evidence = eval(parse(text = ev_expr)),
-            n = n_samples)
-  })
-
-  results$Shift <- results$Posterior - results$Prior
-  results$Priority <- rank(-abs(results$Shift))
-  results[order(results$Priority), ]
-}
-
-# Diagnose District Mwanga (NMR=High)
-cat("=== District Mwanga Diagnosis ===\n")
-mwanga <- diagnose_district(bn_fit, list(NMR = "High"))
-print(mwanga)
-
-# Diagnose with additional evidence (NMR=High, Quality=Poor)
-cat("\n=== With additional evidence: Quality=Poor ===\n")
-mwanga_deep <- diagnose_district(bn_fit,
-                                  list(NMR = "High", Quality = "Poor"))
-print(mwanga_deep)
 ```
 
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Marginal probabilities** tell us baseline expectations. The marginal P(NMR=High) = 45.5% is the starting point before any district-specific evidence.
+**Situational analysis means running the model backwards -- from outcomes to causes.**
 
-**Evidence updates beliefs via Bayes' rule.** Observing NMR=High shifts all root causes toward their "bad" states — with staffing showing the largest shift.
+Three skills make it work:
 
-**The three structures determine information flow:** serial and diverging chains are blocked by conditioning on the middle node; converging chains are *activated* by it.
+1. **Average across possibilities** when you do not know a variable (marginal probability)
+2. **Update your best guess** when new evidence arrives (belief updating)
+3. **Understand how evidence flows** through chains, forks, and colliders -- especially explaining away
+:::
 
-**Explaining away is the most counterintuitive phenomenon.** In a collider, observing the common effect makes independent causes compete — confirming one reduces belief in the other.
+. . .
+
+::: {.incremental}
+- **Marginal probability** = "What is my best guess before I learn anything?" (a weighted average)
+- **Belief updating** = "How does my best guess change when I learn something new?"
+- **Chains and forks** let evidence flow, but conditioning on the middle node blocks it
+- **Colliders** block evidence by default, but conditioning on the collision point opens the flow
+- **Explaining away** is the most powerful diagnostic tool: ruling out one cause makes the remaining causes *more* likely
+- **In R**, `cpquery()` lets you ask any backward question with a single line of code
 :::
 
 
 ## Looking Ahead
 
 ::: {.callout-box}
-**Next: Chapter 6 — Simpson's Paradox and Cost-Effectiveness**
+**Next: Chapter 6 -- Simpson's Paradox and Cost-Effectiveness**
 
-Now that we can perform inference, we apply it to a critical problem:
+Now that you can run the model backwards, we tackle a famous trap:
 
-- **Simpson's Paradox** — when aggregate data reverses the true causal effect
-- How conditioning on the wrong variable produces misleading cost-effectiveness estimates
-- Why program evaluation in MNH requires causal reasoning, not just data analysis
+- **Simpson's Paradox** -- when aggregated data reverses the true causal effect
+- Why an intervention can look *harmful* overall but be *beneficial* in every subgroup
+- How conditioning on the wrong variable produces disastrously wrong conclusions
 - Practical implications for how large MNH programs evaluate their country portfolios
 :::
 
+. . .
 
-##  {background-color="white"}
+::: {.callout-box .green}
+**The connection:** Chapter 5 taught you to diagnose *what went wrong* in a single region. Chapter 6 teaches you to avoid a deadly statistical illusion when comparing *across* regions -- an illusion that has led to real-world policy failures in global health.
+:::
+
+
+## {background-color="white"}
 
 <br><br><br>
 

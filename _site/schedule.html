@@ -127,10 +127,9 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#course-structure" id="toc-course-structure" class="nav-link active" data-scroll-target="#course-structure">Course Structure</a></li>
   <li><a href="#part-i-foundations-sessions-13" id="toc-part-i-foundations-sessions-13" class="nav-link" data-scroll-target="#part-i-foundations-sessions-13">Part I: Foundations (Sessions 1–3)</a></li>
-  <li><a href="#part-ii-quantitative-analysis-sessions-46" id="toc-part-ii-quantitative-analysis-sessions-46" class="nav-link" data-scroll-target="#part-ii-quantitative-analysis-sessions-46">Part II: Quantitative Analysis (Sessions 4–6)</a></li>
-  <li><a href="#part-iii-decision-strategy-sessions-79" id="toc-part-iii-decision-strategy-sessions-79" class="nav-link" data-scroll-target="#part-iii-decision-strategy-sessions-79">Part III: Decision &amp; Strategy (Sessions 7–9)</a></li>
-  <li><a href="#part-iv-data-driven-methods-session-10" id="toc-part-iv-data-driven-methods-session-10" class="nav-link" data-scroll-target="#part-iv-data-driven-methods-session-10">Part IV: Data-Driven Methods (Session 10)</a></li>
-  <li><a href="#chapter-dependency-chain" id="toc-chapter-dependency-chain" class="nav-link" data-scroll-target="#chapter-dependency-chain">Chapter Dependency Chain</a></li>
+  <li><a href="#part-ii-adding-numbers-sessions-46" id="toc-part-ii-adding-numbers-sessions-46" class="nav-link" data-scroll-target="#part-ii-adding-numbers-sessions-46">Part II: Adding Numbers (Sessions 4–6)</a></li>
+  <li><a href="#part-iii-making-decisions-sessions-79" id="toc-part-iii-making-decisions-sessions-79" class="nav-link" data-scroll-target="#part-iii-making-decisions-sessions-79">Part III: Making Decisions (Sessions 7–9)</a></li>
+  <li><a href="#part-iv-learning-from-data-session-10" id="toc-part-iv-learning-from-data-session-10" class="nav-link" data-scroll-target="#part-iv-learning-from-data-session-10">Part IV: Learning from Data (Session 10)</a></li>
   <li><a href="#session-format" id="toc-session-format" class="nav-link" data-scroll-target="#session-format">Session Format</a></li>
   <li><a href="#textbook" id="toc-textbook" class="nav-link" data-scroll-target="#textbook">Textbook</a></li>
   </ul>
@@ -161,9 +160,9 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="course-structure" class="level2">
 <h2 class="anchored" data-anchor-id="course-structure">Course Structure</h2>
-<p>This course consists of 10 sessions, each corresponding to one chapter of the textbook. Sessions are grouped into four thematic parts that build on each other sequentially.</p>
+<p>This course consists of 10 sessions, each corresponding to one chapter. Sessions are grouped into four thematic parts that build on each other.</p>
 <div class="callout-box">
-<p><strong>Prerequisite chain:</strong> Each chapter builds on the previous ones. The dependency chain runs Ch1 → Ch2 → Ch3 → Ch4 → Ch5 → Ch6 → Ch7 → Ch8 → Ch9 → Ch10. It is strongly recommended to follow the chapters in order.</p>
+<p><strong>Prerequisite chain:</strong> Each chapter builds on the previous ones. It is strongly recommended to follow the chapters in order.</p>
 </div>
 </section>
 <section id="part-i-foundations-sessions-13" class="level2">
@@ -174,7 +173,6 @@ ul.task-list li input[type="checkbox"] {
 <th>Session</th>
 <th>Chapter</th>
 <th>Topics</th>
-<th>R Packages</th>
 <th>Preparation</th>
 </tr>
 </thead>
@@ -182,36 +180,32 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>1</td>
 <td><a href="./chapters/ch01.html">Ch 1: Introduction to Causal Analysis</a></td>
-<td>Situational assessment vs.&nbsp;intervention; correlation ≠ causation; confounding, reverse causation, selection bias</td>
-<td><code>dagitty</code>, <code>ggdag</code></td>
-<td>Read Ryall &amp; Bramson Ch 1; install R packages</td>
+<td>Why causation matters; three traps (confounding, reverse causation, selection bias); basic DAGs</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="even">
 <td>2</td>
 <td><a href="./chapters/ch02.html">Ch 2: Qualitative Causal Models</a></td>
-<td>Four node types; signed directed links; serial, diverging, converging triplets; d-separation</td>
-<td><code>dagitty</code>, <code>ggdag</code></td>
-<td>Read Ryall &amp; Bramson Ch 2</td>
+<td>Three node types; signed links; chains, forks, and colliders; information flow rules</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="odd">
 <td>3</td>
 <td><a href="./chapters/ch03.html">Ch 3: The MNH Diagnostic Case Study</a></td>
-<td>Iterative model building; stakeholder interviews; root node identification; prioritizing recommendations</td>
-<td><code>dagitty</code>, <code>ggdag</code></td>
-<td>Read Ryall &amp; Bramson Ch 3</td>
+<td>Building a DAG through interviews; root nodes as leverage points; supply vs.&nbsp;demand side</td>
+<td>Read the pre-class essay</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="part-ii-quantitative-analysis-sessions-46" class="level2">
-<h2 class="anchored" data-anchor-id="part-ii-quantitative-analysis-sessions-46">Part II: Quantitative Analysis (Sessions 4–6)</h2>
+<section id="part-ii-adding-numbers-sessions-46" class="level2">
+<h2 class="anchored" data-anchor-id="part-ii-adding-numbers-sessions-46">Part II: Adding Numbers (Sessions 4–6)</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Session</th>
 <th>Chapter</th>
 <th>Topics</th>
-<th>R Packages</th>
 <th>Preparation</th>
 </tr>
 </thead>
@@ -219,36 +213,32 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>4</td>
 <td><a href="./chapters/ch04.html">Ch 4: Quantitative Causal Models</a></td>
-<td>Probability distributions; CPTs; Bayes’ rule; Causal Markov Condition; Bayesian networks</td>
-<td><code>bnlearn</code>, <code>ggplot2</code></td>
-<td>Read Ryall &amp; Bramson Ch 4</td>
+<td>Natural frequencies; lookup tables (CPTs); Bayes’ rule with tree diagrams; Bayesian networks</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="even">
 <td>5</td>
 <td><a href="./chapters/ch05.html">Ch 5: Situational Analysis</a></td>
-<td>Marginal probabilities; belief updating; inference in serial, diverging, converging structures; explaining away</td>
-<td><code>bnlearn</code>, <code>ggplot2</code></td>
-<td>Read Ryall &amp; Bramson Ch 5</td>
+<td>Updating beliefs with evidence; explaining away; diagnosing problems from outcomes</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="odd">
 <td>6</td>
 <td><a href="./chapters/ch06.html">Ch 6: Simpson’s Paradox &amp; Cost-Effectiveness</a></td>
-<td>Simpson’s Paradox; Prosecutor’s Fallacy; causal reasoning in cost-effectiveness analysis</td>
-<td><code>ggplot2</code></td>
-<td>Read Ryall &amp; Bramson Ch 6</td>
+<td>When combined data misleads; confounder vs.&nbsp;mediator; cross-country comparisons</td>
+<td>Read the pre-class essay</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="part-iii-decision-strategy-sessions-79" class="level2">
-<h2 class="anchored" data-anchor-id="part-iii-decision-strategy-sessions-79">Part III: Decision &amp; Strategy (Sessions 7–9)</h2>
+<section id="part-iii-making-decisions-sessions-79" class="level2">
+<h2 class="anchored" data-anchor-id="part-iii-making-decisions-sessions-79">Part III: Making Decisions (Sessions 7–9)</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Session</th>
 <th>Chapter</th>
 <th>Topics</th>
-<th>R Packages</th>
 <th>Preparation</th>
 </tr>
 </thead>
@@ -256,36 +246,32 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>7</td>
 <td><a href="./chapters/ch07.html">Ch 7: Decision Analysis &amp; Value of Information</a></td>
-<td>Do-calculus; expected utility; decision trees; value of information; optimal intervention design</td>
-<td><code>bnlearn</code>, <code>ggplot2</code></td>
-<td>Read Ryall &amp; Bramson Ch 7</td>
+<td>Decision maps; expected value; watching vs.&nbsp;doing; the value of running a pilot first</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="even">
 <td>8</td>
 <td><a href="./chapters/ch08.html">Ch 8: Multi-Country Resource Allocation</a></td>
-<td>Portfolio optimization; allocation under uncertainty; country-level analysis; budget distribution</td>
-<td><code>ggplot2</code>, <code>tidyr</code></td>
-<td>Read Ryall &amp; Bramson Ch 8</td>
+<td>Three allocation strategies; uncertainty; Monte Carlo simulation; sequential decisions</td>
+<td>Read the pre-class essay</td>
 </tr>
 <tr class="odd">
 <td>9</td>
 <td><a href="./chapters/ch09.html">Ch 9: Game Theory &amp; Strategic Interactions</a></td>
-<td>Nash equilibrium; dominant strategies; incentive design; donor-government dynamics</td>
-<td><code>ggplot2</code></td>
-<td>Read Ryall &amp; Bramson Ch 9</td>
+<td>Payoff matrices; Nash equilibrium; the free-rider problem; commitment devices</td>
+<td>Read the pre-class essay</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="part-iv-data-driven-methods-session-10" class="level2">
-<h2 class="anchored" data-anchor-id="part-iv-data-driven-methods-session-10">Part IV: Data-Driven Methods (Session 10)</h2>
+<section id="part-iv-learning-from-data-session-10" class="level2">
+<h2 class="anchored" data-anchor-id="part-iv-learning-from-data-session-10">Part IV: Learning from Data (Session 10)</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Session</th>
 <th>Chapter</th>
 <th>Topics</th>
-<th>R Packages</th>
 <th>Preparation</th>
 </tr>
 </thead>
@@ -293,40 +279,26 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>10</td>
 <td><a href="./chapters/ch10.html">Ch 10: Structure Learning from Observational Data</a></td>
-<td>Markov equivalence; PC algorithm; hill-climbing; instrumental variables; causal regression</td>
-<td><code>bnlearn</code>, <code>dagitty</code>, <code>ggdag</code>, <code>ivreg</code></td>
-<td>Read Ryall &amp; Bramson Ch 10</td>
+<td>Can computers discover causes?; expert + algorithm; the feedback loop</td>
+<td>Read the pre-class essay</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="chapter-dependency-chain" class="level2">
-<h2 class="anchored" data-anchor-id="chapter-dependency-chain">Chapter Dependency Chain</h2>
-<pre><code>Ch 1 (Introduction)
- └─→ Ch 2 (Qualitative DAGs)
-      └─→ Ch 3 (Interview Case Study)
-           └─→ Ch 4 (Quantitative / CPTs / Bayes)
-                └─→ Ch 5 (Inference / Belief Updating)
-                     └─→ Ch 6 (Simpson's Paradox)
-                          └─→ Ch 7 (Decision Analysis / do-calculus)
-                               └─→ Ch 8 (Resource Allocation)
-                                    └─→ Ch 9 (Game Theory)
-                                         └─→ Ch 10 (Structure Learning)</code></pre>
 </section>
 <section id="session-format" class="level2">
 <h2 class="anchored" data-anchor-id="session-format">Session Format</h2>
 <p>Each session follows a consistent structure:</p>
 <ol type="1">
-<li><strong>Theory presentation</strong> (lecture slides) — Core concepts from the textbook, adapted to MNH contexts</li>
-<li><strong>MNH application</strong> — Real-world examples applying the theory to maternal and newborn health programs</li>
-<li><strong>R code workshop</strong> — Hands-on coding exercises using the chapter’s R packages</li>
+<li><strong>Concept presentation</strong> — Core ideas explained with everyday analogies and MNH examples</li>
+<li><strong>MNH application</strong> — Real-world examples from Ethiopia, Rwanda, Kenya, and Tanzania</li>
+<li><strong>R code workshop</strong> — Hands-on coding with guided explanations</li>
 <li><strong>Key takeaways and discussion</strong> — Summary and preview of the next session</li>
 </ol>
 </section>
 <section id="textbook" class="level2">
 <h2 class="anchored" data-anchor-id="textbook">Textbook</h2>
 <p>Ryall, M. D., &amp; Bramson, A. (2014). <em>Inference and Intervention: Causal Models for Business Analysis</em>. Routledge.</p>
-<p>All textbook examples have been adapted from business contexts to maternal and newborn health program analysis.</p>
+<p>The course teaches the same concepts from the textbook but uses entirely new examples drawn from public MNH data.</p>
 
 
 </section>

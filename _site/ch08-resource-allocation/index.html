@@ -10,8 +10,8 @@
   <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="BK Advisors">
-  <meta name="dcterms.date" content="2026-02-12">
-  <title>Chapter 8: MNH Resource Allocation</title>
+  <meta name="dcterms.date" content="2026-03-07">
+  <title>Chapter 8: Multi-Country Resource Allocation</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -96,7 +96,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-afce544662d4c774d79a6cccbbed54ef.css">
+  <link rel="stylesheet" href="index_files/libs/revealjs/dist/theme/quarto-6e9afe50719493a7abb77d07998557a4.css">
   <link href="index_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="index_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -194,7 +194,7 @@
     <div class="slides">
 
 <section data-background-color="#005CB9" class="quarto-title-block center">
-  <h1 class="title">Chapter 8: MNH Resource Allocation</h1>
+  <h1 class="title">Chapter 8: Multi-Country Resource Allocation</h1>
   <p class="subtitle">Inference and Intervention | BK Advisors</p>
 
 <div class="quarto-title-authors">
@@ -205,663 +205,736 @@ BK Advisors
 </div>
 </div>
 
-  <p class="date">2026-02-12</p>
+  <p class="date">2026-03-07</p>
 </section>
 <section class="slide level2">
 <h2>Learning Objectives</h2>
 <p>After this chapter, you will be able to:</p>
 <ul>
-<li class="fragment">Frame a <strong>multi-country resource allocation</strong> problem as a decision under uncertainty</li>
-<li class="fragment">Build <strong>probability distributions</strong> over government co-financing, intervention coverage, and health outcomes</li>
-<li class="fragment">Apply <strong>sequential decision making</strong> (commit → observe → scale) with backward induction</li>
-<li class="fragment">Assess <strong>stakeholder response</strong> (crowding out vs.&nbsp;crowding in) as a strategic variable</li>
-<li class="fragment">Use <strong>Monte Carlo simulation</strong> in R to compare allocation strategies and quantify confidence intervals</li>
+<li class="fragment">Frame a <strong>multi-country resource allocation</strong> problem as a puzzle with real tradeoffs</li>
+<li class="fragment">Compare three intuitive allocation strategies: <strong>Concentrate, Spread, and Tiered</strong></li>
+<li class="fragment">Explain why <strong>uncertainty</strong> makes the “obvious best answer” less obvious</li>
+<li class="fragment">Use <strong>Monte Carlo simulation</strong> (“replaying the future 1,000 times”) to compare strategies</li>
+<li class="fragment">Apply <strong>sequential decision making</strong> – “invest a little, watch, then decide”</li>
 </ul>
 </section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Book Context: HaHCo</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Resource allocation under uncertainty — the original case</span></p>
-</section>
 <section class="slide level2">
-<h2>The HaHCo Problem</h2>
-<div class="definition-box">
-<p><strong>HaHCo</strong> is a ride-sharing company deciding how to allocate drivers across cities (San Francisco vs.&nbsp;New York). The key uncertainties: market demand in each city, competitive dynamics, and the legal/regulatory response from incumbent taxi companies.</p>
-</div>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
-<div class="callout-box">
-<p><strong>Decision:</strong> How many drivers to deploy in SF vs.&nbsp;NY?</p>
-<p><strong>Uncertainties:</strong></p>
-<ul>
-<li>Market size in each city</li>
-<li>Competitor legal response</li>
-<li>Regulatory environment</li>
-</ul>
-</div>
-</div>
-<div class="col">
-<div class="callout-box orange">
-<p><strong>Core tradeoff:</strong></p>
-<ul>
-<li><strong>Concentrate</strong> in one city → higher payoff <em>if</em> that market is large, but riskier</li>
-<li><strong>Spread</strong> across cities → lower variance, potentially lower peak return</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>From HaHCo to the Beginnings Fund</h2>
-<p>The same analytical framework applies to global health resource allocation:</p>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>HaHCo (Book)</th>
-<th>Beginnings Fund (MNH)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Drivers across cities</td>
-<td>$525M across 10 countries</td>
-</tr>
-<tr class="even">
-<td>Market demand uncertainty</td>
-<td>Baseline burden + intervention coverage uncertainty</td>
-</tr>
-<tr class="odd">
-<td>Competitor legal response</td>
-<td>Government co-financing commitment</td>
-</tr>
-<tr class="even">
-<td>Regulatory environment</td>
-<td>Health system readiness</td>
-</tr>
-<tr class="odd">
-<td>Revenue maximization</td>
-<td>Lives saved maximization</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="key-takeaway">
-<p><strong>Same structure, different domain.</strong> The tools from the book — influence diagrams, expected value, decision trees, and sensitivity analysis — apply directly to the Beginnings Fund’s allocation problem.</p>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>The Multi-Country Allocation Problem</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">$525M across 10 countries over 76 months</span></p>
-</section>
-<section class="slide level2">
-<h2>The Beginnings Fund Portfolio</h2>
-<div class="callout-box">
-<p><strong>The Fund:</strong> $525M committed over 76 months to reduce maternal and neonatal mortality across sub-Saharan Africa. The Investment Committee must decide <em>how much</em> to allocate to <em>which countries</em> and <em>when</em>.</p>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Country</th>
-<th>Lives Saved Target</th>
-<th>Phase</th>
-<th>Baseline NMR (per 1,000)</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Ethiopia</strong></td>
-<td>86,124</td>
-<td>Phase 1 (2025)</td>
-<td>28.1</td>
-</tr>
-<tr class="even">
-<td><strong>Tanzania</strong></td>
-<td>63,497</td>
-<td>Phase 1 (2025)</td>
-<td>20.3</td>
-</tr>
-<tr class="odd">
-<td><strong>Kenya</strong></td>
-<td>46,494</td>
-<td>Phase 1 (2025)</td>
-<td>19.6</td>
-</tr>
-<tr class="even">
-<td><strong>Uganda</strong></td>
-<td>43,058</td>
-<td>Phase 2 (2026)</td>
-<td>19.0</td>
-</tr>
-<tr class="odd">
-<td><strong>Ghana</strong></td>
-<td>23,910</td>
-<td>Phase 1 (2025)</td>
-<td>24.5</td>
-</tr>
-<tr class="even">
-<td><strong>Malawi</strong></td>
-<td>20,761</td>
-<td>Phase 1 (2025)</td>
-<td>22.4</td>
-</tr>
-<tr class="odd">
-<td><strong>Zimbabwe</strong></td>
-<td>20,082</td>
-<td>Phase 1 (2025)</td>
-<td>23.1</td>
-</tr>
-<tr class="even">
-<td><strong>Rwanda</strong></td>
-<td>14,585</td>
-<td>Phase 1 (2025)</td>
-<td>16.2</td>
-</tr>
-<tr class="odd">
-<td><strong>Lesotho</strong></td>
-<td>4,336</td>
-<td>Phase 2 (2026)</td>
-<td>34.8</td>
-</tr>
-<tr class="even">
-<td><strong>Nigeria</strong></td>
-<td>TBD</td>
-<td>Fund Two (2028)</td>
-<td>35.9</td>
-</tr>
-<tr class="odd">
-<td><strong>Total</strong></td>
-<td><strong>322,847</strong></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-<section class="slide level2">
-<h2>What Makes This Hard</h2>
-<p>Each country differs on three critical dimensions:</p>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
-<div class="callout-box">
-<p><strong>Baseline Burden</strong></p>
-<p>The number of maternal and neonatal deaths preventable with known interventions. Ethiopia has the largest target (86,124 lives) because of both high NMR and large birth cohort.</p>
-</div>
-</div>
-<div class="col">
-<div class="callout-box green">
-<p><strong>Health System Capacity</strong></p>
-<p>Can the country absorb and deploy interventions effectively? Rwanda (NMR 16.2) has strong systems; Lesotho (NMR 34.8) has weaker infrastructure but high need per capita.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box orange">
-<p><strong>Government Readiness</strong></p>
-<p>Will the government maintain co-financing commitments, sustain policy reforms, and absorb programs after the Fund exits? This is the <em>most uncertain</em> variable — and the one with the largest impact on long-run outcomes.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Sources of Uncertainty</h2>
-<div class="definition-box">
-<p><strong>Key Insight:</strong> The Fund cannot simply allocate proportional to burden. Each dollar’s impact depends on uncertain, country-specific factors that interact with the allocation decision.</p>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Uncertainty</th>
-<th>Description</th>
-<th>Impact</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Government co-financing</strong></td>
-<td>Will governments sustain funding after Fund exits?</td>
-<td>Determines long-run impact</td>
-</tr>
-<tr class="even">
-<td><strong>Intervention coverage</strong></td>
-<td>Will programs reach target populations?</td>
-<td>Determines short-run lives saved</td>
-</tr>
-<tr class="odd">
-<td><strong>Workforce retention</strong></td>
-<td>Will trained health workers stay in post?</td>
-<td>Determines capacity sustainability</td>
-</tr>
-<tr class="even">
-<td><strong>Political stability</strong></td>
-<td>Will elections or conflict disrupt programs?</td>
-<td>Binary risk (derails everything)</td>
-</tr>
-<tr class="odd">
-<td><strong>Other donor behavior</strong></td>
-<td>Will other donors crowd in or crowd out?</td>
-<td>Changes marginal value of Fund $</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box red">
-<p><strong>The fundamental challenge:</strong> We must commit funds <em>before</em> resolving these uncertainties. The question is not “What is the right allocation?” but <strong>“What allocation is robust to the uncertainty we face?”</strong></p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>The Allocation Decision Space</h2>
-<p>The Fund must choose an allocation vector: <span class="math inline">\(\mathbf{a} = (a_1, a_2, \ldots, a_{10})\)</span> where <span class="math inline">\(a_i\)</span> = dollars to country <span class="math inline">\(i\)</span> and <span class="math inline">\(\sum a_i = \$525M\)</span>.</p>
-<div class="fragment">
-<p><strong>Three archetype strategies:</strong></p>
-<div class="columns-equal">
-<div class="col">
-<div class="callout-box">
-<p><strong>Concentrate</strong></p>
-<p>Allocate 70%+ to the top 3 countries by expected lives saved (Ethiopia, Tanzania, Kenya).</p>
-<p><em>High expected value, high variance.</em></p>
-</div>
-</div>
-<div class="col">
-<div class="callout-box green">
-<p><strong>Spread</strong></p>
-<p>Allocate roughly equally across all 10 countries.</p>
-<p><em>Lower expected value, lower variance.</em></p>
-</div>
-</div>
-<div class="col">
-<div class="callout-box orange">
-<p><strong>Tiered</strong></p>
-<p>Weight by burden × capacity score, with floors and ceilings per country.</p>
-<p><em>Balanced approach.</em></p>
-</div>
-</div>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box">
-<p><strong>This is the HaHCo problem at scale.</strong> Instead of 2 cities, we have 10 countries. Instead of drivers, we have $525M. The analytical approach is the same: model uncertainty, compute expected outcomes, and find the robust allocation.</p>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Modeling Uncertainty</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Probability distributions over key variables</span></p>
-</section>
-<section class="slide level2">
-<h2>Government Co-Financing Scenarios</h2>
-<div class="definition-box">
-<p><strong>Government co-financing</strong> is the probability that the government will maintain or increase its health budget commitments after the Fund’s investment period ends. This is the single most important uncertainty.</p>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Scenario</th>
-<th>Probability</th>
-<th>Description</th>
-<th>Impact on Lives Saved</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>High</strong></td>
-<td>0.40</td>
-<td>Government meets or exceeds commitments; absorbs programs</td>
-<td>100% of target achieved</td>
-</tr>
-<tr class="even">
-<td><strong>Medium</strong></td>
-<td>0.50</td>
-<td>Partial commitment; some programs sustained</td>
-<td>60% of target achieved</td>
-</tr>
-<tr class="odd">
-<td><strong>Low</strong></td>
-<td>0.10</td>
-<td>Government reneges; programs collapse post-exit</td>
-<td>25% of target achieved</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>Expected achievement rate:</strong> <span class="math inline">\(0.40 \times 1.00 + 0.50 \times 0.60 + 0.10 \times 0.25 = 0.40 + 0.30 + 0.025 = \mathbf{0.725}\)</span> (72.5% of target)</p>
-<p>This is the <strong>base case</strong> expected outcome for any country. But co-financing probabilities vary by country.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Country-Specific Probability Profiles</h2>
-<p>Not all countries carry the same risk profile:</p>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Country</th>
-<th>P(High)</th>
-<th>P(Medium)</th>
-<th>P(Low)</th>
-<th>Expected Achievement</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Rwanda</td>
-<td>0.60</td>
-<td>0.35</td>
-<td>0.05</td>
-<td>83.3%</td>
-</tr>
-<tr class="even">
-<td>Kenya</td>
-<td>0.50</td>
-<td>0.40</td>
-<td>0.10</td>
-<td>76.5%</td>
-</tr>
-<tr class="odd">
-<td>Ethiopia</td>
-<td>0.40</td>
-<td>0.45</td>
-<td>0.15</td>
-<td>70.8%</td>
-</tr>
-<tr class="even">
-<td>Tanzania</td>
-<td>0.45</td>
-<td>0.40</td>
-<td>0.15</td>
-<td>72.8%</td>
-</tr>
-<tr class="odd">
-<td>Ghana</td>
-<td>0.35</td>
-<td>0.50</td>
-<td>0.15</td>
-<td>68.3%</td>
-</tr>
-<tr class="even">
-<td>Malawi</td>
-<td>0.30</td>
-<td>0.50</td>
-<td>0.20</td>
-<td>65.0%</td>
-</tr>
-<tr class="odd">
-<td>Uganda</td>
-<td>0.35</td>
-<td>0.45</td>
-<td>0.20</td>
-<td>67.0%</td>
-</tr>
-<tr class="even">
-<td>Zimbabwe</td>
-<td>0.25</td>
-<td>0.45</td>
-<td>0.30</td>
-<td>59.5%</td>
-</tr>
-<tr class="odd">
-<td>Lesotho</td>
-<td>0.20</td>
-<td>0.45</td>
-<td>0.35</td>
-<td>55.8%</td>
-</tr>
-<tr class="even">
-<td>Nigeria</td>
-<td>0.30</td>
-<td>0.40</td>
-<td>0.30</td>
-<td>61.5%</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box orange">
-<p><strong>Key pattern:</strong> Countries with stronger health systems (Rwanda, Kenya) have higher expected achievement. But the countries with the largest burden (Ethiopia, Nigeria) carry more uncertainty. This creates the core allocation tradeoff.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Decision Tree for a Single Country</h2>
-<p>Consider allocating $50M to Ethiopia:</p>
-<div class="fragment">
-<table style="width: 90%; margin: 0.4em auto; font-size: 0.5em;">
-<tbody><tr>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node decision rect" style="padding: 0.4em 0.6em;">
-Allocate<br>$50M to ETH
-</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow">→</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node" style="padding: 0.4em 0.6em;">
-Gov’t<br>Co-finance
-</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow">→</span>
-</td>
-<td style="text-align: center; padding: 0.5em; vertical-align: top;">
-<div style="margin-bottom: 0.3em;">
-<strong>High (0.40):</strong> 86,124 lives
-</div>
-<div style="margin-bottom: 0.3em;">
-<strong>Med (0.45):</strong> 51,674 lives
-</div>
-<div>
-<strong>Low (0.15):</strong> 21,531 lives
-</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow">→</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node hexagon" style="border-color: #3E9B6E; color: #3E9B6E; padding: 0.4em 0.6em;">
-EV =<br>60,932
-</div>
-</td>
-</tr>
-</tbody></table>
-</div>
-<div class="fragment">
-<div class="math-block">
-<p><span class="math inline">\(EV(\text{Ethiopia}) = 0.40 \times 86{,}124 + 0.45 \times 51{,}674 + 0.15 \times 21{,}531 = 34{,}450 + 23{,}253 + 3{,}230 = \mathbf{60{,}932}\)</span> lives</p>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box">
-<p><strong>But this assumes the full $50M goes to Ethiopia.</strong> The real question is: would those dollars save <em>more</em> lives if allocated to Kenya or Tanzania instead? We need to compare expected lives saved <em>per dollar</em> across countries.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Scenario Analysis: Best / Base / Worst</h2>
-<p>Across the full portfolio ($525M, all 10 countries):</p>
-<div class="fragment">
-<table class="caption-top">
-<colgroup>
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-<col style="width: 25%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Scenario</th>
-<th>Assumption</th>
-<th>Total Lives Saved</th>
-<th>% of Target</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Best Case</strong></td>
-<td>All countries achieve High co-financing</td>
-<td>322,847</td>
-<td>100%</td>
-</tr>
-<tr class="even">
-<td><strong>Base Case</strong></td>
-<td>Country-specific probability mix</td>
-<td>228,417</td>
-<td>70.7%</td>
-</tr>
-<tr class="odd">
-<td><strong>Worst Case</strong></td>
-<td>All countries achieve Low co-financing</td>
-<td>80,712</td>
-<td>25.0%</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="columns-equal">
-<div class="col">
-<div class="callout-box green">
-<p><strong>Base case is credible.</strong> The weighted-average expected outcome delivers ~70% of the target — consistent with typical large-scale global health programs.</p>
-</div>
-</div>
-<div class="col">
-<div class="callout-box red">
-<p><strong>Worst case is devastating.</strong> If co-financing fails across the board, only 80,712 of 322,847 targeted lives would be saved. This tail risk motivates portfolio diversification.</p>
-</div>
-</div>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Sequential Decision Making</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Commit → Observe → Scale</span></p>
-</section>
-<section class="slide level2">
-<h2>The Multi-Stage Structure</h2>
-<p>The Fund does not have to commit all $525M on day one. Phased rollout enables <strong>sequential decision making</strong>:</p>
-<div class="fragment">
+<h2>Chapter Overview</h2>
 <div class="step-flow">
 <div class="step-item" style="border-left: 4px solid #005CB9;">
-<strong>Stage 1</strong><br>Commit seed<br>funding ($50M)
-</div>
-<div class="step-arrow">
-→
-</div>
-<div class="step-item" style="border-left: 4px solid #F8A623;">
-<strong>Observe</strong><br>Pilot results<br>(12–18 months)
+The Allocation<br>Puzzle
 </div>
 <div class="step-arrow">
 →
 </div>
 <div class="step-item" style="border-left: 4px solid #83BD00;">
-<strong>Stage 2</strong><br>Scale or<br>reallocate
+Three<br>Strategies
+</div>
+<div class="step-arrow">
+→
+</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">
+Uncertainty &amp;<br>Scenarios
+</div>
+<div class="step-arrow">
+→
+</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">
+Replaying<br>the Future
 </div>
 <div class="step-arrow">
 →
 </div>
 <div class="step-item" style="border-left: 4px solid #3E9B6E;">
-<strong>Outcome</strong><br>Lives saved<br>(76 months)
-</div>
+Sequential<br>Decisions
 </div>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p><strong>This is exactly the HaHCo structure.</strong> The book’s ride-sharing company can test a market before scaling. The Beginnings Fund can run pilots before committing full allocations. The value of this optionality depends on <em>how informative</em> the pilot results are.</p>
+<p><strong>The big idea:</strong> You have a fixed budget. Four countries need help. Each country is different – different problems, different strengths, different risks. How do you split the money? There is no formula that spits out the “right” answer, but there <em>are</em> smart ways to think about the tradeoffs.</p>
+</div>
+</div>
+</section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>The Allocation Puzzle</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Four countries, limited budget, different needs</span></p>
+</section>
+<section class="slide level2">
+<h2>The Question</h2>
+<div class="definition-box">
+<p><strong>The core puzzle:</strong> Imagine you lead a maternal and neonatal health (MNH) program with a fixed annual budget. Four East African countries need support. Each country has a different health burden, a different health system, and a different set of risks. How do you divide the budget?</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box">
+<p><strong>What makes this hard:</strong></p>
+<ul>
+<li>Sending everything to one country might save the most lives – <em>if things go well</em></li>
+<li>Spreading money equally feels fair, but might waste resources in places that cannot absorb them</li>
+<li>You do not know the future: governments change, crises happen, programs surprise you</li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="callout-box orange">
+<p><strong>What this is NOT:</strong></p>
+<ul>
+<li>Not a math optimization problem with one “correct” answer</li>
+<li>Not about picking a winner and ignoring everyone else</li>
+<li>Not about guessing the future perfectly</li>
+</ul>
+<p>It is about making a <strong>smart bet</strong> when you do not have all the information.</p>
+</div>
+</div>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Rolling Back the Decision Tree</h2>
-<p><strong>Backward induction</strong> for a 2-stage Ethiopia decision:</p>
+<h2>Why Not Just Give It All to the Country With the Biggest Problem?</h2>
+<div class="callout-box">
+<p>Intuition says: “Find the country with the worst maternal mortality, and send all the money there.” Sounds logical, right?</p>
+</div>
 <div class="fragment">
-<p><strong>Stage 2 (after observing pilot):</strong></p>
+<p>But here is why that can backfire:</p>
+<ul>
+<li class="fragment"><strong>Absorption capacity.</strong> A country with weak infrastructure may not be able to spend the money effectively. More funding does not automatically mean more impact.</li>
+<li class="fragment"><strong>Diminishing returns.</strong> The first million dollars does more than the tenth. After a certain point, each additional dollar saves fewer additional lives.</li>
+<li class="fragment"><strong>Concentration risk.</strong> If you put all your eggs in one basket and something goes wrong (political crisis, leadership change, supply chain failure), you lose <em>everything</em>.</li>
+<li class="fragment"><strong>Fairness and politics.</strong> Completely ignoring other countries creates tension with governments, donors, and partner organizations.</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>The takeaway:</strong> The “best” allocation is not simply “all to the highest burden.” It is a balance of impact, risk, capacity, and strategic judgment. That is what makes this a puzzle.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Country Profiles</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What the public data tells us about each country</span></p>
+</section>
+<section class="slide level2">
+<h2>Four Countries, Four Profiles</h2>
+<p>All data below comes from <strong>publicly available sources</strong> (WHO, World Bank, DHS surveys). These are real numbers for real countries.</p>
+<div class="fragment">
 <table class="caption-top">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Pilot Signal</th>
-<th>Updated P(High)</th>
-<th>Optimal Stage 2</th>
-<th>Expected Lives</th>
+<th>Indicator</th>
+<th>Ethiopia</th>
+<th>Rwanda</th>
+<th>Kenya</th>
+<th>Tanzania</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Promising</td>
-<td>0.70</td>
-<td>Scale up ($100M)</td>
-<td>72,804</td>
+<td><strong>Maternal Mortality Ratio</strong> (per 100k live births)</td>
+<td>267</td>
+<td>248</td>
+<td>342</td>
+<td>238</td>
 </tr>
 <tr class="even">
-<td>Mixed</td>
-<td>0.35</td>
-<td>Moderate ($60M)</td>
-<td>48,203</td>
+<td><strong>Neonatal Mortality Rate</strong> (per 1,000 live births)</td>
+<td>28</td>
+<td>16</td>
+<td>21</td>
+<td>20</td>
 </tr>
 <tr class="odd">
-<td>Negative</td>
-<td>0.10</td>
-<td>Redirect funds</td>
-<td>12,156</td>
+<td><strong>Annual live births</strong> (approx.)</td>
+<td>3.4 million</td>
+<td>370,000</td>
+<td>1.5 million</td>
+<td>2.1 million</td>
+</tr>
+<tr class="even">
+<td><strong>Health system</strong></td>
+<td>8+ diverse regions</td>
+<td>Strong centralized</td>
+<td>Devolved (47 counties)</td>
+<td>Workforce gap</td>
+</tr>
+<tr class="odd">
+<td><strong>Key challenge</strong></td>
+<td>Scale across vast geography</td>
+<td>Sustaining gains</td>
+<td>County-level variation</td>
+<td>Rural staffing</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="fragment">
-<p><strong>Stage 1 (before pilot):</strong> P(Promising) = 0.35, P(Mixed) = 0.45, P(Negative) = 0.20</p>
-<div class="math-block">
-<p><span class="math inline">\(EV(\text{Sequential}) = 0.35 \times 72{,}804 + 0.45 \times 48{,}203 + 0.20 \times 12{,}156 = 25{,}481 + 21{,}691 + 2{,}431 = \mathbf{49{,}604}\)</span></p>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p>Compare to <strong>commit-all-upfront</strong> EV of 60,932 lives. The sequential approach yields fewer expected lives (49,604) because <em>less money is committed</em>. But the key advantage is <strong>risk reduction</strong> — the worst case is much better.</p>
+<div class="callout-box">
+<p><strong>Source:</strong> WHO Global Health Observatory; World Bank World Development Indicators; most recent Demographic and Health Surveys. Figures are approximate and may reflect different reporting years.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>The Value of Waiting vs.&nbsp;the Cost of Delay</h2>
+<h2>Reading the Profiles</h2>
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box">
+<p><strong>Ethiopia</strong> has the highest NMR (28) and the largest birth cohort (3.4M). That means the <em>absolute number</em> of neonatal deaths is enormous. But Ethiopia also has 8+ regions with very different health systems – scaling programs is hard.</p>
+</div>
+<div class="callout-box green">
+<p><strong>Rwanda</strong> has the lowest NMR (16) and a famously strong, centralized health system. Programs tend to work well here. But the birth cohort is small, so the absolute number of lives you can save is limited.</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box orange">
+<p><strong>Kenya</strong> has the highest MMR (342) and a devolved system with 47 counties. Impact varies wildly depending on which county you work in. Some counties look like Rwanda; others look like Ethiopia.</p>
+</div>
+<div class="callout-box red">
+<p><strong>Tanzania</strong> has a moderate burden (MMR 238, NMR 20) but a serious health workforce gap. There are not enough skilled birth attendants in rural areas. Without staff, equipment sits unused.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="key-takeaway">
+<p><strong>No single country dominates on every dimension.</strong> Ethiopia has the biggest need; Rwanda has the best system; Kenya has the highest maternal mortality; Tanzania has a critical workforce bottleneck. A smart allocation has to weigh all of these.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Three Strategies</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Concentrate, Spread, or Tiered?</span></p>
+</section>
+<section class="slide level2">
+<h2>Strategy 1: Concentrate</h2>
+<div class="definition-box">
+<p><strong>Concentrate:</strong> Put the majority of the budget into one or two countries where you expect the highest absolute impact. In our case, that probably means Ethiopia (biggest birth cohort, highest NMR) and Kenya (highest MMR).</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Maximizes <em>expected</em> lives saved if your top picks perform well</li>
+<li>Simpler to manage – fewer countries means fewer coordination challenges</li>
+<li>Deeper investment may push a country past a tipping point</li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Cons:</strong></p>
+<ul>
+<li>If Ethiopia hits a political crisis or Kenya’s devolution slows rollout, you lose big</li>
+<li>Rwanda and Tanzania are left with scraps – and their governments notice</li>
+<li>You are making a big bet on a few uncertain outcomes</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="example-block">
+<p><span class="example-label">Illustrative Split</span></p>
+<p>Ethiopia 50% | Kenya 30% | Tanzania 12% | Rwanda 8%</p>
+<p><em>This is a hypothetical example for teaching purposes, not an actual program allocation.</em></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Strategy 2: Spread</h2>
+<div class="definition-box">
+<p><strong>Spread:</strong> Divide the budget roughly equally across all four countries. Everyone gets a fair share.</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Reduces risk – if one country struggles, the others can still deliver</li>
+<li>Politically easier – no country feels ignored</li>
+<li>You learn about all four countries simultaneously</li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Cons:</strong></p>
+<ul>
+<li>You may spread too thin – none of the countries gets enough to make a real difference</li>
+<li>Equal shares ignore the fact that Ethiopia has 9x the births of Rwanda</li>
+<li>The best-performing country is underfunded; the weakest is overfunded</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="example-block">
+<p><span class="example-label">Illustrative Split</span></p>
+<p>Ethiopia 25% | Kenya 25% | Tanzania 25% | Rwanda 25%</p>
+<p><em>Equal allocation regardless of burden or capacity.</em></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Strategy 3: Tiered</h2>
+<div class="definition-box">
+<p><strong>Tiered:</strong> Weight the allocation by a combination of health burden and system capacity. Countries with higher burden <em>and</em> reasonable capacity get more. Countries with low burden or weak capacity get less (but not zero).</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Pros:</strong></p>
+<ul>
+<li>Balances impact and risk – bigger countries get more, but not everything</li>
+<li>Accounts for capacity – money goes where it can actually be used</li>
+<li>Provides a rationale that is defensible to donors and governments</li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="callout-box orange">
+<p><strong>Cons:</strong></p>
+<ul>
+<li>Requires judgment calls about how to weight burden vs.&nbsp;capacity</li>
+<li>More complex to explain and manage</li>
+<li>“Weighted” does not mean “optimal” – the weights are still subjective</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="example-block">
+<p><span class="example-label">Illustrative Split</span></p>
+<p>Ethiopia 40% | Kenya 28% | Tanzania 20% | Rwanda 12%</p>
+<p><em>Weighted by burden (NMR x births) adjusted for system capacity.</em></p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Comparing the Three Strategies</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Feature</th>
+<th>Concentrate</th>
+<th>Spread</th>
+<th>Tiered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Expected impact</strong> (if things go well)</td>
+<td>Highest</td>
+<td>Lowest</td>
+<td>Middle</td>
+</tr>
+<tr class="even">
+<td><strong>Worst-case outcome</strong> (if things go badly)</td>
+<td>Worst</td>
+<td>Best</td>
+<td>Middle</td>
+</tr>
+<tr class="odd">
+<td><strong>Fairness / political acceptability</strong></td>
+<td>Low</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr class="even">
+<td><strong>Management complexity</strong></td>
+<td>Low</td>
+<td>Medium</td>
+<td>Medium</td>
+</tr>
+<tr class="odd">
+<td><strong>Flexibility to adjust later</strong></td>
+<td>Low (committed)</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+</tbody>
+</table>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Notice the pattern:</strong> There is a tradeoff between <em>expected impact</em> and <em>protection against bad outcomes</em>. The Concentrate strategy is like buying a single lottery ticket – high potential payoff, but risky. The Spread strategy is like buying insurance – less upside, but more protection. The Tiered strategy tries to get the best of both worlds.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="key-takeaway">
+<p><strong>No strategy is universally “best.”</strong> The right choice depends on how much risk you are willing to take, how uncertain the future is, and what your stakeholders value. The rest of this chapter gives you tools to think through that choice.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Uncertainty</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">We do not know exactly what will happen</span></p>
+</section>
+<section class="slide level2">
+<h2>What Could Go Right – and What Could Go Wrong</h2>
+<div class="callout-box">
+<p><strong>The honest truth:</strong> No matter how good your analysis, the future is uncertain. Programs can exceed expectations or fall flat. The question is not “What <em>will</em> happen?” but <strong>“What <em>could</em> happen, and how likely is each scenario?”</strong></p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box green">
+<p><strong>Things go well:</strong></p>
+<ul>
+<li>Government commits to sustaining the program</li>
+<li>Health workers stay at their posts</li>
+<li>Supply chains deliver on time</li>
+<li>Community uptake is strong</li>
+<li>Other donors add funding</li>
+</ul>
+<p><em>Probability: roughly 30-40% in most countries</em></p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box red">
+<p><strong>Things go poorly:</strong></p>
+<ul>
+<li>Political transition disrupts priorities</li>
+<li>Trained workers leave for private sector</li>
+<li>Drug stockouts undermine quality</li>
+<li>Community resistance slows adoption</li>
+<li>Other donors pull out</li>
+</ul>
+<p><em>Probability: roughly 10-20% in most countries</em></p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>The middle ground (40-50% probability):</strong> Things go <em>okay</em>. Not everything works, but programs make meaningful progress. Some regions outperform; others underperform. This is the most likely scenario – and the hardest to plan for.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Scenarios for Each Country</h2>
+<p>Let us assign rough probabilities to three scenarios for each country. These are illustrative, based on the public data and general knowledge of each country’s health system.</p>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Country</th>
+<th>P(Things go well)</th>
+<th>P(Middle ground)</th>
+<th>P(Things go poorly)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ethiopia</strong></td>
+<td>0.30</td>
+<td>0.50</td>
+<td>0.20</td>
+</tr>
+<tr class="even">
+<td><strong>Rwanda</strong></td>
+<td>0.55</td>
+<td>0.35</td>
+<td>0.10</td>
+</tr>
+<tr class="odd">
+<td><strong>Kenya</strong></td>
+<td>0.35</td>
+<td>0.45</td>
+<td>0.20</td>
+</tr>
+<tr class="even">
+<td><strong>Tanzania</strong></td>
+<td>0.30</td>
+<td>0.50</td>
+<td>0.20</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Key pattern:</strong> Rwanda has the highest probability of “things go well” (strong system, political stability, track record). Ethiopia and Tanzania carry more downside risk. Kenya is in between – some counties are excellent, others are fragile.</p>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>These probabilities are judgment calls, not precise measurements.</strong> That is okay. The point of the exercise is not to nail the exact numbers – it is to force yourself to think about <em>how confident</em> you are in each country’s trajectory. Even approximate probabilities are better than ignoring uncertainty entirely.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Why Uncertainty Changes the Answer</h2>
+<div class="example-block">
+<p><span class="example-label">A Simple Illustration</span></p>
+<p>Suppose you have 100 units of budget to split between two countries:</p>
+<ul>
+<li><strong>Country X:</strong> If things go well (50%), you save 200 lives. If things go poorly (50%), you save 20 lives. Expected value: 110 lives.</li>
+<li><strong>Country Y:</strong> If things go well (50%), you save 130 lives. If things go poorly (50%), you save 90 lives. Expected value: 110 lives.</li>
+</ul>
+<p>Same expected value! But very different risk profiles.</p>
+</div>
+<div class="fragment">
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box">
+<p><strong>If you put everything in Country X:</strong></p>
+<ul>
+<li>Best case: 200 lives</li>
+<li>Worst case: 20 lives</li>
+<li>You are gambling</li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="callout-box green">
+<p><strong>If you split 50/50:</strong></p>
+<ul>
+<li>Best case: 165 lives (lower)</li>
+<li>Worst case: 55 lives (much higher)</li>
+<li>You are diversifying</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="key-takeaway">
+<p><strong>Diversification reduces your worst-case outcome.</strong> This is the same logic behind not putting all your savings in one stock. In global health, the “worst case” is measured in lives lost – which makes diversification especially important.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>Replaying the Future</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Monte Carlo simulation – imagining 1,000 possible futures</span></p>
+</section>
+<section class="slide level2">
+<h2>What Is Monte Carlo Simulation?</h2>
+<div class="definition-box">
+<p><strong>Monte Carlo simulation</strong> is a way of exploring uncertainty by letting a computer “replay the future” thousands of times. Each replay randomly picks a scenario for each country (things go well, middle ground, things go poorly), calculates the outcome, and records it. After 1,000 replays, you have a picture of <em>all the things that could happen</em> – not just the average.</p>
+</div>
+<div class="fragment">
+<p>Think of it like this:</p>
+<ul>
+<li class="fragment">You write each scenario on a slip of paper and put them in a hat</li>
+<li class="fragment">You draw a slip for Ethiopia, a slip for Rwanda, a slip for Kenya, a slip for Tanzania</li>
+<li class="fragment">You calculate the total lives saved under that combination of draws</li>
+<li class="fragment">You put the slips back, shake the hat, and draw again</li>
+<li class="fragment">After 1,000 rounds, you have 1,000 possible outcomes</li>
+</ul>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>Why “Monte Carlo”?</strong> The technique is named after the Monte Carlo casino in Monaco – because it uses randomness (like rolling dice) to explore possibilities. It was developed by physicists working on the atomic bomb and is now used in everything from weather forecasting to financial planning to global health.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>What Monte Carlo Tells You</h2>
+<div class="columns-equal">
+<div class="col">
+<div class="callout-box">
+<p><strong>Without Monte Carlo:</strong></p>
+<p>“Our best estimate is 5,000 lives saved.”</p>
+<p>One number. No sense of uncertainty. Is this almost guaranteed? Or is it a coin flip?</p>
+</div>
+</div>
+<div class="col">
+<div class="callout-box green">
+<p><strong>With Monte Carlo:</strong></p>
+<p>“In 1,000 simulations, we saved between 2,100 and 8,400 lives. The middle 50% of outcomes fell between 4,200 and 6,100. There is a 10% chance we save fewer than 3,000.”</p>
+<p>Now you understand the <em>range</em> of possibilities and can plan accordingly.</p>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>The key insight:</strong> Monte Carlo does not tell you what <em>will</em> happen. It tells you what <em>could</em> happen, and how often. This lets you compare strategies not just on their average outcome, but on their <em>entire distribution</em> of outcomes – including the best case, the worst case, and everything in between.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>Comparing Strategies With Monte Carlo</h2>
+<p>Imagine we run 1,000 simulations for each of our three strategies. Here is what the results might look like:</p>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Concentrate</th>
+<th>Spread</th>
+<th>Tiered</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Average lives saved</strong></td>
+<td>5,200</td>
+<td>4,600</td>
+<td>5,000</td>
+</tr>
+<tr class="even">
+<td><strong>Best case</strong> (top 5%)</td>
+<td>8,400</td>
+<td>6,100</td>
+<td>7,200</td>
+</tr>
+<tr class="odd">
+<td><strong>Worst case</strong> (bottom 5%)</td>
+<td>1,800</td>
+<td>3,200</td>
+<td>2,700</td>
+</tr>
+<tr class="even">
+<td><strong>Chance of saving &lt; 3,000</strong></td>
+<td>18%</td>
+<td>4%</td>
+<td>9%</td>
+</tr>
+</tbody>
+</table>
+<p><em>Illustrative numbers for teaching purposes. Actual outcomes depend on program design, country context, and budget scale.</em></p>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Read the table carefully:</strong></p>
+<ul>
+<li><strong>Concentrate</strong> has the highest average (5,200) but also the worst worst-case (1,800) and an 18% chance of falling below 3,000 lives.</li>
+<li><strong>Spread</strong> has the lowest average (4,600) but the best worst-case (3,200) and only a 4% chance of falling below 3,000.</li>
+<li><strong>Tiered</strong> is in between on every dimension – a compromise.</li>
+</ul>
+</div>
+</div>
+<div class="fragment">
+<div class="key-takeaway">
+<p><strong>Which strategy is “best” depends on what you care about.</strong> If you want the highest <em>expected</em> outcome and are willing to risk a bad result, go with Concentrate. If you want to protect against disaster, go with Spread. If you want a balance, go with Tiered. Monte Carlo makes this tradeoff visible.</p>
+</div>
+</div>
+</section></section>
+<section>
+<section class="title-slide slide level1 center" data-background-color="#005CB9">
+<h1>You Don’t Have to Decide Everything Today</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Sequential decisions – invest a little, watch, then decide</span></p>
+</section>
+<section class="slide level2">
+<h2>The Power of “Wait and See”</h2>
+<div class="callout-box">
+<p><strong>A common mistake in resource allocation:</strong> treating it as a one-shot decision. “Here is the budget. Divide it now. Done.” But in reality, most programs operate over multiple years. You can make a <em>preliminary</em> allocation, observe what happens, and then <em>adjust</em>.</p>
+</div>
+<div class="fragment">
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">
+<strong>Year 1</strong><br>Pilot funding<br>(invest a little)
+</div>
+<div class="step-arrow">
+→
+</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">
+<strong>Observe</strong><br>Early results<br>(watch)
+</div>
+<div class="step-arrow">
+→
+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">
+<strong>Year 2+</strong><br>Scale or shift<br>(then decide)
+</div>
+<div class="step-arrow">
+→
+</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">
+<strong>Outcome</strong><br>Lives saved<br>(over full program)
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="callout-box green">
+<p><strong>This is sequential decision making.</strong> Instead of committing 100% of the budget upfront, you commit a smaller amount, gather information, and then make a better-informed decision about the rest. It is the difference between placing one giant bet and playing a series of smaller, smarter bets.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>An Example: Two-Stage Allocation</h2>
+<div class="example-block">
+<p><span class="example-label">Hypothetical Scenario</span></p>
+<p>Suppose you have a budget of 100 units over two years. You are deciding how much to invest in Tanzania, where outcomes are uncertain because of the workforce gap.</p>
+<p><strong>Option A: Commit everything now.</strong> Send 30 units to Tanzania in Year 1.</p>
+<p><strong>Option B: Pilot first.</strong> Send 10 units to Tanzania in Year 1 as a pilot. Based on what you learn, decide whether to send 20 more in Year 2 – or redirect those 20 units to another country.</p>
+</div>
+<div class="fragment">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Scenario</th>
+<th>P</th>
+<th>Option A (all-in)</th>
+<th>Option B (pilot first)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Workforce holds, program succeeds</td>
+<td>0.40</td>
+<td>450 lives</td>
+<td>420 lives</td>
+</tr>
+<tr class="even">
+<td>Mixed results</td>
+<td>0.40</td>
+<td>250 lives</td>
+<td>270 lives</td>
+</tr>
+<tr class="odd">
+<td>Workforce collapses</td>
+<td>0.20</td>
+<td>60 lives</td>
+<td>180 lives</td>
+</tr>
+<tr class="even">
+<td><strong>Expected value</strong></td>
+<td></td>
+<td><strong>278 lives</strong></td>
+<td><strong>300 lives</strong></td>
+</tr>
+</tbody>
+</table>
+<p><em>Illustrative numbers. The pilot approach yields a higher expected value because you avoid wasting resources when things go badly.</em></p>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>Why is Option B better?</strong> Because in the “workforce collapses” scenario, you only lose 10 units instead of 30. The 20 units you held back can be redirected to a country where they will do more good. The pilot buys you <em>information</em> – and information has value.</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+<h2>The Cost of Waiting</h2>
+<div class="callout-box red">
+<p><strong>But waiting is not free.</strong> Every month you delay scaling up a successful program, preventable deaths are occurring. The pilot period is not just “gathering data” – it is a period when lives are at stake.</p>
+</div>
+<div class="fragment">
 <div class="columns-equal">
 <div class="col">
 <div class="callout-box green">
 <p><strong>Value of waiting:</strong></p>
 <ul>
-<li>Better information → better allocation</li>
-<li>Avoid committing $100M to a country with Low co-financing</li>
-<li>EVPI from Chapter 7 applies: pilot provides imperfect but valuable signal</li>
-<li>Reduces portfolio variance</li>
+<li>Better information leads to better allocation</li>
+<li>Avoid wasting resources on failing programs</li>
+<li>Reduce the chance of catastrophic misallocation</li>
+<li>Build evidence base for donors and governments</li>
 </ul>
 </div>
 </div>
@@ -869,116 +942,140 @@ EV =<br>60,932
 <div class="callout-box red">
 <p><strong>Cost of delay:</strong></p>
 <ul>
-<li><strong>Lives lost during pilot period.</strong> Every month of delay = preventable deaths occurring</li>
-<li>Roughly 4,500 neonatal deaths per month across the 10 countries that could be averted</li>
-<li>18-month pilot delay ≈ 81,000 potential lives at stake</li>
-<li>Staff and political momentum may dissipate</li>
+<li>Preventable deaths during the pilot period</li>
+<li>Political momentum may dissipate</li>
+<li>Staff recruited for pilot may leave</li>
+<li>Other donors may fill the gap (or leave it)</li>
 </ul>
+</div>
 </div>
 </div>
 </div>
 <div class="fragment">
 <div class="key-takeaway">
-<p><strong>The cost of delay is measured in lives.</strong> Sequential decision making is valuable, but not free. The Fund must balance the information value of waiting against the human cost of inaction. This is a distinctive feature of global health versus commercial allocation problems.</p>
+<p><strong>The decision is not “wait vs.&nbsp;act” but “how much to commit now vs.&nbsp;later.”</strong> A good sequential strategy commits enough to start saving lives immediately, while holding back enough to adjust course when you learn more. Getting this balance right is one of the hardest calls in global health.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>MNH Application: 2-Stage Decision for Nigeria</h2>
-<div class="example-block">
-<p><span class="example-label">Nigeria Allocation Decision</span></p>
-<p><strong>Context:</strong> Nigeria is planned for Fund Two (2028). The Investment Committee must decide <em>now</em> whether to begin preparatory investments.</p>
-<p><strong>Stage 1 (2026):</strong> Invest $15M in a health system strengthening pilot in 3 Nigerian states.</p>
-<p><strong>Observe (2027):</strong> Government co-financing behavior, workforce absorption, political stability.</p>
-<p><strong>Stage 2 (2028):</strong> Based on pilot results, commit $0–$120M from Fund Two.</p>
-</div>
+<h2>When Sequential Decisions Work Best</h2>
+<p>Sequential allocation is most valuable when:</p>
+<ul>
+<li class="fragment"><strong>Uncertainty is high.</strong> You genuinely do not know what will happen (e.g., a new country, an untested intervention)</li>
+<li class="fragment"><strong>Information arrives quickly.</strong> You can learn meaningful things in 6-12 months, not 5 years</li>
+<li class="fragment"><strong>Funds are flexible.</strong> You can actually redirect money from one country to another (not always easy with donor rules)</li>
+<li class="fragment"><strong>The cost of delay is manageable.</strong> The program is not in a crisis where every day counts</li>
+</ul>
 <div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Decision Path</th>
-<th>P</th>
-<th>Investment</th>
-<th>Expected Lives</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Pilot → Promising → Full scale</td>
-<td>0.30</td>
-<td>$135M</td>
-<td>48,000</td>
-</tr>
-<tr class="even">
-<td>Pilot → Mixed → Partial scale</td>
-<td>0.40</td>
-<td>$55M</td>
-<td>18,000</td>
-</tr>
-<tr class="odd">
-<td>Pilot → Negative → Exit</td>
-<td>0.30</td>
-<td>$15M</td>
-<td>2,000</td>
-</tr>
-<tr class="even">
-<td><strong>EV(Sequential)</strong></td>
-<td></td>
-<td><strong>$62M</strong></td>
-<td><strong>22,400</strong></td>
-</tr>
-<tr class="odd">
-<td>No pilot → Full commit</td>
-<td>1.00</td>
-<td>$120M</td>
-<td>25,000</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box orange">
-<p><strong>The pilot saves $58M in expected cost</strong> ($62M vs.&nbsp;$120M) while sacrificing only 2,600 expected lives (22,400 vs.&nbsp;25,000). The freed capital can be deployed in higher-confidence countries.</p>
+<div class="callout-box">
+<p><strong>When it does NOT work well:</strong></p>
+<ul>
+<li>If the window for action is closing fast (e.g., disease outbreak)</li>
+<li>If donor contracts lock in allocations for multiple years</li>
+<li>If political commitments require upfront certainty (“We promised Tanzania $X”)</li>
+<li>If the pilot is too small to generate useful information</li>
+</ul>
 </div>
 </div>
 </section></section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>Stakeholder Response</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Other donors and governments as strategic actors</span></p>
+<h1>MNH Application</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Applying the three strategies to our four countries</span></p>
 </section>
 <section class="slide level2">
-<h2>Crowding Out vs.&nbsp;Crowding In</h2>
-<div class="definition-box">
-<p><strong>Crowding Out:</strong> When the Fund’s investment causes other donors or the government to <em>reduce</em> their own spending on MNH — “the Fund will cover it.”</p>
-<p><strong>Crowding In:</strong> When the Fund’s investment causes others to <em>increase</em> their spending — “this sector is getting results; let’s invest more.”</p>
+<h2>Setting Up the Problem</h2>
+<div class="callout-box">
+<p><strong>Scenario:</strong> You lead an MNH program with a fixed annual budget (let us call it 100 units for simplicity). You must allocate across Ethiopia, Rwanda, Kenya, and Tanzania. Your goal: maximize lives saved while managing risk.</p>
 </div>
 <div class="fragment">
+<p>Using the public data from our country profiles, we can estimate a rough “impact score” for each country:</p>
+<table class="caption-top" style="width:100%;">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Country</th>
+<th>NMR</th>
+<th>Births (M)</th>
+<th>Preventable deaths (est.)</th>
+<th>System capacity</th>
+<th>Impact score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ethiopia</strong></td>
+<td>28</td>
+<td>3.4</td>
+<td>~95,000</td>
+<td>Medium</td>
+<td>High burden, moderate capacity</td>
+</tr>
+<tr class="even">
+<td><strong>Rwanda</strong></td>
+<td>16</td>
+<td>0.37</td>
+<td>~6,000</td>
+<td>Strong</td>
+<td>Lower burden, high capacity</td>
+</tr>
+<tr class="odd">
+<td><strong>Kenya</strong></td>
+<td>21</td>
+<td>1.5</td>
+<td>~32,000</td>
+<td>Variable</td>
+<td>High burden, variable capacity</td>
+</tr>
+<tr class="even">
+<td><strong>Tanzania</strong></td>
+<td>20</td>
+<td>2.1</td>
+<td>~42,000</td>
+<td>Weak-Medium</td>
+<td>High burden, capacity gap</td>
+</tr>
+</tbody>
+</table>
+<p><em>Preventable deaths estimated as NMR x births x fraction preventable with known interventions. Approximate figures for illustration.</em></p>
+</div>
+</section>
+<section class="slide level2">
+<h2>The Three Strategies Applied</h2>
 <div class="columns-equal">
 <div class="col">
-<div class="callout-box red">
-<p><strong>Crowding Out Scenario</strong></p>
-<p>Fund invests $50M in Tanzania MNH.</p>
-<p>Government redirects $20M from MNH to other priorities.</p>
-<p><strong>Net new investment:</strong> $30M.</p>
-<p><strong>Impact:</strong> 63% of expected lives saved.</p>
+<div class="callout-box">
+<p><strong>Concentrate</strong></p>
+<p>Ethiopia 50% | Kenya 30% Tanzania 12% | Rwanda 8%</p>
+<p><em>Logic:</em> Ethiopia and Kenya account for ~73% of estimated preventable deaths. Focus resources where the numbers are biggest.</p>
 </div>
 </div>
 <div class="col">
 <div class="callout-box green">
-<p><strong>Crowding In Scenario</strong></p>
-<p>Fund invests $50M in Tanzania MNH.</p>
-<p>Government adds $15M in matching funds. World Bank adds $10M.</p>
-<p><strong>Net new investment:</strong> $75M.</p>
-<p><strong>Impact:</strong> 150% of expected lives saved.</p>
+<p><strong>Spread</strong></p>
+<p>Ethiopia 25% | Kenya 25% Tanzania 25% | Rwanda 25%</p>
+<p><em>Logic:</em> Every country gets a fair share. Reduces risk from any single country failing.</p>
 </div>
+</div>
+<div class="col">
+<div class="callout-box orange">
+<p><strong>Tiered</strong></p>
+<p>Ethiopia 40% | Kenya 28% Tanzania 20% | Rwanda 12%</p>
+<p><em>Logic:</em> Weight by burden adjusted for capacity. Ethiopia gets the most (high burden), but not everything. Rwanda gets least (low burden), but enough to maintain programs.</p>
 </div>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Modeling Other Donors</h2>
-<p>Other donors (World Bank, Global Fund, USAID, bilateral agencies) respond to the Fund’s allocation:</p>
+<h2>Expected Outcomes Under Each Strategy</h2>
+<p>Using our scenario probabilities and illustrative impact assumptions:</p>
 <div class="fragment">
 <table class="caption-top">
 <colgroup>
@@ -989,491 +1086,265 @@ EV =<br>60,932
 </colgroup>
 <thead>
 <tr class="header">
-<th>Fund Action</th>
-<th>Other Donor Response</th>
-<th>P</th>
-<th>Net Multiplier</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Large investment in country X</td>
-<td>Redirect away (“covered”)</td>
-<td>0.30</td>
-<td>0.7×</td>
-</tr>
-<tr class="even">
-<td>Large investment in country X</td>
-<td>Maintain existing programs</td>
-<td>0.45</td>
-<td>1.0×</td>
-</tr>
-<tr class="odd">
-<td>Large investment in country X</td>
-<td>Match/expand programs</td>
-<td>0.25</td>
-<td>1.4×</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="math-block">
-<p><span class="math inline">\(\text{Expected multiplier} = 0.30 \times 0.7 + 0.45 \times 1.0 + 0.25 \times 1.4 = 0.21 + 0.45 + 0.35 = \mathbf{1.01}\)</span></p>
-</div>
-</div>
-<div class="fragment">
-<div class="callout-box orange">
-<p><strong>On average, the multiplier is roughly 1.0</strong> — crowding out and crowding in approximately cancel. But the variance matters: in 30% of cases the Fund’s dollar buys only $0.70 of new investment. Strategic coordination with other donors can shift these probabilities.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Preview: Game Theory (Chapter 9)</h2>
-<div class="callout-box">
-<p><strong>The stakeholder response problem is fundamentally a game theory problem.</strong> Each actor (Fund, government, other donors) makes decisions considering what the others will do.</p>
-<p>In Chapter 9, we will formalize this with:</p>
-<ul>
-<li><strong>Nash equilibrium</strong> — stable allocation patterns where no actor wants to deviate</li>
-<li><strong>Commitment devices</strong> — co-financing agreements that bind government behavior</li>
-<li><strong>Signaling</strong> — how the Fund’s early investments signal priorities to other donors</li>
-<li><strong>Mechanism design</strong> — structuring incentives so all actors align toward lives saved</li>
-</ul>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>For now:</strong> We treat stakeholder response as an <em>uncertain variable</em> in our decision model (a chance node). In Chapter 9, we upgrade it to a <em>strategic variable</em> with its own decision logic.</p>
-</div>
-</div>
-</section></section>
-<section>
-<section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>MNH Application: 3-Country Allocation</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Full decision analysis for Ethiopia, Kenya, and Tanzania</span></p>
-</section>
-<section class="slide level2">
-<h2>The 3-Country Problem</h2>
-<div class="callout-box">
-<p><strong>Simplified scenario:</strong> The Investment Committee has $200M to allocate across Ethiopia, Kenya, and Tanzania — the three largest target countries. How should it split the funds?</p>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Country</th>
-<th>Lives Saved Target</th>
-<th>Expected Achievement</th>
-<th>Lives per $M</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Ethiopia</strong></td>
-<td>86,124</td>
-<td>70.8%</td>
-<td>610</td>
-</tr>
-<tr class="even">
-<td><strong>Kenya</strong></td>
-<td>46,494</td>
-<td>76.5%</td>
-<td>356</td>
-</tr>
-<tr class="odd">
-<td><strong>Tanzania</strong></td>
-<td>63,497</td>
-<td>72.8%</td>
-<td>462</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box orange">
-<p><strong>Naive approach:</strong> Allocate proportional to lives-per-dollar → send almost everything to Ethiopia. But this ignores <strong>risk</strong> (Ethiopia has more uncertainty) and <strong>diminishing returns</strong> (marginal impact decreases with scale).</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Influence Diagram for 3-Country Allocation</h2>
-<table style="width: 95%; margin: 0.4em auto; font-size: 0.42em;">
-<tbody><tr>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node decision rect" style="padding: 0.4em 0.6em;">
-Allocation<br><span class="math inline">\(a_{ETH}, a_{KEN}, a_{TZA}\)</span>
-</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow" style="font-size: 1.8em;">→</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node" style="padding: 0.4em 0.6em;">
-Coverage<br>(per country)
-</div>
-</td>
-<td style="text-align: center;">
-<span class="dag-arrow" style="font-size: 1.8em;">→</span>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node hexagon" style="border-color: #3E9B6E; color: #3E9B6E; padding: 0.4em 0.6em;">
-Total<br>Lives Saved
-</div>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td>
-</td>
-<td style="text-align: center; padding: 0.3em;">
-<span class="dag-arrow">↑</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="dag-arrow">↑</span>
-</td>
-<td>
-</td>
-<td>
-</td>
-</tr>
-<tr>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node confounder" style="padding: 0.4em 0.6em;">
-Gov’t Co-<br>financing
-</div>
-</td>
-<td>
-</td>
-<td style="text-align: center; padding: 0.5em;">
-<div class="dag-node confounder" style="padding: 0.4em 0.6em;">
-Donor<br>Response
-</div>
-</td>
-<td>
-</td>
-<td>
-</td>
-</tr>
-</tbody></table>
-<div class="fragment">
-<ul>
-<li class="fragment"><strong>Decision node</strong> (rectangle): Allocation vector <span class="math inline">\((a_{ETH}, a_{KEN}, a_{TZA})\)</span> with <span class="math inline">\(\sum = \$200M\)</span></li>
-<li class="fragment"><strong>Chance nodes</strong> (ovals): Coverage per country, influenced by allocation and uncertain factors</li>
-<li class="fragment"><strong>Uncertain variables</strong> (amber): Government co-financing and other donor response — both country-specific</li>
-<li class="fragment"><strong>Objective</strong> (hexagon): Total lives saved across all three countries</li>
-</ul>
-</div>
-</section>
-<section class="slide level2">
-<h2>Comparing Strategies</h2>
-<p>Three allocation strategies for $200M across Ethiopia/Kenya/Tanzania:</p>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
 <th>Strategy</th>
-<th>Ethiopia</th>
-<th>Kenya</th>
-<th>Tanzania</th>
-<th>Expected Lives</th>
-<th>Std Dev</th>
+<th>Expected lives saved</th>
+<th>Best case (top 10%)</th>
+<th>Worst case (bottom 10%)</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Concentrate</strong></td>
-<td>$140M</td>
-<td>$30M</td>
-<td>$30M</td>
-<td>112,460</td>
-<td>28,400</td>
+<td>~5,200</td>
+<td>~8,400</td>
+<td>~1,800</td>
 </tr>
 <tr class="even">
 <td><strong>Spread</strong></td>
-<td>$67M</td>
-<td>$67M</td>
-<td>$67M</td>
-<td>104,280</td>
-<td>19,100</td>
+<td>~4,600</td>
+<td>~6,100</td>
+<td>~3,200</td>
 </tr>
 <tr class="odd">
 <td><strong>Tiered</strong></td>
-<td>$90M</td>
-<td>$45M</td>
-<td>$65M</td>
-<td>109,850</td>
-<td>22,600</td>
+<td>~5,000</td>
+<td>~7,200</td>
+<td>~2,700</td>
 </tr>
 </tbody>
 </table>
+<p><em>Illustrative figures based on hypothetical budget and impact assumptions. Not actual program projections.</em></p>
 </div>
 <div class="fragment">
-<div class="columns-equal">
-<div class="col">
 <div class="callout-box">
-<p><strong>Concentrate</strong> has the highest expected value (112,460) but also the highest risk (std dev 28,400). A bad outcome in Ethiopia is catastrophic.</p>
+<p><strong>The Tiered strategy sacrifices about 4% of expected impact compared to Concentrate, but improves the worst-case outcome by 50%.</strong> That tradeoff – a small expected cost for a large reduction in downside risk – is why many real-world programs gravitate toward tiered allocations.</p>
 </div>
 </div>
-<div class="col">
+<div class="fragment">
 <div class="callout-box green">
-<p><strong>Tiered</strong> sacrifices 2,610 expected lives (2.3%) relative to Concentrate but reduces standard deviation by 20%. This is the <strong>efficient frontier</strong> logic from portfolio theory.</p>
-</div>
-</div>
+<p><strong>Which would you choose?</strong> There is no universally right answer. It depends on your risk tolerance, your donors’ expectations, and how much flexibility you have to adjust over time.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
-<h2>Sensitivity to Government Co-Financing</h2>
-<p><strong>At what P(High co-financing) does Concentrate beat Tiered?</strong></p>
-<div class="fragment">
-<p>Let <span class="math inline">\(p\)</span> = P(High co-financing) for Ethiopia specifically:</p>
-<div class="math-block">
-<p><span class="math inline">\(EV(\text{Concentrate}) = 140M \times [p \times 610 + (1-p) \times 280] / M = 140 \times (280 + 330p)\)</span></p>
-<p><span class="math inline">\(EV(\text{Tiered}) = 90 \times (280 + 330p) + 45 \times (190 + 166p) + 65 \times (250 + 212p)\)</span></p>
-</div>
-</div>
-<div class="fragment">
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Ethiopia P(High)</th>
-<th>EV(Concentrate)</th>
-<th>EV(Tiered)</th>
-<th>Best Strategy</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>0.20</td>
-<td>93,800</td>
-<td>97,250</td>
-<td>Tiered</td>
-</tr>
-<tr class="even">
-<td>0.40</td>
-<td>112,460</td>
-<td>109,850</td>
-<td>Concentrate</td>
-</tr>
-<tr class="odd">
-<td>0.60</td>
-<td>131,120</td>
-<td>122,450</td>
-<td>Concentrate</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="fragment">
-<div class="callout-box green">
-<p><strong>Crossover point: P(High) ≈ 0.35.</strong> If the Investment Committee believes Ethiopia has a &gt;35% chance of high co-financing, concentrating funds becomes optimal in expectation. But the risk-adjusted answer depends on the Committee’s risk tolerance.</p>
-</div>
-</div>
-</section>
-<section class="slide level2">
-<h2>Recommendation with Confidence Intervals</h2>
-<div class="key-takeaway">
-<p><strong>Recommended allocation: Tiered strategy</strong></p>
-<p>Ethiopia $90M | Kenya $45M | Tanzania $65M</p>
-<p><strong>Expected lives saved: 109,850</strong> (95% CI: 68,300 – 148,200)</p>
-</div>
-<div class="fragment">
+<h2>Adding Sequential Decisions</h2>
 <div class="example-block">
-<p><span class="example-label">Rationale</span></p>
-<ol type="1">
-<li><p><strong>Robustness:</strong> Tiered performs within 3% of Concentrate under favorable conditions and substantially better under adverse conditions (worst-case gap: +14,200 lives)</p></li>
-<li><p><strong>Portfolio diversification:</strong> Spreading across 3 countries with different risk profiles reduces the probability of catastrophic shortfall</p></li>
-<li><p><strong>Political feasibility:</strong> Extreme concentration raises equity concerns among participating governments</p></li>
-<li><p><strong>Adaptive capacity:</strong> Tiered allocation preserves the option to reallocate in Phase 2 based on observed performance</p></li>
-</ol>
+<p><span class="example-label">A Tiered + Sequential Approach</span></p>
+<p><strong>Year 1 (60% of budget):</strong></p>
+<ul>
+<li>Ethiopia 24% | Kenya 17% | Tanzania 12% | Rwanda 7%</li>
+</ul>
+<p><strong>Year 2 (40% of budget):</strong></p>
+<ul>
+<li>Reallocate based on Year 1 results</li>
+<li>Countries performing well get scaled up</li>
+<li>Countries struggling get reallocated to stronger performers</li>
+</ul>
+<p><strong>Expected outcome:</strong> ~5,100 lives (slightly higher than static Tiered, with much better worst-case protection)</p>
+</div>
+<div class="fragment">
+<div class="callout-box orange">
+<p><strong>The sequential version outperforms the static version</strong> because it allows you to redirect resources when you learn that a country is underperforming. The information you gain in Year 1 is valuable – and the Monte Carlo simulation in our R workshop will show you exactly how valuable.</p>
 </div>
 </div>
 </section></section>
 <section>
 <section class="title-slide slide level1 center" data-background-color="#005CB9">
-<h1>R Code Workshop</h1>
-<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Monte Carlo simulation and optimal allocation in R</span></p>
+<h1>R Workshop: Monte Carlo Strategy Comparison</h1>
+<p><span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Replaying the future in R</span></p>
 </section>
 <section class="slide level2">
-<h2>R Block 1: Monte Carlo Simulation</h2>
+<h2>R Block 1: Setting Up the Countries</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-2"><a href=""></a>n_sims <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb1-3"><a href=""></a></span>
-<span id="cb1-4"><a href=""></a><span class="co"># Country parameters: target lives, expected lives per $M, sd per $M</span></span>
-<span id="cb1-5"><a href=""></a>countries <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-6"><a href=""></a>  <span class="at">country =</span> <span class="fu">c</span>(<span class="st">"Ethiopia"</span>, <span class="st">"Kenya"</span>, <span class="st">"Tanzania"</span>),</span>
-<span id="cb1-7"><a href=""></a>  <span class="at">target =</span> <span class="fu">c</span>(<span class="dv">86124</span>, <span class="dv">46494</span>, <span class="dv">63497</span>),</span>
-<span id="cb1-8"><a href=""></a>  <span class="at">lives_per_M =</span> <span class="fu">c</span>(<span class="dv">610</span>, <span class="dv">356</span>, <span class="dv">462</span>),</span>
-<span id="cb1-9"><a href=""></a>  <span class="at">sd_per_M =</span> <span class="fu">c</span>(<span class="dv">185</span>, <span class="dv">95</span>, <span class="dv">130</span>),  <span class="co"># uncertainty in effectiveness</span></span>
-<span id="cb1-10"><a href=""></a>  <span class="at">p_high =</span> <span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.50</span>, <span class="fl">0.45</span>)  <span class="co"># P(high gov co-financing)</span></span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a><span class="co"># Country profiles using PUBLIC data (WHO, World Bank)</span></span>
+<span id="cb1-4"><a href=""></a>countries <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-5"><a href=""></a>  <span class="at">country =</span> <span class="fu">c</span>(<span class="st">"Ethiopia"</span>, <span class="st">"Rwanda"</span>, <span class="st">"Kenya"</span>, <span class="st">"Tanzania"</span>),</span>
+<span id="cb1-6"><a href=""></a>  <span class="at">nmr =</span> <span class="fu">c</span>(<span class="dv">28</span>, <span class="dv">16</span>, <span class="dv">21</span>, <span class="dv">20</span>),           <span class="co"># neonatal mortality rate per 1,000</span></span>
+<span id="cb1-7"><a href=""></a>  <span class="at">births_millions =</span> <span class="fu">c</span>(<span class="fl">3.4</span>, <span class="fl">0.37</span>, <span class="fl">1.5</span>, <span class="fl">2.1</span>),</span>
+<span id="cb1-8"><a href=""></a>  <span class="at">p_good =</span> <span class="fu">c</span>(<span class="fl">0.30</span>, <span class="fl">0.55</span>, <span class="fl">0.35</span>, <span class="fl">0.30</span>),  <span class="co"># P(things go well)</span></span>
+<span id="cb1-9"><a href=""></a>  <span class="at">p_mid  =</span> <span class="fu">c</span>(<span class="fl">0.50</span>, <span class="fl">0.35</span>, <span class="fl">0.45</span>, <span class="fl">0.50</span>),  <span class="co"># P(middle ground)</span></span>
+<span id="cb1-10"><a href=""></a>  <span class="at">p_bad  =</span> <span class="fu">c</span>(<span class="fl">0.20</span>, <span class="fl">0.10</span>, <span class="fl">0.20</span>, <span class="fl">0.20</span>)   <span class="co"># P(things go poorly)</span></span>
 <span id="cb1-11"><a href=""></a>)</span>
 <span id="cb1-12"><a href=""></a></span>
-<span id="cb1-13"><a href=""></a><span class="co"># Simulate outcomes for a given allocation</span></span>
-<span id="cb1-14"><a href=""></a>simulate_outcomes <span class="ot">&lt;-</span> <span class="cf">function</span>(alloc, countries, n_sims) {</span>
-<span id="cb1-15"><a href=""></a>  total_lives <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
-<span id="cb1-16"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
-<span id="cb1-17"><a href=""></a>    lives <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-18"><a href=""></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(countries)) {</span>
-<span id="cb1-19"><a href=""></a>      <span class="co"># Government co-financing scenario</span></span>
-<span id="cb1-20"><a href=""></a>      gov <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"High"</span>, <span class="st">"Med"</span>, <span class="st">"Low"</span>), <span class="dv">1</span>,</span>
-<span id="cb1-21"><a href=""></a>                    <span class="at">prob =</span> <span class="fu">c</span>(countries<span class="sc">$</span>p_high[j],</span>
-<span id="cb1-22"><a href=""></a>                             <span class="dv">1</span> <span class="sc">-</span> countries<span class="sc">$</span>p_high[j] <span class="sc">-</span> <span class="fl">0.10</span>,</span>
-<span id="cb1-23"><a href=""></a>                             <span class="fl">0.10</span>))</span>
-<span id="cb1-24"><a href=""></a>      multiplier <span class="ot">&lt;-</span> <span class="cf">switch</span>(gov, <span class="at">High =</span> <span class="fl">1.0</span>, <span class="at">Med =</span> <span class="fl">0.6</span>, <span class="at">Low =</span> <span class="fl">0.25</span>)</span>
-<span id="cb1-25"><a href=""></a>      <span class="co"># Lives saved = allocation * lives per $M * multiplier + noise</span></span>
-<span id="cb1-26"><a href=""></a>      lives_j <span class="ot">&lt;-</span> alloc[j] <span class="sc">*</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, countries<span class="sc">$</span>lives_per_M[j],</span>
-<span id="cb1-27"><a href=""></a>                                      countries<span class="sc">$</span>sd_per_M[j]) <span class="sc">*</span> multiplier</span>
-<span id="cb1-28"><a href=""></a>      lives <span class="ot">&lt;-</span> lives <span class="sc">+</span> <span class="fu">max</span>(<span class="dv">0</span>, lives_j)</span>
-<span id="cb1-29"><a href=""></a>    }</span>
-<span id="cb1-30"><a href=""></a>    total_lives[i] <span class="ot">&lt;-</span> lives</span>
-<span id="cb1-31"><a href=""></a>  }</span>
-<span id="cb1-32"><a href=""></a>  total_lives</span>
-<span id="cb1-33"><a href=""></a>}</span>
-<span id="cb1-34"><a href=""></a></span>
-<span id="cb1-35"><a href=""></a><span class="co"># Three strategies (in $M)</span></span>
-<span id="cb1-36"><a href=""></a>strat_concentrate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">140</span>, <span class="dv">30</span>, <span class="dv">30</span>)  <span class="co"># Heavy Ethiopia</span></span>
-<span id="cb1-37"><a href=""></a>strat_spread      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">67</span>, <span class="dv">67</span>, <span class="dv">67</span>)   <span class="co"># Equal</span></span>
-<span id="cb1-38"><a href=""></a>strat_tiered      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">90</span>, <span class="dv">45</span>, <span class="dv">65</span>)   <span class="co"># Weighted</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-13"><a href=""></a><span class="co"># Estimated preventable neonatal deaths (in thousands)</span></span>
+<span id="cb1-14"><a href=""></a><span class="co"># Rough estimate: NMR * births * fraction preventable (~0.5)</span></span>
+<span id="cb1-15"><a href=""></a>countries<span class="sc">$</span>preventable_k <span class="ot">&lt;-</span> <span class="fu">with</span>(countries,</span>
+<span id="cb1-16"><a href=""></a>  nmr <span class="sc">*</span> births_millions <span class="sc">*</span> <span class="fl">0.5</span></span>
+<span id="cb1-17"><a href=""></a>)</span>
+<span id="cb1-18"><a href=""></a></span>
+<span id="cb1-19"><a href=""></a>countries</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
-<h2>R Block 2: Visualize Strategy Outcomes</h2>
+<h2>R Block 2: The Simulation Function</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href=""></a></span>
-<span id="cb2-3"><a href=""></a><span class="co"># Run simulations</span></span>
-<span id="cb2-4"><a href=""></a>sim_conc   <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_concentrate, countries, n_sims)</span>
-<span id="cb2-5"><a href=""></a>sim_spread <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_spread, countries, n_sims)</span>
-<span id="cb2-6"><a href=""></a>sim_tiered <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(strat_tiered, countries, n_sims)</span>
-<span id="cb2-7"><a href=""></a></span>
-<span id="cb2-8"><a href=""></a><span class="co"># Combine into data frame</span></span>
-<span id="cb2-9"><a href=""></a>sim_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb2-10"><a href=""></a>  <span class="at">lives =</span> <span class="fu">c</span>(sim_conc, sim_spread, sim_tiered),</span>
-<span id="cb2-11"><a href=""></a>  <span class="at">strategy =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>),</span>
-<span id="cb2-12"><a href=""></a>                 <span class="at">each =</span> n_sims)</span>
-<span id="cb2-13"><a href=""></a>)</span>
-<span id="cb2-14"><a href=""></a></span>
-<span id="cb2-15"><a href=""></a><span class="co"># Violin plot with embedded box plot</span></span>
-<span id="cb2-16"><a href=""></a><span class="fu">ggplot</span>(sim_df, <span class="fu">aes</span>(<span class="at">x =</span> strategy, <span class="at">y =</span> lives <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">fill =</span> strategy)) <span class="sc">+</span></span>
-<span id="cb2-17"><a href=""></a>  <span class="fu">geom_violin</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">draw_quantiles =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)) <span class="sc">+</span></span>
-<span id="cb2-18"><a href=""></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb2-19"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
-<span id="cb2-20"><a href=""></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Allocation Strategy"</span>,</span>
-<span id="cb2-21"><a href=""></a>       <span class="at">y =</span> <span class="st">"Total Lives Saved (thousands)"</span>,</span>
-<span id="cb2-22"><a href=""></a>       <span class="at">title =</span> <span class="st">"Simulated Outcomes: 3-Country Allocation ($200M)"</span>,</span>
-<span id="cb2-23"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"10,000 Monte Carlo draws | Violin shows full distribution"</span>) <span class="sc">+</span></span>
-<span id="cb2-24"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb2-25"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="co"># Simulate total lives saved for a given allocation strategy</span></span>
+<span id="cb2-2"><a href=""></a><span class="co"># allocation = vector of proportions summing to 1 (or 100)</span></span>
+<span id="cb2-3"><a href=""></a><span class="co"># n_sims = number of Monte Carlo replays</span></span>
+<span id="cb2-4"><a href=""></a></span>
+<span id="cb2-5"><a href=""></a>simulate_strategy <span class="ot">&lt;-</span> <span class="cf">function</span>(allocation, countries, <span class="at">n_sims =</span> <span class="dv">1000</span>) {</span>
+<span id="cb2-6"><a href=""></a>  <span class="co"># Normalize allocation to proportions</span></span>
+<span id="cb2-7"><a href=""></a>  alloc <span class="ot">&lt;-</span> allocation <span class="sc">/</span> <span class="fu">sum</span>(allocation)</span>
+<span id="cb2-8"><a href=""></a>  results <span class="ot">&lt;-</span> <span class="fu">numeric</span>(n_sims)</span>
+<span id="cb2-9"><a href=""></a></span>
+<span id="cb2-10"><a href=""></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sims) {</span>
+<span id="cb2-11"><a href=""></a>    total_lives <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb2-12"><a href=""></a></span>
+<span id="cb2-13"><a href=""></a>    <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(countries)) {</span>
+<span id="cb2-14"><a href=""></a>      <span class="co"># Draw a scenario for this country</span></span>
+<span id="cb2-15"><a href=""></a>      scenario <span class="ot">&lt;-</span> <span class="fu">sample</span>(</span>
+<span id="cb2-16"><a href=""></a>        <span class="fu">c</span>(<span class="st">"good"</span>, <span class="st">"mid"</span>, <span class="st">"bad"</span>), <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb2-17"><a href=""></a>        <span class="at">prob =</span> <span class="fu">c</span>(countries<span class="sc">$</span>p_good[j],</span>
+<span id="cb2-18"><a href=""></a>                 countries<span class="sc">$</span>p_mid[j],</span>
+<span id="cb2-19"><a href=""></a>                 countries<span class="sc">$</span>p_bad[j])</span>
+<span id="cb2-20"><a href=""></a>      )</span>
+<span id="cb2-21"><a href=""></a></span>
+<span id="cb2-22"><a href=""></a>      <span class="co"># Effectiveness multiplier depends on scenario</span></span>
+<span id="cb2-23"><a href=""></a>      multiplier <span class="ot">&lt;-</span> <span class="cf">switch</span>(scenario,</span>
+<span id="cb2-24"><a href=""></a>        <span class="at">good =</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="fl">0.80</span>, <span class="fl">1.00</span>),  <span class="co"># 80-100% of potential</span></span>
+<span id="cb2-25"><a href=""></a>        <span class="at">mid  =</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="fl">0.40</span>, <span class="fl">0.70</span>),  <span class="co"># 40-70% of potential</span></span>
+<span id="cb2-26"><a href=""></a>        <span class="at">bad  =</span> <span class="fu">runif</span>(<span class="dv">1</span>, <span class="fl">0.05</span>, <span class="fl">0.25</span>)   <span class="co"># 5-25% of potential</span></span>
+<span id="cb2-27"><a href=""></a>      )</span>
+<span id="cb2-28"><a href=""></a></span>
+<span id="cb2-29"><a href=""></a>      <span class="co"># Lives saved = allocation share * preventable deaths * multiplier</span></span>
+<span id="cb2-30"><a href=""></a>      lives_j <span class="ot">&lt;-</span> alloc[j] <span class="sc">*</span> countries<span class="sc">$</span>preventable_k[j] <span class="sc">*</span> <span class="dv">1000</span> <span class="sc">*</span> multiplier</span>
+<span id="cb2-31"><a href=""></a>      total_lives <span class="ot">&lt;-</span> total_lives <span class="sc">+</span> lives_j</span>
+<span id="cb2-32"><a href=""></a>    }</span>
+<span id="cb2-33"><a href=""></a>    results[i] <span class="ot">&lt;-</span> total_lives</span>
+<span id="cb2-34"><a href=""></a>  }</span>
+<span id="cb2-35"><a href=""></a>  <span class="fu">return</span>(results)</span>
+<span id="cb2-36"><a href=""></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
-<h2>R Block 3: Optimal Allocation via Grid Search</h2>
+<h2>R Block 3: Running the Three Strategies</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Grid search over allocation space</span></span>
-<span id="cb3-2"><a href=""></a><span class="co"># Constraint: a_ETH + a_KEN + a_TZA = 200 (in $M)</span></span>
-<span id="cb3-3"><a href=""></a>grid_step <span class="ot">&lt;-</span> <span class="dv">10</span>  <span class="co"># $10M increments</span></span>
-<span id="cb3-4"><a href=""></a>results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb3-5"><a href=""></a></span>
-<span id="cb3-6"><a href=""></a><span class="cf">for</span> (a_eth <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">200</span>, grid_step)) {</span>
-<span id="cb3-7"><a href=""></a>  <span class="cf">for</span> (a_ken <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">200</span> <span class="sc">-</span> a_eth, grid_step)) {</span>
-<span id="cb3-8"><a href=""></a>    a_tza <span class="ot">&lt;-</span> <span class="dv">200</span> <span class="sc">-</span> a_eth <span class="sc">-</span> a_ken</span>
-<span id="cb3-9"><a href=""></a>    alloc <span class="ot">&lt;-</span> <span class="fu">c</span>(a_eth, a_ken, a_tza)</span>
-<span id="cb3-10"><a href=""></a></span>
-<span id="cb3-11"><a href=""></a>    <span class="co"># Quick simulation (fewer draws for speed)</span></span>
-<span id="cb3-12"><a href=""></a>    sim <span class="ot">&lt;-</span> <span class="fu">simulate_outcomes</span>(alloc, countries, <span class="at">n_sims =</span> <span class="dv">2000</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Define the three strategies (percentage allocations)</span></span>
+<span id="cb3-2"><a href=""></a><span class="co">#                    ETH  RWA  KEN  TZA</span></span>
+<span id="cb3-3"><a href=""></a>strat_concentrate <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">50</span>,   <span class="dv">8</span>,  <span class="dv">30</span>,  <span class="dv">12</span>)</span>
+<span id="cb3-4"><a href=""></a>strat_spread      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">25</span>,  <span class="dv">25</span>,  <span class="dv">25</span>,  <span class="dv">25</span>)</span>
+<span id="cb3-5"><a href=""></a>strat_tiered      <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">40</span>,  <span class="dv">12</span>,  <span class="dv">28</span>,  <span class="dv">20</span>)</span>
+<span id="cb3-6"><a href=""></a></span>
+<span id="cb3-7"><a href=""></a><span class="co"># Run 1,000 simulations for each</span></span>
+<span id="cb3-8"><a href=""></a>n_sims <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb3-9"><a href=""></a></span>
+<span id="cb3-10"><a href=""></a>sim_conc   <span class="ot">&lt;-</span> <span class="fu">simulate_strategy</span>(strat_concentrate, countries, n_sims)</span>
+<span id="cb3-11"><a href=""></a>sim_spread <span class="ot">&lt;-</span> <span class="fu">simulate_strategy</span>(strat_spread, countries, n_sims)</span>
+<span id="cb3-12"><a href=""></a>sim_tiered <span class="ot">&lt;-</span> <span class="fu">simulate_strategy</span>(strat_tiered, countries, n_sims)</span>
 <span id="cb3-13"><a href=""></a></span>
-<span id="cb3-14"><a href=""></a>    results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(results, <span class="fu">data.frame</span>(</span>
-<span id="cb3-15"><a href=""></a>      <span class="at">a_eth =</span> a_eth, <span class="at">a_ken =</span> a_ken, <span class="at">a_tza =</span> a_tza,</span>
-<span id="cb3-16"><a href=""></a>      <span class="at">ev =</span> <span class="fu">mean</span>(sim),</span>
-<span id="cb3-17"><a href=""></a>      <span class="at">sd =</span> <span class="fu">sd</span>(sim),</span>
-<span id="cb3-18"><a href=""></a>      <span class="at">p5 =</span> <span class="fu">quantile</span>(sim, <span class="fl">0.05</span>)  <span class="co"># 5th percentile (worst case)</span></span>
-<span id="cb3-19"><a href=""></a>    ))</span>
-<span id="cb3-20"><a href=""></a>  }</span>
-<span id="cb3-21"><a href=""></a>}</span>
-<span id="cb3-22"><a href=""></a></span>
-<span id="cb3-23"><a href=""></a><span class="co"># Best by expected value</span></span>
-<span id="cb3-24"><a href=""></a>best_ev <span class="ot">&lt;-</span> results[<span class="fu">which.max</span>(results<span class="sc">$</span>ev), ]</span>
-<span id="cb3-25"><a href=""></a><span class="fu">cat</span>(<span class="st">"Max EV allocation:"</span>, best_ev<span class="sc">$</span>a_eth, <span class="st">"/"</span>,</span>
-<span id="cb3-26"><a href=""></a>    best_ev<span class="sc">$</span>a_ken, <span class="st">"/"</span>, best_ev<span class="sc">$</span>a_tza, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-27"><a href=""></a><span class="fu">cat</span>(<span class="st">"Expected lives:"</span>, <span class="fu">round</span>(best_ev<span class="sc">$</span>ev), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-28"><a href=""></a></span>
-<span id="cb3-29"><a href=""></a><span class="co"># Best by worst-case (maximin)</span></span>
-<span id="cb3-30"><a href=""></a>best_p5 <span class="ot">&lt;-</span> results[<span class="fu">which.max</span>(results<span class="sc">$</span>p5), ]</span>
-<span id="cb3-31"><a href=""></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Maximin allocation:"</span>, best_p5<span class="sc">$</span>a_eth, <span class="st">"/"</span>,</span>
-<span id="cb3-32"><a href=""></a>    best_p5<span class="sc">$</span>a_ken, <span class="st">"/"</span>, best_p5<span class="sc">$</span>a_tza, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb3-33"><a href=""></a><span class="fu">cat</span>(<span class="st">"5th percentile lives:"</span>, <span class="fu">round</span>(best_p5<span class="sc">$</span>p5), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-14"><a href=""></a><span class="co"># Summary statistics</span></span>
+<span id="cb3-15"><a href=""></a>summary_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-16"><a href=""></a>  <span class="at">Strategy =</span> <span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>),</span>
+<span id="cb3-17"><a href=""></a>  <span class="at">Mean =</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">mean</span>(sim_conc), <span class="fu">mean</span>(sim_spread), <span class="fu">mean</span>(sim_tiered))),</span>
+<span id="cb3-18"><a href=""></a>  <span class="at">Median =</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">median</span>(sim_conc), <span class="fu">median</span>(sim_spread), <span class="fu">median</span>(sim_tiered))),</span>
+<span id="cb3-19"><a href=""></a>  <span class="at">P5  =</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">quantile</span>(sim_conc, <span class="fl">0.05</span>), <span class="fu">quantile</span>(sim_spread, <span class="fl">0.05</span>),</span>
+<span id="cb3-20"><a href=""></a>                 <span class="fu">quantile</span>(sim_tiered, <span class="fl">0.05</span>))),</span>
+<span id="cb3-21"><a href=""></a>  <span class="at">P95 =</span> <span class="fu">round</span>(<span class="fu">c</span>(<span class="fu">quantile</span>(sim_conc, <span class="fl">0.95</span>), <span class="fu">quantile</span>(sim_spread, <span class="fl">0.95</span>),</span>
+<span id="cb3-22"><a href=""></a>                 <span class="fu">quantile</span>(sim_tiered, <span class="fl">0.95</span>)))</span>
+<span id="cb3-23"><a href=""></a>)</span>
+<span id="cb3-24"><a href=""></a>summary_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section class="slide level2">
-<h2>R Block 4: Sensitivity Analysis</h2>
+<h2>R Block 4: Visualizing the Distributions</h2>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">library</span>(tidyr)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb4-2"><a href=""></a></span>
-<span id="cb4-3"><a href=""></a><span class="co"># Sensitivity: vary Ethiopia P(High co-financing) from 0.1 to 0.8</span></span>
-<span id="cb4-4"><a href=""></a>p_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">0.8</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
-<span id="cb4-5"><a href=""></a>sens_results <span class="ot">&lt;-</span> <span class="fu">data.frame</span>()</span>
-<span id="cb4-6"><a href=""></a></span>
-<span id="cb4-7"><a href=""></a><span class="cf">for</span> (p_high_eth <span class="cf">in</span> p_seq) {</span>
-<span id="cb4-8"><a href=""></a>  <span class="co"># Update Ethiopia's co-financing probability</span></span>
-<span id="cb4-9"><a href=""></a>  countries_mod <span class="ot">&lt;-</span> countries</span>
-<span id="cb4-10"><a href=""></a>  countries_mod<span class="sc">$</span>p_high[<span class="dv">1</span>] <span class="ot">&lt;-</span> p_high_eth</span>
-<span id="cb4-11"><a href=""></a></span>
-<span id="cb4-12"><a href=""></a>  ev_conc <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_concentrate, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-13"><a href=""></a>  ev_spr  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_spread, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-14"><a href=""></a>  ev_tier <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">simulate_outcomes</span>(strat_tiered, countries_mod, <span class="dv">3000</span>))</span>
-<span id="cb4-15"><a href=""></a></span>
-<span id="cb4-16"><a href=""></a>  sens_results <span class="ot">&lt;-</span> <span class="fu">rbind</span>(sens_results, <span class="fu">data.frame</span>(</span>
-<span id="cb4-17"><a href=""></a>    <span class="at">p_high =</span> p_high_eth,</span>
-<span id="cb4-18"><a href=""></a>    <span class="at">Concentrate =</span> ev_conc,</span>
-<span id="cb4-19"><a href=""></a>    <span class="at">Spread =</span> ev_spr,</span>
-<span id="cb4-20"><a href=""></a>    <span class="at">Tiered =</span> ev_tier</span>
-<span id="cb4-21"><a href=""></a>  ))</span>
-<span id="cb4-22"><a href=""></a>}</span>
-<span id="cb4-23"><a href=""></a></span>
-<span id="cb4-24"><a href=""></a><span class="co"># Pivot to long format and plot</span></span>
-<span id="cb4-25"><a href=""></a>sens_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(sens_results, <span class="at">cols =</span> <span class="sc">-</span>p_high,</span>
-<span id="cb4-26"><a href=""></a>                          <span class="at">names_to =</span> <span class="st">"Strategy"</span>, <span class="at">values_to =</span> <span class="st">"EV"</span>)</span>
-<span id="cb4-27"><a href=""></a></span>
-<span id="cb4-28"><a href=""></a><span class="fu">ggplot</span>(sens_long, <span class="fu">aes</span>(<span class="at">x =</span> p_high, <span class="at">y =</span> EV <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">color =</span> Strategy)) <span class="sc">+</span></span>
-<span id="cb4-29"><a href=""></a>  <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb4-30"><a href=""></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.40</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb4-31"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
-<span id="cb4-32"><a href=""></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"P(High Gov't Co-financing) for Ethiopia"</span>,</span>
-<span id="cb4-33"><a href=""></a>       <span class="at">y =</span> <span class="st">"Expected Lives Saved (thousands)"</span>,</span>
-<span id="cb4-34"><a href=""></a>       <span class="at">title =</span> <span class="st">"Sensitivity: How Ethiopia's Co-financing Risk Affects Strategy Choice"</span>,</span>
-<span id="cb4-35"><a href=""></a>       <span class="at">subtitle =</span> <span class="st">"Dashed line = current estimate (p = 0.40)"</span>) <span class="sc">+</span></span>
-<span id="cb4-36"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-3"><a href=""></a><span class="co"># Combine simulation results into one data frame</span></span>
+<span id="cb4-4"><a href=""></a>sim_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-5"><a href=""></a>  <span class="at">lives =</span> <span class="fu">c</span>(sim_conc, sim_spread, sim_tiered),</span>
+<span id="cb4-6"><a href=""></a>  <span class="at">strategy =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>),</span>
+<span id="cb4-7"><a href=""></a>                 <span class="at">each =</span> n_sims)</span>
+<span id="cb4-8"><a href=""></a>)</span>
+<span id="cb4-9"><a href=""></a></span>
+<span id="cb4-10"><a href=""></a><span class="co"># Density plot: shows the full distribution for each strategy</span></span>
+<span id="cb4-11"><a href=""></a><span class="fu">ggplot</span>(sim_df, <span class="fu">aes</span>(<span class="at">x =</span> lives <span class="sc">/</span> <span class="dv">1000</span>, <span class="at">fill =</span> strategy)) <span class="sc">+</span></span>
+<span id="cb4-12"><a href=""></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb4-13"><a href=""></a>  <span class="fu">geom_vline</span>(</span>
+<span id="cb4-14"><a href=""></a>    <span class="at">data =</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-15"><a href=""></a>      <span class="at">strategy =</span> <span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>),</span>
+<span id="cb4-16"><a href=""></a>      <span class="at">mean_val =</span> <span class="fu">c</span>(<span class="fu">mean</span>(sim_conc), <span class="fu">mean</span>(sim_spread),</span>
+<span id="cb4-17"><a href=""></a>                   <span class="fu">mean</span>(sim_tiered)) <span class="sc">/</span> <span class="dv">1000</span></span>
+<span id="cb4-18"><a href=""></a>    ),</span>
+<span id="cb4-19"><a href=""></a>    <span class="fu">aes</span>(<span class="at">xintercept =</span> mean_val, <span class="at">color =</span> strategy),</span>
+<span id="cb4-20"><a href=""></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span></span>
+<span id="cb4-21"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb4-22"><a href=""></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
+<span id="cb4-23"><a href=""></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#005CB9"</span>, <span class="st">"#83BD00"</span>, <span class="st">"#FA7650"</span>)) <span class="sc">+</span></span>
+<span id="cb4-24"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-25"><a href=""></a>    <span class="at">x =</span> <span class="st">"Lives Saved (thousands)"</span>,</span>
+<span id="cb4-26"><a href=""></a>    <span class="at">y =</span> <span class="st">"Density"</span>,</span>
+<span id="cb4-27"><a href=""></a>    <span class="at">title =</span> <span class="st">"1,000 Simulated Futures: Three Allocation Strategies"</span>,</span>
+<span id="cb4-28"><a href=""></a>    <span class="at">subtitle =</span> <span class="st">"Dashed lines = mean outcome for each strategy"</span></span>
+<span id="cb4-29"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb4-30"><a href=""></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb4-31"><a href=""></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section class="slide level2">
+<h2>R Block 5: Which Strategy “Wins” Most Often?</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="co"># For each simulation, which strategy saved the most lives?</span></span>
+<span id="cb5-2"><a href=""></a>wins <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-3"><a href=""></a>  <span class="at">sim =</span> <span class="dv">1</span><span class="sc">:</span>n_sims,</span>
+<span id="cb5-4"><a href=""></a>  <span class="at">best =</span> <span class="fu">apply</span>(<span class="fu">cbind</span>(sim_conc, sim_spread, sim_tiered), <span class="dv">1</span>,</span>
+<span id="cb5-5"><a href=""></a>               <span class="cf">function</span>(x) <span class="fu">c</span>(<span class="st">"Concentrate"</span>, <span class="st">"Spread"</span>, <span class="st">"Tiered"</span>)[<span class="fu">which.max</span>(x)])</span>
+<span id="cb5-6"><a href=""></a>)</span>
+<span id="cb5-7"><a href=""></a></span>
+<span id="cb5-8"><a href=""></a><span class="co"># How often does each strategy "win"?</span></span>
+<span id="cb5-9"><a href=""></a><span class="fu">table</span>(wins<span class="sc">$</span>best)</span>
+<span id="cb5-10"><a href=""></a></span>
+<span id="cb5-11"><a href=""></a><span class="co"># But also: how often does each strategy fall below a threshold?</span></span>
+<span id="cb5-12"><a href=""></a>threshold <span class="ot">&lt;-</span> <span class="dv">2000</span>  <span class="co"># lives</span></span>
+<span id="cb5-13"><a href=""></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Probability of saving fewer than"</span>, threshold, <span class="st">"lives:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-14"><a href=""></a><span class="fu">cat</span>(<span class="st">"  Concentrate:"</span>, <span class="fu">mean</span>(sim_conc <span class="sc">&lt;</span> threshold), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-15"><a href=""></a><span class="fu">cat</span>(<span class="st">"  Spread:     "</span>, <span class="fu">mean</span>(sim_spread <span class="sc">&lt;</span> threshold), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-16"><a href=""></a><span class="fu">cat</span>(<span class="st">"  Tiered:     "</span>, <span class="fu">mean</span>(sim_tiered <span class="sc">&lt;</span> threshold), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="fragment">
+<div class="callout-box">
+<p><strong>Two ways to evaluate a strategy:</strong></p>
+<ol type="1">
+<li><strong>How often does it win?</strong> (Concentrate may win most individual simulations)</li>
+<li><strong>How often does it fail badly?</strong> (Concentrate also has the highest chance of catastrophic shortfall)</li>
+</ol>
+<p>Which question matters more depends on your values and your risk tolerance.</p>
+</div>
 </div>
 </section>
 <section class="slide level2">
 <h2>Key Takeaways</h2>
 <div class="key-takeaway">
-<p><strong>Resource allocation under uncertainty</strong> requires balancing expected impact against risk. The optimal allocation depends not just on <em>where lives can be saved most efficiently</em>, but on <em>how uncertain</em> we are about each country’s trajectory.</p>
+<p><strong>Resource allocation is a puzzle, not an optimization problem.</strong> The “right” answer depends on your risk tolerance, your values, and how much you know about the future.</p>
 </div>
 <div class="fragment">
 <ul>
-<li class="fragment"><strong>Portfolio thinking</strong> applies to global health: diversification reduces catastrophic shortfall risk</li>
-<li class="fragment"><strong>Sequential decisions</strong> (pilot → scale) add value by resolving uncertainty — but delay costs lives</li>
-<li class="fragment"><strong>Government co-financing</strong> is the dominant uncertainty; small shifts in P(High) change the optimal strategy</li>
-<li class="fragment"><strong>Stakeholder response</strong> (crowding out/in) can amplify or undermine the Fund’s investment</li>
-<li class="fragment"><strong>Monte Carlo simulation</strong> in R makes it possible to quantify confidence intervals and compare strategies rigorously</li>
-<li class="fragment"><strong>The cost of delay is measured in lives</strong> — a distinctive feature of health versus commercial allocation</li>
+<li class="fragment"><strong>Three strategies</strong> offer different tradeoffs: Concentrate (high risk, high reward), Spread (low risk, lower reward), Tiered (balanced)</li>
+<li class="fragment"><strong>Uncertainty</strong> means the “obvious best” country is not always the best bet – diversification protects against bad surprises</li>
+<li class="fragment"><strong>Monte Carlo simulation</strong> lets you “replay the future” and see the full range of possible outcomes, not just the average</li>
+<li class="fragment"><strong>Sequential decisions</strong> (“invest a little, watch, then decide”) let you buy information before committing fully</li>
+<li class="fragment"><strong>The cost of delay is real</strong> – waiting to decide means lives lost today – so the art is finding the right balance between acting now and learning first</li>
+<li class="fragment"><strong>Portfolio thinking</strong> applies to global health just as it applies to finance: do not put all your eggs in one basket</li>
 </ul>
 </div>
 </section>
 <section class="slide level2">
 <h2>Looking Ahead</h2>
 <div class="callout-box">
-<p><strong>Next: Chapter 9 — Multi-Agent Decision Making and Game Theory</strong></p>
-<p>We move from treating stakeholders as <em>uncertain variables</em> to modeling them as <em>strategic agents</em>:</p>
+<p><strong>Next: Chapter 9 – Multi-Agent Decision Making</strong></p>
+<p>So far, we have treated the allocation as <em>your</em> decision alone. But in reality, other actors are making decisions too:</p>
 <ul>
-<li><strong>Nash equilibrium</strong> in donor coordination games</li>
-<li><strong>Commitment devices</strong> that bind government co-financing</li>
-<li><strong>Mechanism design</strong> for aligning incentives across funders</li>
-<li><strong>MNH application:</strong> Designing a co-financing framework that maximizes collective impact</li>
+<li><strong>Governments</strong> deciding whether to co-finance or redirect funds</li>
+<li><strong>Other donors</strong> deciding whether to invest alongside you or pull out</li>
+<li><strong>Health workers</strong> deciding whether to stay or leave</li>
 </ul>
+<p>Chapter 9 introduces <strong>game theory</strong> – a framework for thinking about what happens when multiple decision-makers interact, each with their own objectives.</p>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p><strong>From Ch 8 to Ch 9:</strong> We solved the allocation problem <em>as if</em> government and donor behavior were exogenous uncertainties. In Chapter 9, we recognize these actors have their own objectives — and we design strategies that account for their rational self-interest.</p>
+<p><strong>From Chapter 8 to Chapter 9:</strong> We solved the allocation problem as if we were the only player on the field. In Chapter 9, we recognize that governments and donors are playing their own games – and our strategy needs to account for theirs.</p>
 </div>
 </div>
 </section>
@@ -1483,7 +1354,7 @@ Donor<br>Response
 <div style="text-align: center;">
 <p><img data-src="bka-logo.png" width="250"></p>
 <p><br></p>
-<p><span style="color: #005CB9; font-size: 0.6em;">Inference and Intervention | Chapter 8: MNH Resource Allocation</span></p>
+<p><span style="color: #005CB9; font-size: 0.6em;">Inference and Intervention | Chapter 8: Multi-Country Resource Allocation</span></p>
 <p><span style="color: #666; font-size: 0.5em;">BK Advisors</span></p>
 </div>
 

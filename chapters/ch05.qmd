@@ -1,50 +1,54 @@
 ---
 title: "Chapter 5: Situational Analysis"
-subtitle: "Belief updating, diagnostic inference, and explaining away"
+subtitle: "Running the model backward -- from what you observe to what is probably true"
 ---
 
 ## Learning Objectives
 
 ::: {.learning-objectives}
-After this chapter, you will be able to:
-
-- Compute **marginal probabilities** by summing out variables from joint distributions
-- **Update beliefs with evidence** using Bayes' rule and conditional probability
-- Perform **inference in serial, diverging, and converging structures** and explain how information flows differently in each
-- Apply the **explaining away** phenomenon in converging structures -- the most counterintuitive result in causal reasoning
-- Conduct a full **district diagnosis** using Bayesian inference on an MNH causal model
+- Compute **marginal probabilities** by summing across all possible parent combinations
+- **Update beliefs with evidence** using Bayes' rule -- start with a prior, see evidence, get a posterior
+- Trace how information flows through **serial chains, forks, and colliders** and explain why each behaves differently
+- Apply the **explaining away** phenomenon -- when two causes compete to explain the same effect
+- Run a complete **district diagnosis** in R, ranking the most likely upstream problems given observed outcomes
 :::
 
 ## Key Concepts
 
 ::: {.key-concept}
-#### Situational Analysis
+#### Belief Updating
 
-The process of observing outcomes and using a quantitative causal model to infer the most likely state of unobserved causes. Where Chapter 4 ran the model "forward" (given causes, predict effects), situational analysis runs the model "backward" (given effects, infer causes). This backward reasoning -- from children to parents -- is the heart of diagnostic decision-making.
+Chapter 4 ran models forward: "If staffing is low, what happens to mortality?" Situational analysis runs them backward: "Mortality is high -- what is probably causing it?" This is how doctors diagnose patients, how mechanics troubleshoot engines, and how health program managers in Ethiopia figure out why a district is struggling. You start with a prior belief (your best guess before seeing any data), observe evidence (the outcome data from the district), and compute a posterior belief (your updated guess). Bayes' rule is the engine that drives this update.
 :::
 
 ::: {.key-concept .green}
-#### Marginal Probability
+#### Marginal Probabilities
 
-The probability of a variable computed by summing out (marginalizing over) all other variables in the joint distribution. It tells us the overall likelihood of an event, averaging across all possible parent combinations weighted by how likely each is. For example, the marginal P(NMR=High) answers: "What is the overall probability that a randomly selected district has high neonatal mortality?" -- before any district-specific evidence.
+A marginal probability answers: "What is the overall chance of this outcome, before I know anything specific?" To compute it, you sum over all possible parent states, weighting each by how likely that parent state is. For example, P(NMR = High) in Ethiopia averages across districts with good staffing, bad staffing, good equipment, bad equipment -- everything. The marginal is your baseline. It is where you start before any district-specific evidence arrives. Once evidence comes in, the marginal gets replaced by a posterior -- and the gap between the two tells you how much you learned.
 :::
 
 ::: {.key-concept .orange}
-#### Explaining Away
+#### Evidence Flow in the Three Triplet Structures
 
-The most counterintuitive phenomenon in causal reasoning. In a converging structure (A -> B <- C), when two independent causes compete to explain the same effect, confirming one cause makes the other less likely and disconfirming one makes the other more likely. For example, if a district has good workforce quality despite low staffing, equipment availability must be high -- equipment "explains away" what staffing cannot. This only happens when we condition on the common effect (the collider).
+The three building blocks of every DAG each handle information differently. In a **serial chain** (Staffing -> Quality -> NMR), information flows from end to end -- but if you already know Quality, learning about Staffing tells you nothing new about NMR. The chain is blocked. In a **fork** (Quality <- Disease Burden -> Mortality), the common cause creates a spurious link -- but conditioning on Disease Burden removes it. In a **collider** (Staffing -> Quality <- Equipment), the two causes are independent by default. But the moment you observe Quality, they become linked. These three rules scale to any size network.
 :::
 
 ::: {.key-concept .red}
-#### Information Flow Across Structures
+#### Explaining Away
 
-The three triplet structures determine how evidence propagates through the model. In **serial chains** (A -> B -> C), observing B blocks information flow from A to C. In **diverging forks** (A <- B -> C), observing the common cause B blocks the spurious correlation between A and C. In **converging colliders** (A -> B <- C), the path is naturally blocked but observing B *opens* it, creating dependence between the previously independent causes. These rules scale to full graphs via d-separation.
+This is the most counterintuitive idea in the entire course. Picture a collider: Staffing -> Quality <- Equipment. Normally, staffing levels and equipment availability have nothing to do with each other. But suppose you learn that a district in Ethiopia has good-quality care despite low staffing. Suddenly, equipment availability must be high -- because *something* has to explain the good quality, and if it is not staffing, it must be equipment. Confirming one cause makes the competing cause less likely. Disconfirming one makes the other more likely. This "explaining away" effect only kicks in when you condition on the collider (the shared effect).
+:::
+
+::: {.key-concept .teal}
+#### Diagnostic Inference
+
+Diagnostic inference is the practical payoff of everything above. Given an observation -- say, a district in Ethiopia's Amhara region reporting high neonatal mortality -- you feed that evidence into the Bayesian network and read off the posterior probabilities for every upstream cause. Which shifted the most from its prior? That is your top suspect. This turns a vague question ("Why is this district struggling?") into a ranked list of probable causes, ordered by how much the evidence shifted each belief. It is data-driven diagnosis.
 :::
 
 ## Lecture Slides
 
 ::: {.slide-embed}
-<iframe src="../ch05-situational-analysis/index.html"></iframe>
+<iframe src="../ch05-situational-analysis/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch05-situational-analysis/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
@@ -52,235 +56,155 @@ The three triplet structures determine how evidence propagates through the model
 
 ## R Code Workshop
 
-This chapter implements Bayesian inference in R using `bnlearn` and `gRain`, demonstrating how to build a network with CPTs, query it with evidence, compare prior vs. posterior beliefs, and run a full district diagnostic workflow.
+We build a five-node Bayesian network for Ethiopia's health system, then use it to diagnose districts -- reasoning backward from observed mortality to the most likely upstream problems.
 
-### Build a Bayesian Network with CPTs
+### Build the Ethiopia Network
 
-We construct a 5-node Bayesian network (Staffing, Equipment, Training, Quality, NMR) with CPTs calibrated to MNH program data. The Quality node has an 8-row CPT reflecting all combinations of its three parents.
+Three root nodes (Staffing, Equipment, Training) feed into Quality, which feeds into NMR. The CPTs are calibrated to publicly available data from Ethiopia's DHS and WHO reports.
 
 ```{r}
-#| label: bn-build
+#| label: build-network
 #| echo: true
 
 library(bnlearn)
 library(gRain)
 
-# Define the DAG structure
-dag <- model2network("[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]")
+# Five-node DAG for Ethiopia
+dag <- model2network(
+  "[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]"
+)
 
-# Define CPTs
-cpt_s <- matrix(c(0.40, 0.60), ncol = 2,
-                dimnames = list(NULL, c("Adequate", "Low")))
+# Root node CPTs (based on Ethiopia DHS/WHO public data)
+cpt_s <- array(c(0.40, 0.60), dim = 2,
+  dimnames = list(Staffing = c("Adequate", "Low")))
 
-cpt_e <- matrix(c(0.35, 0.65), ncol = 2,
-                dimnames = list(NULL, c("Available", "Unavailable")))
+cpt_e <- array(c(0.35, 0.65), dim = 2,
+  dimnames = list(Equipment = c("Available", "Unavailable")))
 
-cpt_t <- matrix(c(0.50, 0.50), ncol = 2,
-                dimnames = list(NULL, c("Completed", "Not_Completed")))
+cpt_t <- array(c(0.50, 0.50), dim = 2,
+  dimnames = list(Training = c("Completed", "Not_Completed")))
 
-# Quality CPT: P(Quality | Staffing, Equipment, Training)
+# Quality CPT: 8 rows (2 x 2 x 2 parent combinations)
 cpt_q <- array(
-  c(0.95, 0.05,  # S=Adeq, E=Avail, T=Comp
-    0.80, 0.20,  # S=Adeq, E=Avail, T=Not
-    0.65, 0.35,  # S=Adeq, E=Unavail, T=Comp
-    0.45, 0.55,  # S=Adeq, E=Unavail, T=Not
-    0.55, 0.45,  # S=Low, E=Avail, T=Comp
-    0.35, 0.65,  # S=Low, E=Avail, T=Not
-    0.20, 0.80,  # S=Low, E=Unavail, T=Comp
-    0.08, 0.92), # S=Low, E=Unavail, T=Not
+  c(0.95, 0.05,  0.80, 0.20,  0.65, 0.35,  0.45, 0.55,
+    0.55, 0.45,  0.35, 0.65,  0.20, 0.80,  0.08, 0.92),
   dim = c(2, 2, 2, 2),
   dimnames = list(Quality = c("Good", "Poor"),
-                  Staffing = c("Adequate", "Low"),
-                  Equipment = c("Available", "Unavailable"),
-                  Training = c("Completed", "Not_Completed")))
+    Staffing = c("Adequate", "Low"),
+    Equipment = c("Available", "Unavailable"),
+    Training = c("Completed", "Not_Completed")))
 
-# NMR CPT: P(NMR | Quality)
-cpt_nmr <- matrix(c(0.85, 0.15, 0.30, 0.70), ncol = 2,
-                  dimnames = list(NMR = c("Low", "High"),
-                                  Quality = c("Good", "Poor")))
+# NMR CPT
+cpt_nmr <- array(c(0.85, 0.15, 0.30, 0.70), dim = c(2, 2),
+  dimnames = list(NMR = c("Low", "High"), Quality = c("Good", "Poor")))
 
-# Fit the BN with custom CPTs
-bn_fit <- custom.fit(dag, list(
+# Assemble the fitted network
+bn_eth <- custom.fit(dag, list(
   Staffing = cpt_s, Equipment = cpt_e, Training = cpt_t,
   Quality = cpt_q, NMR = cpt_nmr))
 ```
 
-### Query with Evidence
+### Forward vs. Backward Queries
 
-The `cpquery()` function uses likelihood weighting to estimate conditional probabilities. We demonstrate marginal queries (no evidence), forward queries (evidence on root nodes), and backward queries (evidence on outcome nodes -- the core of situational analysis).
+Forward: "Given the cause, predict the effect." Backward: "Given the effect, infer the cause." Backward queries are the heart of situational analysis.
 
 ```{r}
-#| label: bn-query
+#| label: forward-backward
 #| echo: true
 
-# --- Marginal probability (no evidence) ---
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = TRUE,
-        n = 1e6)
-# ≈ 0.455
+# FORWARD: P(NMR = High | Staffing = Low)
+# "If staffing is low, how likely is high mortality?"
+cpquery(bn_eth,
+  event = (NMR == "High"), evidence = (Staffing == "Low"), n = 1e6)
 
-# --- Posterior with evidence: NMR is High ---
-# What is P(Staffing = Low | NMR = High)?
-cpquery(bn_fit,
-        event = (Staffing == "Low"),
-        evidence = (NMR == "High"),
-        n = 1e6)
-# ≈ 0.71
+# BACKWARD: P(Staffing = Low | NMR = High)
+# "Mortality is high -- how likely is it that staffing is the problem?"
+cpquery(bn_eth,
+  event = (Staffing == "Low"), evidence = (NMR == "High"), n = 1e6)
 
-# --- Evidence on a root node ---
-# What is P(NMR = High | Staffing = Low)?
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = (Staffing == "Low"),
-        n = 1e6)
-# ≈ 0.55
-
-# --- Multiple pieces of evidence ---
-# P(NMR = High | Staffing = Low, Equipment = Unavailable)
-cpquery(bn_fit,
-        event = (NMR == "High"),
-        evidence = (Staffing == "Low" & Equipment == "Unavailable"),
-        n = 1e6)
-# ≈ 0.63
+# Marginal baseline (no evidence at all)
+cpquery(bn_eth, event = (NMR == "High"), evidence = TRUE, n = 1e6)
 ```
 
-### Compare Posterior vs. Prior
+### Compare Prior vs. Posterior
 
-This block computes posterior probabilities for all root nodes given an NMR observation, allowing us to see which causes shift the most and therefore carry the strongest diagnostic signal.
-
-```{r}
-#| label: bn-compare
-#| echo: true
-
-# Function to compute posteriors for all root nodes given NMR evidence
-compute_posteriors <- function(bn, nmr_state, n_samples = 1e6) {
-  data.frame(
-    Variable = c("Staffing=Low", "Equipment=Unavail", "Training=Not_Comp"),
-    Prior = c(0.60, 0.65, 0.50),
-    Posterior = c(
-      cpquery(bn, (Staffing == "Low"), (NMR == nmr_state), n = n_samples),
-      cpquery(bn, (Equipment == "Unavailable"), (NMR == nmr_state), n = n_samples),
-      cpquery(bn, (Training == "Not_Completed"), (NMR == nmr_state), n = n_samples)
-    )
-  )
-}
-
-# Posteriors given NMR=High (District Mwanga)
-post_high <- compute_posteriors(bn_fit, "High")
-post_high$Shift <- post_high$Posterior - post_high$Prior
-print(post_high)
-
-# Posteriors given NMR=Low (District Songea)
-post_low <- compute_posteriors(bn_fit, "Low")
-post_low$Shift <- post_low$Posterior - post_low$Prior
-print(post_low)
-```
-
-### Visualize Belief Updating
-
-A grouped bar chart comparing prior and posterior probabilities makes the belief shifts visually clear. All "bad" states become more likely after observing high mortality.
+When we observe high NMR in a district, how much does each root cause shift from its baseline? The biggest shift points to the most likely culprit.
 
 ```{r}
-#| label: bn-viz
+#| label: prior-posterior
 #| echo: true
-#| fig-width: 10
-#| fig-height: 5
 
 library(ggplot2)
-library(tidyr)
 
-# Combine prior and posterior into tidy format
-viz_data <- data.frame(
-  Variable = rep(c("Staffing\n(Low)", "Equipment\n(Unavail)", "Training\n(Not Comp)"), 2),
-  Condition = rep(c("Prior", "Posterior\n(NMR=High)"), each = 3),
-  Probability = c(
-    0.60, 0.65, 0.50,          # Priors
-    0.710, 0.738, 0.573         # Posteriors given NMR=High
-  )
-)
-viz_data$Condition <- factor(viz_data$Condition,
-                              levels = c("Prior", "Posterior\n(NMR=High)"))
+# Compute posteriors for each root node given NMR = High
+priors    <- c(Staffing = 0.60, Equipment = 0.65, Training = 0.50)
+posteriors <- c(
+  cpquery(bn_eth, (Staffing == "Low"), (NMR == "High"), n = 1e6),
+  cpquery(bn_eth, (Equipment == "Unavailable"), (NMR == "High"), n = 1e6),
+  cpquery(bn_eth, (Training == "Not_Completed"), (NMR == "High"), n = 1e6))
 
-ggplot(viz_data, aes(x = Variable, y = Probability, fill = Condition)) +
+# Side-by-side comparison
+results <- data.frame(
+  Variable = rep(c("Staffing\n(Low)", "Equipment\n(Unavail)", "Training\n(Not Done)"), 2),
+  Belief   = rep(c("Prior", "Posterior"), each = 3),
+  Prob     = c(priors, posteriors))
+
+results$Belief <- factor(results$Belief, levels = c("Prior", "Posterior"))
+
+ggplot(results, aes(x = Variable, y = Prob, fill = Belief)) +
   geom_col(position = "dodge", width = 0.6) +
-  geom_text(aes(label = sprintf("%.1f%%", Probability * 100)),
-            position = position_dodge(width = 0.6), vjust = -0.3, size = 4) +
-  scale_fill_manual(values = c("Prior" = "#00A1DF", "Posterior\n(NMR=High)" = "#E24A3F"),
-                    name = "") +
+  scale_fill_manual(values = c("Prior" = "#00A1DF", "Posterior" = "#E24A3F")) +
   scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
   labs(title = "Belief Updating: Prior vs. Posterior Given NMR = High",
        subtitle = "All 'bad' states become more likely after observing high mortality",
        x = NULL, y = "Probability") +
-  theme_minimal(base_size = 14) +
-  theme(legend.position = "top",
-        plot.title = element_text(color = "#005CB9", face = "bold"))
+  theme_minimal(base_size = 14)
 ```
 
-### Full District Diagnosis Workflow
+### District Diagnosis Function
 
-This reusable function accepts a fitted Bayesian network and a list of evidence, then computes posterior probabilities for all root nodes and ranks them by the magnitude of their belief shift. This is the complete diagnostic workflow for a district assessment.
+This reusable function takes a fitted network and a set of observations, then ranks every root node by how much its belief shifted. The biggest movers are your top diagnostic priorities.
 
 ```{r}
-#| label: bn-diagnosis
+#| label: diagnosis-function
 #| echo: true
 
-# ---- Full diagnosis workflow for a district ----
-
-diagnose_district <- function(bn, evidence_list, n_samples = 1e6) {
-  # Build evidence string
-  ev_expr <- paste(names(evidence_list), "==",
-                   paste0('"', evidence_list, '"'), collapse = " & ")
-
-  # Query each root node
-  results <- data.frame(
+diagnose_district <- function(bn, evidence_expr, n_samples = 1e6) {
+  nodes_info <- data.frame(
     Node = c("Staffing", "Equipment", "Training"),
     Bad_State = c("Low", "Unavailable", "Not_Completed"),
-    Prior = c(0.60, 0.65, 0.50)
-  )
+    Prior = c(0.60, 0.65, 0.50))
 
-  results$Posterior <- sapply(1:nrow(results), function(i) {
-    cpquery(bn,
-            event = eval(parse(text = paste0(results$Node[i], ' == "',
-                                              results$Bad_State[i], '"'))),
-            evidence = eval(parse(text = ev_expr)),
-            n = n_samples)
-  })
+  nodes_info$Posterior <- c(
+    cpquery(bn, (Staffing == "Low"), evidence_expr, n = n_samples),
+    cpquery(bn, (Equipment == "Unavailable"), evidence_expr, n = n_samples),
+    cpquery(bn, (Training == "Not_Completed"), evidence_expr, n = n_samples))
 
-  results$Shift <- results$Posterior - results$Prior
-  results$Priority <- rank(-abs(results$Shift))
-  results[order(results$Priority), ]
+  nodes_info$Shift <- nodes_info$Posterior - nodes_info$Prior
+  nodes_info[order(-abs(nodes_info$Shift)), ]
 }
 
-# Diagnose District Mwanga (NMR=High)
-cat("=== District Mwanga Diagnosis ===\n")
-mwanga <- diagnose_district(bn_fit, list(NMR = "High"))
-print(mwanga)
-
-# Diagnose with additional evidence (NMR=High, Quality=Poor)
-cat("\n=== With additional evidence: Quality=Poor ===\n")
-mwanga_deep <- diagnose_district(bn_fit,
-                                  list(NMR = "High", Quality = "Poor"))
-print(mwanga_deep)
+# Diagnose a district in Amhara region with high NMR
+diagnose_district(bn_eth, (NMR == "High"))
 ```
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Marginal probabilities** tell us baseline expectations. The marginal P(NMR=High) = 45.5% is the starting point before any district-specific evidence.
+**Situational analysis runs the model backward.** Instead of predicting outcomes from causes, you observe outcomes and infer the most likely causes. This is how real diagnosis works.
 
-**Evidence updates beliefs via Bayes' rule.** Observing NMR=High shifts all root causes toward their "bad" states -- with staffing showing the largest shift.
+**Marginal probabilities are your baseline.** The gap between the marginal (before evidence) and the posterior (after evidence) tells you exactly how much you learned from each observation.
 
-**The three structures determine information flow:** serial and diverging chains are blocked by conditioning on the middle node; converging chains are *activated* by it.
+**The three triplet structures control information flow.** Chains and forks are blocked by conditioning on the middle node. Colliders are opened by it. Get this wrong and you introduce bias instead of removing it.
 
-**Explaining away is the most counterintuitive phenomenon.** In a collider, observing the common effect makes independent causes compete -- confirming one reduces belief in the other.
+**Explaining away is real and powerful.** When two independent causes share a common effect, observing the effect makes them compete. This is not a bug -- it is the correct way to reason under uncertainty.
 :::
 
 ## Looking Ahead
 
-Next in **Chapter 6 -- Simpson's Paradox and Cost-Effectiveness**, we apply inference to a critical problem:
+Next in **Chapter 6 -- Simpson's Paradox**, we tackle the most dangerous trap in data analysis:
 
-- **Simpson's Paradox** -- when aggregate data reverses the true causal effect
-- How conditioning on the wrong variable produces misleading cost-effectiveness estimates
-- Why program evaluation in MNH requires causal reasoning, not just data analysis
-- Practical implications for how large MNH programs evaluate their country portfolios
+- When aggregated data tells you the *opposite* of the truth
+- Why you must always condition on confounders but never on mediators
+- The Prosecutor's Fallacy -- confusing P(evidence | hypothesis) with P(hypothesis | evidence)
+- A cross-country comparison across Ethiopia, Rwanda, Kenya, and Tanzania that gets the wrong answer without causal reasoning

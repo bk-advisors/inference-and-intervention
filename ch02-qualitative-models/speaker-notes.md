@@ -1,285 +1,190 @@
 # Speaker Notes — Chapter 2: Qualitative Causal Models
 
 ## Overview
-Today is our grammar lesson. We're going to learn the formal vocabulary and the rules for building causal diagrams. The big payoff is three simple patterns — chain, fork, and collider — that govern how information flows through *any* causal model, no matter how complex. Once you internalize those three patterns, you can reason about any DAG. And we'll close by building the full MNH qualitative model together.
+Welcome back. Today is our grammar lesson for causal thinking. Last time we learned *why* causal models matter — the correlation traps, the confounding, the danger of acting on misleading data. Now we're going to learn *how* to actually build one. The payoff is three simple patterns — chain, fork, and collider — that control how information flows through any causal diagram, no matter how big. Memorize those three patterns and you can reason about anything. We'll finish by building a complete model of Rwanda's health system together.
 
 ## Slide: Learning Objectives
-Alright, six objectives for today, and they build on each other like a staircase. We start with the building blocks — the four types of nodes. Then we learn how to connect them with directed links and signs. Then we handle the tricky cases where a simple plus or minus isn't enough — that's where conditional certainty tables come in. Then we get to the heart of it: the three fundamental triplet patterns. From there, we learn the formal independence criterion called d-separation. And finally, we put it all together and build a complete MNH DAG. *(pause)* It's a lot of material, I know. But each individual piece is simple. The power comes from combining them.
+Five objectives today, and they build like a staircase. *(pause)* First, we learn the three main types of nodes — the building blocks. Then we learn how to connect them with signed links — plus and minus. Then we get to the heart of it: the three fundamental triplet structures. From there, we learn the formal rule called d-separation — when does information flow, and when does it stop? And finally, we put it all together and build a complete DAG for Rwanda's maternal and newborn health system. *(pause)* Each piece is simple on its own. The power comes from combining them.
+
+## Slide: Chapter Overview
+Look at the five-step flow across the top. We go from mental models to formal DAGs, then node types and links, then the three triplets, then information flow rules, and finally the Rwanda application. *(pause)* Here's where we are in the course: Chapter 1 showed us *why* causal thinking matters. Now we learn *how* to draw a causal model. By the end of today, you'll have a complete diagram of Rwanda's health system on paper and in R.
 
 ## Slide: From Intuition to Structure
-Why writing down causal beliefs matters — let's talk about that.
+Let's talk about why writing down your causal beliefs changes everything.
 
-## Slide: The Problem with Mental Models
-Here's something I want you to think about. Every one of you already has a mental model of how your program works, right? You have beliefs about what causes what. The problem is that those mental models are *implicit*. They live in your head. They're vague. They're often inconsistent. *(pause)* And here's the really tricky part — two people can have completely different models and disagree about a decision without ever realizing *why* they disagree, because neither person has actually written down their assumptions.
+## Slide: Everyone Has a Mental Model
+You already carry causal beliefs around in your head. *(pause)* "If we train more community health workers, outcomes will improve." "Insurance coverage drives facility delivery rates." "Better equipment leads to better care." Those are all causal claims. The problem? They live in your head, where nobody can challenge them.
 
-Now look at the two columns on this slide. On the left, implicit models — vague, resistant to scrutiny, hidden assumptions, unproductive disagreements. On the right, explicit models using DAGs — precise, shareable, open to critique, and disagreements become *productive*. *(pause)* That's the single biggest practical benefit of what we're learning today. When you draw your beliefs out as a diagram, your assumptions become visible, debatable, and testable.
+Think about it — everyone has a mental model. The question is whether yours is written down where others can see it, poke holes in it, and help you improve it.
 
-And that core principle at the bottom — read it with me — a qualitative causal model is a disciplined way of writing down what you believe about how variables relate to one another, *before* you add any numbers. That's all it is. Let's learn how to do it.
+## Slide: Implicit vs. Explicit Models
+Look at the two columns. *(pause)* On the left — implicit models, the ones stuck in your head. They're vague and shifting. Assumptions are hidden. Two people can disagree without even knowing *why* they disagree. You can't test them against data.
 
-## Slide: From Whiteboard Sketch to Formal DAG
-So here's the workflow you'll use every single time you build a causal model. Five steps. Identify your variables, classify the node types, draw the arrows, assign signs, and validate the structure.
+On the right — explicit models on paper. Precise and shareable. Assumptions are out in the open. Disagreements become *productive* because you can point to the exact arrow you disagree about. And they generate testable predictions. *(pause)* A qualitative causal model is just a disciplined way of writing down what you believe about how things connect — before you add any numbers. That's all it is. Let's learn how.
 
-Let me give you the MNH example to make it concrete. Imagine a program director says, "I think training midwives improves quality of care, and better quality reduces mortality." *(pause)* That one sentence becomes a chain: Training, arrow with a plus sign to Quality, arrow with a minus sign to Mortality. You take an informal belief and translate it into a precise diagram. Simple as that.
+## Slide: The Model-Building Process
+Five steps, every time. *(pause)* List your variables. Classify your node types. Draw your arrows. Assign your signs. Check the structure.
 
-The rest of this chapter teaches you the formal rules for each of those five steps.
+Here's an everyday example to make it click. A school principal says: "I think class size affects teacher attention, and teacher attention affects test scores." That one sentence *is* a causal model: Class Size, arrow with a minus sign to Teacher Attention, arrow with a plus sign to Test Scores. We just gave it structure. *(pause)* The rest of this chapter teaches you the formal rules for each step.
 
-## Slide: Nodes
-The four building blocks of causal diagrams — let's go through them one at a time.
+## Slide: Three Node Types
+The building blocks of every causal diagram.
 
-## Slide: Node Type 1: Probabilistic Nodes (Ovals)
-Probabilistic nodes are the workhorses of any causal model. These are your uncertain variables — things you don't control and can't predict with certainty. You draw them as ovals.
+## Slide: Probabilistic Nodes (Ovals)
+Probabilistic nodes are the things the world throws at you — variables whose values are uncertain. You observe them, but you don't directly control them. Drawn as ovals. *(pause)* Everyday examples: tomorrow's weather, a student's exam score, traffic on your drive to school. In our health context: Quality of Care — is it good or poor? Care-Seeking Behavior — high or low? Workforce Competency — competent or still developing?
 
-Look at the MNH examples. Neonatal mortality rate — is it high or low? You don't know for sure. Baseline disease burden — severe, moderate, or low? Again, uncertain. Workforce quality — competent, developing, or inadequate? Same thing.
+These are the variables where you have to deal with uncertainty. Nature decides, not you.
 
-Now here's the critical rule, and I want you to remember this. Each probabilistic node must have MECE states — mutually exclusive and collectively exhaustive. *(pause)* What does that mean? A baby's NMR category is either high or low. It can't be both at the same time, and it must be one or the other. Getting these state definitions right is absolutely critical, because everything else in the model depends on them. If your states aren't MECE, your whole model breaks down.
+## Slide: Decision Nodes (Rectangles)
+Decision nodes are the levers you can pull — variables you *choose*. Drawn as rectangles. *(pause)* Everyday: which university to apply to, how much to spend on advertising, whether to study tonight or watch TV. In our health context: how much to invest in community health worker training, whether to buy more equipment, whether to expand Rwanda's Mutuelle insurance program.
 
-## Slide: Node Type 2: Objective Nodes (Hexagons)
-Objective nodes are what we're ultimately trying to affect. Lives saved, maternal mortality ratio, cost-effectiveness. You draw them as hexagons, and they have a special property — they're always leaf nodes. That means nothing flows *out* of them. No arrows leave an objective node.
+These are the handles you can grab. The choices are yours.
 
-Think of it this way: they sit at the very end of your causal chains and they answer one question — what are we ultimately trying to optimize? *(pause)* In the MNH context, the primary objective is lives saved, but we often track multiple objectives simultaneously — NMR, MMR, cost-effectiveness. They're all sitting there at the right-hand side of your diagram, collecting the effects of everything upstream.
+## Slide: Objective Nodes (Hexagons)
+Objective nodes are the scoreboard — what you're ultimately trying to achieve. Drawn as hexagons. Arrows flow *into* objective nodes but never *out*. *(pause)* Everyday: your final GPA, a company's annual profit, a team's win-loss record. In our context: Neonatal Mortality and Maternal Mortality.
 
-## Slide: Node Type 3: Strategic Option Nodes (Rectangles)
-Now these are the levers — the things the program actually controls. Budget allocation, training investment, equipment procurement. You draw them as rectangles, and they're the mirror image of objective nodes. Where objectives are leaf nodes with no arrows going out, strategic options are root nodes with no *causal* arrows coming in.
+Nobody "controls" the objective directly. It's the result of everything upstream. It just sits at the end and collects the effects of all your decisions and all the uncertainty.
 
-*(pause)* The distinction here is important. A probabilistic node is something the world determines — you observe it. A strategic option node is something *you* choose. Budget allocation? That's your decision. Whether to fund training? Your call. What equipment to procure? Again, you. These are the handles you can grab. I should mention there's one exception — informational links, which are dashed arrows, can point into decision nodes. We'll cover those shortly.
+## Slide: Node Types: Quick Reference
+Here's the cheat sheet. *(pause)* Probabilistic — ovals — uncertain things nature determines. Decision — rectangles — choices you make. Objective — hexagons — goals you're trying to achieve. There's also a fourth type — function nodes — for variables that are calculated exactly from their parents, like "Total Spending equals Training plus Equipment plus Systems." We won't focus on those, but just know they exist for accounting-type formulas.
 
-## Slide: Node Type 4: Function Nodes (Chevrons)
-Function nodes are the simplest type, and that's why they sometimes get overlooked. If you know all the parent values, you know the child's value with certainty. No uncertainty at all.
+## Slide: Signed Links
+Arrows that tell you which direction things move.
 
-Total budget spent is just the sum of workforce spending plus equipment spending plus systems spending — that's arithmetic, not probability. Coverage rate is facilities equipped divided by total facilities — again, just a formula. *(pause)* Look at the comparison on this slide. A probabilistic node takes parent states and gives you a probability distribution — uncertainty remains. A function node takes parent states and gives you exactly one answer. Zero residual uncertainty.
+## Slide: How Links Work
+An arrow from A to B means changing A can change B. The sign tells you the direction. *(pause)* Plus means more A leads to more B — "A pushes B up." Minus means more A leads to less B — "A pushes B down."
 
-These are rare in qualitative models, but they become important when we add numbers in Chapter 4, where they represent accounting identities and formulas.
-
-## Slide: Directed Links
-Okay, we've got our four node types. Now let's learn how to connect them.
-
-## Slide: Causal Links with Signs
-An arrow from A to B means A directly causes B. That's straightforward. But we add one more piece of information — the sign. *(pause)*
-
-Look at the table. Plus means more A leads to more B. Minus means more A leads to *less* B. And zero means no effect for that particular combination — we'll see that in conditional certainty tables soon.
-
-Now look at the diagram at the bottom. Training Investment, plus arrow, to Workforce Quality, minus arrow, to Neonatal Mortality. Read it out loud with me: more training leads to better quality, and better quality leads to lower mortality. *(pause)* Simple, right? But already powerful. With just two arrows and two signs, we've captured a meaningful causal story about how the MNH program works.
-
-## Slide: Parent, Child, and Directed Paths
-Now we need the family tree vocabulary of DAGs. Parents are at the tail of arrows, children are at the head. A directed path follows arrows from ancestor to descendant — always going in the direction the arrows point.
-
-Look at the diagram. Budget is a root node — no parents, it's exogenous. NMR is a leaf node — no children, it's the terminal outcome. Training is a child of Budget, Quality is a grandchild.
-
-*(pause)* Now here's a key insight — the sign multiplication rule. The overall sign of a path is the product of the individual link signs along that path. Follow me through this: Budget to Training is plus, Training to Quality is plus, Quality to NMR is minus. So the overall sign is plus times plus times minus, which equals... *(pause)* minus. More budget leads to lower mortality. That's exactly what we'd hope, right? The math of the signs confirms the intuition of the investment.
+Look at the diagram. CHW Training Investment, plus arrow to Workforce Competency, minus arrow to Neonatal Mortality. Read it out loud: "Training investment *increases* workforce competency, and higher competency *decreases* neonatal mortality." *(pause)* Two arrows and two signs, and we've already captured a meaningful causal story.
 
 ## Slide: Sign Multiplication Along Paths
-This slide formalizes that sign rule with a table of examples. The multiplication logic works just like multiplying positive and negative numbers from algebra class. Plus times plus is plus. Minus times minus is also plus. Plus times minus is minus.
+Here's a trick that makes everything easier. When you follow a path through multiple arrows, you multiply the signs — just like multiplying positive and negative numbers. *(pause)* Plus times plus equals plus. Minus times minus equals plus. Plus times minus equals minus.
 
-Walk through each row of the table. Budget through Training through Quality to NMR — plus, plus, minus — overall minus. More budget reduces NMR. Budget through Equipment through Quality to NMR — same signs, same conclusion. Disease Burden through Coverage to NMR — minus times minus equals plus. Higher burden, higher NMR. Makes sense.
+Look at the examples. Training to Competency to Mortality: plus times minus equals minus overall. Training reduces mortality. Makes sense, right? And the everyday example: Rain increases wet roads — that's plus. Wet roads increase accidents — that's plus. Overall: plus times plus equals plus. Rain increases accidents. *(pause)* Simple rule, but incredibly useful when you're tracing effects through a big diagram.
 
-*(pause)* Now, pay attention to that orange callout. When multiple paths connect two nodes and they have *different* overall signs, qualitative analysis alone can't tell you the net effect. Is it positive or negative on balance? You can't say. That's one of the big reasons we'll need actual numbers when we get to Chapter 4.
+## Slide: The Three Triplets
+Every causal diagram is built from just three patterns. This is the most important part of the whole chapter. Learn these three and you understand every DAG.
 
-## Slide: Informational Links into Decision Nodes
-This one's different from everything we've seen so far. Informational links are dashed arrows pointing into decision nodes. They don't represent causation — they represent information availability.
+## Slide: Why Three Triplets Matter
+Look at the table. *(pause)* Number one: the Chain — A causes B, B causes C. B is a mediator, passing information along. Number two: the Fork — B causes both A and C. B is a common cause. Number three: the Collider — A and C both cause B. B is a collision point.
 
-Look at the diagram. That dashed arrow from Baseline NMR Data into Budget Allocation? It means the program observes NMR data *before* deciding how to allocate the budget. *(pause)* This is *not* the same as saying NMR causes the budget. It's saying the decision-maker has access to that information when making their choice.
+Each one has its own rule about when information flows and when it stops. Get these rules wrong and your entire analysis falls apart. *(pause)* So let's go through them one at a time. Pay close attention. I'm going to ask you to burn this into your memory.
 
-Why does this matter? Because in Chapter 7, when we get to decision analysis, what you know at the time of your decision determines your optimal strategy. If you can see the NMR data before you allocate funds, you can target your investment. If you can't, you're flying blind. The information structure of the problem matters enormously.
+## Slide: Triplet 1: The Chain
+A causes B, B causes C. B sits in the middle, passing information from A to C. *(pause)* The everyday example: Rain causes Wet Roads, Wet Roads cause Car Accidents. If you already know the roads are wet, does learning it rained tell you anything *new* about accident risk? No. The road condition already captured everything rain had to say.
 
-## Slide: Conditional Certainty Tables
-When plus and minus are not enough — let's tackle that.
+Here's the rule: information flows from A to C through B. But if you hold B fixed — if you already know B's value — the flow stops. Think of it like a water pipe. Water flows from the faucet through the pipe to the bucket. Close the valve in the middle? Nothing gets through.
 
-## Slide: When Relationships Are Not Monotonic
-So far, a simple plus or minus sign has been enough to describe every relationship. More of A always means more of B, or always means less of B. That's a monotonic relationship. *(pause)* But sometimes the real world is more complicated than that.
+## Slide: Chain: MNH Example
+Look at the health example. *(pause)* CHW Training Investment, plus arrow to Workforce Competency, minus arrow to Neonatal Mortality.
 
-The CPAP example is perfect. Do CPAP machines reduce mortality? Well... it depends. If trained staff are available to operate them, yes — you get a minus sign, mortality goes down. But if staff aren't trained? The machines just sit idle. The effect is zero, not minus. *(pause)* This is a conditional relationship. The effect of one input depends on the state of another input. And when you have that, a simple plus or minus won't capture it. You need a conditional certainty table.
+Left side, the green box — we're *not* holding competency fixed. Training and mortality are connected. Knowing a district invested in training, you'd predict lower mortality. Information flows through the chain.
 
-Look at the table on this slide. Each cell tells you the qualitative sign for that particular combination of parent states. CPAP available *and* staff trained? Minus — reduces NMR. CPAP available but staff *not* trained? Zero — no effect, machines gathering dust. CPAP unavailable, staff trained? Zero — skill without tools. Both unavailable? Zero — no intervention at all.
+Right side, the orange box — we *are* holding competency fixed. If we already know a health worker is competent, it doesn't matter *how* she became competent — training, years of experience, natural talent. The training information is blocked by the competency information. *(pause)* For Rwanda, this means training's value is entirely mediated through competency. Competency is what actually matters at the end of the day.
 
-## Slide: Reading Conditional Certainty Tables
-Now let's look at a richer example — the effect on quality of care when we cross staff competency with equipment availability.
+## Slide: Triplet 2: The Fork
+A gets an arrow from B, and C gets an arrow from B. B is in the middle, causing both A and C. *(pause)* Here's our old friend the ice cream example. Ice Cream Sales and Drowning Deaths are both caused by Summer Heat. They look correlated, but neither one causes the other. Summer heat is the common cause hiding in the background.
 
-This table tells a more nuanced story. Staff competent and equipment available? Strong positive effect — you've got the full package. Staff competent but equipment unavailable? Still positive, but moderate — skill compensates for missing tools to some degree. Staff developing with equipment available? Also moderate — the equipment helps bridge the competency gap. *(pause)*
+The rule works just like the chain: A and C look associated, but only because of B. Hold B fixed — control for temperature — and the link between ice cream and drowning vanishes.
 
-But look at the bottom-right corner. Staff inadequate and equipment unavailable? That's not just zero — that's a *minus*. Active harm risk from unsupervised deliveries. That should give you pause.
+## Slide: Fork: MNH Example
+Now the health version. *(pause)* CHW Deployment and Neonatal Mortality are both driven by Disease Burden. The naive observation says districts with more CHWs have higher mortality — health workers cause harm? Of course not. Disease burden is the common cause. High-burden districts get more workers *and* have higher mortality.
 
-And here's the key insight in that orange callout — this is really important for MNH programs. People and Products are complements, not substitutes. Investing in one without the other doesn't just give you partial results — in the worst case, it can give you *no* results, or even negative ones. You need both. Keep that in mind.
+Control for disease burden, and the spurious link disappears. *(pause)* For Rwanda, across its 30 districts, the Ministry of Health deploys more CHWs to higher-burden areas. Any comparison of CHW numbers versus mortality *must* control for baseline disease burden, or you'll get the wrong answer.
 
-## Slide: Serial Triplets (Chain)
-Alright, now we get to the heart of the chapter. These next three sections — chain, fork, collider — are the most important material we'll cover today.
+## Slide: Triplet 3: The Collider
+Okay, here's where it gets counterintuitive. Pay very close attention, because this one behaves *opposite* to everything we just learned. *(pause)*
 
-## Slide: The Serial Triplet Structure
-The serial triplet, or chain, is the simplest causal pathway. A causes B, B causes C. A arrow to B, B arrow to C.
+A causes B, and C also causes B. Two arrows collide at B. That's why it's called a collider.
 
-Here's how information flows. If you don't know B's value, then learning about A tells you something about C. Information flows right along the chain from A through B to C. *(pause)* But — and this is the key — if you already know B's exact value, then learning about A tells you nothing *new* about C. Conditioning on the mediator blocks the path.
+The everyday example: High Grades and Athletic Talent both help you get into a selective university. Among the general population, grades and athletic ability are unrelated. But among *admitted students* — if you know someone got in and they're not a great athlete — they must be an academic star. One cause "explains away" the other.
 
-Think of it like a water pipe. Water flows from the reservoir through the pipe to the tap. But if you close the valve in the middle? Nothing from the reservoir reaches the tap. That's exactly what conditioning on B does — it closes the valve.
+## Slide: Collider: MNH Example
+Staffing Level and Equipment Availability both contribute to Quality of Care. Quality is the collider. *(pause)*
 
-## Slide: MNH Example: Training → Competency → Mortality
-Let's make this concrete with the MNH chain. Training leads to competency, competency leads to mortality.
+Left side, the green box — not looking at quality. Staffing and equipment are independent — separate decisions, no connection.
 
-Look at the two columns. On the left, the green box — we're *not* conditioning on competency. In that case, training and mortality are associated. If I tell you a midwife completed her training, you can reasonably predict her patients will have better outcomes. Information flows through the chain.
+Right side, the red box — among facilities with *good* quality. If staffing is low at a good-quality facility, equipment must be excellent. The two causes "explain away" each other. *(pause)* This creates a fake negative relationship between staffing and equipment that doesn't actually exist. That's collider bias, and it trips up even experienced researchers.
 
-*(pause)* Now look at the right column, the orange box. We *are* conditioning on competency. If I already *know* a midwife is competent — maybe I tested her directly — then it no longer matters *how* she became competent. Training, years of experience, natural talent, whatever. The training information is "screened off" by the competency information. The path is blocked.
+## Slide: Information Flow Rules
+d-Separation: when does information flow, and when does it stop?
 
-So what does this mean for the program? It tells us that training's value is entirely mediated through competency. Competency is what actually matters. Training is just one way to get there. If you can measure competency directly, you don't need training records to predict outcomes.
+## Slide: The Three Rules
+Burn this into your memory. I'm serious. This is the single most important table in the entire course. *(pause)*
 
-## Slide: Chain Summary
-Here's the compact version. Not conditioning on B? A and C are associated — information flows. Conditioning on B? Blocked — the path is shut.
+Chain: A to B to C. Default? Information flows. Condition on the middle? Blocked. Fork: A from B, C from B. Default? Flows. Condition on the middle? Blocked. Collider: A to B, C to B. Default? Blocked. Condition on the middle? Flows.
 
-And I love this pipeline analogy. Water flows from the reservoir through the pipe to the tap. Close the valve at B, and nothing from A reaches C. *(pause)* Make sure you can recall this pattern instantly. We'll need it for d-separation.
+*(pause)* See the pattern? Chains and forks behave the same — conditioning on the middle blocks the flow. The collider is the rebel — conditioning on the middle *opens* the flow. The collider flips the rule. Everything else is the same; the collider is the odd one out.
 
-## Slide: Diverging Triplets (Fork)
-Now the second pattern — the common cause structure.
+The fancy name for these rules is d-separation — the "d" stands for directional. If every path between two variables is blocked, they're d-separated, and knowing one tells you nothing about the other.
 
-## Slide: The Diverging Triplet Structure
-The fork looks like this: A gets an arrow *from* B, and C gets an arrow *from* B. B is in the middle, causing both A and C. Notice the arrows point *away* from B in both directions.
+## Slide: Applying d-Separation
+In real diagrams, two variables might be connected by multiple paths. You have to check every path. *(pause)* The rule is: walk along each path. At each node, ask — is this a chain or fork middle, or a collider? Chain or fork middle that you're conditioning on? Blocked. Collider that you're *not* conditioning on? Blocked. One blocked node is enough to block the whole path.
 
-Here's what happens. Because B drives both A and C, A and C end up correlated — even though neither one causes the other. This is a spurious correlation. *(pause)* The classic example? Ice cream sales and drowning deaths. They're correlated. Does ice cream cause drowning? Of course not. Summer heat drives both — more ice cream *and* more swimming. Heat is the common cause, the B in our fork. Once you know the temperature, the correlation between ice cream and drowning disappears.
+If *all* paths between two variables are blocked, they're independent. Even one open path means information can still flow.
 
-And notice — the information flow rules are the same as the chain! Unconditionally, information flows between A and C. Condition on B, the common cause, and the flow is blocked. Same pattern, different causal structure.
+## Slide: d-Separation: Worked Example
+Let's work through this together. *(pause)* Look at the diagram. Training flows to Quality, Quality flows to Mortality. Equipment also flows into Quality from below.
 
-## Slide: MNH Example: PPH Detection ← Workforce Quality → CPAP Usage
-Let's see this in the MNH context. Workforce quality is the common cause. It drives both PPH detection rates and correct CPAP usage.
+First question: is Training independent of Mortality given Quality? The path is Training to Quality to Mortality. That's a chain, and Quality is in our conditioning set. Chain with the middle conditioned on — blocked. Yes, d-separated.
 
-Look at the left column, the red box. Here's what a naive observer sees: facilities with high PPH detection rates also have high CPAP usage. So they ask, "Does detecting PPH somehow *cause* better CPAP use? Should we invest in PPH detection protocols to improve CPAP outcomes?" *(pause)*
+Second question: is Training independent of Equipment given Quality? The path goes Training to Quality and Equipment to Quality. Quality is a collider here — two arrows point into it. And it's in our conditioning set. Collider conditioned on — opened! So no, Training and Equipment are *not* independent given Quality. *(pause)* Conditioning on quality created a spurious link between training and equipment. That's collider bias, right here in our own model.
 
-Now look at the right column, the green box. That's the causal reality. Both metrics are driven by workforce quality. Competent staff are good at detecting PPH *and* good at using CPAP correctly. It's not that one causes the other — they share a common driver.
+## Slide: MNH Application: Rwanda
+Now let's build a real model for a real country.
 
-The program implication is in that callout at the bottom. If you see a correlation between two metrics, you have to ask — is there a common driver? Investing in PPH detection protocols won't improve CPAP usage unless you address the underlying cause, which is workforce quality.
+## Slide: Rwanda at a Glance
+Here are the numbers. *(pause)* Neonatal mortality: about 16 per 1,000. Maternal mortality: about 248 per 100,000. Facility delivery rate: over 94 percent — that's really high. Health insurance through Mutuelle de Sante: about 85 percent coverage. They've got roughly 58,000 community health workers across 30 districts. But nurses per population is only about 1.3 per 1,000, way below the WHO target of 4.45.
 
-## Slide: Fork Summary
-Same compact format. Not conditioning on B? A and C appear correlated — spurious correlation from the common cause. Conditioning on B? Blocked — the confounding disappears.
+Rwanda's CHW program and Mutuelle insurance are widely studied success stories. But the workforce is stretched thin, and neonatal mortality has been harder to crack than under-5 mortality.
 
-*(pause)* And notice that orange callout — this is exactly the confounding trap from Chapter 1. Remember the health worker deployment example? The fork structure is the formal representation of confounding. And the solution is always the same: condition on the common cause.
+## Slide: Choosing Our Variables
+We want a diagram rich enough to capture the key dynamics but small enough to reason about. Seven nodes. *(pause)* Three decision nodes — rectangles, the levers we pull: CHW Training Investment, Equipment Procurement, and Insurance Policy. Three probabilistic nodes in the middle: Workforce Competency, Equipment Availability, and Care-Seeking Behavior. One more probabilistic node that acts as the bottleneck: Quality of Care. And one objective node — the hexagon, the scoreboard: Neonatal Mortality.
 
-## Slide: Converging Triplets (Collider)
-Okay, here's where it gets interesting. And honestly, a little counterintuitive. The dangerous exception.
+## Slide: The Rwanda MNH DAG
+Look at the diagram. Read it left to right. *(pause)* Decisions on the left — what we control. Mediators in the middle — how they work. Quality of Care is the bottleneck where everything converges. And Neonatal Mortality on the right — what we want to reduce.
 
-## Slide: The Converging Triplet Structure
-The collider looks like this: A causes B, and C *also* causes B. Two arrows "collide" at B. That's why it's called a collider.
+Each of the three decisions flows through its own channel. Training builds competency. Procurement gets equipment into facilities. Insurance drives care-seeking. All three channels pour into Quality, and Quality reduces mortality.
 
-Now here's where you need to pay very close attention, because this structure behaves *opposite* to everything we just learned. *(pause)*
+## Slide: Signs and Path Analysis
+Let's assign signs. *(pause)* Training to Competency — plus. Procurement to Availability — plus. Insurance to Care-Seeking — plus. Competency to Quality — plus. Availability to Quality — plus. Care-Seeking to Quality — plus. Quality to Mortality — minus.
 
-With chains and forks, information flows naturally, and conditioning blocks it. With colliders, it's reversed. Unconditionally, A and C are independent. No information flows at all — the path is naturally blocked at the collider. *(pause)* But — and this is the dangerous part — if you condition on B, you *open* the path. A and C become associated. You've created a spurious correlation that didn't exist before.
+Now follow any path from a decision to mortality. Training to Competency to Quality to Mortality: plus times plus times minus equals minus overall. Training reduces mortality. Same for all three channels — every one carries an overall minus sign. All three reduce mortality. *(pause)* The question is: which one has the *strongest* effect? That's what we'll need actual numbers for in Chapter 4.
 
-Read that red warning box with me. Conditioning on a collider *creates* a spurious association that did not exist before. This is the opposite of what happens with chains and forks. This is what we call collider bias, and it trips up even experienced analysts.
+## Slide: Spotting Triplets in the Rwanda DAG
+Time for pattern recognition. *(pause)* Look at the green box — chains. Training to Competency to Quality. Insurance to Care-Seeking to Quality. Procurement to Availability to Quality to Mortality. Conditioning on the mediator blocks each of these paths.
 
-## Slide: MNH Example: Staffing → Quality of Care ← Equipment
-Both staffing levels and equipment availability contribute to quality of care. Quality is the collider — two arrows point into it.
+Now the red box — colliders. Competency and Availability both flow into Quality. Competency and Care-Seeking both flow into Quality. Quality is a collider for all of these pairs. *(pause)* That means if you condition on Quality — say, you only study high-quality facilities — you create a fake link between staffing and equipment. With Rwanda's nurse shortage of 1.3 per 1,000, if you only look at high-performing facilities, staffing and equipment will appear negatively related. That's a statistical illusion from collider bias. Be careful what you condition on.
 
-Now, if you don't condition on quality — look at the left, green box — staffing and equipment are independent. They're separate investment decisions. Knowing one tells you nothing about the other. Fine.
+## Slide: R Workshop
+Let's build Rwanda's DAG in R with dagitty and ggdag.
 
-*(pause)* But among facilities with *good* quality of care — meaning you're now conditioning on the collider — something weird happens. If you learn that staffing is low at a good-quality facility, what do you infer? *(pause)* That the equipment must be excellent. Something has to explain the good quality, and if it isn't people, it must be products. The two causes "explain away" each other. That's collider bias, and it creates a spurious *negative* association between staffing and equipment that doesn't actually exist in the population.
+## Slide: Setting Up
+Same three packages as last time — dagitty, ggdag, and ggplot2. *(pause)* If they're already installed, just load them. If not, uncomment the install line and run it first.
 
-## Slide: Collider Summary and the "Explain Away" Intuition
-Let me give you an analogy that makes this click. Imagine you know a student passed an exam. That's the collider. Now I tell you the exam was easy. What happens to your belief about the student's talent? *(pause)* It goes *down*. Because if the exam was easy, you don't need much talent to pass. The two causes — talent and exam difficulty — compete to explain the common effect. That's "explaining away."
+## Slide: Step 1: Define Rwanda's DAG
+Here we define the full seven-node model in code. *(pause)* Look at the dagitty syntax. Three decision nodes on the left: CHW_Training, Equipment_Procure, Insurance_Policy. Three mediators in the middle: Competency, Equip_Avail, Care_Seeking, plus Quality. And Neonatal_Mortality on the right. Seven arrows connecting them. Then we check isAcyclic — it should return TRUE, confirming we haven't accidentally created any loops. That's our sanity check.
 
-Now look at that critical table at the bottom of the slide. This is the single most important thing to memorize in this chapter. *(pause)*
+## Slide: Step 2: Visualize the DAG
+Now let's see it. *(pause)* The first call, ggdag, gives us the basic picture. The second call, ggdag_status, color-codes the exposure and outcome — so we can see the path from CHW Training to Neonatal Mortality highlighted. Run both and see how the structure pops visually.
 
-Chains and forks: associated unconditionally, blocked by conditioning. Colliders: blocked unconditionally, *opened* by conditioning. The collider is the odd one out. Everything else follows the same pattern — the collider is the exception that flips the rule. Burn this table into your memory.
+## Slide: Step 3: Test d-Separation
+Here's where we check our understanding against the computer. Three tests. *(pause)* Test 1: Is Training independent of Mortality given Quality? That's a chain — we expect TRUE, blocked. Test 2: Is Competency independent of Equipment Availability unconditionally? No connecting path — we expect TRUE. Test 3: Is Competency independent of Equipment Availability given Quality? That's a collider — we expect FALSE, opened!
 
-## Slide: c-Independence and d-Separation
-Alright, now we formalize what we just learned into a general criterion we can apply to any graph, no matter how complex.
+Run the code. If your predictions match, you've got the triplet rules down. If any surprise you, go back and trace the path by hand. *(pause)* TRUE means independent, path blocked. FALSE means information flows. Test 3 is the collider effect in action.
 
-## Slide: From Triplets to Full Graphs
-In simple triplets, the rules are straightforward. But real DAGs are messier. There might be many paths between any two nodes, and each path might contain multiple triplet structures.
+## Slide: Step 4: Paths and Adjustment Sets
+Two more powerful tools. *(pause)* The paths function lists every route from CHW_Training to Neonatal_Mortality. The impliedConditionalIndependencies function generates every testable prediction our model makes — if data violates any of these, our model needs fixing. And adjustmentSets tells us what we need to control for.
 
-So here's the formal definition. Two nodes X and Y are d-separated given a set of conditioning variables Z if *every* path between X and Y is blocked. If they're d-separated, they're conditionally independent given Z. *(pause)*
-
-And a path is blocked if it contains either a chain or fork where the middle node is in your conditioning set, *or* a collider where the middle node and its descendants are *not* in your conditioning set. Same three rules we just learned, now applied path by path across the whole graph.
-
-## Slide: Applying d-Separation: An Example
-Let's work through this together. Look at the DAG on this slide. Budget flows to Training, which flows to Quality, which flows to NMR. And Equipment also flows into Quality from below.
-
-*(pause)* First question: Is Training d-separated from NMR given Quality? The path is Training to Quality to NMR. That's a chain, and Quality is in our conditioning set. Chain with the middle node conditioned on — blocked. So yes, Training and NMR are d-separated given Quality. If we know the quality of care, learning about training tells us nothing new about NMR.
-
-Second question: Is Training d-separated from Equipment given Quality? The path is Training to Quality, and Equipment to Quality. Wait — that's Training arrow to Quality, *and* Equipment arrow to Quality. Quality is a collider! And it's in our conditioning set. Collider with the middle node conditioned on — opened. So no, Training and Equipment are *not* d-separated given Quality. *(pause)* Conditioning on quality created a spurious association between training and equipment. This is collider bias in action, right here in our own model.
-
-## Slide: d-Separation Decision Procedure
-Here's the algorithm, in four steps. One — list all paths between X and Y. Two — for each path, identify every triplet structure. Three — check if any triplet blocks the path. Four — if *all* paths are blocked, you have d-separation.
-
-Look at the box in the middle. A path is blocked if it contains at least one chain or fork with the middle node conditioned on, *or* a collider with the middle node and all its descendants *not* conditioned on. And d-separation holds only if every single path is blocked. Even one open path means information can flow.
-
-*(pause)* Now, why does this matter practically? Look at that green callout. d-Separation tells us which conditional independencies our model *implies*. And those are testable predictions. If we get data and the data disagrees with what our model says should be independent — our model is wrong. That's the scientific payoff. We've turned our beliefs into falsifiable claims.
-
-## Slide: MNH Application: Full Qualitative DAG
-Now let's put it all together and build the full model.
-
-## Slide: Identifying the Variables
-We're going to build a comprehensive DAG with about ten key nodes. Let's walk through them.
-
-On the left — one strategic option node: Budget Allocation, with four states: People-heavy, Products-heavy, Systems-heavy, or Balanced. That's our lever.
-
-Then six mediating variables — the ovals: Workforce, Training, Equipment, Referral System, Quality of Care, and Coverage. Each with discrete MECE states.
-
-One contextual variable: Baseline Burden — severe, moderate, or low. This is the confounder we need to account for.
-
-And two objective nodes at the end: NMR and MMR. Those are what we're trying to reduce.
-
-*(pause)* This variable selection step is arguably the most important — and hardest — part of building a causal model. What you include, what you exclude, and how you define the states... those choices shape everything downstream.
-
-## Slide: The Full DAG Structure
-And here's the complete picture. Take a moment to look at the layout.
-
-Budget is on the left — that's our decision. It flows through multiple pathways: directly to Workforce, Equipment, Referral System, and Training. Those mediators feed into Quality of Care in the middle. Quality then drives both NMR and MMR on the right. And Baseline Burden sits up top as a confounder, influencing the outcomes directly.
-
-*(pause)* Notice the layered structure: decisions on the left, mediators in the middle, outcomes on the right, confounders above. Each arrow tells a story about how investment translates into outcomes. Trace any path from Budget to NMR — every single one goes through Quality. That makes Quality the central bottleneck of the entire model. Everything has to flow through it.
-
-## Slide: Assigning Signs to Every Link
-This table assigns a sign and a rationale to all thirteen links in the DAG. Let me walk through a few.
-
-Budget to Workforce — plus — more funding enables hiring and retention. Budget to Equipment — plus — more funding procures CPAP machines, PPH bundles, ultrasound. Training to Quality — plus — trained staff deliver better care. Quality to NMR — minus — better care reduces mortality. *(pause)*
-
-Every single one should make intuitive sense. And here's what's important — having the rationale written down makes the model *debatable*. If a colleague disagrees with a sign, they can point to exactly which link and exactly which assumption they contest. That's so much more productive than arguing about vague intuitions. "I disagree with your model" becomes "I disagree that more equipment always improves quality — I think it depends on whether staff know how to use it." And now you can have a real conversation.
-
-## Slide: Identifying Triplets Within the Model
-Now it's pattern recognition time. Our DAG contains all three triplet types.
-
-Look at the green box — chains. Budget to Training to Quality. Referral System to Coverage to Quality. Budget to Workforce to Quality to NMR. Conditioning on the mediator blocks each of these paths.
-
-The blue box — forks. Workforce and Equipment are both children of Budget. NMR and MMR are both children of Quality. Training and Referral System are both children of Budget. These are common cause structures. Conditioning on the common parent blocks the spurious correlation between the children.
-
-*(pause)* And then the red box — colliders. This is where it gets dangerous. Workforce and Equipment both point into Quality. Training and Equipment both point into Quality. Coverage and Workforce both point into Quality. Quality is a collider for all of these pairs. That means — and this is critical — if you run a regression controlling for quality of care, you create a spurious association between staffing and equipment investment. Collider bias. Be very careful about what you condition on.
-
-## Slide: Testable Implications
-Here's the scientific payoff. Our qualitative DAG generates specific conditional independence predictions that we can actually test against data.
-
-Training should be independent of Equipment, given Budget. That's a fork structure. Training should be independent of NMR, given Quality. That's a chain. Workforce and Equipment should *not* be independent given Quality — because Quality is a collider and conditioning on it opens the path. *(pause)*
-
-If we get health data and any of these predictions are violated, we know our model needs revision. And that's the whole point. A model that can't be wrong is a model that can't teach you anything. These testable implications are what make our diagram more than just a pretty picture — they make it a scientific claim.
-
-## Slide: R Code Workshop
-Let's build and analyze this DAG in R.
-
-## Slide: R: Define the Full MNH DAG with dagitty
-Alright, let's open R. We're going to define our full ten-node MNH DAG using the dagitty package. You'll specify all thirteen causal links — every arrow we just discussed — and then we'll verify the graph is acyclic. *(pause)* If dagitty says it's a valid DAG, we know we haven't accidentally created any feedback loops. That's our first sanity check.
-
-## Slide: R: Visualize the DAG Color-Coded by Role
-Now let's see what our model actually looks like. We're going to create a color-coded visualization that distinguishes the different node roles. Budget in blue — that's our decision. Mediators in green — workforce, training, equipment, referral system, coverage, and quality. Baseline burden in amber — the contextual confounder. And NMR and MMR in red — the outcomes we care about. *(pause)* This visual layout makes the flow of the model immediately intuitive. Left to right, decisions to outcomes, with the machinery of change in between.
-
-## Slide: R: Test d-Separation
-Here's where we check our hand calculations against the computer. We're going to run five d-separation queries on our MNH DAG.
-
-Is Training d-separated from NMR given Quality? We said yes — it's a chain, conditioning on the middle blocks it. Is Workforce d-separated from Equipment unconditionally? We said no — Budget is a common parent creating a fork. Is Workforce d-separated from Equipment given Budget? We said yes — conditioning on the common cause blocks the fork. Is Workforce d-separated from Equipment given Quality? We said no — Quality is a collider and conditioning on it opens the path. *(pause)*
-
-Run the code and check. If your answers match dagitty's output, you've got the triplet rules down. If any surprise you, go back and trace the path by hand.
-
-## Slide: R: Enumerate All Paths
-Now let's use dagitty's paths function to list all directed paths from Budget to NMR and from Budget to MMR. This shows you all the different channels through which investment flows to reach the outcomes.
-
-*(pause)* Notice how many paths there are. Budget reaches NMR through workforce, through training, through equipment, through the referral system and coverage — each one a distinct causal pathway. And we can also look at paths between Workforce and Equipment through the collider Quality, to see how conditioning on Quality would connect variables that are otherwise independent.
-
-## Slide: R: Implied Conditional Independencies
-This is the grand finale of the coding session. We're going to use dagitty to generate the *complete* list of conditional independencies implied by our DAG. Every single one of these is a testable prediction our model makes.
-
-*(pause)* Look at the output. Training should be independent of Equipment given Budget. Workforce should be independent of Referral System given Budget. Training should be independent of Baseline Burden. And so on. Each one of these is a claim that, if our model is correct, should hold in the data. When we get to Chapter 10 and start working with real health system data, we can check every single one of these predictions. If the data says two variables are associated when our model says they should be independent, we know exactly where our model needs to be revised.
+Notice it returns the empty set for CHW_Training. Why? Because Training has no parents in this DAG — it's a root node. No backdoor paths to close. The causal effect can be estimated without any adjustment, *if* the DAG is correct. That's a big "if," and it's why getting the diagram right matters so much.
 
 ## Slide: Key Takeaways
-Three things I want you to take away from today.
+Three things to take away. *(pause)* First, a qualitative causal model makes your assumptions visible, shareable, and testable. It gets beliefs out of your head and onto paper.
 
-First, a DAG encodes your causal beliefs explicitly using four node types and signed directed links. It takes what's in your head and puts it on paper where people can see it, question it, and improve it.
+Second, every DAG is built from three triplets — chains, forks, and colliders — each with its own information flow rule. Chains and forks: conditioning on the middle blocks the flow. Colliders: conditioning on the middle opens the flow. Get this backwards and you introduce bias instead of removing it.
 
-Second, the three triplet structures — chain, fork, and collider — govern all information flow. Chains and forks are open naturally and blocked by conditioning. The collider is the dangerous exception — blocked naturally and *opened* by conditioning. Please remember that.
-
-*(pause)* Third, d-separation translates graph structure into testable predictions. If the data disagrees with what your model implies, your model needs fixing.
-
-And for MNH specifically, the big insight is that People, Products, and Systems investments are complements flowing through Quality of Care — and that conditioning on Quality creates collider bias between the investment pillars. Be careful what you control for.
+Third, for Rwanda: three investment decisions flow through three mediators into Quality of Care, then Neonatal Mortality. The diagram tells us *where* to look — the numbers will tell us *how much*.
 
 ## Slide: Looking Ahead
-Next session we put these tools to work in a structured case study. We'll be building a DAG from stakeholder interviews, translating people's qualitative beliefs into formal diagrams, and identifying where they agree, where they disagree, and what assumptions are hiding underneath the surface. *(pause)* That sets us up for Chapter 4, where we add actual numbers — probabilities — to the structure we've built. The qualitative skeleton gets quantitative flesh.
+Next session we put these tools to work on a real consulting case. *(pause)* We'll build a DAG from stakeholder interviews in Kenya — talking to a County Health Director, a midwife, and a community health worker. Each conversation reveals new variables our model was missing. It's detective work, and it's where the theory becomes practice.
+
+Then in Chapter 4, we replace the plus and minus signs with actual probabilities — answering not just *what* affects what, but *how much*. See you next time.
