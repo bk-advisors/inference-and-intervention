@@ -643,18 +643,18 @@ def draw_ch08():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# CHAPTER 9 — Game Theory & Strategic Interactions  (Rwanda focus, simplified)
+# CHAPTER 9 — Game Theory & Strategic Interactions  (Kenya focus, simplified)
 # ══════════════════════════════════════════════════════════════════════════════
 
 def draw_ch09():
-    fig, ax = new_fig("Ch 9 — The Free-Rider Trap (Rwanda)")
+    fig, ax = new_fig("Ch 9 — The Free-Rider Trap (Kenya)")
 
     # ── 2x2 Payoff Matrix ──
     mx, my = 3.5, 3.2  # top-left of matrix
     cw, ch_m = 2.0, 1.4  # cell width, cell height
 
     # Headers — simplified labels
-    ax.text(mx + cw, my + 0.6, "Rwanda Gov't", ha="center", fontsize=12,
+    ax.text(mx + cw, my + 0.6, "Kenya County", ha="center", fontsize=12,
             fontweight="bold", color=TEAL, fontfamily="sans-serif")
     ax.text(mx + 0.5 * cw, my + 0.15, "Co-invest", ha="center", fontsize=10,
             fontweight="bold", color=TEAL, fontfamily="sans-serif")

@@ -418,7 +418,7 @@ Each chapter has a primary country whose public data provides the main examples:
 | Ch 6 | All four | Simpson's Paradox needs cross-country comparison |
 | Ch 7 | Kenya | County-level resource decisions; intensive vs. equity focus |
 | Ch 8 | All four | Multi-country resource allocation |
-| Ch 9 | Rwanda | CHW program + Mutuelle as real commitment devices |
+| Ch 9 | Kenya | 47 devolved counties; conditional grants as commitment devices |
 | Ch 10 | Tanzania | DHIS2/GOTHOMIS data system; structure learning from health data |
 
 ---

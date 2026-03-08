@@ -534,67 +534,57 @@ essays.append({
     "title": "When the World Pushes Back",
     "subtitle": "Why governments respond strategically to donor investments -- and how to design for it",
     "body": r"""
-In 2011, Rwanda achieved something remarkable. Its community-based health insurance scheme, Mutuelle de Sante, reached enrollment rates above 90 percent. Nearly every Rwandan had some form of health coverage. It was one of the most successful universal coverage pushes in sub-Saharan Africa.
+In 2013, Kenya did something that most countries only talk about. It devolved its health system to 47 county governments. Overnight, health budgets, staffing decisions, and facility management moved from Nairobi to county capitals spread across the country. It was one of the boldest governance reforms in sub-Saharan Africa.
 
-Here is what makes the story interesting from a strategic perspective. Rwanda is a country that receives substantial donor support for health. When large amounts of foreign money flow into a health system, governments often respond by reducing their own spending. "The donors are covering it. Let us redirect our budget to roads." This is called crowding out, and it is one of the most persistent problems in international development.
+Here is what makes the story interesting from a strategic perspective. When international donors send money to improve maternal and newborn health in Kenya, they are no longer dealing with one government. They are dealing with 47.
 
-Rwanda did not do this. Instead, the government increased its own health spending alongside donor contributions. It invested heavily in Mutuelle de Sante. It created performance-based financing for health facilities. It expanded community health worker programs with government funds, not just donor funds.
+Each county government has its own budget, its own priorities, and its own political calculations. And each one is watching what the others do -- and what the donors do -- before deciding how to spend its own money.
 
-Why? Was Rwanda simply more virtuous than other countries?
+This is a game. Not the kind with winners and losers, but the kind where every player's best move depends on what the other players choose. Game theory gives us the tools to understand why rational county governments sometimes make choices that produce collectively terrible health outcomes -- and how to design funding agreements that prevent it.
 
-Maybe. But game theory offers a more useful explanation. Rwanda's government had structured the situation so that investing in health was the rational strategy, not just the altruistic one.
+The health funding landscape is a strategic interaction. Donors, national governments, and county governments each make decisions about how much to invest, where to invest, and under what conditions. Each side's optimal behavior depends on what the other sides do. And the outcome depends on all their strategies together.
 
-This is the fundamental insight of game theory: the other player has a strategy too. And until you understand what is rational for them -- not just what is ethical or what they promised -- your plans are incomplete.
+Let us strip this down to the simplest possible game. A donor and a county government each choose High or Low investment in health. If both invest High, the county gets excellent health outcomes. If both invest Low, outcomes are poor. If one invests High and the other invests Low, outcomes are moderate.
 
-The health funding landscape is a strategic interaction. Donors and governments each make decisions about how much to invest, where to invest, and under what conditions. Each side's optimal behavior depends on what the other side does. And the outcome depends on both strategies together.
+What is the county government's best response?
 
-Let us strip this down to the simplest possible game. A donor and a government each choose High or Low investment. If both invest High, the country gets excellent health outcomes. If both invest Low, outcomes are poor. If one invests High and the other invests Low, outcomes are moderate.
+If the donor invests High, the county is tempted to invest Low. The donor is already doing the heavy lifting. Why spend scarce county money on health when the donor will spend it for you? The county gets moderate outcomes for minimal cost -- and can redirect the savings to roads, administration, or prestige projects. Not as good as full cooperation, but a pretty good deal from the county's perspective.
 
-What is the government's best response?
+If the donor invests Low, the county's best move is also Low. The donor is not contributing much, so the county would have to bear the entire cost alone for only marginally better outcomes.
 
-If the donor invests High, the government is tempted to invest Low. The donor is already doing the heavy lifting. Why spend scarce government money when the donor will spend it for you? The government gets moderate outcomes for minimal cost. Not as good as full cooperation, but a pretty good deal.
+In both scenarios, the county's rational move is Low. This is the free-rider problem. Each player has an incentive to let the other bear the cost. The result is underinvestment by everyone -- even when all parties would prefer mutual cooperation.
 
-If the donor invests Low, the government's best move is also Low. The donor is not contributing much, so the government would have to bear the entire cost alone for only marginally better outcomes.
+Kenya's national government recognized this trap. Its response was conditional grants.
 
-In both scenarios, the government's rational move is Low. This is the free-rider problem. Each player has an incentive to let the other bear the cost. The result is underinvestment by everyone -- even when both parties would prefer mutual cooperation.
+Conditional grants are funds that flow from the national government to counties, but with strings attached. The money is released only when the county meets specific health targets -- staffing ratios, facility readiness scores, immunization coverage rates. These targets are verified through Kenya's DHIS2 health information system, which tracks real-time facility data across all 47 counties.
 
-So why did Rwanda cooperate?
+This is a textbook commitment device. It changes the payoff matrix so that free-riding becomes costly. A county that redirects health funds to other priorities does not just get worse health outcomes. It loses the next tranche of conditional grant funding. The rational response shifts from free-riding to cooperation.
 
-Several features of Rwanda's situation changed the game structure.
+But conditional grants only work if enforcement is credible. And here is where Kenya's story gets complicated. Monitoring 47 counties is harder than monitoring one national government. Some counties have strong DHIS2 reporting systems and transparent budgets. Others have weaker data infrastructure and less accountability. The conditional grant mechanism works well where verification is strong. It works poorly where it is not.
 
-The first is political ownership. Rwanda's leadership treated health outcomes as a core political metric. Mortality rates were reviewed in cabinet meetings. Provincial governors were evaluated partly on health indicators. The government did not view health as a charitable activity to be funded by outsiders. It viewed health as a measure of regime performance.
+This creates a natural experiment. Counties with strong accountability systems -- where conditional grants are genuinely conditional -- tend to maintain health spending even when donor funding flows in. Counties with weaker systems -- where conditions are loosely enforced -- show the classic free-rider pattern. Health grants arrive, county health budgets quietly shrink, and net new investment is smaller than anyone intended.
 
-This changed the payoff matrix. For Rwanda's government, investing Low in health carried a domestic political cost that did not exist for governments where health was less politically prominent. Cooperation was not just altruistic. It was self-interested.
+Kenya's National Hospital Insurance Fund, NHIF, adds another layer. NHIF covers formal sector workers and provides some coverage for the poorest households. But its reach is uneven across counties. In counties with high NHIF enrollment, the local government has a built-in political constituency that demands health services. Cutting health spending means angry voters. In counties with low NHIF coverage, that political pressure is weaker -- and free-riding is easier.
 
-The second feature is commitment devices. Rwanda structured several donor relationships as performance-based contracts. Donor funding was released in tranches tied to government actions -- budget allocations, policy changes, staffing targets. This made free-riding expensive. Investing Low did not just mean losing donor goodwill. It meant losing the next tranche of funding.
+The pattern is clear. Accountability changes incentives. When county governments face real consequences for underinvesting in health -- lost conditional grants, angry NHIF-enrolled voters, visible DHIS2 dashboards -- they cooperate. When those mechanisms are weak, they free-ride.
 
-This is a classic game theory mechanism. You change the structure of the game so that defection is costly and cooperation is rewarded. The government does not cooperate because it promised to. It cooperates because cooperation maximizes its payoff given the rules of the game.
+Consider the hold-up problem at county level. A donor funds training for dozens of community health volunteers in a rural county. The expectation is that the county government will absorb them -- provide stipends, supervision, and integration into the formal system.
 
-The third feature is repeated interaction. Rwanda's relationship with donors is ongoing. A government that free-rides today risks losing donor confidence -- and donor funding -- tomorrow. In a one-shot game, defection is rational. In a repeated game, the shadow of the future creates incentives for cooperation.
+But the county government faces a different calculation. Absorbing workers costs money from its own budget. And the county knows that if the donor cares enough about these workers, the donor will extend funding rather than watch the program collapse. The donor has already invested. Walking away means admitting failure. The sunk cost works in the county's favor.
 
-These three mechanisms -- political ownership, commitment devices, and repeated interaction -- explain why Rwanda cooperated when many other governments have not. It is not a story about virtue. It is a story about incentive structures.
+So the county delays. It forms a committee. It cites budget constraints. It promises absorption next year. And the donor extends.
 
-Now consider the opposite situation: the Workforce Absorption Problem.
+This is not unique to Kenya. It happens everywhere. But Kenya's devolved system multiplies the problem by 47. Each county is a separate game with its own players and its own equilibrium.
 
-A donor funds training for hundreds of community health workers. The expectation is that the government will absorb them into the formal health system when donor funding ends. The workers need salaries, supervision, and integration.
+The solution is the same across all 47 games: design the agreement so that cooperation is each player's best response.
 
-But the government faces a different calculation. Absorbing workers costs money. And the government knows that if the donor cares enough about these workers, the donor will extend funding rather than let the program collapse. The donor has already invested millions. Walking away means admitting failure. The sunk cost works in the government's favor.
+Milestone-based disbursement works. Structure the funding so that county co-investment is required at each stage. The donor commits funding, but releases it in tranches tied to county actions -- budget lines for health workers, verified through DHIS2, confirmed by independent review. Free-riding now means losing the next tranche.
 
-So the government delays. It forms a committee. It cites budget constraints. It promises absorption "next year." And the donor, faced with the choice between extending funding or watching trained workers drift away, extends.
+Matching grants work even better. The donor matches every shilling the county spends on health, up to a ceiling. Now the county's incentive flips. Every shilling it spends buys two shillings of health services. Not investing means leaving matching funds on the table.
 
-This is the hold-up problem. The government exploits the donor's sunk cost to avoid absorbing the workers. The workers become permanently donor-funded -- exactly the opposite of the sustainability the program was designed to achieve.
+The central lesson is simple but powerful: do not rely on good intentions. Design the game so that rational self-interest leads to cooperative outcomes. This is not cynicism. Most county health directors genuinely want better outcomes for their people. But they operate within political and budgetary systems that create incentives. Those incentives sometimes point away from cooperation, even when the individuals involved would prefer to cooperate.
 
-How do you avoid this? By designing the game differently from the start.
-
-Milestone-based disbursement is one approach. Structure the funding so that government co-investment is required at each stage. The donor commits $5 million, but releases it in tranches: the first when the government publishes an integration plan, the second when worker positions appear in the government budget, the third when the first government-funded salaries are paid. Free-riding now means losing the next tranche.
-
-Matching grants are another approach. The donor matches every dollar the government spends, up to a ceiling. Now the government's incentive flips. Every dollar it spends buys two dollars of health services. Not investing means leaving matching funds on the table. The rational response is to invest more, not less.
-
-Gavi, the Vaccine Alliance, has used this kind of co-financing mechanism for years. Countries start by paying a small share of vaccine costs, with Gavi covering the rest. Over time, the country share increases. By the time a country graduates from Gavi support, it is paying the full cost -- and the transition is gradual enough that budgets can adjust. The design works because it aligns incentives. The government co-finances not because it promised to, but because co-financing is the rational strategy given the game structure.
-
-The central lesson is simple but powerful: do not rely on good intentions. Design the game so that rational self-interest leads to cooperative outcomes. This is not cynicism. Most health ministers genuinely want better outcomes for their people. But they operate within political and budgetary systems that create incentives. Those incentives sometimes point away from cooperation, even when the individuals involved would prefer to cooperate.
-
-The most effective health investments are not the ones with the best technical design. They are the ones with the best strategic design -- the ones that anticipate how the other players will respond and channel those responses toward cooperation.
+The most effective health investments are not the ones with the best technical design. They are the ones with the best strategic design -- the ones that anticipate how the 47 county players will respond and channel those responses toward cooperation.
 
 A plan that ignores everyone else's strategy is not a plan. It is a wish.
 """,

@@ -1,6 +1,6 @@
 ---
 title: "Chapter 9: Game Theory & Strategic Interactions"
-subtitle: "When everyone acts in their own interest, how do you get cooperation in Rwanda?"
+subtitle: "When everyone acts in their own interest, how do you get cooperation across Kenya's 47 counties?"
 ---
 
 ## Learning Objectives
@@ -10,7 +10,7 @@ subtitle: "When everyone acts in their own interest, how do you get cooperation 
 - Read and interpret a **payoff matrix** to find each player's best response
 - Find the **Nash Equilibrium** -- the outcome where nobody wants to change their move
 - Recognize the **free-rider problem** and explain why it leads to bad outcomes
-- Describe how **commitment devices** (like milestone-based contracts) can fix the problem
+- Describe how **commitment devices** (like conditional grants) can fix the problem
 :::
 
 ## Key Concepts
@@ -18,31 +18,31 @@ subtitle: "When everyone acts in their own interest, how do you get cooperation 
 ::: {.key-concept}
 #### Strategic Interactions
 
-In Chapter 8, we treated government co-financing as a random variable -- something uncertain but not strategic. In reality, governments are rational actors making deliberate choices. When a large donor announces generous funding for Rwanda's health sector, the Rwandan government might think: "Great, we can redirect our own health budget to roads." This is not random -- it is a strategic response. Game theory gives us the tools to anticipate and shape these responses.
+In Chapter 8, we treated government co-financing as a random variable -- something uncertain but not strategic. In reality, county governments are rational actors making deliberate choices. When a large donor announces generous funding for Kenya's health sector, a county government might think: "Great, we can redirect our own health budget to roads." This is not random -- it is a strategic response. Kenya's devolved system splits authority across 47 counties, each with its own health budget, making these strategic calculations happen at every level. Game theory gives us the tools to anticipate and shape these responses.
 :::
 
 ::: {.key-concept .green}
 #### Payoff Matrices
 
-A payoff matrix is a table that shows what happens for every possible combination of choices. Imagine a donor and the Rwandan government each have two options: invest heavily or invest lightly in newborn health. The matrix has four cells, one for each combination. Each cell contains two numbers: the donor's payoff and the government's payoff. Reading the matrix tells you what each player should do given what the other player does.
+A payoff matrix is a table that shows what happens for every possible combination of choices. Imagine a donor and a Kenya county government each have two options: invest heavily or invest lightly in newborn health. The matrix has four cells, one for each combination. Each cell contains two numbers: the donor's payoff and the county's payoff. Reading the matrix tells you what each player should do given what the other player does.
 :::
 
 ::: {.key-concept .orange}
 #### Nash Equilibrium
 
-A Nash Equilibrium is a combination of strategies where neither player wants to change their choice, given what the other player is doing. Think of it as the "stable" outcome -- once both players land there, nobody has a reason to move. The problem is that the Nash Equilibrium is not always the best outcome for everyone. In many health funding games, the equilibrium involves the donor paying generously while the government free-rides.
+A Nash Equilibrium is a combination of strategies where neither player wants to change their choice, given what the other player is doing. Think of it as the "stable" outcome -- once both players land there, nobody has a reason to move. The problem is that the Nash Equilibrium is not always the best outcome for everyone. In many health funding games, the equilibrium involves the donor paying generously while the county government free-rides.
 :::
 
 ::: {.key-concept .red}
 #### The Free-Rider Problem
 
-Free-riding happens when one player benefits from the other's effort without contributing their fair share. If the donor will fund Rwanda's neonatal health program regardless of what the government does, the government's best move is to spend its money elsewhere. This is individually rational but collectively harmful -- total investment in health ends up lower than it should be.
+Free-riding happens when one player benefits from the other's effort without contributing their fair share. If the donor will fund a Kenyan county's neonatal health program regardless of what the county does, the county's best move is to spend its money elsewhere. Some of Kenya's 47 counties redirect conditional health grants toward other priorities while still claiming credit for donor-funded health improvements. This is individually rational but collectively harmful -- total investment in health ends up lower than it should be.
 :::
 
 ::: {.key-concept .teal}
 #### Commitment Devices
 
-A commitment device is a contract structure that changes the payoff matrix so that cooperation becomes the smart choice for both sides. Milestone-based payments are a classic example: the donor commits funding, but each tranche is released only when the government hits specific targets (like training a certain number of midwives). This makes free-riding costly and cooperation genuinely attractive. The key is credibility -- the donor must actually withhold funds when milestones are missed, or the threat is empty.
+A commitment device is a contract structure that changes the payoff matrix so that cooperation becomes the smart choice for both sides. Kenya's conditional grant mechanism is a real-world example: the national government commits funding, but each tranche is released only when a county hits specific health targets verified through DHIS2 (like reducing neonatal mortality or increasing facility deliveries). This makes free-riding costly and cooperation genuinely attractive. The key is credibility -- the national government or donor must actually withhold funds when milestones are missed, or the threat is empty.
 :::
 
 ## Lecture Slides
@@ -56,11 +56,11 @@ A commitment device is a contract structure that changes the payoff matrix so th
 
 ## R Code Workshop
 
-We will build a payoff matrix in R, find the Nash Equilibrium, and then simulate a repeated game to see how tit-for-tat can induce cooperation.
+We will build a payoff matrix in R, find the Nash Equilibrium, and then simulate a repeated game to see how tit-for-tat can induce cooperation between a donor and a county government.
 
 ### Building a Payoff Matrix and Finding Nash Equilibrium
 
-Each player can "Invest High" or "Invest Low" in neonatal health. The donor cares about lives saved; the government balances health against other priorities.
+Each player can "Invest High" or "Invest Low" in neonatal health. The donor cares about lives saved; the county government balances health against other priorities like roads and water.
 
 ```{r}
 #| label: payoff-and-nash
@@ -70,13 +70,13 @@ Each player can "Invest High" or "Invest Low" in neonatal health. The donor care
 donor_payoffs <- matrix(
   c(24, 18, 5, 8), nrow = 2, ncol = 2,
   dimnames = list(Donor = c("Invest High", "Invest Low"),
-                  Rwanda = c("Invest High", "Invest Low")))
+                  County = c("Invest High", "Invest Low")))
 
-# Government payoffs (composite score)
+# County government payoffs (composite score)
 gov_payoffs <- matrix(
   c(7, 5, 10, 6), nrow = 2, ncol = 2,
   dimnames = list(Donor = c("Invest High", "Invest Low"),
-                  Rwanda = c("Invest High", "Invest Low")))
+                  County = c("Invest High", "Invest Low")))
 
 # Find Nash Equilibria by checking best responses
 find_nash <- function(p1, p2) {
@@ -90,18 +90,18 @@ find_nash <- function(p1, p2) {
 
 ne <- find_nash(donor_payoffs, gov_payoffs)
 for (eq in ne)
-  cat(sprintf("Nash Equilibrium: (%s, %s) -> Donor: %d, Gov: %d\n",
+  cat(sprintf("Nash Equilibrium: (%s, %s) -> Donor: %d, County: %d\n",
               rownames(donor_payoffs)[eq[1]],
               colnames(donor_payoffs)[eq[2]],
               donor_payoffs[eq[1], eq[2]], gov_payoffs[eq[1], eq[2]]))
 # Expected: (Invest High, Invest Low) -- the free-rider outcome
 ```
 
-The equilibrium is (Invest High, Invest Low) -- the donor funds generously and the government free-rides. Both could do better by cooperating, but neither has an individual reason to change.
+The equilibrium is (Invest High, Invest Low) -- the donor funds generously and the county government free-rides. Both could do better by cooperating, but neither has an individual reason to change.
 
 ### Simulating a Repeated Game with Tit-for-Tat
 
-In a one-shot game, free-riding wins. But over 20 rounds, a tit-for-tat donor -- who matches the government's previous move -- can punish free-riding and reward cooperation.
+In a one-shot game, free-riding wins. But over 20 rounds, a tit-for-tat donor -- who matches the county's previous move -- can punish free-riding and reward cooperation. Think of each round as a year of conditional grant disbursements.
 
 ```{r}
 #| label: repeated-game
@@ -127,7 +127,7 @@ simulate_repeated <- function(donor_strategy, n = 20) {
     p <- payoffs[[paste0(d_act[t], "_", g_act[t])]]
     d_pay[t] <- p["D"]; g_pay[t] <- p["G"]
   }
-  data.frame(round=1:n, gov_action=g_act, donor_payoff=d_pay)
+  data.frame(round=1:n, county_action=g_act, donor_payoff=d_pay)
 }
 
 always <- simulate_repeated("always_high"); always$strategy <- "Always Fund High"
@@ -136,9 +136,9 @@ results <- rbind(always, tft)
 
 ggplot(results, aes(x=round, y=cumsum(donor_payoff), color=strategy)) +
   geom_line(linewidth=1.2) +
-  geom_point(aes(shape=gov_action), size=2.5) +
+  geom_point(aes(shape=county_action), size=2.5) +
   scale_color_manual(values=c("#E24A3F","#83BD00")) +
-  scale_shape_manual(values=c(High=16, Low=4), name="Gov Action") +
+  scale_shape_manual(values=c(High=16, Low=4), name="County Action") +
   labs(title="Repeated Game: Does Conditional Funding Work?",
        subtitle="Tit-for-tat punishes free-riding and rewards cooperation",
        x="Funding Round (Year)", y="Cumulative Lives Saved (hundreds)",
@@ -160,30 +160,30 @@ A heatmap shows which outcomes are good for the donor (green) and which are bad 
 #| fig-height: 5
 
 game_df <- expand.grid(Donor=c("Invest High","Invest Low"),
-                       Rwanda=c("Invest High","Invest Low"))
+                       County=c("Invest High","Invest Low"))
 game_df$Donor_Payoff <- c(24,18,5,8)
-game_df$Gov_Payoff   <- c(7,5,10,6)
+game_df$County_Payoff <- c(7,5,10,6)
 game_df$Label <- paste0("Donor: ",game_df$Donor_Payoff,
-                        "\nRwanda: ",game_df$Gov_Payoff)
+                        "\nCounty: ",game_df$County_Payoff)
 
-ggplot(game_df, aes(x=Rwanda, y=Donor, fill=Donor_Payoff)) +
+ggplot(game_df, aes(x=County, y=Donor, fill=Donor_Payoff)) +
   geom_tile(color="white", linewidth=2) +
   geom_text(aes(label=Label), size=5, fontface="bold") +
   scale_fill_gradient2(low="#E24A3F", mid="#FED141", high="#83BD00",
                        midpoint=14, name="Donor\nPayoff") +
-  labs(title="Rwanda Health Funding Game: Payoff Matrix",
-       x="Rwanda Government Strategy", y="Donor Strategy") +
+  labs(title="Kenya County Health Funding Game: Payoff Matrix",
+       x="County Government Strategy", y="Donor Strategy") +
   theme_minimal(base_size=16) + theme(panel.grid=element_blank())
 ```
 
 ## Key Takeaways
 
 ::: {.key-takeaway}
-**Game theory** helps you think about what happens when multiple players each pursue their own interests. In health funding, this often means donors pay and governments redirect money elsewhere.
+**Game theory** helps you think about what happens when multiple players each pursue their own interests. In Kenya's devolved health system, this often means donors or the national government pay and county governments redirect money elsewhere.
 
 **Nash Equilibrium** is the stable outcome, but it is not always the best outcome. The free-rider equilibrium wastes resources and costs lives.
 
-**Commitment devices** like milestone-based contracts change the payoff matrix so that cooperation becomes each player's best response. In a repeated game, tit-for-tat strategies can build cooperation over time -- but only if the threat of punishment is credible.
+**Commitment devices** like conditional grants change the payoff matrix so that cooperation becomes each player's best response. In a repeated game, tit-for-tat strategies can build cooperation over time -- but only if the threat of punishment is credible. Kenya's conditional grant mechanism, verified through DHIS2, is exactly this kind of device.
 :::
 
 ## Looking Ahead

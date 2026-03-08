@@ -16,6 +16,7 @@ format:
     center: false
     width: 1280
     height: 720
+    embed-resources: true
 execute:
   echo: true
   eval: false
@@ -563,17 +564,17 @@ The most effective programs combine all three:
 :::
 
 
-# MNH Application: Rwanda's Health System {background-color="#005CB9"}
+# MNH Application: Kenya's Devolved Health System {background-color="#005CB9"}
 
-<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A real-world case of escaping the free-rider trap</span>
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">47 counties, 47 games — a real-world multi-player free-rider scenario</span>
 
 
-## Rwanda: The Country That Changed the Game
+## Kenya: 47 Games at Once
 
 ::: {.callout-box}
-**Rwanda's health transformation** is one of the most studied success stories in global health. After the devastating genocide of 1994, Rwanda rebuilt its health system using exactly the kind of commitment structures game theory would recommend.
+**Kenya devolved power to 47 counties in 2013,** including responsibility for delivering health services. This created something game theory finds fascinating: not one donor-government game, but **47 simultaneous games** — each county making its own spending decisions, each interacting with national government and international donors.
 
-We will look at two flagship programs — Mutuelle de Sante and the Community Health Worker program — through the lens of strategic interaction.
+We will look at Kenya's maternal and newborn health landscape through the lens of strategic interaction, focusing on how conditional grants attempt to solve the free-rider problem at scale.
 :::
 
 . . .
@@ -582,16 +583,23 @@ We will look at two flagship programs — Mutuelle de Sante and the Community He
 
 | Indicator | Value |
 |---|---|
-| Community Health Workers (CHWs) | ~58,000 across the country |
-| Mutuelle de Sante (community health insurance) coverage | ~85% of the population |
-| Facility-based delivery rate | 94%+ |
-| Under-5 mortality reduction (2000-2020) | Declined by more than 70% |
+| Devolved counties (since 2013) | 47 |
+| Maternal Mortality Ratio (WHO) | ~342 per 100,000 live births |
+| Neonatal Mortality Rate | ~21 per 1,000 live births |
+| Facility-based delivery rate (national) | ~89% |
+| Health data system | DHIS2 (District Health Information Software) |
+
+. . .
+
+::: {.callout-box .orange}
+**The core challenge:** National averages mask enormous variation. Some counties approach world-class MNH performance. Others lag far behind. The devolved system means that **each county is a separate strategic player** — and some play the game very differently from others.
+:::
 
 
-## Mutuelle de Sante: A Conditional Agreement at Scale
+## The Conditional Grant System
 
 ::: {.definition-box}
-**Mutuelle de Sante** is Rwanda's community-based health insurance program. Enrollment is near-universal, with households paying income-adjusted premiums and the government subsidizing the poorest members.
+**Conditional Grant:** A transfer from national to county government where funds are released **only when the county meets specified spending targets and performance indicators.** Kenya uses DHIS2 data to verify compliance, turning a simple budget transfer into a structured incentive mechanism.
 :::
 
 . . .
@@ -599,44 +607,46 @@ We will look at two flagship programs — Mutuelle de Sante and the Community He
 **How does this relate to game theory?**
 
 ::: {.incremental}
-- **The old game:** Donors fund health services directly. Government has no incentive to build its own financing system. When donors leave, services collapse.
-- **Rwanda's approach:** Build a domestic financing mechanism (Mutuelle) that **requires government co-investment** as a condition for donor support.
-- **The commitment:** Government premium subsidies and Mutuelle infrastructure represent ongoing fiscal commitments that are politically costly to reverse.
+- **The old game (pre-devolution):** Central government controls all health spending. Donors negotiate with one player. Accountability is centralized but often weak.
+- **The new game (post-devolution):** 47 counties each receive health budgets. National government allocates conditional grants. Counties decide how to spend them. Donors interact with both levels.
+- **The commitment device:** Conditional grants tie future funding to verified performance — funds only flow when counties demonstrate they have spent previous allocations on health priorities and met DHIS2-tracked indicators.
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**Result:** Rwanda effectively turned a one-shot donor game into a **repeated game with built-in commitment devices.** The government's investment in Mutuelle infrastructure is a credible signal of sustained commitment — because abandoning it would mean political backlash from 85% of the insured population.
+**This is a real-world commitment device.** The national government cannot credibly promise to fund counties that redirect health money to roads or administration. The conditional grant structure automates the enforcement, reducing the need for trust.
 :::
 
 
-## Community Health Workers: 58,000 Commitment Devices
+## NHIF as a Partial Commitment Device
 
-Rwanda's CHW program is the backbone of its primary health system.
+::: {.definition-box}
+**NHIF (National Hospital Insurance Fund)** is Kenya's national health insurance scheme. It covers formal sector workers and their dependents, with voluntary enrollment for informal sector workers. Unlike a universal system, NHIF's reach varies dramatically across counties.
+:::
 
 . . .
 
 ::: {.columns-equal}
 ::: {.col}
 ::: {.callout-box}
-**The Structure**
+**What NHIF Does Well**
 
-- ~58,000 CHWs deployed nationwide
-- 3 CHWs per village (Binome and ASM)
-- Government selects, trains, and supervises
-- CHWs handle malaria treatment, newborn care, family planning referrals, and community health insurance enrollment
+- Provides a domestic financing mechanism for health
+- Creates a political constituency that depends on continued health funding
+- Signals government commitment to health financing to donors
+- Covers facility-based deliveries for enrolled members
 :::
 :::
 
 ::: {.col}
-::: {.callout-box .green}
-**The Game Theory Angle**
+::: {.callout-box .orange}
+**Where NHIF Falls Short**
 
-- Government **invested first** by building the CHW infrastructure
-- This signaled credible commitment to donors
-- Donors responded by funding training, supplies, and data systems
-- The result: a **cooperative equilibrium** where both sides invest because both have skin in the game
+- Coverage is concentrated in urban areas and formal employment
+- Rural and informal sector workers — who need MNH services most — are often uninsured
+- County-level NHIF enrollment varies enormously
+- The uneven coverage creates **different incentive structures** in different counties
 :::
 :::
 :::
@@ -644,56 +654,98 @@ Rwanda's CHW program is the backbone of its primary health system.
 . . .
 
 ::: {.callout-box}
-**Why did this work?** Rwanda's government took on the largest recurring cost — the human infrastructure of 58,000 CHWs embedded in every village. This was not a cheap gesture. It was a costly, visible, hard-to-reverse commitment that changed the payoff matrix for every international partner.
+**The game theory implication:** In counties with high NHIF enrollment, the government has strong incentives to maintain health infrastructure (insured voters demand it). In counties with low enrollment, the political cost of cutting health spending is lower — making free-riding more tempting.
 :::
 
 
-## How Rwanda Escaped the Free-Rider Trap
+## The County Free-Rider Problem
 
-Let us map Rwanda's strategy onto our three escape routes:
+Kenya's devolved system creates a textbook multi-player free-rider scenario.
 
 . . .
 
-| Escape Route | Rwanda's Implementation |
+::: {.example-block}
+[How County-Level Free-Riding Works]{.example-label}
+
+**Step 1:** National government allocates conditional health grants to a county.
+
+**Step 2:** The county receives the funds but redirects a portion to other priorities — road construction, administrative costs, or politically visible projects that win votes faster than maternal health clinics.
+
+**Step 3:** Donors and national government see health indicators stagnate despite funding flows.
+
+**Step 4:** High-burden counties like Bungoma, Kakamega, Kilifi, and Mombasa continue to show poor MNH outcomes even as national averages improve — because the grant money was partially diverted.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**The Three-Player Game**
+
+| Player | Strategy | Temptation |
+|---|---|---|
+| **Donor** | Fund county health programs | Funds get redirected |
+| **National Gov** | Allocate conditional grants | Counties divert funds |
+| **County Gov** | Spend grants on health | Redirect to other priorities |
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Why 47 games is harder than one:** With a single national government, a donor can monitor one partner. With 47 counties, enforcement costs multiply. Some counties cooperate genuinely, others game the system, and it is expensive to tell the difference — especially when DHIS2 data quality varies by county.
+:::
+:::
+:::
+
+
+## How Kenya Maps onto the Escape Routes
+
+Let us map Kenya's conditional grant system onto our three escape routes:
+
+. . .
+
+| Escape Route | Kenya's Implementation |
 |---|---|
-| **Commitment Devices** | Government invested in CHW infrastructure and Mutuelle premium subsidies — costly and politically irreversible |
-| **Conditional Agreements** | Donor funding was structured around government co-financing targets and performance indicators |
-| **Repeated Interactions** | Multi-year partnerships with performance-based financing built trust and accountability over time |
+| **Commitment Devices** | Conditional grants tie funding to DHIS2-verified performance indicators — counties must demonstrate health spending before receiving the next tranche |
+| **Conditional Agreements** | National-to-county transfers are structured as "meet targets or lose funding" — a direct conditional agreement |
+| **Repeated Interactions** | Annual budget cycles create a repeated game — counties that cooperate this year receive funding next year; those that divert funds face consequences |
 
 . . .
 
 ::: {.callout-box .green}
-**The 94%+ facility delivery rate** is not just a health statistic. It is evidence that a cooperative equilibrium held — that government investment in health workers and insurance, combined with donor investment in facilities and training, produced an outcome neither side could have achieved alone.
+**The ~89% national facility delivery rate** masks the real story. Some counties have achieved rates above 90% — evidence that the cooperative equilibrium holds where conditional grants are enforced. Other counties lag significantly, suggesting that free-riding persists where enforcement is weak.
 :::
 
 
-## The Counterfactual: What If Rwanda Had Free-Ridden?
+## Counterfactual: With vs Without Conditional Grants
 
 ::: {.columns-equal}
 ::: {.col}
 ::: {.callout-box .red}
-**Free-Rider Scenario**
+**Unconditional Grant Counties**
 
-- Government lets donors fund everything
-- No Mutuelle, no CHW infrastructure
-- Donors eventually exit
-- Programs collapse without domestic funding
-- Health gains reverse
+- Funds flow regardless of health spending
+- County governments face no penalty for diversion
+- Rational strategy: redirect to politically rewarding projects
+- Health indicators stagnate or decline
+- Donor funding displaces rather than supplements county effort
 
-**Outcome:** Temporary improvement followed by regression. The story of many development programs worldwide.
+**Outcome:** The classic free-rider equilibrium. (Don't Invest, Free-Ride) at (2, 2). Total value: 4.
 :::
 :::
 
 ::: {.col}
 ::: {.callout-box .green}
-**What Rwanda Actually Did**
+**Conditional Grant Counties**
 
-- Government built domestic health financing (Mutuelle)
-- Government recruited and embedded 58,000 CHWs
-- Donors complemented with training and supplies
-- When donor priorities shifted, core systems survived
+- Funds released only upon verified health performance
+- Diverting funds means losing the next tranche
+- Rational strategy: spend on health to maintain funding flow
+- Health indicators improve as cooperation holds
+- DHIS2 data provides the verification mechanism
 
-**Outcome:** Sustained, nationally-owned health system with among the best health outcomes in Sub-Saharan Africa.
+**Outcome:** The cooperative equilibrium. (Invest, Co-Invest) at (4, 3). Total value: 7.
 :::
 :::
 :::
@@ -701,7 +753,7 @@ Let us map Rwanda's strategy onto our three escape routes:
 . . .
 
 ::: {.key-takeaway}
-**Game theory explains why Rwanda's approach worked:** by making large, visible, hard-to-reverse commitments, the government changed its own payoff matrix. Free-riding became more costly than cooperating. The equilibrium shifted from (Donor Funds, Government Free-Rides) to (Both Invest, High Impact).
+**Game theory explains why Kenya's conditional grant system matters:** by tying future funding to verified performance, the system changes each county's payoff matrix. Free-riding becomes costly because it triggers funding cuts. Cooperation becomes the dominant strategy — not because county officials are more virtuous, but because the incentive structure makes cooperation the rational choice. The counties where this mechanism works well demonstrate what is possible; the counties where enforcement is weak demonstrate what happens without it.
 :::
 
 
@@ -965,7 +1017,7 @@ ggplot(game_df, aes(x = Gov, y = Donor, fill = Total)) +
 
 3. **Modify the repeated game.** What if the Government only switches to cooperation after being punished for **two** consecutive rounds instead of one? How does this affect cumulative payoffs?
 
-4. **Rwanda simulation.** Model a 10-year game where the Government commits 10% more co-financing each year (commitment device). Compare total health impact to a scenario with no commitment device.
+4. **Kenya county simulation.** Model a 10-year game where a county government faces conditional grants (funds released only if health targets are met). Compare total health impact to a scenario with unconditional grants where the county can freely redirect funds.
 :::
 
 
@@ -980,7 +1032,7 @@ ggplot(game_df, aes(x = Gov, y = Donor, fill = Total)) +
 
 **The free-rider trap** is real and pervasive. Rational self-interest can lock everyone into a collectively bad result.
 
-**Escape routes exist:** commitment devices, conditional agreements, and repeated interactions can shift the equilibrium from free-riding to cooperation. Rwanda's health system is a powerful real-world example.
+**Escape routes exist:** commitment devices, conditional agreements, and repeated interactions can shift the equilibrium from free-riding to cooperation. Kenya's conditional grant system across 47 devolved counties is a powerful real-world example.
 :::
 
 
