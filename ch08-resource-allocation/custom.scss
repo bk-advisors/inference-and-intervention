@@ -44,7 +44,7 @@ $presentation-line-height: 1.4;
 // ===== Global polish =====
 .reveal .slides section {
   overflow-y: auto;
-  padding: 40px 60px;
+  overflow-x: hidden;
 
   h2 {
     font-weight: 600;
