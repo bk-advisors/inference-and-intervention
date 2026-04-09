@@ -6,6 +6,8 @@ project:
     - r-setup.qmd
     - references.qmd
     - chapters/*.qmd
+  resources:
+    - course-intro/**
   output-dir: _site
 
 website:
