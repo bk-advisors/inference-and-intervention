@@ -71,6 +71,9 @@ inference-and-intervention/
   ch08-resource-allocation/ # Ch 8 slide deck
   ch09-multi-agent/         # Ch 9 slide deck
   ch10-data-driven/         # Ch 10 slide deck
+  reflections on course videos/  # Video transcript review workflow
+    input/                     #   YouTube transcripts (.docx), reference examples, photo, CV
+    output/                    #   Revised scripts (.docx) and slide decks (Quarto revealjs)
   country-plans/            # Source .docx files (reference only — use public data from these)
   context/                  # Reference PDFs (do not modify)
   _archive/                 # Archived v1 graduate-level content

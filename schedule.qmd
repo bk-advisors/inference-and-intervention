@@ -5,13 +5,13 @@ subtitle: "10-session syllabus for Inference and Intervention"
 
 ## Course Structure
 
-This course consists of 10 sessions, each corresponding to one chapter. Sessions are grouped into four thematic parts that build on each other.
+This course consists of 10 sessions, each corresponding to one chapter. Sessions are grouped into three thematic parts that build on each other.
 
 ::: {.callout-box}
 **Prerequisite chain:** Each chapter builds on the previous ones. It is strongly recommended to follow the chapters in order.
 :::
 
-## Part I: Foundations (Sessions 1--3)
+## Part 1: Draw the Picture (Sessions 1--3)
 
 | Session | Chapter | Topics | Preparation |
 |---------|---------|--------|-------------|
@@ -19,7 +19,7 @@ This course consists of 10 sessions, each corresponding to one chapter. Sessions
 | 2 | [Ch 2: Qualitative Causal Models](chapters/ch02.qmd) | Three node types; signed links; chains, forks, and colliders; information flow rules | Read the pre-class essay |
 | 3 | [Ch 3: The MNH Diagnostic Case Study](chapters/ch03.qmd) | Building a DAG through interviews; root nodes as leverage points; supply vs. demand side | Read the pre-class essay |
 
-## Part II: Adding Numbers (Sessions 4--6)
+## Part 2: Add the Numbers (Sessions 4--6)
 
 | Session | Chapter | Topics | Preparation |
 |---------|---------|--------|-------------|
@@ -27,18 +27,13 @@ This course consists of 10 sessions, each corresponding to one chapter. Sessions
 | 5 | [Ch 5: Situational Analysis](chapters/ch05.qmd) | Updating beliefs with evidence; explaining away; diagnosing problems from outcomes | Read the pre-class essay |
 | 6 | [Ch 6: Simpson's Paradox & Cost-Effectiveness](chapters/ch06.qmd) | When combined data misleads; confounder vs. mediator; cross-country comparisons | Read the pre-class essay |
 
-## Part III: Making Decisions (Sessions 7--9)
+## Part 3: Make Decisions (Sessions 7--10)
 
 | Session | Chapter | Topics | Preparation |
 |---------|---------|--------|-------------|
 | 7 | [Ch 7: Decision Analysis & Value of Information](chapters/ch07.qmd) | Decision maps; expected value; watching vs. doing; the value of running a pilot first | Read the pre-class essay |
 | 8 | [Ch 8: Multi-Country Resource Allocation](chapters/ch08.qmd) | Three allocation strategies; uncertainty; Monte Carlo simulation; sequential decisions | Read the pre-class essay |
 | 9 | [Ch 9: Game Theory & Strategic Interactions](chapters/ch09.qmd) | Payoff matrices; Nash equilibrium; the free-rider problem; commitment devices | Read the pre-class essay |
-
-## Part IV: Learning from Data (Session 10)
-
-| Session | Chapter | Topics | Preparation |
-|---------|---------|--------|-------------|
 | 10 | [Ch 10: Structure Learning from Observational Data](chapters/ch10.qmd) | Can computers discover causes?; expert + algorithm; the feedback loop | Read the pre-class essay |
 
 ## Session Format

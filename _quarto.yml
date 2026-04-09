@@ -27,23 +27,21 @@ website:
     style: floating
     title: "Chapters"
     contents:
-      - section: "Part I: Foundations"
+      - section: "Part 1: Draw the Picture"
         contents:
           - chapters/ch01.qmd
           - chapters/ch02.qmd
           - chapters/ch03.qmd
-      - section: "Part II: Quantitative Analysis"
+      - section: "Part 2: Add the Numbers"
         contents:
           - chapters/ch04.qmd
           - chapters/ch05.qmd
           - chapters/ch06.qmd
-      - section: "Part III: Decision & Strategy"
+      - section: "Part 3: Make Decisions"
         contents:
           - chapters/ch07.qmd
           - chapters/ch08.qmd
           - chapters/ch09.qmd
-      - section: "Part IV: Data-Driven Methods"
-        contents:
           - chapters/ch10.qmd
   page-footer:
     center: "Inference and Intervention | BK Advisors"
