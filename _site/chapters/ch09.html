@@ -397,7 +397,7 @@ Note
 </section>
 <section id="now-fix-the-game-with-conditionality" class="level3">
 <h3 class="anchored" data-anchor-id="now-fix-the-game-with-conditionality">Now fix the game with conditionality</h3>
-<p>Suppose the donor adds a clause: <em>“the match only triggers if total maternal health spending rises by at least X.”</em> This makes <code>redirect + match</code> impossible — its payoff drops sharply for the county.</p>
+<p>Suppose the donor adds a clause: <em>“the match only triggers if total maternal health spending rises by at least X.”</em> This penalises <code>redirect + match</code> for the county — the county can no longer game the system to get both the match and the road repairs.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>game_fixed <span class="ot">&lt;-</span> game <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">county_payoff =</span> <span class="fu">case_when</span>(</span>
@@ -408,8 +408,10 @@ Note
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">find_nash</span>(game_fixed) <span class="sc">|&gt;</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(county_action, donor_action, county_payoff, donor_payoff, is_nash)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>The Nash equilibrium has moved. Now <code>fund + match</code> is the stable outcome — exactly what the donor wanted in the first place. <strong>Same players, same actions, different payoffs, different equilibrium.</strong></p>
-<p>That single shift — adding a single constraint — is what game-theory-aware grant design buys you.</p>
+<p>Look carefully at the output. <strong>You should now see TWO rows with <code>is_nash = TRUE</code></strong> — both <code>fund + match</code> AND the original <code>redirect + walk_away</code>.</p>
+<p>That is not a bug. Conditionality didn’t <em>eliminate</em> the bad equilibrium; it created a viable <em>alternative</em> good one. We now have two stable cells, and the question becomes: which one will the players actually coordinate on?</p>
+<p>This is where the <em>language</em> of the contract starts to matter. The conditionality clause acts as a <strong>focal point</strong> — a shared, public expectation that picks one of the two equilibria. Both players know the donor will enforce the clause, both know the county now has nothing to gain from gaming it, and both coordinate on the cooperative cell. The clause’s job is not to make the bad outcome impossible (it can’t); its job is to make the cooperative outcome the <em>obvious</em> place to settle.</p>
+<p><strong>Game theory rarely produces a single answer. It produces a small set of stable answers, and the language of the contract picks among them.</strong> That is the whole purpose of grant design — not to compel cooperation, but to make cooperation focal.</p>
 </section>
 </section>
 <section id="try-it-yourself" class="level2">

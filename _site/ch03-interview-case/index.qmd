@@ -110,7 +110,7 @@ She asks the opening question. Mary thinks. Then she says:
 
 ::: {style="text-align: center; font-size: 0.85em;"}
 
-[Bleeding starts at home]{.dag-node}  →  [Family waits]{.dag-node}  →  [Motorbike arranged]{.dag-node}  →  [Mother arrives at facility]{.dag-node}  →  [Mother survives]{.dag-node .outcome .hexagon}
+[Bleeding starts at home]{.dag-node}  →  [Family waits]{.dag-node}  →  [Motorbike arranged]{.dag-node}  →  [Mother arrives too late]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
 
 :::
 
@@ -138,13 +138,13 @@ She asks the same opening question.
 ::: {.example-block}
 [lokol]{.example-label}
 
-*"My wife was bleeding. I knew she needed to go. But the head of our family was not at home. I am not the head. I had to wait until my brother came back from the market to give permission to spend the money on transport. By then it was very late."*
+*"My wife was bleeding. I knew she needed to go. But in our compound, my older brother is the elder — he is the one who decides about big expenses. And he was at the market that day. I am her husband, but I am not the elder of the compound. I had to wait until he came back to give permission to spend the money on transport. By then it was very late."*
 :::
 
 . . .
 
 ::: {.callout-box .orange}
-A new noun appears: **permission**. It was not on Mary's picture. But it sits *before* the motorbike box, and it changes the meaning of "family waits".
+A new noun appears: **permission**. It was not on Mary's picture. But it sits *before* the motorbike box, and it changes the meaning of "family waits". *(In Lokol's extended-family compound, the older brother holds financial authority — a real pattern in many rural Kenyan households.)*
 :::
 
 
@@ -154,7 +154,7 @@ A new noun appears: **permission**. It was not on Mary's picture. But it sits *b
 
 ::: {style="text-align: center; font-size: 0.78em;"}
 
-[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission from head of family]{.dag-node .confounder}  →  [Motorbike arranged]{.dag-node}  →  [Mother survives]{.dag-node .outcome .hexagon}
+[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission from elder]{.dag-node .confounder}  →  [Motorbike arranged]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
 
 :::
 
@@ -198,7 +198,7 @@ A new noun appears far up the chain: **stockout**. It is nowhere near the bedsid
 
 ⬇
 
-[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission]{.dag-node .confounder}  →  [Motorbike]{.dag-node}  →  [Mother arrives]{.dag-node}  →  [Mother survives]{.dag-node .outcome .hexagon}
+[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission]{.dag-node .confounder}  →  [Motorbike]{.dag-node}  →  [Mother arrives]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
 
 :::
 

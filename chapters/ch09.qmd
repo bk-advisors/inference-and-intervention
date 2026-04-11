@@ -86,7 +86,7 @@ You should see exactly one row with `is_nash = TRUE` — the bottom-right cell, 
 
 ### Now fix the game with conditionality
 
-Suppose the donor adds a clause: *"the match only triggers if total maternal health spending rises by at least X."* This makes `redirect + match` impossible — its payoff drops sharply for the county.
+Suppose the donor adds a clause: *"the match only triggers if total maternal health spending rises by at least X."* This penalises `redirect + match` for the county — the county can no longer game the system to get both the match and the road repairs.
 
 ```{r}
 #| label: ch09-fixed
@@ -100,9 +100,13 @@ find_nash(game_fixed) |>
   select(county_action, donor_action, county_payoff, donor_payoff, is_nash)
 ```
 
-The Nash equilibrium has moved. Now `fund + match` is the stable outcome — exactly what the donor wanted in the first place. **Same players, same actions, different payoffs, different equilibrium.**
+Look carefully at the output. **You should now see TWO rows with `is_nash = TRUE`** — both `fund + match` AND the original `redirect + walk_away`.
 
-That single shift — adding a single constraint — is what game-theory-aware grant design buys you.
+That is not a bug. Conditionality didn't *eliminate* the bad equilibrium; it created a viable *alternative* good one. We now have two stable cells, and the question becomes: which one will the players actually coordinate on?
+
+This is where the *language* of the contract starts to matter. The conditionality clause acts as a **focal point** — a shared, public expectation that picks one of the two equilibria. Both players know the donor will enforce the clause, both know the county now has nothing to gain from gaming it, and both coordinate on the cooperative cell. The clause's job is not to make the bad outcome impossible (it can't); its job is to make the cooperative outcome the *obvious* place to settle.
+
+**Game theory rarely produces a single answer. It produces a small set of stable answers, and the language of the contract picks among them.** That is the whole purpose of grant design — not to compel cooperation, but to make cooperation focal.
 
 ## Try it yourself
 

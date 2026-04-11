@@ -50,25 +50,25 @@ Naomi has been studying the same kind of programme in Mwanza for a year. She rep
 
 | | Voucher | No voucher |
 |---|---|---|
-| **Delivered in clinic** | 78 / 100 | 52 / 100 |
+| **Delivered in clinic** | 65 / 100 | 55 / 100 |
 
 . . .
 
-Voucher looks like it helps. **+26 percentage points.**
+Voucher looks like it helps. **+10 percentage points.**
 
 . . .
 
-**Same data, split by income:**
+**Same data, split by access to a clinic:**
 
 | | Voucher | No voucher |
 |---|---|---|
-| **Low income** | 40 / 60  (67%) | 35 / 50  (70%) |
-| **High income** | 38 / 40  (95%) | 17 / 50  (34%) |
+| **Easy to reach** | 60 / 70  (86%) | 45 / 50  (90%) |
+| **Hard to reach** | 5 / 30  (17%) | 10 / 50  (20%) |
 
 . . .
 
 ::: {.callout-box .red}
-In *both* income groups, voucher does worse than no voucher. But in the aggregate, voucher does better. **Same data. Opposite story.**
+In *both* access groups, voucher does worse than no voucher. But in the aggregate, voucher does better. **Same data. Opposite story.**
 :::
 
 
@@ -100,16 +100,16 @@ Look at the table again:
 
 ::: {.incremental}
 
-- **Most voucher recipients are low-income.** *(60 out of 100 voucher households are low income.)*
-- **Most non-recipients are high-income.** *(50 out of 100 non-voucher households are high income.)*
-- **High-income households deliver in clinics more often anyway** — even without a voucher.
+- **Most voucher recipients are in easy-to-reach areas.** *(70 out of 100 voucher households are easy-to-reach.)*
+- **Non-recipients are split evenly.** *(50 hard-to-reach, 50 easy.)*
+- **Easy-to-reach households deliver in clinics far more often anyway** — even without any voucher.
 
 :::
 
 . . .
 
 ::: {.callout-box}
-The aggregate is comparing apples (mostly low-income) to oranges (mostly high-income). The income split takes the apples-and-oranges out of the comparison.
+The aggregate is comparing apples (mostly easy-to-reach voucher recipients) to oranges (a 50/50 mix of access). The access split takes the apples-and-oranges out of the comparison.
 :::
 
 
@@ -124,7 +124,7 @@ Whether to trust the aggregate or the split depends entirely on **the picture**.
 
 ::: {style="text-align: center; font-size: 0.9em;"}
 
-[Income]{.dag-node .confounder}
+[Access to a clinic]{.dag-node .confounder}
 
 ⬇  ⬇
 
@@ -135,7 +135,7 @@ Whether to trust the aggregate or the split depends entirely on **the picture**.
 . . .
 
 ::: {.callout-box .green}
-This is a **fork** — exactly the shape from Chapter 2. Income causes both whether you get the voucher (because the programme prioritised lower-income areas) *and* whether you deliver in a clinic.
+This is a **fork** — exactly the shape from Chapter 2. Access causes both whether you get the voucher (because the programme rolled out where there were already clinics that could redeem it) *and* whether you actually deliver in one.
 
 When there is a fork, **you have to disaggregate to remove the confounding**. The split is right; the aggregate is wrong.
 :::
@@ -149,16 +149,16 @@ Now imagine a different picture for the same data:
 
 ::: {style="text-align: center; font-size: 0.9em;"}
 
-[Voucher]{.dag-node .treatment}  →  [Income status (after voucher)]{.dag-node}  →  [Delivers in clinic]{.dag-node .outcome .hexagon}
+[Voucher]{.dag-node .treatment}  →  [Effective access (after voucher)]{.dag-node}  →  [Delivers in clinic]{.dag-node .outcome .hexagon}
 
 :::
 
 . . .
 
 ::: {.callout-box .orange}
-If income is *downstream* of the voucher — say, the voucher includes a cash transfer that affects measured income — then "income" is not a confounder. It is a **mediator**.
+If "access" is actually *downstream* of the voucher — say, the voucher includes a transport subsidy that *creates* access where there was none — then access is not a confounder. It is a **mediator**.
 
-In this picture, **disaggregating by income blocks the very effect you are trying to measure**. The aggregate is right; the split is wrong.
+In this picture, **disaggregating by access blocks the very effect you are trying to measure**. The aggregate is right; the split is wrong.
 :::
 
 
@@ -166,8 +166,8 @@ In this picture, **disaggregating by income blocks the very effect you are tryin
 
 ::: {.incremental}
 
-- **Picture 1 (income → voucher and outcome):** disaggregate. Trust the split.
-- **Picture 2 (voucher → income → outcome):** do not disaggregate. Trust the aggregate.
+- **Picture 1 (access → voucher and outcome):** disaggregate. Trust the split.
+- **Picture 2 (voucher → access → outcome):** do not disaggregate. Trust the aggregate.
 
 :::
 
@@ -198,14 +198,14 @@ The two errors come from the same source — adjusting for the wrong variable �
 
 ## Hassan's resolution
 
-Hassan looks at the picture. The voucher programme prioritised low-income areas, so income is *upstream* of voucher receipt. **It is a confounder, not a mediator.**
+Hassan looks at the picture. The voucher programme rolled out in counties that already had clinics — they had to, because the voucher could only be redeemed at a registered facility. So **access is upstream of voucher receipt**. It is a confounder, not a mediator.
 
 . . .
 
 ::: {.callout-box .green}
-He goes back to his board with the *split* numbers and a new sentence: *"The voucher does not help. It looks like it does only because the programme reaches lower-income areas, where clinic delivery is harder for other reasons."*
+He goes back to his board with the *split* numbers and a new sentence: *"The voucher does not help. It looks like it does only because the programme reached the easy-to-access areas first — and those areas already had high clinic delivery rates without any voucher at all."*
 
-That is a much more useful answer than "+26 percentage points."
+That is a much more useful answer than "+10 percentage points."
 :::
 
 

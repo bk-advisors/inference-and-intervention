@@ -16,7 +16,7 @@ Welcome back. *(pause)*
 
 This is the strangest chapter in the course. It is also the most useful — because the trap we are about to learn catches *almost everyone* the first time, and once you can see it, you will see it every week of your professional life.
 
-We are going to look at a single data set — about a voucher programme in Kenya — that says one thing in the aggregate and the *opposite* thing when you split it by income. *(pause)*
+We are going to look at a single data set — about a voucher programme in Kenya — that says one thing in the aggregate and the *opposite* thing when you split it by access. *(pause)*
 
 The numbers are not wrong. The arithmetic is correct in both views. Same data. Opposite story. That is Simpson's Paradox. And by the end of this chapter, you will know exactly when to trust the aggregate, when to trust the split, and how to tell the difference. *(pause)*
 
@@ -36,7 +36,7 @@ Naomi is thirty-eight. She is a district health analyst in Mwanza Region, Tanzan
 
 Hassan sends Naomi a message Sunday evening. He is excited. The first results are in. *Delivery in a clinic is more common in households that received the voucher than in households that did not.* He attaches a graph. *(pause)*
 
-Naomi reads it. Then she types one sentence. *(pause)* *"Look at the same data split by income."* *(pause)*
+Naomi reads it. Then she types one sentence. *(pause)* *"Look at the same data split by access."* *(pause)*
 
 That is the moment everything is about to flip. *(pause)*
 
@@ -50,17 +50,17 @@ That question is the entire chapter.
 
 OK. Here are the numbers. Take this slide slowly.
 
-*Look at the first table — the aggregate.* Out of every hundred voucher households, seventy-eight delivered in a clinic. Out of every hundred non-voucher households, fifty-two delivered. That is a twenty-six percentage point gap, in favour of the voucher. *(pause)*
+*Look at the first table — the aggregate.* Out of every hundred voucher households, sixty-five delivered in a clinic. Out of every hundred non-voucher households, fifty-five delivered. That is a ten percentage point gap, in favour of the voucher. *(pause)*
 
-If Hassan stopped here, he would write a report saying *"the voucher programme increased clinic delivery by twenty-six percentage points"*. He would feel good about his quarter. He would maybe ask for more money. *(pause)*
+If Hassan stopped here, he would write a report saying *"the voucher programme increased clinic delivery by ten percentage points"*. He would feel good about his quarter. He would maybe ask for more money. *(pause)*
 
-But Naomi told him to split by income. So he does. *(pause)*
+But Naomi told him to split by *access to a clinic*. Whether the household is in an *easy-to-reach* area — a place with a registered facility nearby and a passable road — or a *hard-to-reach* area, where the nearest clinic is hours away. So Hassan splits. *(pause)*
 
-*Look at the second table — split by income.* Now look only at the low-income row. Among low-income households, voucher recipients delivered in clinic forty out of sixty times — sixty-seven percent. Non-recipients did so thirty-five out of fifty times — *seventy* percent. *(pause)* Among low-income households, the voucher made things slightly *worse*. *(pause)*
+*Look at the second table — split by access.* Now look only at the easy-to-reach row. Among easy-to-reach households, voucher recipients delivered in clinic sixty out of seventy times — eighty-six percent. Non-recipients did so forty-five out of fifty times — *ninety* percent. *(pause)* Among easy-to-reach households, the voucher made things slightly *worse*. *(pause)*
 
-Now the high-income row. Voucher: thirty-eight out of forty, ninety-five percent. No voucher: seventeen out of fifty, thirty-four percent. Among high-income households, the voucher *also* made things slightly worse. Wait — let me re-read that. *(pause)*
+Now the hard-to-reach row. Voucher: five out of thirty, seventeen percent. No voucher: ten out of fifty, twenty percent. Among hard-to-reach households, the voucher *also* made things slightly worse. *(pause)*
 
-Look at the red box. **In both income groups, voucher does worse than no voucher. But in the aggregate, voucher does better. Same data. Opposite story.** *(pause)*
+Look at the red box. **In both access groups, voucher does worse than no voucher. But in the aggregate, voucher does better. Same data. Opposite story.** *(pause)*
 
 *(longer pause)*
 
@@ -96,17 +96,17 @@ So let's understand it.
 
 *Look at the table again.* And read it with three new things in mind. *(pause)*
 
-*Bullet by bullet.* First. **Most voucher recipients are low-income.** Sixty out of every hundred voucher households are low-income. The voucher programme deliberately prioritised lower-income areas — that is good programme design. *(pause)*
+*Bullet by bullet.* First. **Most voucher recipients are in easy-to-reach areas.** Seventy out of every hundred voucher households are easy-to-reach. The voucher programme had to roll out where there were existing registered clinics that could redeem the vouchers — and those clinics were almost all in easier-to-reach areas. *(pause)*
 
-Second. **Most non-recipients are high-income.** Fifty out of every hundred non-voucher households are high-income. Of course — those are the households the programme did not target. *(pause)*
+Second. **Non-recipients are split evenly.** Fifty hard-to-reach, fifty easy-to-reach. Those are households the programme did not reach — they are scattered across the geography. *(pause)*
 
-Third. **High-income households deliver in clinics more often anyway**, even without a voucher. This is the most important fact in the table. Without any voucher at all, a high-income household has clinic delivery rates of around thirty-four percent, while a low-income household sits around seventy percent — wait, those numbers seem reversed, let me re-check. *(pause)*
+Third. **Easy-to-reach households deliver in clinics far more often anyway**, even without a voucher. This is the most important fact in the table. Look at the no-voucher numbers: ninety percent of easy-to-reach households deliver in a clinic without any voucher at all, versus only twenty percent of hard-to-reach households. The clinic is right there for one group and four hours away for the other. *(pause)*
 
-OK. Looking at the table again — non-voucher low-income is seventy percent and non-voucher high-income is thirty-four percent. So in this dataset, non-voucher *low*-income households actually deliver in clinic *more* than non-voucher high-income ones. That is unusual but it happens — perhaps because the non-voucher low-income households are clustered near urban facilities and the non-voucher high-income are scattered across rural areas. The point is not the direction. The point is that the two groups are *very different from each other* in ways that have nothing to do with the voucher. *(pause)*
+So the two groups — voucher and no-voucher — are *very different from each other* in ways that have nothing to do with the voucher itself. The voucher group is mostly drawn from a population (easy-to-reach) where clinic delivery is naturally easy. The no-voucher group is drawn from a much harder-to-reach mix. *(pause)*
 
-Look at the box. **The aggregate is comparing apples (mostly low-income voucher recipients) to oranges (mostly high-income non-recipients). The income split takes the apples-and-oranges out of the comparison.** *(pause)*
+Look at the box. **The aggregate is comparing apples (mostly easy-to-reach voucher recipients) to oranges (a fifty-fifty mix of access). The access split takes the apples-and-oranges out of the comparison.** *(pause)*
 
-That is the entire mechanism. The aggregate looks like it is comparing voucher to no-voucher. It is actually comparing *voucher-among-the-poor* to *no-voucher-among-the-rich*. Two different populations. The voucher is incidental.
+That is the entire mechanism. The aggregate looks like it is comparing voucher to no-voucher. It is actually comparing *voucher-where-the-clinic-is-close* to *no-voucher-where-the-clinic-is-anywhere*. Two different populations. The voucher is incidental.
 
 ---
 
@@ -122,13 +122,13 @@ OK. Now we get to the point of the chapter. **When should you trust the split, a
 
 The picture decides. *(pause)*
 
-*Look at the diagram on the screen.* Three boxes. **Income** at the top, with arrows down to **voucher received** and **delivers in clinic**. That is a fork — exactly the shape from Chapter 2. Income causes both. *(pause)*
+*Look at the diagram on the screen.* Three boxes. **Access to a clinic** at the top, with arrows down to **voucher received** and **delivers in clinic**. That is a fork — exactly the shape from Chapter 2. Access causes both. *(pause)*
 
-Why? Because the programme prioritised lower-income areas, *so income causes voucher receipt*. And income causes clinic delivery for many other reasons — distance, education, prior experience. *Income causes both*. *(pause)*
+Why? Because the programme rolled out where there were already registered clinics — *so access causes voucher receipt*. And access also causes clinic delivery directly, for many obvious reasons — proximity, road quality, transport time. *Access causes both*. *(pause)*
 
 Look at the green box. **This is a fork.** And here is the rule, straight from Chapter 2: *when there is a fork upstream, you have to disaggregate to remove the confounding.* The split is right. The aggregate is wrong. *(pause)*
 
-So Hassan should trust Naomi. The split is the answer. The aggregate is an artefact of confounding by income.
+So Hassan should trust Naomi. The split is the answer. The aggregate is an artefact of confounding by access.
 
 ---
 
@@ -138,11 +138,11 @@ But — and this is where the chapter gets really interesting — *sometimes the
 
 Imagine a different picture for the same data. *(pause)*
 
-*Look at the second diagram.* **Voucher** at the top. Arrow down to **income status (after voucher)**. Arrow from income status down to **delivers in clinic**. That is a *chain*. Three boxes in a row. *(pause)*
+*Look at the second diagram.* **Voucher** at the top. Arrow down to **effective access (after voucher)**. Arrow from effective access down to **delivers in clinic**. That is a *chain*. Three boxes in a row. *(pause)*
 
-In this picture, the voucher is the cause, and "income" is downstream. Maybe the voucher includes a cash transfer, so receiving it actually changes the household's measured income. In this picture, income is not a confounder. Income is a **mediator**. It is part of *how* the voucher works. *(pause)*
+In this picture, the voucher is the cause, and "access" is downstream. Maybe the voucher includes a transport subsidy that *creates* access where there was none — pays for the motorbike that would otherwise not have come. In this picture, access is not a confounder. Access is a **mediator**. It is part of *how* the voucher works. *(pause)*
 
-Look at the orange box. **In this picture, disaggregating by income blocks the very effect you are trying to measure.** Because the voucher works *through* income — and if you hold income constant, you have just removed the voucher's effect from your data. *(pause)*
+Look at the orange box. **In this picture, disaggregating by access blocks the very effect you are trying to measure.** Because the voucher works *through* access — and if you hold access constant, you have just removed the voucher's effect from your data. *(pause)*
 
 In this picture, the aggregate is right and the split is wrong.
 
@@ -152,7 +152,7 @@ In this picture, the aggregate is right and the split is wrong.
 
 So here is the punch line. Same data. Two pictures. Opposite advice. *(pause)*
 
-*Bullet by bullet.* If income is upstream of voucher (a confounder), disaggregate. Trust the split. *(pause)* If income is downstream of voucher (a mediator), do not disaggregate. Trust the aggregate. *(pause)*
+*Bullet by bullet.* If access is upstream of voucher (a confounder), disaggregate. Trust the split. *(pause)* If access is downstream of voucher (a mediator), do not disaggregate. Trust the aggregate. *(pause)*
 
 Look at the red box. **The data alone cannot tell you which picture is right.** *(pause)*
 
@@ -186,13 +186,13 @@ That is it. That is the entire skill. Draw the picture. Let the picture decide. 
 
 So what does Hassan do? *(pause)*
 
-He looks at the picture. He thinks about it carefully. And he concludes — the voucher programme prioritised low-income areas, so income is *upstream* of voucher receipt. **Income is a confounder, not a mediator.** *(pause)*
+He looks at the picture. He thinks about it carefully. And he concludes — the voucher programme rolled out where there were already registered clinics, so access is *upstream* of voucher receipt. **Access is a confounder, not a mediator.** *(pause)*
 
 So he trusts the split. He goes back to his board on Monday morning with a *very* different message than he was planning Sunday afternoon. *(pause)*
 
-Look at the green box. *He says: "The voucher does not help. It looks like it does only because the programme reaches lower-income areas, where clinic delivery is harder for other reasons."* *(pause)*
+Look at the green box. *He says: "The voucher does not help. It looks like it does only because the programme reached the easy-to-access areas first — and those areas already had high clinic delivery rates without any voucher at all."* *(pause)*
 
-That is a much more useful answer than "+twenty-six percentage points." It is also a much harder conversation. But it is the *honest* answer — and Hassan now knows how to defend it, because he has the picture.
+That is a much more useful answer than "+ten percentage points." It is also a much harder conversation. But it is the *honest* answer — and Hassan now knows how to defend it, because he has the picture.
 
 ---
 

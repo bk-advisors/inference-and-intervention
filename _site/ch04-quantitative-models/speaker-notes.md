@@ -124,21 +124,21 @@ That is a **lookup table**. One per arrow. And a picture with a lookup table on 
 
 Look at the green box. *Don't be intimidated by the name.* "Bayesian network" sounds like something a computer science PhD would invent. It is actually just a picture from Chapter 2 with counts attached. The name comes from a man named Thomas Bayes who lived in the eighteenth century, and we will explain what he actually did in Chapter 5. For now, the name is just a label for *picture-plus-numbers*. *(pause)*
 
-Let me show you the smallest possible Bayesian network — just two arrows from Joyce's facility.
+Let me show you the smallest possible Bayesian network — just one arrow from Joyce's facility.
 
 ---
 
-## Slide: Joyce's two-arrow picture
+## Slide: Joyce's tiny picture, with the table on it
 
-Two boxes. One arrow. One lookup table.
+Two boxes. One arrow. One lookup table. *(pause)*
 
-*Look at the diagram.* On the left: anaemia (a factor — Joyce cannot choose it). In the middle: bleeding at delivery. On the right: bad outcome. *(pause)*
+*Look at the diagram.* On the left: anaemia (a factor — Joyce cannot choose it). On the right: bad outcome (the hexagon — what we are trying to move). One arrow connecting them. *(pause)*
 
-And below the picture, a small table. *Look at the table.* Out of every forty anaemia mothers, twenty-four had bleeding at delivery and sixteen did not. Out of every sixty non-anaemia mothers, only twelve had bleeding and forty-eight did not. *(pause)*
+And below the picture is the *same* lookup table we already filled in two slides ago — Joyce's hundred mothers, broken down by anaemia and bad outcome. Five anaemia mothers had bad outcomes, thirty-five had good outcomes. Forty anaemia mothers in total. One non-anaemia mother had a bad outcome, fifty-nine had good outcomes. Sixty non-anaemia mothers in total. *(pause)*
 
-Look at the box. *That table says "out of every forty anaemia mothers, twenty-four had bleeding at delivery; out of every sixty non-anaemia mothers, only twelve did."* *(pause)*
+Look at the box. **Two boxes. One arrow. One lookup table.** That is the smallest possible picture-with-numbers. And it is already enough to answer Joyce's question. *(pause)*
 
-That is one arrow with one lookup table. If we had a third box — say, *bad outcome* — we would have a second lookup table for the second arrow. That is what a Bayesian network is. Pictures plus tables.
+This is what a Bayesian network is. Pictures plus tables. The next slide is the moment you see *why* it is a big deal.
 
 ---
 
@@ -146,15 +146,17 @@ That is one arrow with one lookup table. If we had a third box — say, *bad out
 
 Now here is why this is the big chapter of Part 2 of the course.
 
-Once each arrow has a table, you can ask the picture *brand-new questions* — questions you could not answer with the picture alone, and could not answer with the table alone. *(pause)*
+Once an arrow has a lookup table on it, you can ask the picture *brand-new questions* — and you can run the arrow in *both directions*. *(pause)*
 
-*Bullet by bullet.* A mother walks in with anaemia. What is the chance of bleeding? Twenty-four out of forty — sixty out of every hundred anaemia mothers. *(pause)*
+*Bullet by bullet.* **Forward.** A mother walks in with anaemia. What is the chance of a bad outcome? *(pause)* Look at the table. Anaemia row: five bad, thirty-five good, out of forty. So five out of forty. That is roughly one in eight. *(pause)*
 
-But now flip it. A mother bled at delivery. What is the chance she had anaemia? Twenty-four divided by thirty-six — because twenty-four anaemia mothers bled and twelve non-anaemia mothers also bled, so thirty-six bled in total — and twenty-four of them had anaemia. So two out of every three women who bleed had anaemia. *(pause)*
+Now flip it. **Backward.** A bad outcome happened. What is the chance the mother had anaemia? *(pause)* This is the *reverse* question — and it has a different answer. Look at the bad-outcome column. There were six bad outcomes total — five in anaemia mothers, one in a non-anaemia mother. So five out of six. About eighty-three percent of bad outcomes happened in anaemia mothers. *(pause)*
 
-That is a *different question*. That is asking the arrow to run *backwards*. The picture-plus-table lets you do that. *(pause)*
+That is a *completely different question* and a *completely different answer*. The forward question — *if I have anaemia, how worried should I be?* — is one in eight. The backward question — *given that something went wrong, how likely is anaemia to be involved?* — is five out of six. *(pause)*
 
-And there is a third trick. A new district reports a lot of bleeding but does not measure anaemia at all. With a Bayesian network you can use the bleeding numbers and the picture to *estimate* the missing anaemia numbers. We will do this for real in Chapter 5. *(pause)*
+Now the third question. **Comparison.** Does anaemia matter? Compare the anaemia rate (one in eight) to the non-anaemia rate (one in sixty). About eight times higher. *(pause)*
+
+Three questions. Same table. Three different answers. *That* is the magic of putting numbers on a picture. *(pause)*
 
 Look at the green box. **The picture *with* numbers can answer questions the picture *without* numbers cannot.** That is the entire reason we are doing this.
 

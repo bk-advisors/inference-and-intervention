@@ -356,7 +356,7 @@ Note
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="st">  Bleeding -&gt; FamilyWaits</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="st">  FamilyWaits -&gt; Motorbike</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Motorbike -&gt; ArrivesAtFacility</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherSurvives</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherDies</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(mary_dag, <span class="at">text_size =</span> <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -371,7 +371,7 @@ Note
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="st">  FamilyDecides -&gt; Permission</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Permission -&gt; Motorbike</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Motorbike -&gt; ArrivesAtFacility</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherSurvives</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherDies</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(mary_lokol_dag, <span class="at">text_size =</span> <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -379,40 +379,41 @@ Note
 </section>
 <section id="step-3-esthers-layer-the-supply-chain" class="level3">
 <h3 class="anchored" data-anchor-id="step-3-esthers-layer-the-supply-chain">Step 3 — Esther’s layer (the supply chain)</h3>
-<p>Esther’s stockout has nothing to do with the bedside chain — it sits in a different part of the picture entirely, with its own arrow into the survival box.</p>
+<p>Esther’s stockout has nothing to do with the bedside chain — it sits in a different part of the picture entirely, with its own arrow into the death-outcome box.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>faith_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">  NationalSupplier -&gt; CountyStockout</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">  CountyStockout -&gt; DrugAtFacility</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  DrugAtFacility -&gt; MotherSurvives</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  DrugAtFacility -&gt; MotherDies</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Bleeding -&gt; FamilyDecides</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">  FamilyDecides -&gt; Permission</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Permission -&gt; Motorbike</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Motorbike -&gt; ArrivesAtFacility</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherSurvives</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">  ArrivesAtFacility -&gt; MotherDies</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(faith_dag) <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="at">NationalSupplier =</span> <span class="dv">0</span>, <span class="at">CountyStockout =</span> <span class="dv">1</span>, <span class="at">DrugAtFacility =</span> <span class="dv">2</span>,</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">Bleeding =</span> <span class="dv">0</span>, <span class="at">FamilyDecides =</span> <span class="dv">1</span>, <span class="at">Permission =</span> <span class="dv">2</span>,</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">Motorbike =</span> <span class="dv">3</span>, <span class="at">ArrivesAtFacility =</span> <span class="dv">4</span>, <span class="at">MotherSurvives =</span> <span class="dv">5</span>),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">Motorbike =</span> <span class="dv">3</span>, <span class="at">ArrivesAtFacility =</span> <span class="dv">4</span>, <span class="at">MotherDies =</span> <span class="dv">5</span>),</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="at">NationalSupplier =</span> <span class="dv">2</span>, <span class="at">CountyStockout =</span> <span class="dv">2</span>, <span class="at">DrugAtFacility =</span> <span class="dv">2</span>,</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">Bleeding =</span> <span class="dv">0</span>, <span class="at">FamilyDecides =</span> <span class="dv">0</span>, <span class="at">Permission =</span> <span class="dv">0</span>,</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">Motorbike =</span> <span class="dv">0</span>, <span class="at">ArrivesAtFacility =</span> <span class="dv">0</span>, <span class="at">MotherSurvives =</span> <span class="dv">1</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">Motorbike =</span> <span class="dv">0</span>, <span class="at">ArrivesAtFacility =</span> <span class="dv">0</span>, <span class="at">MotherDies =</span> <span class="dv">1</span>)</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(faith_dag, <span class="at">text_size =</span> <span class="fl">2.5</span>) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>What you should see: two layers feeding into a single survival outcome. The bedside layer at the bottom. The supply-chain layer up top. Joined only at the very end.</p>
+<p>What you should see: two layers feeding into a single death-outcome. The bedside layer at the bottom. The supply-chain layer up top. Joined only at the very end. <em>(We use the death framing because Mary’s interview was specifically about what causes deaths — and the picture should reflect what the source actually said.)</em></p>
 </section>
 <section id="asking-the-picture-which-arrows-youd-need-to-test" class="level3">
 <h3 class="anchored" data-anchor-id="asking-the-picture-which-arrows-youd-need-to-test">Asking the picture which arrows you’d need to test</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many distinct paths run from the start of the bleeding chain to survival?</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(faith_dag, <span class="at">from =</span> <span class="st">"Bleeding"</span>, <span class="at">to =</span> <span class="st">"MotherSurvives"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many distinct paths run from the start of the bleeding chain to the</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># death-outcome? Each one is a place a programme could intervene.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paths</span>(faith_dag, <span class="at">from =</span> <span class="st">"Bleeding"</span>, <span class="at">to =</span> <span class="st">"MotherDies"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>R will show you that there’s only one path — but it has six links in it. Every one of those links is a place a programme could intervene. And the picture tells you that <em>DrugAtFacility</em> is on a completely separate path, controlled by an entirely different set of people.</p>
+<p>R will show you that there’s only one path — but it has six links in it. Every one of those links is a place a programme could intervene to <em>break the chain</em> and save the life. And the picture tells you that <em>DrugAtFacility</em> is on a completely separate path, controlled by an entirely different set of people.</p>
 <p>This is the practical payoff of the interview method: the finished picture <em>makes the intervention points visible</em>.</p>
 </section>
 </section>

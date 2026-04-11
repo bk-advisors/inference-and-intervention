@@ -64,34 +64,51 @@ You should see Bahati at 5.6 and Nakuru town at 4.2. Bahati wins by 1.4 lives pe
 
 ### Compute the Expected Value of Perfect Information
 
+EVPI requires us to enumerate the *joint* scenarios across both options, not just one. We assume Bahati's good/bad year is independent of Nakuru's good/bad year — a rough but defensible assumption when the two facilities are far enough apart that local shocks (rainfall, road closures, staff turnover) don't move together.
+
 ```{r}
 #| label: ch07-evpi
-# Step 1: under uncertainty (no perfect info), the best David can do is pick
-# the option with the highest expected value.
-ev_no_info <- options |>
-  group_by(option) |>
-  summarise(ev = sum(lives_saved * prob)) |>
-  pull(ev) |>
-  max()
+# Bahati and Nakuru as two separate uncertain sources.
+bahati_states <- tibble(state = c("good", "bad"), lives = c(8, 2), prob = c(0.6, 0.4))
+nakuru_states <- tibble(state = c("good", "bad"), lives = c(5, 1), prob = c(0.8, 0.2))
 
-# Step 2: with perfect information, David would know which scenario is going
-# to happen *before* he chooses. So in each scenario, he can pick the BEST
-# option for that scenario.
-ev_with_info <- options |>
-  group_by(scenario) |>
-  summarise(
-    best_lives = max(lives_saved),
-    prob       = first(prob)
-  ) |>
-  summarise(ev = sum(best_lives * prob)) |>
-  pull(ev)
+# All four joint states (Bahati state x Nakuru state).
+joint <- tidyr::crossing(
+  b_state = bahati_states$state,
+  n_state = nakuru_states$state
+) |>
+  mutate(
+    b_lives = bahati_states$lives[match(b_state, bahati_states$state)],
+    n_lives = nakuru_states$lives[match(n_state, nakuru_states$state)],
+    b_prob  = bahati_states$prob[match(b_state, bahati_states$state)],
+    n_prob  = nakuru_states$prob[match(n_state, nakuru_states$state)],
+    joint_prob = b_prob * n_prob,
+    # In each joint state, with perfect info you'd pick the option that
+    # actually saves more lives in that state.
+    best_lives = pmax(b_lives, n_lives)
+  )
 
-# EVPI is the difference.
+joint
+
+# EV under uncertainty: David picks the single option with the highest
+# expected value (Bahati at 5.6) and lives with whatever year actually happens.
+ev_no_info <- max(
+  sum(bahati_states$lives * bahati_states$prob),
+  sum(nakuru_states$lives * nakuru_states$prob)
+)
+ev_no_info
+
+# EV with perfect information: in each joint state, David picks the best
+# option for that state.
+ev_with_info <- sum(joint$best_lives * joint$joint_prob)
+ev_with_info
+
+# EVPI = how much you'd gain on average from knowing the future before deciding.
 evpi <- ev_with_info - ev_no_info
 evpi
 ```
 
-What you should see: an EVPI of around 1 life per year. That tells David that a one-month study of Bahati's complication rate would, in the best case, save about one extra newborn life — which is meaningful but not enormous. He'd weigh that against the cost of waiting a month before placing the midwife.
+What you should see: `ev_no_info` is 5.6 (Bahati's expected value), `ev_with_info` is around 6.56, and **`evpi` is around 0.96 — about 1 extra life per year**. That tells David a perfectly informative one-month study could, in expectation, save him about one extra newborn life — which is meaningful but not enormous. He'd weigh that against the cost of waiting a month before placing the midwife.
 
 This is the "would more research change my decision?" question, made into a number.
 

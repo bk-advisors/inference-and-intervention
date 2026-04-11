@@ -280,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#setting-up" id="toc-setting-up" class="nav-link" data-scroll-target="#setting-up">Setting up</a></li>
   <li><a href="#joyces-picture-with-structure-only" id="toc-joyces-picture-with-structure-only" class="nav-link" data-scroll-target="#joyces-picture-with-structure-only">Joyce’s picture, with structure only</a></li>
-  <li><a href="#now-add-joyces-lookup-tables" id="toc-now-add-joyces-lookup-tables" class="nav-link" data-scroll-target="#now-add-joyces-lookup-tables">Now add Joyce’s lookup tables</a></li>
+  <li><a href="#now-add-joyces-lookup-table" id="toc-now-add-joyces-lookup-table" class="nav-link" data-scroll-target="#now-add-joyces-lookup-table">Now add Joyce’s lookup table</a></li>
   <li><a href="#ask-the-network-joyces-bedside-questions" id="toc-ask-the-network-joyces-bedside-questions" class="nav-link" data-scroll-target="#ask-the-network-joyces-bedside-questions">Ask the network Joyce’s bedside questions</a></li>
   </ul></li>
   <li><a href="#try-it-yourself" id="toc-try-it-yourself" class="nav-link" data-scroll-target="#try-it-yourself">Try it yourself</a></li>
@@ -339,7 +339,7 @@ Note
 </section>
 <section id="r-workshop-build-joyces-first-bayesian-network" class="level2">
 <h2 class="anchored" data-anchor-id="r-workshop-build-joyces-first-bayesian-network">R workshop — build Joyce’s first Bayesian network</h2>
-<p>In the lecture, we built a small two-arrow picture for Joyce’s facility: <strong>Anaemia → Bleeding → BadOutcome</strong>, and we filled in counts from her last 100 mothers. In this workshop you’ll do the same in R using the <code>bnlearn</code> package — and then ask the network the same questions Joyce asks at the bedside.</p>
+<p>In the lecture, we built the smallest possible picture-with-numbers for Joyce’s facility: <strong>Anaemia → BadOutcome</strong>, with the counts from her last 100 mothers (5 anaemia mothers had a bad outcome, 1 non-anaemia mother had one). In this workshop you’ll do the same in R using the <code>bnlearn</code> package — and then ask the network the same forward and backward questions Joyce asks at the bedside.</p>
 <section id="setting-up" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up">Setting up</h3>
 <div class="cell">
@@ -353,76 +353,70 @@ Note
 <h3 class="anchored" data-anchor-id="joyces-picture-with-structure-only">Joyce’s picture, with structure only</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First, just the picture (no numbers yet).</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the same kind of structure we drew in Chapter 2.</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>joyce_dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(<span class="st">"[Anaemia][Bleeding|Anaemia][BadOutcome|Bleeding]"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Two boxes, one arrow — the smallest possible Bayesian network.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>joyce_dag <span class="ot">&lt;-</span> <span class="fu">model2network</span>(<span class="st">"[Anaemia][BadOutcome|Anaemia]"</span>)</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the structure</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(joyce_dag)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>What you should see: three boxes in a chain. Anaemia → Bleeding → BadOutcome. Same shape as the lecture diagram.</p>
+<p>What you should see: two boxes with one arrow. Anaemia → BadOutcome. The same shape as the lecture diagram.</p>
 </section>
-<section id="now-add-joyces-lookup-tables" class="level3">
-<h3 class="anchored" data-anchor-id="now-add-joyces-lookup-tables">Now add Joyce’s lookup tables</h3>
-<p>Here are the counts straight from Joyce’s logbook, in the same form as the lecture table:</p>
+<section id="now-add-joyces-lookup-table" class="level3">
+<h3 class="anchored" data-anchor-id="now-add-joyces-lookup-table">Now add Joyce’s lookup table</h3>
+<p>The counts come straight from Joyce’s logbook — exactly the table from the lecture.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Joyce had 40 anaemia mothers and 60 non-anaemia mothers out of 100.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># That's 0.40 vs 0.60 — but think of it as "40 out of 100".</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Think of these as "40 out of 100", not "0.40".</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>prob_anaemia <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.40</span>, <span class="fl">0.60</span>),</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="dv">2</span>,</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="at">Anaemia =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>))</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Of every 40 anaemia mothers, 24 had bleeding (60%); of every 60 non-anaemia</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># mothers, only 12 had bleeding (20%).</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>prob_bleeding_given_anaemia <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.60</span>, <span class="fl">0.40</span>,   <span class="co"># Anaemia = yes  → bleeding 60%, no bleeding 40%</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.20</span>, <span class="fl">0.80</span>),  <span class="co"># Anaemia = no   → bleeding 20%, no bleeding 80%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Of every 40 anaemia mothers, 5 had a bad outcome (5/40 = 12.5%) and 35 did not.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Of every 60 non-anaemia mothers, 1 had a bad outcome (1/60 ≈ 1.7%) and 59 did not.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>prob_bad_given_anaemia <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.125</span>, <span class="fl">0.875</span>,    <span class="co"># Anaemia = yes  → bad 5/40 = 12.5%, good 87.5%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.0167</span>, <span class="fl">0.9833</span>), <span class="co"># Anaemia = no   → bad 1/60 ≈ 1.7%,  good 98.3%</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Bleeding =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>),</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Anaemia  =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">BadOutcome =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">Anaemia    =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>)</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Of every 36 women who bled, 5 had a bad outcome (~14%); of every 64 who</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># didn't bleed, 1 had a bad outcome (~1.5%).</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>prob_bad_given_bleeding <span class="ot">&lt;-</span> <span class="fu">array</span>(</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="fl">0.14</span>, <span class="fl">0.86</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fl">0.015</span>, <span class="fl">0.985</span>),</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">dim =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">dimnames =</span> <span class="fu">list</span>(</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">BadOutcome =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>),</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">Bleeding   =</span> <span class="fu">c</span>(<span class="st">"yes"</span>, <span class="st">"no"</span>)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Stitch the tables onto the picture.</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>joyce_bn <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(joyce_dag, <span class="at">dist =</span> <span class="fu">list</span>(</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">Anaemia    =</span> prob_anaemia,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bleeding   =</span> prob_bleeding_given_anaemia,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">BadOutcome =</span> prob_bad_given_bleeding</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Stitch the table onto the picture.</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>joyce_bn <span class="ot">&lt;-</span> <span class="fu">custom.fit</span>(joyce_dag, <span class="at">dist =</span> <span class="fu">list</span>(</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">Anaemia    =</span> prob_anaemia,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">BadOutcome =</span> prob_bad_given_anaemia</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="ask-the-network-joyces-bedside-questions" class="level3">
 <h3 class="anchored" data-anchor-id="ask-the-network-joyces-bedside-questions">Ask the network Joyce’s bedside questions</h3>
+<p>The whole point of the picture-with-numbers is that the <em>same</em> lookup table answers different questions when you ask it from different directions.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to gRain format so we can run queries.</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>joyce_grain <span class="ot">&lt;-</span> <span class="fu">as.grain</span>(joyce_bn)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Question 1: a new mother walks in with anaemia. What's the chance of a bad outcome?</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">querygrain</span>(<span class="fu">setEvidence</span>(joyce_grain,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Anaemia =</span> <span class="st">"yes"</span>)),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">nodes =</span> <span class="st">"BadOutcome"</span>)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Question 2 (the reverse): a mother had a bad outcome. What's the chance she had anaemia?</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">querygrain</span>(<span class="fu">setEvidence</span>(joyce_grain,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">BadOutcome =</span> <span class="st">"yes"</span>)),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">nodes =</span> <span class="st">"Anaemia"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># FORWARD question: a new mother walks in with anaemia.</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># What's the chance of a bad outcome?</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">querygrain</span>(<span class="fu">setEvidence</span>(joyce_grain,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">Anaemia =</span> <span class="st">"yes"</span>)),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">nodes =</span> <span class="st">"BadOutcome"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># BACKWARD question: a bad outcome happened.</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># What's the chance the mother had anaemia?</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">querygrain</span>(<span class="fu">setEvidence</span>(joyce_grain,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                       <span class="at">evidence =</span> <span class="fu">list</span>(<span class="at">BadOutcome =</span> <span class="st">"yes"</span>)),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">nodes =</span> <span class="st">"Anaemia"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>What you should see: question 1 gives you a probability that’s much higher than the 6% baseline — because the anaemia evidence has flowed <em>forward</em> through the picture. Question 2 gives you a probability that’s much higher than the 40% baseline — because the bad-outcome evidence has flowed <em>backward</em> through the picture.</p>
-<p>That’s the magic of putting numbers on the picture. The arrows can run in both directions when you ask the network a question.</p>
+<p>What you should see:</p>
+<ul>
+<li><strong>Forward question</strong> returns about <strong>12.5%</strong> — that’s 5 out of 40 anaemia mothers having a bad outcome.</li>
+<li><strong>Backward question</strong> returns about <strong>83%</strong> — that’s 5 of the 6 bad outcomes happening in anaemia mothers.</li>
+</ul>
+<p>Same table, two questions, two answers. That is the magic of putting numbers on the picture. The arrow can run in both directions when you ask the network a question.</p>
 </section>
 </section>
 <section id="try-it-yourself" class="level2">

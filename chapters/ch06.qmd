@@ -5,7 +5,7 @@ subtitle: "Hassan, Naomi, and Simpson's Paradox"
 
 ## The mystery
 
-A Kenyan voucher programme looks like a 26-percentage-point success in the aggregate. Split by income, the relationship *reverses* — the voucher does worse than no voucher in *every* income group. Same data. Opposite story. Which version should you trust?
+A Kenyan voucher programme looks like a 10-percentage-point success in the aggregate. Split by access to a clinic, the relationship *reverses* — the voucher does worse than no voucher in *every* access group. Same data. Opposite story. Which version should you trust?
 
 ::: {.callout-note}
 **The one thing to remember from this chapter:** When data tells you opposite things at the aggregate and split levels, the data is not lying. The picture is what tells you which view to trust. A fork → split. A mediator → don't.
@@ -22,7 +22,7 @@ A Kenyan voucher programme looks like a 26-percentage-point success in the aggre
 
 ## R workshop — see Simpson's Paradox happen, then resolve it
 
-In the lecture, we walked Hassan through the trap and back out using a picture. In this workshop you'll see the paradox appear in real numbers and watch how the choice of adjustment variable flips the answer.
+In the lecture, we walked Hassan through the trap and back out using a picture. In this workshop you'll build the exact same dataset in R, watch the paradox appear in your console, and then watch how the choice of picture determines whether you should disaggregate.
 
 ### Setting up
 
@@ -35,19 +35,20 @@ library(ggdag)
 
 ### Build the dataset from the lecture
 
+The numbers are exactly those from the lecture table — 100 voucher households and 100 non-voucher households, split by whether the household lives in an easy-to-reach area (close to a registered facility) or a hard-to-reach area.
+
 ```{r}
 #| label: ch06-data
-# Same numbers as the lecture table.
 voucher_data <- tibble::tribble(
-  ~Income,    ~Voucher,    ~ClinicDelivery, ~n,
-  "low",      "yes",       "yes",           40,
-  "low",      "yes",       "no",            20,
-  "low",      "no",        "yes",           35,
-  "low",      "no",        "no",            15,
-  "high",     "yes",       "yes",           38,
-  "high",     "yes",       "no",            2,
-  "high",     "no",        "yes",           17,
-  "high",     "no",        "no",            33
+  ~Access,         ~Voucher, ~ClinicDelivery, ~n,
+  "easy",          "yes",    "yes",           60,
+  "easy",          "yes",    "no",            10,
+  "easy",          "no",     "yes",           45,
+  "easy",          "no",     "no",            5,
+  "hard",          "yes",    "yes",           5,
+  "hard",          "yes",    "no",            25,
+  "hard",          "no",     "yes",           10,
+  "hard",          "no",     "no",            40
 ) |>
   tidyr::uncount(n)
 
@@ -65,31 +66,39 @@ voucher_data |>
   )
 ```
 
-You'll see voucher = 78%, no voucher = 52%. A clean +26 percentage points.
+You'll see voucher = 65%, no voucher = 55%. A clean +10 percentage points in favour of the voucher.
 
 ### The split view (what Naomi told Hassan to look at)
 
 ```{r}
 #| label: ch06-split
 voucher_data |>
-  group_by(Income, Voucher) |>
+  group_by(Access, Voucher) |>
   summarise(
     pct_clinic = mean(ClinicDelivery == "yes"),
     .groups = "drop"
   )
 ```
 
-Now look at every Income × Voucher cell. **In both income groups, voucher does worse than no voucher.** Same data. Opposite story. Simpson's Paradox is staring at you from your console.
+Now look at every Access × Voucher cell:
+
+- **Easy to reach**: voucher 86%, no voucher 90% — voucher slightly *worse*
+- **Hard to reach**: voucher 17%, no voucher 20% — voucher slightly *worse*
+
+**In both access groups, voucher does worse than no voucher.** Same data. Opposite story. Simpson's Paradox is staring at you from your console.
 
 ### Let the picture decide which view to trust
 
 ```{r}
 #| label: ch06-picture
-# Hassan's picture: income is upstream of voucher AND of clinic delivery.
-# That makes income a confounder — exactly the fork shape from Chapter 2.
+# Hassan's picture: access is upstream of voucher AND of clinic delivery.
+# (The voucher rolled out where existing clinics could redeem it, so the
+# programme is concentrated in easier-to-reach areas — and easier-to-reach
+# areas have higher clinic delivery for many other reasons too.)
+# That makes access a confounder — exactly the fork shape from Chapter 2.
 voucher_dag <- dagitty('dag {
-  Income  -> Voucher
-  Income  -> ClinicDelivery
+  Access  -> Voucher
+  Access  -> ClinicDelivery
   Voucher -> ClinicDelivery
 }')
 
@@ -101,17 +110,19 @@ adjustmentSets(voucher_dag,
                outcome  = "ClinicDelivery")
 ```
 
-R will tell you: **Income**. The picture says income is a confounder, so you have to adjust for it — meaning the *split* view is the right one. The aggregate is misleading.
+R will tell you: **Access**. The picture says access is a confounder, so you have to adjust for it — meaning the *split* view is the right one. The aggregate is misleading.
 
 ### What if the picture were different?
 
 ```{r}
 #| label: ch06-mediator
-# Alternative picture: voucher causes income (e.g., the voucher includes a cash transfer).
-# In this picture, income is a mediator — adjusting for it BLOCKS the very effect you're measuring.
+# Alternative picture: the voucher itself creates effective access (e.g., it
+# includes a transport subsidy that pays for the motorbike). In this picture
+# Access is downstream of Voucher — a mediator. Adjusting for it would BLOCK
+# the very effect you're trying to measure.
 mediator_dag <- dagitty('dag {
-  Voucher -> Income
-  Income  -> ClinicDelivery
+  Voucher -> Access
+  Access  -> ClinicDelivery
   Voucher -> ClinicDelivery
 }')
 
@@ -120,7 +131,7 @@ adjustmentSets(mediator_dag,
                outcome  = "ClinicDelivery")
 ```
 
-R will return an empty set — meaning, in *this* picture, you should *not* adjust for income. The aggregate is right, the split is wrong.
+R will return an empty set — meaning, in *this* picture, you should *not* adjust for access. The aggregate is right, the split is wrong.
 
 **Same data. Two pictures. Opposite advice.** This is exactly the point from the lecture: the data alone cannot pick a winner. The picture has to.
 

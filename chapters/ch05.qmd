@@ -54,20 +54,25 @@ prior_personnel <- c(yes = 0.33, no = 0.67)
 prior_measles   <- c(yes = 0.33, no = 0.67)
 prior_reporting <- c(yes = 0.33, no = 0.67)
 
-# DeathsRose is "yes" if any of the three parents is "yes".
-# (Simplified — in reality you'd give each parent a weight.)
+# DeathsRose is "yes" if any of the three parents is "yes" (a noisy-OR).
+# IMPORTANT: R fills array() in column-major order — the FIRST dimension
+# (DeathsRose) varies fastest, then Personnel, then Measles, then Reporting.
+# Each pair below is (P(DeathsRose=yes), P(DeathsRose=no)) for one combination
+# of the three parents.
 deaths_table <- array(
   c(
-    # Reporting=no
-    0.05, 0.95,   # Personnel=no, Measles=no
-    0.70, 0.30,   # Personnel=no, Measles=yes
-    0.70, 0.30,   # Personnel=yes, Measles=no
-    0.95, 0.05,   # Personnel=yes, Measles=yes
-    # Reporting=yes
-    0.70, 0.30,
-    0.95, 0.05,
-    0.95, 0.05,
-    0.99, 0.01
+    # Reporting = no, Measles = no
+    0.05, 0.95,   # Personnel = no   (none of the three: baseline)
+    0.70, 0.30,   # Personnel = yes  (personnel only)
+    # Reporting = no, Measles = yes
+    0.70, 0.30,   # Personnel = no   (measles only)
+    0.95, 0.05,   # Personnel = yes  (personnel + measles)
+    # Reporting = yes, Measles = no
+    0.70, 0.30,   # Personnel = no   (reporting only)
+    0.95, 0.05,   # Personnel = yes  (personnel + reporting)
+    # Reporting = yes, Measles = yes
+    0.95, 0.05,   # Personnel = no   (measles + reporting)
+    0.99, 0.01    # Personnel = yes  (all three)
   ),
   dim = c(2, 2, 2, 2),
   dimnames = list(

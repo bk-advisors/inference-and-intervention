@@ -138,48 +138,48 @@ Don't be intimidated by the name. It is just a picture from Chapter 2 with count
 :::
 
 
-## Joyce's two-arrow picture
+## Joyce's tiny picture, with the table on it
 
 <br>
 
-::: {style="text-align: center; font-size: 0.9em;"}
+::: {style="text-align: center; font-size: 0.95em;"}
 
-[Anaemia]{.dag-node .confounder}  →  [Bleeding at delivery]{.dag-node}  →  [Bad outcome]{.dag-node .outcome .hexagon}
+[Anaemia]{.dag-node .treatment}  →  [Bad outcome]{.dag-node .outcome .hexagon}
 
 :::
 
 . . .
 
-| | Bleeding | No bleeding | |
+| | Bad outcome | Good outcome | Total |
 |---|---|---|---|
-| **Anaemia** | 24 / 40 | 16 / 40 | (40 mothers) |
-| **No anaemia** | 12 / 60 | 48 / 60 | (60 mothers) |
+| **Anaemia** | 5 | 35 | **40** |
+| **No anaemia** | 1 | 59 | **60** |
 
 . . .
 
 ::: {.callout-box}
-Two boxes. One arrow. One lookup table. *That table says "out of every 40 anaemia mothers, 24 had bleeding at delivery; out of every 60 non-anaemia mothers, only 12 did."*
+**Two boxes. One arrow. One lookup table.** That is the smallest possible picture-with-numbers — and it already answers Joyce's question.
 :::
 
 
 ## Why this is a big deal
 
-Once each arrow has a table, you can ask the picture *new questions*.
+Once an arrow has a lookup table on it, you can ask the picture *new questions* — running the arrow in *both directions*.
 
 . . .
 
 ::: {.incremental}
 
-- **A mother walks in with anaemia. What is the chance of bleeding?** *(24 out of 40, or 60 out of every 100 anaemia mothers.)*
-- **A mother bled at delivery. What is the chance she had anaemia?** *(24 out of 36, because 24+12 mothers bled in total.)*
-- **A new district reports lots of bleeding but does not measure anaemia.** *(You can use the picture to estimate the missing piece.)*
+- **Forward — a mother walks in with anaemia. What's the chance of a bad outcome?** *5 out of 40 = roughly 1 in 8.*
+- **Backward — a bad outcome happened. What's the chance the mother had anaemia?** *5 out of 6, because 5 of the 6 bad outcomes were in anaemia mothers.*
+- **Comparison — does anaemia matter?** *1 in 8 versus 1 in 60 — anaemia mothers are about 8 times more likely to have a bad outcome.*
 
 :::
 
 . . .
 
 ::: {.callout-box .green}
-The picture *with* numbers can answer questions the picture *without* numbers cannot.
+**Same table, three different questions, three different answers.** The picture *with* numbers can answer questions the picture *without* numbers cannot.
 :::
 
 

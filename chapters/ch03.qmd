@@ -42,7 +42,7 @@ mary_dag <- dagitty('dag {
   Bleeding -> FamilyWaits
   FamilyWaits -> Motorbike
   Motorbike -> ArrivesAtFacility
-  ArrivesAtFacility -> MotherSurvives
+  ArrivesAtFacility -> MotherDies
 }')
 ggdag(mary_dag, text_size = 3) + theme_dag()
 ```
@@ -60,7 +60,7 @@ mary_lokol_dag <- dagitty('dag {
   FamilyDecides -> Permission
   Permission -> Motorbike
   Motorbike -> ArrivesAtFacility
-  ArrivesAtFacility -> MotherSurvives
+  ArrivesAtFacility -> MotherDies
 }')
 ggdag(mary_lokol_dag, text_size = 3) + theme_dag()
 ```
@@ -69,45 +69,46 @@ The chain grew by one box. The new box (`Permission`) sits where Mary's "waits" 
 
 ### Step 3 — Esther's layer (the supply chain)
 
-Esther's stockout has nothing to do with the bedside chain — it sits in a different part of the picture entirely, with its own arrow into the survival box.
+Esther's stockout has nothing to do with the bedside chain — it sits in a different part of the picture entirely, with its own arrow into the death-outcome box.
 
 ```{r}
 #| label: ch03-full
 faith_dag <- dagitty('dag {
   NationalSupplier -> CountyStockout
   CountyStockout -> DrugAtFacility
-  DrugAtFacility -> MotherSurvives
+  DrugAtFacility -> MotherDies
 
   Bleeding -> FamilyDecides
   FamilyDecides -> Permission
   Permission -> Motorbike
   Motorbike -> ArrivesAtFacility
-  ArrivesAtFacility -> MotherSurvives
+  ArrivesAtFacility -> MotherDies
 }')
 
 coordinates(faith_dag) <- list(
   x = c(NationalSupplier = 0, CountyStockout = 1, DrugAtFacility = 2,
         Bleeding = 0, FamilyDecides = 1, Permission = 2,
-        Motorbike = 3, ArrivesAtFacility = 4, MotherSurvives = 5),
+        Motorbike = 3, ArrivesAtFacility = 4, MotherDies = 5),
   y = c(NationalSupplier = 2, CountyStockout = 2, DrugAtFacility = 2,
         Bleeding = 0, FamilyDecides = 0, Permission = 0,
-        Motorbike = 0, ArrivesAtFacility = 0, MotherSurvives = 1)
+        Motorbike = 0, ArrivesAtFacility = 0, MotherDies = 1)
 )
 
 ggdag(faith_dag, text_size = 2.5) + theme_dag()
 ```
 
-What you should see: two layers feeding into a single survival outcome. The bedside layer at the bottom. The supply-chain layer up top. Joined only at the very end.
+What you should see: two layers feeding into a single death-outcome. The bedside layer at the bottom. The supply-chain layer up top. Joined only at the very end. *(We use the death framing because Mary's interview was specifically about what causes deaths — and the picture should reflect what the source actually said.)*
 
 ### Asking the picture which arrows you'd need to test
 
 ```{r}
 #| label: ch03-paths
-# How many distinct paths run from the start of the bleeding chain to survival?
-paths(faith_dag, from = "Bleeding", to = "MotherSurvives")
+# How many distinct paths run from the start of the bleeding chain to the
+# death-outcome? Each one is a place a programme could intervene.
+paths(faith_dag, from = "Bleeding", to = "MotherDies")
 ```
 
-R will show you that there's only one path — but it has six links in it. Every one of those links is a place a programme could intervene. And the picture tells you that *DrugAtFacility* is on a completely separate path, controlled by an entirely different set of people.
+R will show you that there's only one path — but it has six links in it. Every one of those links is a place a programme could intervene to *break the chain* and save the life. And the picture tells you that *DrugAtFacility* is on a completely separate path, controlled by an entirely different set of people.
 
 This is the practical payoff of the interview method: the finished picture *makes the intervention points visible*.
 

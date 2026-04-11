@@ -376,32 +376,48 @@ Note
 </section>
 <section id="compute-the-expected-value-of-perfect-information" class="level3">
 <h3 class="anchored" data-anchor-id="compute-the-expected-value-of-perfect-information">Compute the Expected Value of Perfect Information</h3>
+<p>EVPI requires us to enumerate the <em>joint</em> scenarios across both options, not just one. We assume Bahati’s good/bad year is independent of Nakuru’s good/bad year — a rough but defensible assumption when the two facilities are far enough apart that local shocks (rainfall, road closures, staff turnover) don’t move together.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: under uncertainty (no perfect info), the best David can do is pick</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the option with the highest expected value.</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ev_no_info <span class="ot">&lt;-</span> options <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(option) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ev =</span> <span class="fu">sum</span>(lives_saved <span class="sc">*</span> prob)) <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(ev) <span class="sc">|&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>()</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: with perfect information, David would know which scenario is going</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># to happen *before* he chooses. So in each scenario, he can pick the BEST</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># option for that scenario.</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>ev_with_info <span class="ot">&lt;-</span> options <span class="sc">|&gt;</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(scenario) <span class="sc">|&gt;</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">best_lives =</span> <span class="fu">max</span>(lives_saved),</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">prob       =</span> <span class="fu">first</span>(prob)</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ev =</span> <span class="fu">sum</span>(best_lives <span class="sc">*</span> prob)) <span class="sc">|&gt;</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(ev)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bahati and Nakuru as two separate uncertain sources.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>bahati_states <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">state =</span> <span class="fu">c</span>(<span class="st">"good"</span>, <span class="st">"bad"</span>), <span class="at">lives =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">2</span>), <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.6</span>, <span class="fl">0.4</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>nakuru_states <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">state =</span> <span class="fu">c</span>(<span class="st">"good"</span>, <span class="st">"bad"</span>), <span class="at">lives =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">1</span>), <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># All four joint states (Bahati state x Nakuru state).</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>joint <span class="ot">&lt;-</span> tidyr<span class="sc">::</span><span class="fu">crossing</span>(</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">b_state =</span> bahati_states<span class="sc">$</span>state,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">n_state =</span> nakuru_states<span class="sc">$</span>state</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">b_lives =</span> bahati_states<span class="sc">$</span>lives[<span class="fu">match</span>(b_state, bahati_states<span class="sc">$</span>state)],</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_lives =</span> nakuru_states<span class="sc">$</span>lives[<span class="fu">match</span>(n_state, nakuru_states<span class="sc">$</span>state)],</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">b_prob  =</span> bahati_states<span class="sc">$</span>prob[<span class="fu">match</span>(b_state, bahati_states<span class="sc">$</span>state)],</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_prob  =</span> nakuru_states<span class="sc">$</span>prob[<span class="fu">match</span>(n_state, nakuru_states<span class="sc">$</span>state)],</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">joint_prob =</span> b_prob <span class="sc">*</span> n_prob,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># In each joint state, with perfect info you'd pick the option that</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># actually saves more lives in that state.</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">best_lives =</span> <span class="fu">pmax</span>(b_lives, n_lives)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># EVPI is the difference.</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>evpi <span class="ot">&lt;-</span> ev_with_info <span class="sc">-</span> ev_no_info</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>evpi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>joint</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># EV under uncertainty: David picks the single option with the highest</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co"># expected value (Bahati at 5.6) and lives with whatever year actually happens.</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>ev_no_info <span class="ot">&lt;-</span> <span class="fu">max</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(bahati_states<span class="sc">$</span>lives <span class="sc">*</span> bahati_states<span class="sc">$</span>prob),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(nakuru_states<span class="sc">$</span>lives <span class="sc">*</span> nakuru_states<span class="sc">$</span>prob)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>ev_no_info</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># EV with perfect information: in each joint state, David picks the best</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="co"># option for that state.</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>ev_with_info <span class="ot">&lt;-</span> <span class="fu">sum</span>(joint<span class="sc">$</span>best_lives <span class="sc">*</span> joint<span class="sc">$</span>joint_prob)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>ev_with_info</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co"># EVPI = how much you'd gain on average from knowing the future before deciding.</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>evpi <span class="ot">&lt;-</span> ev_with_info <span class="sc">-</span> ev_no_info</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>evpi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>What you should see: an EVPI of around 1 life per year. That tells David that a one-month study of Bahati’s complication rate would, in the best case, save about one extra newborn life — which is meaningful but not enormous. He’d weigh that against the cost of waiting a month before placing the midwife.</p>
+<p>What you should see: <code>ev_no_info</code> is 5.6 (Bahati’s expected value), <code>ev_with_info</code> is around 6.56, and <strong><code>evpi</code> is around 0.96 — about 1 extra life per year</strong>. That tells David a perfectly informative one-month study could, in expectation, save him about one extra newborn life — which is meaningful but not enormous. He’d weigh that against the cost of waiting a month before placing the midwife.</p>
 <p>This is the “would more research change my decision?” question, made into a number.</p>
 </section>
 </section>

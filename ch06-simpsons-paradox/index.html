@@ -174,16 +174,16 @@ Matthew Luke Kuch | BK Advisors
 <tbody>
 <tr class="odd">
 <td><strong>Delivered in clinic</strong></td>
-<td>78 / 100</td>
-<td>52 / 100</td>
+<td>65 / 100</td>
+<td>55 / 100</td>
 </tr>
 </tbody>
 </table>
 <div class="fragment">
-<p>Voucher looks like it helps. <strong>+26 percentage points.</strong></p>
+<p>Voucher looks like it helps. <strong>+10 percentage points.</strong></p>
 </div>
 <div class="fragment">
-<p><strong>Same data, split by income:</strong></p>
+<p><strong>Same data, split by access to a clinic:</strong></p>
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -194,21 +194,21 @@ Matthew Luke Kuch | BK Advisors
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>Low income</strong></td>
-<td>40 / 60 (67%)</td>
-<td>35 / 50 (70%)</td>
+<td><strong>Easy to reach</strong></td>
+<td>60 / 70 (86%)</td>
+<td>45 / 50 (90%)</td>
 </tr>
 <tr class="even">
-<td><strong>High income</strong></td>
-<td>38 / 40 (95%)</td>
-<td>17 / 50 (34%)</td>
+<td><strong>Hard to reach</strong></td>
+<td>5 / 30 (17%)</td>
+<td>10 / 50 (20%)</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="fragment">
 <div class="callout-box red">
-<p>In <em>both</em> income groups, voucher does worse than no voucher. But in the aggregate, voucher does better. <strong>Same data. Opposite story.</strong></p>
+<p>In <em>both</em> access groups, voucher does worse than no voucher. But in the aggregate, voucher does better. <strong>Same data. Opposite story.</strong></p>
 </div>
 </div>
 </section>
@@ -236,14 +236,14 @@ Matthew Luke Kuch | BK Advisors
 <p>Look at the table again:</p>
 <div class="fragment">
 <ul>
-<li class="fragment"><strong>Most voucher recipients are low-income.</strong> <em>(60 out of 100 voucher households are low income.)</em></li>
-<li class="fragment"><strong>Most non-recipients are high-income.</strong> <em>(50 out of 100 non-voucher households are high income.)</em></li>
-<li class="fragment"><strong>High-income households deliver in clinics more often anyway</strong> — even without a voucher.</li>
+<li class="fragment"><strong>Most voucher recipients are in easy-to-reach areas.</strong> <em>(70 out of 100 voucher households are easy-to-reach.)</em></li>
+<li class="fragment"><strong>Non-recipients are split evenly.</strong> <em>(50 hard-to-reach, 50 easy.)</em></li>
+<li class="fragment"><strong>Easy-to-reach households deliver in clinics far more often anyway</strong> — even without any voucher.</li>
 </ul>
 </div>
 <div class="fragment">
 <div class="callout-box">
-<p>The aggregate is comparing apples (mostly low-income) to oranges (mostly high-income). The income split takes the apples-and-oranges out of the comparison.</p>
+<p>The aggregate is comparing apples (mostly easy-to-reach voucher recipients) to oranges (a 50/50 mix of access). The access split takes the apples-and-oranges out of the comparison.</p>
 </div>
 </div>
 </section></section>
@@ -257,13 +257,13 @@ Matthew Luke Kuch | BK Advisors
 <p>Whether to trust the aggregate or the split depends entirely on <strong>the picture</strong>.</p>
 <p><br></p>
 <div style="text-align: center; font-size: 0.9em;">
-<p><span class="dag-node confounder">Income</span></p>
+<p><span class="dag-node confounder">Access to a clinic</span></p>
 <p>⬇ ⬇</p>
 <p><span class="dag-node treatment">Voucher received</span> <span class="dag-node outcome hexagon">Delivers in clinic</span></p>
 </div>
 <div class="fragment">
 <div class="callout-box green">
-<p>This is a <strong>fork</strong> — exactly the shape from Chapter 2. Income causes both whether you get the voucher (because the programme prioritised lower-income areas) <em>and</em> whether you deliver in a clinic.</p>
+<p>This is a <strong>fork</strong> — exactly the shape from Chapter 2. Access causes both whether you get the voucher (because the programme rolled out where there were already clinics that could redeem it) <em>and</em> whether you actually deliver in one.</p>
 <p>When there is a fork, <strong>you have to disaggregate to remove the confounding</strong>. The split is right; the aggregate is wrong.</p>
 </div>
 </div>
@@ -273,20 +273,20 @@ Matthew Luke Kuch | BK Advisors
 <p>Now imagine a different picture for the same data:</p>
 <p><br></p>
 <div style="text-align: center; font-size: 0.9em;">
-<p><span class="dag-node treatment">Voucher</span> → <span class="dag-node">Income status (after voucher)</span> → <span class="dag-node outcome hexagon">Delivers in clinic</span></p>
+<p><span class="dag-node treatment">Voucher</span> → <span class="dag-node">Effective access (after voucher)</span> → <span class="dag-node outcome hexagon">Delivers in clinic</span></p>
 </div>
 <div class="fragment">
 <div class="callout-box orange">
-<p>If income is <em>downstream</em> of the voucher — say, the voucher includes a cash transfer that affects measured income — then “income” is not a confounder. It is a <strong>mediator</strong>.</p>
-<p>In this picture, <strong>disaggregating by income blocks the very effect you are trying to measure</strong>. The aggregate is right; the split is wrong.</p>
+<p>If “access” is actually <em>downstream</em> of the voucher — say, the voucher includes a transport subsidy that <em>creates</em> access where there was none — then access is not a confounder. It is a <strong>mediator</strong>.</p>
+<p>In this picture, <strong>disaggregating by access blocks the very effect you are trying to measure</strong>. The aggregate is right; the split is wrong.</p>
 </div>
 </div>
 </section>
 <section class="slide level2">
 <h2>Same data. Opposite advice.</h2>
 <ul>
-<li class="fragment"><strong>Picture 1 (income → voucher and outcome):</strong> disaggregate. Trust the split.</li>
-<li class="fragment"><strong>Picture 2 (voucher → income → outcome):</strong> do not disaggregate. Trust the aggregate.</li>
+<li class="fragment"><strong>Picture 1 (access → voucher and outcome):</strong> disaggregate. Trust the split.</li>
+<li class="fragment"><strong>Picture 2 (voucher → access → outcome):</strong> do not disaggregate. Trust the aggregate.</li>
 </ul>
 <div class="fragment">
 <div class="callout-box red">
@@ -313,11 +313,11 @@ Matthew Luke Kuch | BK Advisors
 </section>
 <section class="slide level2">
 <h2>Hassan’s resolution</h2>
-<p>Hassan looks at the picture. The voucher programme prioritised low-income areas, so income is <em>upstream</em> of voucher receipt. <strong>It is a confounder, not a mediator.</strong></p>
+<p>Hassan looks at the picture. The voucher programme rolled out in counties that already had clinics — they had to, because the voucher could only be redeemed at a registered facility. So <strong>access is upstream of voucher receipt</strong>. It is a confounder, not a mediator.</p>
 <div class="fragment">
 <div class="callout-box green">
-<p>He goes back to his board with the <em>split</em> numbers and a new sentence: <em>“The voucher does not help. It looks like it does only because the programme reaches lower-income areas, where clinic delivery is harder for other reasons.”</em></p>
-<p>That is a much more useful answer than “+26 percentage points.”</p>
+<p>He goes back to his board with the <em>split</em> numbers and a new sentence: <em>“The voucher does not help. It looks like it does only because the programme reached the easy-to-access areas first — and those areas already had high clinic delivery rates without any voucher at all.”</em></p>
+<p>That is a much more useful answer than “+10 percentage points.”</p>
 </div>
 </div>
 </section></section>

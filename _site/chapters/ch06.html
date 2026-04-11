@@ -314,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="the-mystery" class="level2">
 <h2 class="anchored" data-anchor-id="the-mystery">The mystery</h2>
-<p>A Kenyan voucher programme looks like a 26-percentage-point success in the aggregate. Split by income, the relationship <em>reverses</em> — the voucher does worse than no voucher in <em>every</em> income group. Same data. Opposite story. Which version should you trust?</p>
+<p>A Kenyan voucher programme looks like a 10-percentage-point success in the aggregate. Split by access to a clinic, the relationship <em>reverses</em> — the voucher does worse than no voucher in <em>every</em> access group. Same data. Opposite story. Which version should you trust?</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -341,7 +341,7 @@ Note
 </section>
 <section id="r-workshop-see-simpsons-paradox-happen-then-resolve-it" class="level2">
 <h2 class="anchored" data-anchor-id="r-workshop-see-simpsons-paradox-happen-then-resolve-it">R workshop — see Simpson’s Paradox happen, then resolve it</h2>
-<p>In the lecture, we walked Hassan through the trap and back out using a picture. In this workshop you’ll see the paradox appear in real numbers and watch how the choice of adjustment variable flips the answer.</p>
+<p>In the lecture, we walked Hassan through the trap and back out using a picture. In this workshop you’ll build the exact same dataset in R, watch the paradox appear in your console, and then watch how the choice of picture determines whether you should disaggregate.</p>
 <section id="setting-up" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up">Setting up</h3>
 <div class="cell">
@@ -352,22 +352,22 @@ Note
 </section>
 <section id="build-the-dataset-from-the-lecture" class="level3">
 <h3 class="anchored" data-anchor-id="build-the-dataset-from-the-lecture">Build the dataset from the lecture</h3>
+<p>The numbers are exactly those from the lecture table — 100 voucher households and 100 non-voucher households, split by whether the household lives in an easy-to-reach area (close to a registered facility) or a hard-to-reach area.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same numbers as the lecture table.</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>voucher_data <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Income,    <span class="sc">~</span>Voucher,    <span class="sc">~</span>ClinicDelivery, <span class="sc">~</span>n,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"low"</span>,      <span class="st">"yes"</span>,       <span class="st">"yes"</span>,           <span class="dv">40</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"low"</span>,      <span class="st">"yes"</span>,       <span class="st">"no"</span>,            <span class="dv">20</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"low"</span>,      <span class="st">"no"</span>,        <span class="st">"yes"</span>,           <span class="dv">35</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"low"</span>,      <span class="st">"no"</span>,        <span class="st">"no"</span>,            <span class="dv">15</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"high"</span>,     <span class="st">"yes"</span>,       <span class="st">"yes"</span>,           <span class="dv">38</span>,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"high"</span>,     <span class="st">"yes"</span>,       <span class="st">"no"</span>,            <span class="dv">2</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"high"</span>,     <span class="st">"no"</span>,        <span class="st">"yes"</span>,           <span class="dv">17</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"high"</span>,     <span class="st">"no"</span>,        <span class="st">"no"</span>,            <span class="dv">33</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">uncount</span>(n)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(voucher_data)  <span class="co"># 200 rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>voucher_data <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>Access,         <span class="sc">~</span>Voucher, <span class="sc">~</span>ClinicDelivery, <span class="sc">~</span>n,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"easy"</span>,          <span class="st">"yes"</span>,    <span class="st">"yes"</span>,           <span class="dv">60</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"easy"</span>,          <span class="st">"yes"</span>,    <span class="st">"no"</span>,            <span class="dv">10</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"easy"</span>,          <span class="st">"no"</span>,     <span class="st">"yes"</span>,           <span class="dv">45</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"easy"</span>,          <span class="st">"no"</span>,     <span class="st">"no"</span>,            <span class="dv">5</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hard"</span>,          <span class="st">"yes"</span>,    <span class="st">"yes"</span>,           <span class="dv">5</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hard"</span>,          <span class="st">"yes"</span>,    <span class="st">"no"</span>,            <span class="dv">25</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hard"</span>,          <span class="st">"no"</span>,     <span class="st">"yes"</span>,           <span class="dv">10</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hard"</span>,          <span class="st">"no"</span>,     <span class="st">"no"</span>,            <span class="dv">40</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">uncount</span>(n)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(voucher_data)  <span class="co"># 200 rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="the-aggregate-view-what-hassan-saw-first" class="level3">
@@ -379,56 +379,66 @@ Note
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_clinic =</span> <span class="fu">mean</span>(ClinicDelivery <span class="sc">==</span> <span class="st">"yes"</span>)</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>You’ll see voucher = 78%, no voucher = 52%. A clean +26 percentage points.</p>
+<p>You’ll see voucher = 65%, no voucher = 55%. A clean +10 percentage points in favour of the voucher.</p>
 </section>
 <section id="the-split-view-what-naomi-told-hassan-to-look-at" class="level3">
 <h3 class="anchored" data-anchor-id="the-split-view-what-naomi-told-hassan-to-look-at">The split view (what Naomi told Hassan to look at)</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>voucher_data <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Income, Voucher) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Access, Voucher) <span class="sc">|&gt;</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_clinic =</span> <span class="fu">mean</span>(ClinicDelivery <span class="sc">==</span> <span class="st">"yes"</span>),</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Now look at every Income × Voucher cell. <strong>In both income groups, voucher does worse than no voucher.</strong> Same data. Opposite story. Simpson’s Paradox is staring at you from your console.</p>
+<p>Now look at every Access × Voucher cell:</p>
+<ul>
+<li><strong>Easy to reach</strong>: voucher 86%, no voucher 90% — voucher slightly <em>worse</em></li>
+<li><strong>Hard to reach</strong>: voucher 17%, no voucher 20% — voucher slightly <em>worse</em></li>
+</ul>
+<p><strong>In both access groups, voucher does worse than no voucher.</strong> Same data. Opposite story. Simpson’s Paradox is staring at you from your console.</p>
 </section>
 <section id="let-the-picture-decide-which-view-to-trust" class="level3">
 <h3 class="anchored" data-anchor-id="let-the-picture-decide-which-view-to-trust">Let the picture decide which view to trust</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hassan's picture: income is upstream of voucher AND of clinic delivery.</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># That makes income a confounder — exactly the fork shape from Chapter 2.</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>voucher_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Income  -&gt; Voucher</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Income  -&gt; ClinicDelivery</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; ClinicDelivery</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(voucher_dag, <span class="at">text_size =</span> <span class="dv">4</span>) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ask the picture: to estimate Voucher -&gt; ClinicDelivery, what do we need to adjust for?</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(voucher_dag,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Voucher"</span>,</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome  =</span> <span class="st">"ClinicDelivery"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hassan's picture: access is upstream of voucher AND of clinic delivery.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (The voucher rolled out where existing clinics could redeem it, so the</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># programme is concentrated in easier-to-reach areas — and easier-to-reach</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># areas have higher clinic delivery for many other reasons too.)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># That makes access a confounder — exactly the fork shape from Chapter 2.</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>voucher_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Access  -&gt; Voucher</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Access  -&gt; ClinicDelivery</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; ClinicDelivery</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdag</span>(voucher_dag, <span class="at">text_size =</span> <span class="dv">4</span>) <span class="sc">+</span> <span class="fu">theme_dag</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Ask the picture: to estimate Voucher -&gt; ClinicDelivery, what do we need to adjust for?</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(voucher_dag,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Voucher"</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome  =</span> <span class="st">"ClinicDelivery"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>R will tell you: <strong>Income</strong>. The picture says income is a confounder, so you have to adjust for it — meaning the <em>split</em> view is the right one. The aggregate is misleading.</p>
+<p>R will tell you: <strong>Access</strong>. The picture says access is a confounder, so you have to adjust for it — meaning the <em>split</em> view is the right one. The aggregate is misleading.</p>
 </section>
 <section id="what-if-the-picture-were-different" class="level3">
 <h3 class="anchored" data-anchor-id="what-if-the-picture-were-different">What if the picture were different?</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative picture: voucher causes income (e.g., the voucher includes a cash transfer).</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># In this picture, income is a mediator — adjusting for it BLOCKS the very effect you're measuring.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mediator_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; Income</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">  Income  -&gt; ClinicDelivery</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; ClinicDelivery</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(mediator_dag,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Voucher"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome  =</span> <span class="st">"ClinicDelivery"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative picture: the voucher itself creates effective access (e.g., it</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># includes a transport subsidy that pays for the motorbike). In this picture</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Access is downstream of Voucher — a mediator. Adjusting for it would BLOCK</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the very effect you're trying to measure.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>mediator_dag <span class="ot">&lt;-</span> <span class="fu">dagitty</span>(<span class="st">'dag {</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; Access</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  Access  -&gt; ClinicDelivery</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">  Voucher -&gt; ClinicDelivery</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">adjustmentSets</span>(mediator_dag,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>               <span class="at">exposure =</span> <span class="st">"Voucher"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>               <span class="at">outcome  =</span> <span class="st">"ClinicDelivery"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>R will return an empty set — meaning, in <em>this</em> picture, you should <em>not</em> adjust for income. The aggregate is right, the split is wrong.</p>
+<p>R will return an empty set — meaning, in <em>this</em> picture, you should <em>not</em> adjust for access. The aggregate is right, the split is wrong.</p>
 <p><strong>Same data. Two pictures. Opposite advice.</strong> This is exactly the point from the lecture: the data alone cannot pick a winner. The picture has to.</p>
 </section>
 </section>

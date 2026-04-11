@@ -102,9 +102,9 @@ That sentence has six nouns in it. Look at the green box. **Bleeding. Family. Wa
 
 Now Faith does the second part of the method. She turns Mary's nouns into a picture.
 
-*Look at the diagram.* **Bleeding starts at home → family waits → motorbike arranged → mother arrives at facility → mother survives.** *(pause)*
+*Look at the diagram.* **Bleeding starts at home → family waits → motorbike arranged → mother arrives too late → mother dies.** *(pause)*
 
-Five boxes. Four arrows. A simple chain — exactly the shape from Chapter 2. *(pause)*
+Five boxes. Four arrows. A simple chain — exactly the shape from Chapter 2. The hexagon at the end is *the death*, in red — because Mary's quote was about deaths, and we want the picture to match what Mary actually said. Once we have this chain, every arrow on it is a place where someone could intervene to *break* the chain and save the life. *(pause)*
 
 Look at the bottom box. **The nouns become boxes. The order of events becomes the arrows. That is the whole trick.** *(pause)*
 
@@ -122,7 +122,9 @@ She drives out to a small village and meets **Lokol**. Lokol's wife survived a d
 
 Faith asks the same opening question. Word for word. *"When a mother in your village dies, what is the most common chain of events?"* *(pause)*
 
-And Lokol — look at the example block — says: *"My wife was bleeding. I knew she needed to go. But the head of our family was not at home. I am not the head. I had to wait until my brother came back from the market to give permission to spend the money on transport. By then it was very late."* *(pause)*
+And Lokol — look at the example block — says: *"My wife was bleeding. I knew she needed to go. But in our compound, my older brother is the elder — he is the one who decides about big expenses. And he was at the market that day. I am her husband, but I am not the elder of the compound. I had to wait until he came back to give permission to spend the money on transport. By then it was very late."* *(pause)*
+
+I want to pause on something Lokol just said, because it might surprise you. He says *"I am her husband, but I am not the elder of the compound."* In many extended-family households in rural Kenya — and Turkana especially — the senior male elder of the compound holds authority over major financial decisions, even when the husband is present. A young husband may not have the standing to spend a large sum on transport without the elder's permission. So *Lokol is the husband, but he is not the financial decision-maker for his own household.* That is a real cultural pattern. The chapter acknowledges it because the picture has to reflect how the actual households actually work, not how outsiders assume they work. *(pause)*
 
 A new noun. **Permission.** *(pause)*
 
