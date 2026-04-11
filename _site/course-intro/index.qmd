@@ -1,0 +1,220 @@
+---
+title: "Inference and Intervention"
+subtitle: "A Practical Course on Causal Thinking for Public Health"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## What Is This Course?
+
+A practical guide on how to **think about cause and effect** in complex health systems.
+
+. . .
+
+You will deal with messy data, competing explanations, and hard trade-offs.
+
+. . .
+
+To make good decisions, you need to tell apart what is **really causing** an outcome from what just **happens to show up** alongside it.
+
+. . .
+
+Causal thinking will help you do that.
+
+. . .
+
+::: {.callout-box}
+In this course, I will teach you the essential tools of **causal inference** that you will need when designing, managing, or evaluating health programs.
+:::
+
+
+## Who Is This Course For?
+
+This course is mainly for **anyone who makes decisions about health programs** — or wants to.
+
+. . .
+
+- Program managers and coordinators
+- Policy advisors and planners
+- Grants and portfolio managers
+- M&E and data analysts
+- Students interested in global health
+
+. . .
+
+::: {.callout-box .green}
+You **don't** need a math degree or programming background. I'll break everything down simply.
+:::
+
+
+## Three Things You Will Learn
+
+::: {.incremental}
+
+1. **How to draw your thinking.** You will learn to build causal diagrams — simple pictures that show what causes what — before touching any data.
+
+2. **How to avoid common traps.** You will learn to spot confounding, reverse causation, selection bias, and Simpson's Paradox — mistakes that mislead even experienced analysts.
+
+3. **How to make better decisions.** You will learn to move from "what happened?" to "what should we do?" — using decision theory, resource allocation, and game theory.
+
+:::
+
+
+# A Little Bit About Me {background-color="#005CB9"}
+
+
+## A Little Bit About Me
+
+:::: {.columns}
+
+::: {.column width="35%"}
+![](matthew-kuch.png){width="100%"}
+:::
+
+::: {.column width="65%"}
+
+**Matthew Luke Kuch**
+
+I have over 10 years of experience in global health and management consulting.
+
+. . .
+
+I have worked at **Gavi** (the Vaccine Alliance), **CHAI** (Clinton Health Access Initiative), and **Deloitte Consulting** — across Uganda, Kenya, Lesotho, Tanzania, and Switzerland.
+
+. . .
+
+My work has focused on **vaccines delivery, grants management, health financing,** and **supply chain** — always at the intersection of data, strategy, and implementation.
+
+. . .
+
+I hold an MSc from **Lund University**, studied at the **London School of Economics**, and have a BA in Physics and Economics from **Wheaton College**.
+
+. . .
+
+I now run **BK Advisors**, where we help governments and organizations make better decisions with evidence.
+
+:::
+
+::::
+
+
+# How the Course Is Organized {background-color="#005CB9"}
+
+
+## Course Structure
+
+We have divided the course into **three parts** and **ten chapters**.
+
+<br>
+
+| Part | Chapters | What You Learn |
+|------|----------|----------------|
+| **1. Draw the Picture** | Ch 1–3 | Correlation vs. causation, causal diagrams, building models from interviews |
+| **2. Add the Numbers** | Ch 4–6 | Probability, updating beliefs with evidence, Simpson's Paradox |
+| **3. Make Decisions** | Ch 7–10 | Observing vs. intervening, resource allocation, game theory, data vs. expert judgment |
+
+
+## Part 1: Draw the Picture (Ch 1–3)
+
+We start by learning to **tell apart correlation from causation**.
+
+. . .
+
+Using examples from **Ethiopia's health workforce**, you will see how numbers can mislead.
+
+. . .
+
+Then you will learn to draw **causal diagrams** — simple boxes-and-arrows sketches — using **Rwanda's community health program**.
+
+. . .
+
+Finally, a hands-on case study across **Kenya's 47 counties** where you build a causal model through interviews.
+
+. . .
+
+::: {.callout-box}
+**Key idea:** Sketch your assumptions on paper before you look at any data.
+:::
+
+
+## Part 2: Add the Numbers (Ch 4–6)
+
+Once you have the picture, we put **numbers** on it.
+
+. . .
+
+- **Probability** — a way of being honest about what you don't know yet
+- **Bayesian thinking** — updating your beliefs when new evidence comes in
+- **Simpson's Paradox** — when combined data says one thing, but each country's data says the opposite
+
+. . .
+
+::: {.callout-box .orange}
+**Watch out:** Aggregated trends across countries can hide — or reverse — what is really happening.
+:::
+
+
+## Part 3: Make Decisions (Ch 7–10)
+
+This is where it gets practical.
+
+. . .
+
+You will learn the difference between **watching** something happen and **making** it happen.
+
+. . .
+
+- **Ch 7:** Observational vs. experimental evidence — allocating devices like breathing machines for newborns
+- **Ch 8:** Portfolio thinking — spreading limited resources across countries
+- **Ch 9:** Game theory — governments react to your investments, sometimes matching your money, sometimes redirecting their own
+- **Ch 10:** Can data alone discover causes? Partly — but you still need expert judgment
+
+. . .
+
+::: {.callout-box .green}
+**By the end:** You will be able to draw causal diagrams, spot analytic traps, and make sharper decisions with scarce resources.
+:::
+
+
+## Let's Get Started
+
+::: {.key-takeaway}
+**Causal thinking is a skill. Not a talent. You can learn it.**
+
+All you need is curiosity and a willingness to sketch your ideas on paper.
+:::
+
+<br>
+
+If you have any questions as we go, please let me know.
+
+Let's move to Chapter 1.
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Course Introduction]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

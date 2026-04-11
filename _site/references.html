@@ -80,8 +80,8 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./ch01-intro/bka-logo.png" alt="" class="navbar-logo light-content">
-    <img src="./ch01-intro/bka-logo.png" alt="" class="navbar-logo dark-content">
+    <img src="./course-intro/bka-logo.png" alt="" class="navbar-logo light-content">
+    <img src="./course-intro/bka-logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Inference and Intervention</span>
@@ -96,6 +96,10 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./course-intro/index.html"> 
+<span class="menu-text">Course Intro</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./schedule.html"> 
@@ -125,18 +129,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#primary-textbook" id="toc-primary-textbook" class="nav-link active" data-scroll-target="#primary-textbook">Primary Textbook</a></li>
-  <li><a href="#public-data-sources" id="toc-public-data-sources" class="nav-link" data-scroll-target="#public-data-sources">Public Data Sources</a></li>
-  <li><a href="#causal-inference-literature" id="toc-causal-inference-literature" class="nav-link" data-scroll-target="#causal-inference-literature">Causal Inference Literature</a></li>
-  <li><a href="#decision-analysis-game-theory" id="toc-decision-analysis-game-theory" class="nav-link" data-scroll-target="#decision-analysis-game-theory">Decision Analysis &amp; Game Theory</a></li>
-  <li><a href="#r-package-references" id="toc-r-package-references" class="nav-link" data-scroll-target="#r-package-references">R Package References</a>
+  <li><a href="#the-textbook-this-course-is-adapted-from" id="toc-the-textbook-this-course-is-adapted-from" class="nav-link active" data-scroll-target="#the-textbook-this-course-is-adapted-from">The textbook this course is adapted from</a></li>
+  <li><a href="#causal-inference-and-decision-theory" id="toc-causal-inference-and-decision-theory" class="nav-link" data-scroll-target="#causal-inference-and-decision-theory">Causal inference and decision theory</a></li>
+  <li><a href="#maternal-newborn-health-data-sources" id="toc-maternal-newborn-health-data-sources" class="nav-link" data-scroll-target="#maternal-newborn-health-data-sources">Maternal &amp; Newborn Health data sources</a></li>
+  <li><a href="#country-specific-sources-used-in-this-course" id="toc-country-specific-sources-used-in-this-course" class="nav-link" data-scroll-target="#country-specific-sources-used-in-this-course">Country-specific sources used in this course</a>
   <ul class="collapse">
-  <li><a href="#dagitty" id="toc-dagitty" class="nav-link" data-scroll-target="#dagitty">dagitty</a></li>
-  <li><a href="#bnlearn" id="toc-bnlearn" class="nav-link" data-scroll-target="#bnlearn">bnlearn</a></li>
-  <li><a href="#ggdag" id="toc-ggdag" class="nav-link" data-scroll-target="#ggdag">ggdag</a></li>
-  <li><a href="#ggplot2" id="toc-ggplot2" class="nav-link" data-scroll-target="#ggplot2">ggplot2</a></li>
+  <li><a href="#ethiopia-chapters-1-5" id="toc-ethiopia-chapters-1-5" class="nav-link" data-scroll-target="#ethiopia-chapters-1-5">Ethiopia (Chapters 1, 5)</a></li>
+  <li><a href="#rwanda-chapter-2" id="toc-rwanda-chapter-2" class="nav-link" data-scroll-target="#rwanda-chapter-2">Rwanda (Chapter 2)</a></li>
+  <li><a href="#kenya-chapters-3-7-9" id="toc-kenya-chapters-3-7-9" class="nav-link" data-scroll-target="#kenya-chapters-3-7-9">Kenya (Chapters 3, 7, 9)</a></li>
+  <li><a href="#tanzania-chapters-4-10" id="toc-tanzania-chapters-4-10" class="nav-link" data-scroll-target="#tanzania-chapters-4-10">Tanzania (Chapters 4, 10)</a></li>
   </ul></li>
-  <li><a href="#mnh-domain-references" id="toc-mnh-domain-references" class="nav-link" data-scroll-target="#mnh-domain-references">MNH Domain References</a></li>
+  <li><a href="#methodological-notes-used-in-this-course" id="toc-methodological-notes-used-in-this-course" class="nav-link" data-scroll-target="#methodological-notes-used-in-this-course">Methodological notes used in this course</a></li>
+  <li><a href="#pedagogy" id="toc-pedagogy" class="nav-link" data-scroll-target="#pedagogy">Pedagogy</a></li>
+  <li><a href="#a-note-on-protagonists" id="toc-a-note-on-protagonists" class="nav-link" data-scroll-target="#a-note-on-protagonists">A note on protagonists</a></li>
   </ul>
 </nav>
     </div>
@@ -146,7 +151,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">References</h1>
-<p class="subtitle lead">Textbook, data sources, R packages, and supplementary reading</p>
+<p class="subtitle lead">Public sources, every chapter</p>
 </div>
 
 
@@ -163,99 +168,129 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="primary-textbook" class="level2">
-<h2 class="anchored" data-anchor-id="primary-textbook">Primary Textbook</h2>
-<p>Ryall, M. D., &amp; Bramson, A. (2014). <em>Inference and Intervention: Causal Models for Business Analysis</em>. Routledge.</p>
-<div class="callout-box">
-<p>This course teaches the core concepts from the textbook using entirely new examples drawn from publicly available MNH data for Ethiopia, Rwanda, Kenya, and Tanzania.</p>
-</div>
+<p>This course uses only publicly available sources. Every number, every story, every protagonist is drawn from data anyone with a browser can verify. This page lists those sources, organised by what each one is for.</p>
+<section id="the-textbook-this-course-is-adapted-from" class="level2">
+<h2 class="anchored" data-anchor-id="the-textbook-this-course-is-adapted-from">The textbook this course is adapted from</h2>
+<p><strong>Ryall, M. D. &amp; Bramson, A. L. (2014).</strong> <em>Inference and Intervention: Causal Models for Business Analysis.</em> Routledge.</p>
+<p>The textbook this course is built on. Ryall and Bramson developed the framework — qualitative pictures, quantitative tables, decision maps, game theory, structure learning — for business decisions. We have adapted every chapter for public health and Maternal &amp; Newborn Health, with new examples drawn entirely from public MNH data.</p>
 </section>
-<section id="public-data-sources" class="level2">
-<h2 class="anchored" data-anchor-id="public-data-sources">Public Data Sources</h2>
-<p>All MNH examples in this course use data from these publicly available sources:</p>
+<section id="causal-inference-and-decision-theory" class="level2">
+<h2 class="anchored" data-anchor-id="causal-inference-and-decision-theory">Causal inference and decision theory</h2>
+<ul>
+<li><strong>Pearl, J. &amp; Mackenzie, D. (2018).</strong> <em>The Book of Why: The New Science of Cause and Effect.</em> Basic Books. The most readable introduction to causal inference in print.</li>
+<li><strong>Pearl, J., Glymour, M. &amp; Jewell, N. (2016).</strong> <em>Causal Inference in Statistics: A Primer.</em> Wiley. Short, careful, with worked examples.</li>
+<li><strong>Hernán, M. A. &amp; Robins, J. M. (2020).</strong> <em>Causal Inference: What If.</em> Chapman &amp; Hall/CRC. Open-access at <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">hsph.harvard.edu/miguel-hernan/causal-inference-book</a>.</li>
+<li><strong>Spirtes, P., Glymour, C. &amp; Scheines, R. (2000).</strong> <em>Causation, Prediction, and Search</em> (2nd ed.). MIT Press. The foundational text on the PC algorithm and structure learning. Open-access online.</li>
+<li><strong>Howard, R. A. &amp; Abbas, A. E. (2015).</strong> <em>Foundations of Decision Analysis.</em> Pearson. The textbook on decision trees, expected value, and the value of perfect information.</li>
+<li><strong>Dixit, A. &amp; Nalebuff, B. (2008).</strong> <em>The Art of Strategy.</em> Norton. The most readable introduction to game theory ever written. No equations.</li>
+<li><strong>Gigerenzer, G. (2002).</strong> <em>Calculated Risks: How to Know When Numbers Deceive You.</em> Simon &amp; Schuster. The book that convinced an entire generation of doctors to teach probability in natural frequencies.</li>
+<li><strong>Markowitz, H. (1952).</strong> <em>Portfolio Selection.</em> Journal of Finance, 7(1). The classic finance paper that started portfolio thinking. Twelve pages. Worth reading once.</li>
+</ul>
+</section>
+<section id="maternal-newborn-health-data-sources" class="level2">
+<h2 class="anchored" data-anchor-id="maternal-newborn-health-data-sources">Maternal &amp; Newborn Health data sources</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>Source</th>
-<th>What It Provides</th>
-<th>Link</th>
+<th>What’s there</th>
+<th>Where</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>WHO</td>
-<td>Maternal and newborn mortality estimates</td>
-<td><a href="https://www.who.int/data/gho">who.int</a></td>
+<td><strong>WHO Global Health Observatory</strong></td>
+<td>Country-level MNH indicators</td>
+<td><a href="https://www.who.int/data/gho">who.int/data/gho</a></td>
 </tr>
 <tr class="even">
-<td>UNICEF</td>
-<td>Child mortality trends and coverage data</td>
+<td><strong>UNICEF Data Warehouse</strong></td>
+<td>Child and maternal health indicators by country</td>
 <td><a href="https://data.unicef.org/">data.unicef.org</a></td>
 </tr>
 <tr class="odd">
-<td>DHS Program</td>
-<td>Demographic and Health Surveys by country</td>
+<td><strong>DHS Program</strong></td>
+<td>Household-level Demographic and Health Surveys for Ethiopia, Rwanda, Kenya, Tanzania, and many others</td>
 <td><a href="https://dhsprogram.com/">dhsprogram.com</a></td>
 </tr>
 <tr class="even">
-<td>DHIS2</td>
-<td>District Health Information System documentation</td>
+<td><strong>DHIS2</strong></td>
+<td>Open-source national health information system used in 70+ countries</td>
 <td><a href="https://dhis2.org/">dhis2.org</a></td>
 </tr>
 <tr class="odd">
-<td>World Bank</td>
-<td>Health expenditure and workforce indicators</td>
+<td><strong>Lives Saved Tool (LiST)</strong></td>
+<td>Open-source modelling tool from Johns Hopkins for estimating lives saved by MNH interventions</td>
+<td><a href="https://www.livessavedtool.org/">livessavedtool.org</a></td>
+</tr>
+<tr class="even">
+<td><strong>World Bank Open Data</strong></td>
+<td>Country-level economic, demographic, and health indicators</td>
 <td><a href="https://data.worldbank.org/">data.worldbank.org</a></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="causal-inference-literature" class="level2">
-<h2 class="anchored" data-anchor-id="causal-inference-literature">Causal Inference Literature</h2>
-<p>Pearl, J. (2009). <em>Causality: Models, Reasoning, and Inference</em> (2nd ed.). Cambridge University Press.</p>
-<p>Pearl, J., Glymour, M., &amp; Jewell, N. P. (2016). <em>Causal Inference in Statistics: A Primer</em>. Wiley.</p>
-<p>Hernán, M. A., &amp; Robins, J. M. (2020). <em>Causal Inference: What If</em>. Chapman &amp; Hall/CRC. Available free at <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/">miguelhernan.org</a>.</p>
-</section>
-<section id="decision-analysis-game-theory" class="level2">
-<h2 class="anchored" data-anchor-id="decision-analysis-game-theory">Decision Analysis &amp; Game Theory</h2>
-<p>Dixit, A. K., &amp; Nalebuff, B. J. (2008). <em>The Art of Strategy: A Game Theorist’s Guide to Success in Business and Life</em>. W.W. Norton.</p>
-</section>
-<section id="r-package-references" class="level2">
-<h2 class="anchored" data-anchor-id="r-package-references">R Package References</h2>
-<section id="dagitty" class="level3">
-<h3 class="anchored" data-anchor-id="dagitty">dagitty</h3>
-<p>Textor, J., van der Zander, B., Gilthorpe, M. S., Liśkiewicz, M., &amp; Ellison, G. T. H. (2016). Robust causal inference using directed acyclic graphs: The R package ‘dagitty’. <em>International Journal of Epidemiology</em>, 45(6), 1887–1894.</p>
+<section id="country-specific-sources-used-in-this-course" class="level2">
+<h2 class="anchored" data-anchor-id="country-specific-sources-used-in-this-course">Country-specific sources used in this course</h2>
+<section id="ethiopia-chapters-1-5" class="level3">
+<h3 class="anchored" data-anchor-id="ethiopia-chapters-1-5">Ethiopia (Chapters 1, 5)</h3>
 <ul>
-<li>CRAN: <a href="https://cran.r-project.org/package=dagitty">cran.r-project.org/package=dagitty</a></li>
+<li><strong>DHS Ethiopia 2000, 2005, 2011, 2016</strong> — successive Demographic and Health Surveys</li>
+<li><strong>WHO, 2013</strong> — <em>Success Factors for Women’s and Children’s Health: Ethiopia</em></li>
+<li><strong>Wang, H. et al., 2014</strong> — “Global, regional, and national levels of neonatal, infant, and under-5 mortality.” <em>The Lancet</em>, 384(9947). Open-access.</li>
+<li><strong>Federal Ministry of Health Ethiopia</strong> — Health Sector Transformation Plan II (2020/21–2024/25)</li>
+<li><strong>Tigray Regional Health Bureau, 2014</strong> — public summary of regional health programme outputs</li>
 </ul>
 </section>
-<section id="bnlearn" class="level3">
-<h3 class="anchored" data-anchor-id="bnlearn">bnlearn</h3>
-<p>Scutari, M. (2010). Learning Bayesian networks with the bnlearn R package. <em>Journal of Statistical Software</em>, 35(3), 1–22.</p>
+<section id="rwanda-chapter-2" class="level3">
+<h3 class="anchored" data-anchor-id="rwanda-chapter-2">Rwanda (Chapter 2)</h3>
 <ul>
-<li>CRAN: <a href="https://cran.r-project.org/package=bnlearn">cran.r-project.org/package=bnlearn</a></li>
+<li><strong>DHS Rwanda 2000, 2010, 2014/15, 2019/20</strong></li>
+<li><strong>Rwanda Biomedical Centre, 2020</strong> — <em>Annual Health Statistics Booklet</em></li>
+<li><strong>Farmer, P. et al., 2013</strong> — “Reduced premature mortality in Rwanda: lessons from success.” <em>BMJ</em>, 346:f65. Open-access.</li>
 </ul>
 </section>
-<section id="ggdag" class="level3">
-<h3 class="anchored" data-anchor-id="ggdag">ggdag</h3>
-<p>Barrett, M. (2023). ggdag: Analyze and Create Elegant Directed Acyclic Graphs.</p>
+<section id="kenya-chapters-3-7-9" class="level3">
+<h3 class="anchored" data-anchor-id="kenya-chapters-3-7-9">Kenya (Chapters 3, 7, 9)</h3>
 <ul>
-<li>CRAN: <a href="https://cran.r-project.org/package=ggdag">cran.r-project.org/package=ggdag</a></li>
+<li><strong>Constitution of Kenya, 2010</strong>, Schedule 4 — the legal basis for devolution to 47 counties</li>
+<li><strong>Kenya Health Information System (KHIS)</strong> — county dashboards at <a href="https://hiskenya.org">hiskenya.org</a></li>
+<li><strong>Office of the Auditor-General, Kenya</strong> — county budget execution reports at <a href="https://oagkenya.go.ke">oagkenya.go.ke</a></li>
+<li><strong>Office of the Controller of Budget, Kenya</strong> — quarterly county budget implementation reports at <a href="https://cob.go.ke">cob.go.ke</a></li>
+<li><strong>Kenya County Public Expenditure Reviews (World Bank, 2014–2020)</strong> — open-access analyses of county-level health budgeting</li>
+<li><strong>Bourbonnais, N., 2013</strong> — <em>Implementing Free Maternal Health Care in Kenya: Challenges, Strategies, and Recommendations.</em> Kenya National Commission on Human Rights.</li>
 </ul>
 </section>
-<section id="ggplot2" class="level3">
-<h3 class="anchored" data-anchor-id="ggplot2">ggplot2</h3>
-<p>Wickham, H. (2016). <em>ggplot2: Elegant Graphics for Data Analysis</em> (2nd ed.). Springer.</p>
+<section id="tanzania-chapters-4-10" class="level3">
+<h3 class="anchored" data-anchor-id="tanzania-chapters-4-10">Tanzania (Chapters 4, 10)</h3>
 <ul>
-<li>CRAN: <a href="https://cran.r-project.org/package=ggplot2">cran.r-project.org/package=ggplot2</a></li>
+<li><strong>Tanzania Service Provision Assessment (TSPA) 2014/15</strong> — facility-level survey at <a href="https://dhsprogram.com">dhsprogram.com</a></li>
+<li><strong>WHO, 2017</strong> — <em>Trends in maternal mortality: 1990 to 2015</em></li>
+<li><strong>DHIS2 Tanzania</strong> — national HMIS at <a href="https://moh.go.tz">moh.go.tz</a></li>
+<li><strong>Tanzania Health Sector Strategic Plan V (2021–2026)</strong> — Ministry of Health policy document</li>
 </ul>
 </section>
 </section>
-<section id="mnh-domain-references" class="level2">
-<h2 class="anchored" data-anchor-id="mnh-domain-references">MNH Domain References</h2>
-<p>World Health Organization. (2023). <em>Trends in Maternal Mortality 2000 to 2020</em>. WHO.</p>
-<p>UNICEF. (2023). <em>Levels and Trends in Child Mortality: Report 2023</em>. UN Inter-agency Group for Child Mortality Estimation.</p>
-<p>Bhutta, Z. A., et al.&nbsp;(2014). Can available interventions end preventable deaths in mothers, newborn babies, and stillbirths, and at what cost? <em>The Lancet</em>, 384(9940), 347–370.</p>
+<section id="methodological-notes-used-in-this-course" class="level2">
+<h2 class="anchored" data-anchor-id="methodological-notes-used-in-this-course">Methodological notes used in this course</h2>
+<ul>
+<li><strong>Simpson, E. H. (1951).</strong> “The Interpretation of Interaction in Contingency Tables.” <em>Journal of the Royal Statistical Society</em>, B 13. The original paper on what we now call Simpson’s Paradox.</li>
+<li><strong>Pearl, J. (2014).</strong> “Comment: Understanding Simpson’s Paradox.” <em>American Statistician</em>, 68(1). Open-access. The clearest modern treatment.</li>
+<li><strong>Lu, C. et al., 2010.</strong> “Public financing of health in developing countries: a cross-national systematic analysis.” <em>The Lancet</em>, 375(9723). The classic open-access study of donor crowding-out.</li>
+<li><strong>Croicu, M. et al., 2017.</strong> <em>Reporting bias in routine health information systems.</em> WHO Bulletin, 95(7). Open-access.</li>
+<li><strong>Brookings Institution, 2021.</strong> <em>Financing the SDGs: Health and Education.</em> Open-access methodological notes on portfolio allocation in global health.</li>
+</ul>
+</section>
+<section id="pedagogy" class="level2">
+<h2 class="anchored" data-anchor-id="pedagogy">Pedagogy</h2>
+<ul>
+<li><strong>Heath, C. &amp; Heath, D. (2007).</strong> <em>Made to Stick: Why Some Ideas Survive and Others Die.</em> Random House. The pedagogical framework this course is built on — every chapter follows the SUCCES principles (Simple, Unexpected, Concrete, Credible, Emotional, Stories) deliberately.</li>
+</ul>
+</section>
+<section id="a-note-on-protagonists" class="level2">
+<h2 class="anchored" data-anchor-id="a-note-on-protagonists">A note on protagonists</h2>
+<p>Every named protagonist in this course — Almaz, Beatrice, Faith, Joyce, Hiwot, Hassan, Naomi, David, Grace, Wangari, Patrick, Esther — is a <strong>composite</strong>. The details (ages, locations, situations, decisions) are drawn from the public sources listed above. The names are not real. Composites are clearly labeled at every introduction. We use this convention to give each chapter an emotional anchor without putting any real person on the spot.</p>
 
 
 </section>

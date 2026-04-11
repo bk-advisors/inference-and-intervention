@@ -1,0 +1,291 @@
+---
+title: "Chapter 9 — When the Other Side Reacts"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Wangari and Patrick
+
+**Wangari, 44, county budget director, Nakuru County, Kenya**
+**Patrick, 50, county budget director, Kakamega County, Kenya**
+*(both composites, drawn from publicly available County Treasury reports)*
+
+. . .
+
+A donor offers both counties the *same deal*: **a 1:1 matching grant for maternal health**. Every shilling the county puts in, the donor matches with one of its own.
+
+. . .
+
+::: {.incremental}
+
+- **Wangari accepts enthusiastically.** She doubles her existing maternal health line and unlocks the full match.
+- **Patrick quietly redirects** his own maternal health budget to road repairs — he knows the donor will fund maternal health anyway.
+
+:::
+
+. . .
+
+::: {.callout-box}
+**The question:** Same deal, opposite responses. What predicts who does what — and how should the donor have designed the deal differently?
+:::
+
+
+## And here is the puzzle
+
+The donor's expected-value calculation from Chapter 7 said the matching grant would *double* maternal health spending in both counties.
+
+. . .
+
+::: {.callout-box .red}
+**In Kakamega, it produced almost no new maternal health spending.** The donor's money replaced county money, and the county money went elsewhere. The total didn't change.
+
+This has a name. **Crowding out** — or in game theory terms, *fungibility*.
+:::
+
+
+# Decisions are not made in isolation {background-color="#005CB9"}
+
+
+## The hidden assumption of Chapter 7
+
+Chapter 7's expected-value calculation assumed David was the only one making a decision. The world responded passively.
+
+. . .
+
+::: {.bad-example}
+But the world is not passive. *Everyone else is also making decisions* — and many of them depend on what they think you will do.
+:::
+
+. . .
+
+::: {.definition-box}
+**Game theory** is just decision theory with a single addition: you write down *what the other side will do in response* before you compute your expected value.
+:::
+
+. . .
+
+::: {.callout-box .green}
+The math is the same. The picture is bigger. That is the whole shift in this chapter.
+:::
+
+
+## A payoff matrix in plain language
+
+The simplest game theory tool is a *payoff matrix*. Two players, two choices each, and a small grid showing what happens in each cell.
+
+. . .
+
+| | **Donor matches** | **Donor walks away** |
+|---|---|---|
+| **County funds maternal health** | County: ✓ Match. Donor: ✓ Lives. | County: ✓ Lives, fewer roads. Donor: walked away. |
+| **County redirects to roads** | County: ✓ Roads + ✓ Match. Donor: ✗ Wasted. | County: ✓ Roads, ✗ Lives. Donor: avoided waste. |
+
+. . .
+
+::: {.callout-box .orange}
+Look at the upper-right cell. **The county would prefer to fund maternal health if the donor walks away** — because lives are at stake and the county knows it. But it would also prefer to redirect to roads *if the donor is going to fund maternal health anyway*.
+:::
+
+
+# Nash equilibrium, in plain language {background-color="#005CB9"}
+
+
+## The "nobody wants to move" point
+
+Look at all four cells. Ask yourself: *given what the other player is doing, would I switch?*
+
+. . .
+
+::: {.incremental}
+
+- **County funds, donor matches** → County would gain by switching to roads (+ road repair, still get the match). **Unstable.**
+- **County redirects, donor matches** → Donor would gain by walking away (its money was wasted). **Unstable.**
+- **County funds, donor walks** → County would gain by switching to roads. **Unstable.**
+- **County redirects, donor walks** → Neither side wants to move. **Stable.**
+
+:::
+
+. . .
+
+::: {.definition-box}
+A cell where *no player wants to move* is called a **Nash equilibrium**. It is not necessarily the *best* outcome — it is just where the game *settles*.
+:::
+
+
+## And here is the unsettling result
+
+The Nash equilibrium of the simple matching grant is the worst outcome for everyone:
+
+. . .
+
+::: {.callout-box .red}
+**The county redirects, the donor walks away, no maternal health gets funded, the road gets repaired, lives are lost.**
+
+The donor designed the game. The county is responding rationally. *The bad outcome is the rational outcome.*
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is why intelligent grant design matters.** The structure of the game determines the equilibrium. Change the structure, change the outcome.
+:::
+
+
+# How to fix the game {background-color="#005CB9"}
+
+
+## Three classic moves
+
+::: {.incremental}
+
+- **Conditionality.** *"Match only if total maternal health spending is at least X."* Removes the "redirect" option.
+- **Commitment device.** *"Funds will be released annually based on prior year's verified maternal health spending."* Makes it costly to redirect.
+- **Joint review.** *"Both donor and county sign off on a published spending plan."* Adds a public reputational cost to redirection.
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Each move changes the payoffs.** And changing the payoffs changes the equilibrium. That is the whole game theory toolkit in one sentence.
+:::
+
+
+## Why Wangari accepted and Patrick didn't
+
+::: {.incremental}
+
+- **Nakuru's county finance committee** had public quarterly review meetings. Wangari faced direct public pressure on health spending. *Her cost of redirection was high.*
+- **Kakamega's road network** had visible, immediate political pressure from voters who had been promised repairs for years. *Her cost of NOT redirecting was high.*
+
+:::
+
+. . .
+
+::: {.callout-box}
+Same deal. Different *surrounding payoffs*. Different equilibrium. **Game theory is the chapter where context becomes mathematical.**
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — The game theory model is also a model
+
+The payoff matrix is a *picture* — a simplified one. Many real-world decisions have more than two options, more than two players, and cells you cannot observe.
+
+. . .
+
+::: {.callout-box .orange}
+**Use the payoff matrix to clarify your thinking, not to replace it.** The grid is a sketch, not a calculation engine.
+:::
+
+
+## Warning 2 — Reputational cost is real but hard to measure
+
+*"Patrick will face public anger if he redirects"* might be true. It might not. It depends on local media, election cycles, and personal political networks.
+
+. . .
+
+::: {.callout-box .orange}
+**The hardest cells in any game theory matrix are the ones whose values come from reputation.** They are easy to write down. They are hard to defend with data.
+:::
+
+
+## Warning 3 — Equilibrium is not destiny
+
+Game theory tells you *where the game settles*. It does not tell you *whether the game has to be played*.
+
+. . .
+
+::: {.callout-box .red}
+**The most powerful move is sometimes to refuse to play the game as designed.** A donor that walks away from a bad-equilibrium grant is sending a stronger signal than one who redesigns it.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A donor wants to launch a free emergency obstetric kit programme in three districts. The kits cost the donor money but cost the district nothing. One district happily accepts and reports good outcomes. Another reports good outcomes but has actually been *selling* the kits to neighbouring private clinics. A third refuses the kits entirely.
+
+**Draw a payoff matrix for the second district. What did the donor's incentive structure miss? Which of the three classic fixes (conditionality / commitment / joint review) would you use?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: think about what the district gains from "accept and use", "accept and sell", and "refuse" — and what the donor can verify.*
+:::
+
+
+## Looking ahead
+
+In **Chapter 10**, the final chapter, we ask the question that sounds almost too good to be true: **can a computer just discover causal arrows from data?**
+
+. . .
+
+The answer is *partly yes, mostly no, and the "no" is more important than the "yes"*. We will see exactly when machines can help — and when only the picture-drawing skill from Chapters 2 and 3 will save you.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Wangari and Patrick's story**
+
+- **Office of the Controller of Budget, Kenya** — quarterly county budget implementation reports, publicly available at *cob.go.kenya*. The source for county-by-county redirection patterns.
+- **Lu C. et al., 2010** — *Public financing of health in developing countries: a cross-national systematic analysis*. The Lancet, 375(9723). The classic open-access study of donor crowding-out.
+- **Kenya County Public Expenditure Reviews (World Bank, 2014–2020)** — open-access analyses of county-level health budgeting and donor interactions.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapters 12–13 cover game theory and strategic interaction in business settings; the same matrices apply.
+- **Dixit, A. & Nalebuff, B. (2008)** — *The Art of Strategy*. The most readable introduction to game theory ever written. No equations. Lots of stories.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**Your decisions change how other people behave — and unless you write that down, your forecast of impact will be wrong.**
+
+The payoff matrix is the picture from Chapter 2, with one new rule: every box is something *somebody chose*, and somebody else is choosing in response.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 9]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

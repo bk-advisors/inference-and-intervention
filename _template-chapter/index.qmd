@@ -1,0 +1,313 @@
+---
+title: "Chapter N — [Title — keep it short, no colons]"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+
+
+<!-- ========================================================================
+SLIDE 2 — THE MYSTERY (Unexpected + gap theory)
+One sharp, real, specific puzzle. No definitions, no preamble. Just a fact
+that does not add up, and a question. Save the answer for slide 13-ish.
+========================================================================= -->
+
+## Here is something strange
+
+[ONE specific puzzling fact, with a public-source citation in brackets]
+
+. . .
+
+[A second sentence that sharpens the puzzle]
+
+. . .
+
+::: {.callout-box .orange}
+**The question for this chapter:** [Single sentence — what we're going to figure out together]
+:::
+
+
+<!-- ========================================================================
+SLIDE 3 — MEET THE PROTAGONIST (Emotional + Concrete + Stories)
+ONE named person. Composite-but-clearly-labeled is fine. Photo or sketch
+optional but helpful. Tell us her age, where she lives, what she did. NO
+aggregate statistics on this slide.
+========================================================================= -->
+
+## Meet [Name]
+
+:::: {.columns}
+
+::: {.column width="35%"}
+<!-- Optional: photo or composite illustration -->
+<!-- ![](protagonist.png){width="100%"} -->
+:::
+
+::: {.column width="65%"}
+
+**[Name], [age], [location]** *(composite drawn from [public source])*
+
+[One sentence about who she is.]
+
+. . .
+
+[One sentence about what she did or what happened to her.]
+
+. . .
+
+[One sentence about why her story is the through-line of this chapter.]
+
+:::
+
+::::
+
+
+<!-- ========================================================================
+SLIDE 4 — THE PUZZLE DEEPENS
+A second concrete data point that makes the mystery weirder. This is where
+the learner says "wait, what?" Keep it specific.
+========================================================================= -->
+
+## But here is the twist
+
+[A second specific fact, named, dated, sourced]
+
+. . .
+
+::: {.callout-box}
+[How this contradicts what you'd expect — one sentence]
+:::
+
+
+<!-- ========================================================================
+SLIDE 5 — SECTION DIVIDER: SET UP THE RESOLUTION
+Blue full-screen header. The promise of the chapter.
+========================================================================= -->
+
+# What if I told you... {background-color="#005CB9"}
+
+
+<!-- ========================================================================
+SLIDES 6–11 — THE THREE BIG IDEAS, EACH GROUNDED IN THE PROTAGONIST
+For each idea: one slide explains it (concrete!), one slide applies it to
+the named protagonist. Three ideas × 2 slides = 6 slides.
+
+Concrete language rule: never write "X" or "Y" or "the variable". Always
+say "the number of nurses on duty" or "whether her baby was breathing at
+birth". The expert curse is the enemy.
+========================================================================= -->
+
+## Idea 1 — [Plain-English name, not jargon]
+
+[One-sentence definition in everyday language. NO formula.]
+
+. . .
+
+::: {.definition-box}
+**Concrete picture:** [analogy from outside health: rain/umbrella, ice cream/drowning, etc.]
+:::
+
+
+## Idea 1 in [Name]'s story
+
+[How this idea shows up in the protagonist's specific situation. Use her name.]
+
+. . .
+
+::: {.callout-box .green}
+[The "aha" moment for this idea — one sentence]
+:::
+
+
+## Idea 2 — [Plain-English name]
+
+[As above]
+
+. . .
+
+::: {.definition-box}
+**Concrete picture:** [everyday analogy]
+:::
+
+
+## Idea 2 in [Name]'s story
+
+[Application]
+
+. . .
+
+::: {.callout-box .green}
+[The aha]
+:::
+
+
+## Idea 3 — [Plain-English name]
+
+[As above]
+
+. . .
+
+::: {.definition-box}
+**Concrete picture:** [everyday analogy]
+:::
+
+
+## Idea 3 in [Name]'s story
+
+[Application]
+
+. . .
+
+::: {.callout-box .green}
+[The aha]
+:::
+
+
+<!-- ========================================================================
+SLIDE 12 — SECTION DIVIDER: BACK TO THE PUZZLE
+========================================================================= -->
+
+# Back to the puzzle {background-color="#005CB9"}
+
+
+<!-- ========================================================================
+SLIDE 13 — THE RESOLUTION
+Close the gap opened on slide 2. Use the three ideas the chapter just
+introduced. The "of course!" moment.
+========================================================================= -->
+
+## So what was going on?
+
+[Resolve the mystery in plain language. Reference the three ideas.]
+
+. . .
+
+::: {.callout-box}
+**The hidden piece:** [the thing the learner couldn't see at slide 2 but can now]
+:::
+
+
+<!-- ========================================================================
+SLIDE 14 — WHY IT MATTERS BEYOND THIS ONE STORY
+Generalize, briefly.
+========================================================================= -->
+
+## Why this matters
+
+[One paragraph: this isn't just about Almaz / Daniel / this one country. It's a pattern that shows up every time someone tries to figure out whether a program "worked".]
+
+
+<!-- ========================================================================
+SLIDE 15 — SECTION DIVIDER: TRY IT
+========================================================================= -->
+
+# Try it yourself {background-color="#005CB9"}
+
+
+<!-- ========================================================================
+SLIDE 16 — TRY IT (springboard story)
+A short scenario where the learner has to make a call. Don't tell them
+the answer — let them sit with the question.
+========================================================================= -->
+
+## You're the analyst
+
+::: {.example-block}
+[::]{.example-label} **Scenario**
+
+[2-4 sentences setting up a real-feeling MNH decision the learner has to make. Then ONE specific question.]
+:::
+
+. . .
+
+[Optional: one hint or framing line]
+
+. . .
+
+::: {.callout-box .orange}
+[How the next chapter will give you tools to answer this]
+:::
+
+
+<!-- ========================================================================
+SLIDES 17–21 — LIGHT R SECTION (OPTIONAL)
+If the chapter has an R workshop, the SLIDES show only the IDEA of what the
+code does. The actual code lives on the companion page. Maximum 5 slides.
+
+If the chapter doesn't need R on slides at all, delete this section and
+just point to the companion page from slide 14.
+========================================================================= -->
+
+# What you'll do in R {background-color="#005CB9"}
+
+
+## On the companion page
+
+[One paragraph in plain English: "When you go to the companion page, you'll write a few lines of R that draw [the diagram from slide 7] and check whether [the question from slide 13] holds in some real data."]
+
+. . .
+
+::: {.callout-box .green}
+You don't need to install anything to follow along — the code on the companion page is there to read, not to run.
+:::
+
+
+<!-- ========================================================================
+SLIDE 23 — LOOKING AHEAD
+Preview the next chapter in TWO sentences. Tease, don't explain.
+========================================================================= -->
+
+## Looking ahead
+
+In **Chapter [N+1]**, we will [one-sentence tease — what the next chapter does].
+
+. . .
+
+[One-sentence link from this chapter to that one.]
+
+
+<!-- ========================================================================
+SLIDE 24 — KEY TAKEAWAY (Simple — the Commander's Intent, finally said out loud)
+========================================================================= -->
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**[The Commander's Intent sentence from the top of this file, said out loud.]**
+
+[One short subordinate sentence that anchors it to the protagonist's story.]
+:::
+
+
+<!-- ========================================================================
+SLIDE 25 — CLOSING (white background, centered logo)
+========================================================================= -->
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter [N]]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

@@ -1,133 +1,80 @@
 ---
-title: "R Environment Setup"
-subtitle: "Installing R, RStudio, and the required packages for this course"
+title: "R Setup"
+subtitle: "Installing the tools the companion pages use"
 ---
 
-## First Time Using R?
+## You don't need this to follow the lectures
 
-If you have never used R before, don't worry! R is a free programming tool that helps us create diagrams, run simulations, and analyze data. Think of it as a very powerful calculator that can also draw pictures.
+Every chapter slide deck is self-contained. You can watch the entire course and never touch R. The R code on the companion pages is there to *read* first; running it is optional, and only needed if you want to try the exercises hands-on.
 
-Here is what you need to do:
+If you do want to run the code yourself, this page tells you what to install.
 
-1. **Download R** — this is the engine that runs the code
-2. **Download RStudio** — this is the app where you type and run your code (like a word processor for code)
-3. **Install packages** — these are add-ons that give R extra powers (like apps on your phone)
+## What you will need
 
-Follow the steps below and you will be up and running in about 15 minutes.
+| Tool | Purpose | Where to get it |
+|------|---------|-----------------|
+| **R 4.3+** | The programming language | [r-project.org](https://www.r-project.org/) |
+| **RStudio** | A friendly editor for R | [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/) |
+| **Quarto 1.8+** | (optional) for re-rendering the slide decks yourself | [quarto.org](https://quarto.org/docs/get-started/) |
 
-## Required Software
+Install in that order. R first. RStudio second. Quarto third.
 
-| Software | Version | Download |
-|----------|---------|----------|
-| **R** | 4.3 or later | [r-project.org](https://www.r-project.org/) |
-| **RStudio** (recommended IDE) | Latest | [posit.co/downloads](https://posit.co/download/rstudio-desktop/) |
-| **Quarto** (for rendering slides) | 1.8 or later | [quarto.org](https://quarto.org/docs/get-started/) |
+## The R packages used in this course
 
-::: {.callout-box}
-**Note:** The slide decks and this website use `eval: false` for all R code blocks, meaning R code is displayed but not executed during rendering. You do **not** need R installed to view the slides or website. However, to run the workshop exercises interactively, you will need R and the packages below.
-:::
+Open RStudio. In the **console** at the bottom, paste this line and press Enter:
 
-## Package Installation
-
-Run this once in your R console to install all packages used across the 10 chapters:
-
-```{r}
-#| label: install-all
-#| eval: false
-
-install.packages(c(
-  "dagitty",   # DAG specification and analysis
-  "ggdag",     # DAG visualization with ggplot2
-  "bnlearn",   # Bayesian network structure and parameter learning
-  "ggplot2",   # Data visualization
-  "ivreg",     # Instrumental variable regression (2SLS)
-  "tidyr",     # Data reshaping (pivot_longer)
-  "gRain"      # Exact inference in Bayesian networks (junction tree)
-))
+```r
+install.packages(c("dagitty", "ggdag", "bnlearn", "ggplot2",
+                   "tidyr", "dplyr", "tibble", "gRain"))
 ```
 
-## Packages by Chapter
+That installs everything the companion pages need. The first install can take a few minutes — be patient.
 
-| Package | Purpose | Chapters Used |
-|---------|---------|---------------|
-| `dagitty` | Define and analyze DAGs, d-separation, adjustment sets | 1, 2, 3, 4, 5, 10 |
-| `ggdag` | Visualize DAGs using ggplot2 | 1, 2, 3, 10 |
-| `bnlearn` | Bayesian network structure and parameter learning | 4, 5, 7, 10 |
-| `ggplot2` | All data visualizations | 4, 5, 6, 7, 8, 9, 10 |
-| `gRain` | Exact inference via junction trees (companion to bnlearn) | 4, 5 |
-| `ivreg` | Instrumental variable regression (two-stage least squares) | 10 |
-| `tidyr` | Data reshaping (`pivot_longer`) | 8 |
+## What each package does
 
-## Verification Script
+| Package | What it does | Used in |
+|---------|--------------|---------|
+| **dagitty** | Builds and queries causal diagrams | Ch 1, 2, 3, 6 |
+| **ggdag** | Draws dagitty diagrams nicely | Ch 1, 2, 3, 6 |
+| **bnlearn** | Builds Bayesian networks (pictures with lookup tables) | Ch 4, 5, 10 |
+| **gRain** | Asks Bayesian networks specific questions | Ch 4, 5 |
+| **ggplot2** | Makes histograms and plots | Ch 8 |
+| **dplyr / tidyr / tibble** | Data manipulation helpers | Ch 6, 7, 8, 9 |
 
-After installing, run this script to verify all packages load correctly:
+## Verifying the install
 
-```{r}
-#| label: verify-packages
-#| eval: false
+Paste this into the RStudio console. If every line returns a version number without an error, you are set:
 
-# Verification: load each package and print version
-packages <- c("dagitty", "ggdag", "bnlearn", "ggplot2", "ivreg", "tidyr", "gRain")
-
-for (pkg in packages) {
-  if (requireNamespace(pkg, quietly = TRUE)) {
-    cat(sprintf("✓ %s %s\n", pkg, packageVersion(pkg)))
-  } else {
-    cat(sprintf("✗ %s — NOT INSTALLED\n", pkg))
-  }
-}
+```r
+packageVersion("dagitty")
+packageVersion("ggdag")
+packageVersion("bnlearn")
+packageVersion("gRain")
+packageVersion("ggplot2")
+packageVersion("dplyr")
 ```
 
-Expected output (version numbers may vary):
+## Common installation problems
 
-```
-✓ dagitty 0.3-4
-✓ ggdag 0.2.12
-✓ bnlearn 4.9.4
-✓ ggplot2 3.5.1
-✓ ivreg 0.6-3
-✓ tidyr 1.3.1
-✓ gRain 1.4.3
-```
+### `bnlearn` fails to install on Windows
 
-## Troubleshooting
+You may need [**Rtools**](https://cran.r-project.org/bin/windows/Rtools/), which provides the compiler `bnlearn` needs on Windows. Install Rtools, restart RStudio, then re-run the install.packages line.
 
-### bnlearn installation issues on Windows
+### `gRain` complains about Bioconductor dependencies
 
-`bnlearn` requires compilation. If you encounter errors:
+`gRain` depends on a package called `graph` from Bioconductor. Install it with:
 
-1. Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (match the version to your R version)
-2. Restart R and try `install.packages("bnlearn")` again
-
-### gRain dependency issues
-
-`gRain` depends on Bioconductor packages. If `install.packages("gRain")` fails:
-
-```{r}
-#| label: install-grain
-#| eval: false
-
-if (!requireNamespace("BiocManager", quietly = TRUE))
-  install.packages("BiocManager")
-BiocManager::install("RBGL")
-BiocManager::install("Rgraphviz")
-install.packages("gRain")
+```r
+if (!require("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+BiocManager::install(c("graph", "RBGL"))
 ```
 
-### dagitty on older R versions
+Then re-run the install.packages line.
 
-If `dagitty` installation fails, ensure your R version is 4.3 or later. The package uses features not available in older versions.
+### Older R version
 
-## Consistent MNH Variables
+The course is tested against R 4.3 and later. If you are on R 4.2 or earlier, please update — several of the packages above will fail or behave unexpectedly on older versions.
 
-These variable names are used consistently across chapters in the R code workshops:
+## Don't have time to install anything?
 
-| Variable | Values | R Name |
-|----------|--------|--------|
-| Staffing | Adequate / Low | `Staffing` |
-| Equipment (CPAP) | Available / Unavailable | `Equipment` or `CPAP` |
-| Training | Completed / Not Completed | `Training` |
-| Quality of Care | Good / Poor | `Quality` |
-| Neonatal Mortality Rate | High (>25/1000) / Low (≤25/1000) | `NMR` |
-| Maternal Mortality Ratio | High (>300/100K) / Low (≤300/100K) | `MMR` |
-| Coverage | >80% / ≤80% | `Coverage` |
+You can read every R workshop on the companion pages without running it. The code is annotated line-by-line, and the explanatory paragraphs around each block tell you what the code does and what to expect from the output. Reading is enough to get the ideas; running is for when you are ready to try them on your own data.

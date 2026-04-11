@@ -1,220 +1,134 @@
 ---
-title: "Chapter 10: Structure Learning from Data"
-subtitle: "Can computers discover what causes what? Lessons from Tanzania's health data."
+title: "Chapter 10 — Can the Computer Just Tell Us?"
+subtitle: "Esther, the DHIS2 database, and the wall"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-- Explain what **structure learning** means and why it matters for causal analysis
-- Describe what algorithms **can and cannot** discover from observational data alone
-- Use the **hill-climbing algorithm** (`bnlearn::hc()`) in R to learn a DAG from data
-- Understand why **expert knowledge + algorithms** beats either one alone
-- Recognize the **feedback loop** between data, models, and decisions
+A data scientist at the Tanzania Ministry of Health sits in front of ten years of monthly facility-level data — 60,000 rows, 40 columns. Her director walks in and says *"just run an algorithm and tell us what's causing what"*. Modern algorithms can do remarkable things. But there is one thing they fundamentally cannot do — and the *cannot* is the most important lesson in the course.
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** Data alone cannot tell you the direction of a causal arrow. Data plus a few expert assumptions can — and that is what structure learning really is.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Can Computers Discover Causes?
-
-Throughout this course, we have built causal models by hand -- drawing DAGs based on expert knowledge about how health systems work. But what if you have a large dataset from Tanzania's health information system (DHIS2) and you want the data itself to suggest which variables cause which? Structure learning algorithms try to do exactly that. They look at patterns of correlation and conditional independence in the data and propose a DAG that could have generated those patterns.
-:::
-
-::: {.key-concept .green}
-#### What Algorithms Can and Cannot Do
-
-Here is the honest truth: algorithms are powerful but limited. They **can** discover which variables are connected and, in some cases, which direction the arrows point. They **cannot** distinguish between all possible causal structures. Multiple different DAGs can produce the exact same statistical patterns -- this is called **Markov equivalence**. When the algorithm says "I found a link between staffing and mortality," it might not be able to tell you whether staffing causes lower mortality or whether something else drives both. That ambiguity is where human experts come in.
-:::
-
-::: {.key-concept .orange}
-#### Expert + Algorithm: Better Together
-
-The best results come from combining what the algorithm finds in the data with what domain experts know about the real world. The algorithm might discover a strong link between drug availability and neonatal outcomes in Tanzania. An expert can then confirm the direction (drugs help patients, not the other way around) and flag links the algorithm might have missed (like seasonal rainfall affecting both supply chains and disease burden). Think of the algorithm as a research assistant that does the grunt work, while the expert provides the judgment.
-:::
-
-::: {.key-concept .red}
-#### The Feedback Loop
-
-Structure learning is not a one-time event. It is part of a cycle: (1) collect data from facilities, (2) run the algorithm to discover candidate structures, (3) have experts review and refine the DAG, (4) use the refined model to make intervention decisions, (5) collect new data after the intervention, and (6) update the model. Each trip around this loop makes the model better. This is how a health program in Tanzania (or anywhere) gets smarter over time.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
-<iframe src="../ch10-data-driven/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+<iframe src="../ch10-structure-learning/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch10-data-driven/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch10-structure-learning/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
 :::
 
-## R Code Workshop
+## R workshop — run the PC algorithm, then run into the wall
 
-We will simulate a dataset that looks like Tanzania's DHIS2 facility data, run the hill-climbing structure learning algorithm, and compare what the algorithm discovers to the true causal structure we built into the simulation.
+In the lecture, Esther handed her data to a structure-learning algorithm and got back a network with mostly *undirected* edges. In this workshop you'll do the same on a small simulated MNH dataset and watch the wall appear in your console.
 
-### Simulating Facility-Level Data
-
-We create a dataset with a known causal structure so we can check how well the algorithm recovers it. The variables represent real health system factors: training, drug availability, staffing, equipment, delivery mode, referral patterns, patient volume, and neonatal mortality rate.
+### Setting up
 
 ```{r}
-#| label: simulate-data
-#| echo: true
-
+#| label: ch10-setup
 library(bnlearn)
-library(tibble)
+library(dplyr)
 
 set.seed(42)
-n <- 2000  # facilities in Tanzania
+```
 
-# The TRUE causal structure (we know this; the algorithm does not)
-true_dag <- model2network(paste0(
-  "[Training][DrugAvail][Equipment]",
-  "[Staffing|Training]",
-  "[CSection|Staffing:DrugAvail:Equipment]",
-  "[Referral|Staffing:Equipment]",
-  "[Volume|Staffing:Equipment]",
-  "[NMR|CSection:Referral:Staffing:DrugAvail]"
-))
+### Build a small simulated dataset
 
-# Generate data from the true structure
-training    <- rbinom(n, 1, 0.55)
-drug_avail  <- rbinom(n, 1, 0.65)
-equipment   <- rnorm(n, 0.5, 0.15) |> pmin(1) |> pmax(0)
-staffing    <- rbinom(n, 1, 0.35 + 0.30 * training)
-csection    <- 5 + 8 * staffing + 3 * drug_avail +
-               4 * equipment + rnorm(n, 0, 3)
-referral    <- 15 - 5 * staffing - 3 * equipment + rnorm(n, 0, 4)
-volume      <- 50 + 30 * staffing + 20 * equipment + rnorm(n, 0, 15)
-nmr         <- 35 - 8 * staffing - 4 * drug_avail -
-               3 * (csection > 10) - 2 * (referral < 10) +
-               rnorm(n, 0, 5)
+We'll generate data from a *known* causal structure, then ask the algorithm to recover it. The known truth is:
 
-tz_data <- tibble(
-  Training  = factor(training, labels = c("No", "Yes")),
-  DrugAvail = factor(drug_avail, labels = c("Stockout", "Available")),
-  Equipment = equipment,
-  Staffing  = factor(staffing, labels = c("Low", "Adequate")),
-  CSection  = csection,
-  Referral  = referral,
-  Volume    = volume,
-  NMR       = nmr
+- `RegionalBudget` → `Stockouts`
+- `RegionalBudget` → `StaffShortage`
+- `Stockouts` → `MaternalDeaths`
+- `StaffShortage` → `MaternalDeaths`
+
+```{r}
+#| label: ch10-data
+n <- 1000
+
+regional_budget <- sample(c("low", "high"), n, replace = TRUE, prob = c(0.5, 0.5))
+
+stockouts <- ifelse(regional_budget == "low",
+                    sample(c("yes", "no"), n, replace = TRUE, prob = c(0.7, 0.3)),
+                    sample(c("yes", "no"), n, replace = TRUE, prob = c(0.2, 0.8)))
+
+staff_shortage <- ifelse(regional_budget == "low",
+                         sample(c("yes", "no"), n, replace = TRUE, prob = c(0.6, 0.4)),
+                         sample(c("yes", "no"), n, replace = TRUE, prob = c(0.2, 0.8)))
+
+maternal_deaths <- ifelse(stockouts == "yes" | staff_shortage == "yes",
+                          sample(c("high", "low"), n, replace = TRUE, prob = c(0.6, 0.4)),
+                          sample(c("high", "low"), n, replace = TRUE, prob = c(0.15, 0.85)))
+
+dhis_data <- data.frame(
+  RegionalBudget  = factor(regional_budget),
+  Stockouts       = factor(stockouts),
+  StaffShortage   = factor(staff_shortage),
+  MaternalDeaths  = factor(maternal_deaths)
 )
 
-head(tz_data)
+head(dhis_data)
 ```
 
-### Running the Hill-Climbing Algorithm
-
-The `hc()` function searches over possible DAG structures and picks the one that best balances fitting the data and keeping the model simple (using the BIC score). It is like trying every possible arrangement of arrows and keeping the one that scores best.
+### Run the PC algorithm
 
 ```{r}
-#| label: hill-climbing
-#| echo: true
+#| label: ch10-pc
+# The PC algorithm — Spirtes-Glymour-Scheines (2000), the foundational
+# structure-learning algorithm.
+learned_network <- pc.stable(dhis_data)
 
-# Score-based structure learning: Hill Climbing with BIC
-learned_dag <- hc(tz_data, score = "bic-cg")
-# "bic-cg" handles mixed data (both factors and continuous variables)
-
-cat("Edges the algorithm found:\n")
-print(arcs(learned_dag))
-
-cat("\nEdges in the true DAG:\n")
-print(arcs(true_dag))
-
-# How close did it get? (Structural Hamming Distance -- lower is better)
-shd_score <- shd(learned_dag, true_dag)
-cat("\nStructural Hamming Distance:", shd_score, "\n")
-cat("(0 = perfect recovery; higher = more mistakes)\n")
+learned_network
 ```
 
-### Comparing True vs. Learned Structures
-
-Let's put the true DAG and the learned DAG side by side. Where they agree, the algorithm got it right. Where they differ, we need expert judgment to decide which version is correct.
+### Look at the discovered structure
 
 ```{r}
-#| label: compare-dags
-#| echo: true
-#| fig-width: 10
-#| fig-height: 5
+#| label: ch10-plot
+plot(learned_network)
 
-# Count correct, extra, and missing edges
-true_arcs    <- arcs(true_dag)
-learned_arcs <- arcs(learned_dag)
-correct      <- merge(true_arcs, learned_arcs)
+# What edges did the algorithm find?
+arcs(learned_network)
 
-cat("=== Algorithm Report Card ===\n")
-cat("True edges:       ", nrow(true_arcs), "\n")
-cat("Learned edges:    ", nrow(learned_arcs), "\n")
-cat("Correctly found:  ", nrow(correct), "\n")
-cat("Extra (false):    ", nrow(learned_arcs) - nrow(correct), "\n")
-cat("Missed:           ", nrow(true_arcs) - nrow(correct), "\n")
-
-# Side-by-side visualization
-par(mfrow = c(1, 2))
-graphviz.plot(true_dag, main = "True DAG (what we built)",
-              shape = "ellipse",
-              highlight = list(nodes = "NMR", fill = "#E24A3F",
-                               col = "#E24A3F"))
-graphviz.plot(learned_dag, main = "Learned DAG (what hc() found)",
-              shape = "ellipse",
-              highlight = list(nodes = "NMR", fill = "#E24A3F",
-                               col = "#E24A3F"))
+# Which of those edges are DIRECTED, and which are still undirected?
+directed.arcs(learned_network)
+undirected.arcs(learned_network)
 ```
 
-### Adding Expert Knowledge as Constraints
+What you should see: the algorithm found roughly the right *connectivity* — it identified that `RegionalBudget` is linked to both `Stockouts` and `StaffShortage`, and that both of those are linked to `MaternalDeaths`. But many of the edges came back **undirected**. That's the wall from the lecture.
 
-The algorithm might get some arrows backwards or miss edges entirely. We can help it by providing "whitelisted" edges (arrows we know must exist) and "blacklisted" edges (arrows we know cannot exist). This is where expert knowledge enters the picture.
+Even though we *built the data* from a clear causal structure, the algorithm could not always recover the directions from the data alone — because multiple causal stories produce the same conditional-independence pattern.
+
+### Now hand the algorithm an expert hint
 
 ```{r}
-#| label: expert-constraints
-#| echo: true
-
-# Expert says: Training MUST cause Staffing (not the reverse)
-# Expert says: NMR CANNOT cause DrugAvail (outcomes don't cause inputs)
-whitelist <- data.frame(
-  from = c("Training"),
-  to   = c("Staffing")
-)
+#| label: ch10-expert
+# Esther tells the algorithm: "I'm absolutely certain that RegionalBudget
+# is upstream of everything else — it's a budget cycle, it can't be
+# caused by stockouts." That's a domain assumption the algorithm cannot
+# discover on its own.
 blacklist <- data.frame(
-  from = c("NMR", "NMR", "NMR", "CSection", "Referral", "Volume"),
-  to   = c("DrugAvail", "Training", "Equipment",
-           "Training", "Training", "Training")
+  from = c("Stockouts", "StaffShortage", "MaternalDeaths",
+           "Stockouts", "StaffShortage", "MaternalDeaths"),
+  to   = c("RegionalBudget", "RegionalBudget", "RegionalBudget",
+           "RegionalBudget", "RegionalBudget", "RegionalBudget")
 )
 
-# Re-run with expert constraints
-learned_expert <- hc(tz_data, score = "bic-cg",
-                     whitelist = whitelist,
-                     blacklist = blacklist)
+learned_with_expert <- pc.stable(dhis_data, blacklist = blacklist)
 
-cat("SHD without expert help:", shd(learned_dag, true_dag), "\n")
-cat("SHD with expert help:   ", shd(learned_expert, true_dag), "\n")
-cat("(Lower = closer to the truth)\n")
+plot(learned_with_expert)
+arcs(learned_with_expert)
 ```
 
-## Key Takeaways
+What you should see: with the single domain hint *"nothing causes RegionalBudget"*, more edges become directed. The algorithm could not discover this on its own, but once an expert gives it the orientation, the rest of the picture falls into place.
 
-::: {.key-takeaway}
-**Structure learning algorithms** can discover candidate causal structures from data, but they cannot resolve all ambiguities. Multiple DAGs may be equally consistent with the observed data (Markov equivalence).
+**That is the loop the lecture describes.** Algorithm + expert > algorithm alone > expert alone.
 
-**The hill-climbing algorithm** (`bnlearn::hc()`) is a practical tool for exploring what the data suggests. It is fast, handles mixed data types, and gives you a starting point for expert review.
+## Try it yourself
 
-**Expert knowledge + algorithms = best results.** Use whitelists and blacklists to encode what you know for certain, and let the algorithm figure out the rest.
+You run a structure-learning algorithm on a Kenyan county dataset. It finds a strong undirected edge between *facility births* and *newborn deaths*. What are at least three different stories the data could be telling? Hint: review chains, forks, colliders, and hidden variables — and don't forget the most dangerous explanation: that the algorithm picked up a reporting artefact, not a real causal link.
 
-**The feedback loop** -- data, algorithm, expert review, decision, new data -- is how real health programs get smarter over time. No model is ever finished; it keeps improving as new evidence comes in.
-:::
+## You finished the course
 
-## Course Summary
-
-Congratulations -- you have made it through the entire **Inference and Intervention** course. Here is what you have learned:
-
-| Chapters | What You Learned |
-|----------|-----------------|
-| 1--3 | How to draw causal diagrams (DAGs) and read them like a language |
-| 4--5 | How to turn diagrams into quantitative Bayesian networks and run diagnostic inference |
-| 6 | How aggregated data can trick you (Simpson's Paradox) and how to avoid reasoning traps |
-| 7 | How to make optimal decisions under uncertainty using influence diagrams and expected value |
-| 8 | How to allocate resources across multiple countries using Monte Carlo simulation |
-| 9 | How to anticipate strategic behavior using game theory and design better contracts |
-| **10** | **How to let data help discover causal structures, guided by expert knowledge** |
-
-Causal models are not academic exercises. They are practical tools for answering the questions that matter most: Where should we invest? What should we do? How do we know it will work? Whether you end up working in public health, business, policy, or any other field, this way of thinking -- making your assumptions explicit, testing them against evidence, and updating when you learn something new -- will serve you well.
+You started in Chapter 1 with Almaz in Tigray and one question — *did the Health Extension Worker save her baby?* You now have the toolkit to answer that question, properly, the next time you encounter it in your own work. **Pick one programme you actually work on. Sit down with a pen. Draw the picture. Go interview three people. That single exercise will change how you think about your work — not in five years, but tomorrow.**

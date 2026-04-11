@@ -1,53 +1,23 @@
 ---
-title: "Chapter 1: Introduction to Causal Analysis"
-subtitle: "Situational assessment, managerial intervention, and why correlation does not equal causation"
+title: "Chapter 1 — Did It Actually Work?"
+subtitle: "Almaz, the Health Extension Workers, and the three traps"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-After this chapter, you will be able to:
+Between 2000 and 2016, maternal mortality in Ethiopia fell from **673 to 412 deaths per 100,000 live births** *(DHS Ethiopia 2000; 2016)*.
 
-- Distinguish between **situational assessment** ("What is happening?") and **managerial intervention** ("What should I do?")
-- Explain why **correlation does not imply causation** using real maternal and newborn health examples from Ethiopia
-- Identify the three classic causal thinking traps: **confounding**, **reverse causation**, and **selection bias**
-- Describe the basic building blocks of a **causal model** -- nodes, arrows, and directed acyclic graphs (DAGs)
-- Explain why causal reasoning matters for designing health programs that actually save lives
+Over the same period, Ethiopia trained about **38,000 Health Extension Workers** *(WHO 2013)*.
+
+But facility delivery rates only rose from **5%** in 2005 to **26%** in 2016 *(DHS Ethiopia 2005; 2016)*. Most births were still happening at home during the years when mortality was falling fastest.
+
+So what was actually working?
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** Two things happening together is not the same as one causing the other — and figuring out which is which is the whole job of causal analysis.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Situational Assessment -- "What Is Happening?"
-
-Every decision starts with understanding the current state of the world. A doctor examines a patient before prescribing medicine. A mechanic listens to the engine before opening the hood. A health program manager in Ethiopia asks: "Why is neonatal mortality not falling in Somali region -- is it a workforce problem, a supply chain problem, or something else entirely?" Situational assessment means using evidence to figure out which variables are in which states, and *why*. You cannot fix a problem you do not understand.
-:::
-
-::: {.key-concept .green}
-#### Managerial Intervention -- "What Should I Do?"
-
-Once you understand the situation, you face a choice: which levers should you pull? Resources are always limited -- money, time, people, equipment. Spending on training means *not* spending on equipment. Building a data system means *not* hiring more midwives. Every intervention involves trade-offs, and choosing wisely requires understanding what causes what. Ethiopia's Health Extension Program invested across three pillars -- People (40,000+ community health workers), Products (essential medicines and equipment), and Systems (DHIS2 and referral networks). The causal question is: how do these three pillars combine to produce better outcomes? Do they work independently, or do they need each other?
-:::
-
-::: {.key-concept .red}
-#### The Three Causal Thinking Traps
-
-| Trap | What Goes Wrong | Ethiopia Example |
-|---|---|---|
-| **Confounding** | A hidden third variable drives both X and Y | Disease burden drives both health worker deployment and mortality -- regions with the most workers have the highest deaths |
-| **Reverse Causation** | Y causes X, not X causes Y | High mortality attracts international funding, not the other way around |
-| **Selection Bias** | Your data sample is not representative | Only well-resourced hospitals report to DHIS2, so equipment appears unrelated to survival |
-
-All three traps create patterns in data that look like causal effects but are not. The antidote is explicit causal modeling -- drawing a picture of what causes what *before* you analyze the data.
-:::
-
-::: {.key-concept .teal}
-#### Directed Acyclic Graphs (DAGs)
-
-A causal model is just a diagram that shows what causes what. It has three simple ingredients: **nodes** (the things you care about, drawn as circles or shapes), **arrows** (causal links -- "A causes B" is drawn as A to B), and **signs** ([+] or [-] telling you the direction of effect). A DAG is a causal diagram where all arrows point in one direction and there are no loops -- you can never follow the arrows from any node back to itself. "Directed" means arrows have a direction. "Acyclic" means no circles. "Graph" is just the math word for a diagram of connected nodes. The no-loops rule matters because loops make it impossible to figure out what causes what.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
 <iframe src="../ch01-intro/index.html"></iframe>
@@ -56,170 +26,76 @@ A causal model is just a diagram that shows what causes what. It has three simpl
 </div>
 :::
 
-## R Code Workshop
+## R workshop — draw Almaz's picture
 
-This chapter introduces the core R packages for causal analysis: `dagitty` for defining and analyzing DAGs, `ggdag` for drawing them, and `ggplot2` for general plotting. By the end of this section you will have built three different causal diagrams in code.
+In the lecture, we drew Almaz's situation as a small diagram with four boxes — government funding at the top, the Health Extension Worker and the new road as siblings underneath, and the baby's survival at the bottom. In this workshop you'll draw that same diagram in R, then ask R one specific question: *if I add the road to my picture, does the apparent effect of the HEW change?*
 
-### Setting Up the Environment
+You don't need to install anything yet. Read the code first. Run it later if you want.
 
-Before we draw any diagrams, we need to load our tools. Think of these packages as specialized toolboxes: `dagitty` lets you write down a causal diagram and ask questions about it, `ggdag` turns the code into a visual picture, and `ggplot2` powers the drawing engine behind the scenes.
+### Setting up
+
+We use a small package called `dagitty` for drawing causal diagrams, and `ggdag` for making them look nice on screen.
 
 ```{r}
-#| label: setup
-#| echo: true
-
-# Install packages the first time you use them (remove the # to run):
-# install.packages(c("dagitty", "ggdag", "ggplot2"))
-
-# Load the packages into our R session
-library(dagitty)    # Define and analyze causal diagrams (DAGs)
-library(ggdag)      # Draw pretty pictures of those DAGs
-library(ggplot2)    # General-purpose plotting library
+#| label: ch01-setup
+# Load the two packages we need.
+# dagitty handles the math of causal diagrams.
+# ggdag turns them into pictures.
+library(dagitty)
+library(ggdag)
 ```
 
-### A Simple 3-Node Chain
+### Almaz's picture, in code
 
-Let's start with the simplest useful causal model for a health program. We define three nodes -- Investment, Coverage, and Mortality -- connected by two arrows. Investment increases coverage, and higher coverage reduces mortality. Notice that investment does not directly reduce mortality; it works *through* coverage.
+This is the diagram from the lecture. Each line is one arrow.
 
 ```{r}
-#| label: simple-dag
-#| echo: true
-#| fig-width: 8
-#| fig-height: 4
-
-# Define a 3-node DAG
-# pos="x,y" sets the position on the diagram
-mnh_simple <- dagitty('dag {
-  Investment [pos="0,0"]
-  Coverage   [pos="1,0"]
-  NMR        [pos="2,0"]
-
-  Investment -> Coverage
-  Coverage -> NMR
+#| label: ch01-almaz-dag
+# Build the diagram.
+# Read each arrow as "this one influences that one".
+almaz_dag <- dagitty('dag {
+  Funding   -> HEW
+  Funding   -> Road
+  HEW       -> BabySurvives
+  Road      -> BabySurvives
 }')
 
-# Draw the diagram
-# theme_dag() removes gridlines and axes for a clean look
-ggdag(mnh_simple) +
-  theme_dag() +
-  labs(title = "Simple MNH Causal Model",
-       subtitle = "Investment -> Coverage -> Neonatal Mortality Rate")
+# Tell ggdag where to put each box on the page.
+coordinates(almaz_dag) <- list(
+  x = c(Funding = 1, HEW = 0, Road = 2, BabySurvives = 1),
+  y = c(Funding = 2, HEW = 1, Road = 1, BabySurvives = 0)
+)
+
+# Draw it.
+ggdag(almaz_dag, text_size = 4) + theme_dag()
 ```
 
-This tiny model already tells us something useful: if investment goes up but coverage does *not* go up, the money is leaking somewhere in between. The chain helps you find where things break down.
+What you should see: a four-box picture. Funding sits at the top. Two arrows come down from it to the HEW box on the left and the Road box on the right. Then both of those have arrows pointing down to BabySurvives at the bottom.
 
-### A Confounded Model
+This picture makes one thing visible that the words alone don't: **the HEW and the road share a parent.** They came in the same package. That's the whole reason it's hard to tell which one mattered.
 
-Now let's add Complication Severity as a confounder -- the hidden variable that creates a misleading correlation between hospital delivery and mortality. This is the classic Ethiopia puzzle: regions where the most health workers are deployed tend to have the highest mortality rates.
+### The one specific question
+
+Now we ask `dagitty` the question from the lecture: *if we want to estimate the effect of the HEW on whether the baby survives, what else do we need to take into account?*
 
 ```{r}
-#| label: confounded-dag
-#| echo: true
-#| fig-width: 9
-#| fig-height: 5
-
-# Hospital delivery and mortality: confounded by complication severity
-confounded_dag <- dagitty('dag {
-  Complication_Severity [pos="1,0"]
-  Hospital_Delivery     [pos="0,1"]
-  Neonatal_Mortality    [pos="2,1"]
-
-  Complication_Severity -> Hospital_Delivery
-  Complication_Severity -> Neonatal_Mortality
-  Hospital_Delivery -> Neonatal_Mortality
-}')
-
-# Color-code by role: green = exposure, red = outcome, amber = confounder
-ggdag_status(confounded_dag,
-             exposure = "Hospital_Delivery",
-             outcome = "Neonatal_Mortality") +
-  theme_dag() +
-  scale_color_manual(values = c("exposure" = "#83BD00",
-                                "outcome" = "#E24A3F",
-                                "other" = "#F8A623")) +
-  labs(title = "Confounding in Hospital Delivery Data",
-       subtitle = "Complication severity drives both delivery location and mortality")
+#| label: ch01-adjustment-set
+# Ask: to estimate HEW -> BabySurvives, what do we need to control for?
+adjustmentSets(almaz_dag,
+               exposure  = "HEW",
+               outcome   = "BabySurvives")
 ```
 
-Read the picture: Complication Severity sits at the top, sending arrows down to *both* Hospital Delivery and Neonatal Mortality. That is the fork structure -- the classic confounding pattern. Without accounting for severity, you would wrongly conclude that hospital delivery increases mortality.
+R will tell you: **Road**.
 
-### Finding Adjustment Sets
+That's the answer. If you want to know whether the HEW actually made a difference, you cannot just look at villages with HEWs versus villages without. You have to compare them at the same level of road access — because the road is doing some of the work, and the HEW is doing some of the work, and right now you can't tell how much of each.
 
-Here is the powerful part. Once we have drawn the diagram, R can tell us *exactly* which variables we need to control for to get the true causal effect. The `adjustmentSets()` function does this automatically.
+This is the whole game we're going to play for the rest of the course: draw the picture, then let the picture tell you which questions are answerable and which ones aren't.
 
-```{r}
-#| label: adjustment-sets
-#| echo: true
+## Try it yourself
 
-# Ask dagitty: "What do I need to control for to estimate the
-# causal effect of Hospital_Delivery on Neonatal_Mortality?"
-adjustmentSets(confounded_dag,
-               exposure = "Hospital_Delivery",
-               outcome = "Neonatal_Mortality")
-# Returns: { Complication_Severity }
-# Translation: control for severity, and the confounding goes away
-```
+A neighbouring district to Almaz's launches a free SMS reminder service for pregnant women in 2018. By 2020, antenatal visit rates in that district have risen by 12 percentage points. The district health officer wants more funding to expand it.
 
-In plain English: if you compare patients who have the *same* complication severity, then hospital delivery is associated with *lower* mortality. The confounding disappears once you account for why patients ended up at the hospital in the first place.
+Before you write your funding recommendation, draw the picture. What boxes would you put on it? What arrows? What other thing might have changed in that district between 2018 and 2020 — and where does *it* go on the picture?
 
-### Ethiopia's Three-Pillar Model
-
-Let's build a richer model that captures Ethiopia's three-pillar approach -- People, Products, and Systems -- all flowing through Quality of Care, with Disease Burden as a confounder affecting both mortality outcomes.
-
-```{r}
-#| label: rich-dag
-#| echo: true
-#| fig-width: 10
-#| fig-height: 6
-
-# Ethiopia's three-pillar theory of change as a DAG
-ethiopia_toc <- dagitty('dag {
-  People          [pos="1,0"]
-  Products        [pos="1,1"]
-  Systems         [pos="1,2"]
-  Quality         [pos="2,1"]
-  NMR             [pos="3,0.5"]
-  MMR             [pos="3,1.5"]
-  Disease_Burden  [pos="2,2.5"]
-
-  People   -> Quality
-  Products -> Quality
-  Systems  -> Quality
-  Quality  -> NMR
-  Quality  -> MMR
-  Disease_Burden -> NMR
-  Disease_Burden -> MMR
-}')
-
-# Find the adjustment set for estimating People -> NMR
-adjustmentSets(ethiopia_toc,
-               exposure = "People",
-               outcome = "NMR")
-
-# Draw the full model
-ggdag(ethiopia_toc) +
-  theme_dag() +
-  labs(title = "Ethiopia MNH: Three-Pillar Theory of Change",
-       subtitle = "People, Products, and Systems -> Quality -> Mortality")
-```
-
-This model says all three pillars flow into Quality of Care. Quality then reduces both NMR and MMR. Disease Burden affects the outcomes directly -- a region with severe malaria burden will have higher mortality even with good care. A trained midwife without a PPH kit cannot stop a hemorrhage. A PPH kit without a trained midwife is just a box on a shelf. People, Products, and Systems are *complements* -- they multiply each other's effect.
-
-## Key Takeaways
-
-::: {.key-takeaway}
-**Causal thinking starts with two questions:** "What is happening?" (situational assessment) and "What should I do?" (managerial intervention). You cannot answer the second well without answering the first.
-
-**Correlation does not equal causation.** Three traps -- confounding, reverse causation, and selection bias -- all create misleading patterns in data. Ethiopia's 40,000 Health Extension Workers are not causing deaths. Disease burden is confounding the relationship.
-
-**A causal model (DAG)** makes your assumptions visible, testable, and actionable. Draw the diagram. Ask R what to control for. Analyze the data correctly. Make better decisions.
-:::
-
-## Looking Ahead
-
-Next in **Chapter 2 -- Qualitative Causal Models**, we learn the formal language of causal diagrams:
-
-- Three types of nodes: probabilistic (ovals), decision (rectangles), and objective (hexagons)
-- Signed directed links with [+] and [-] telling you which direction things move
-- The three fundamental triplet structures: **chains**, **forks**, and **colliders** -- and why colliders behave opposite to everything else
-- **d-Separation** -- the rule that tells you when information flows between variables and when it stops
+We'll come back to this exact scenario in Chapter 2.

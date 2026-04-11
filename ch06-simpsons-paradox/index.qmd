@@ -1,0 +1,316 @@
+---
+title: "Chapter 6 — When the Data Lies in Two Directions"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Hassan and Naomi
+
+**Hassan, 35, M&E lead at a Kenyan NGO** *(composite, drawn from county-level program reports)*
+
+**Naomi, 38, district health analyst, Mwanza Region, Tanzania** *(composite, drawn from MOHCDGEC quarterly reviews)*
+
+. . .
+
+They are comparing notes over WhatsApp on a Sunday evening.
+
+. . .
+
+Hassan's NGO has just rolled out a free transport voucher for pregnant women in two Kenyan counties. He sends Naomi a graph showing **delivery in a clinic is more common in households that received the voucher**.
+
+. . .
+
+Naomi has been studying the same kind of programme in Mwanza for a year. She replies: *"Look at the same data split by income."*
+
+. . .
+
+::: {.callout-box}
+**The question:** When Hassan splits the data, the relationship *flips*. What just happened — and which version of the data should he believe?
+:::
+
+
+## And here is the puzzle
+
+**Aggregate (all households):**
+
+| | Voucher | No voucher |
+|---|---|---|
+| **Delivered in clinic** | 78 / 100 | 52 / 100 |
+
+. . .
+
+Voucher looks like it helps. **+26 percentage points.**
+
+. . .
+
+**Same data, split by income:**
+
+| | Voucher | No voucher |
+|---|---|---|
+| **Low income** | 40 / 60  (67%) | 35 / 50  (70%) |
+| **High income** | 38 / 40  (95%) | 17 / 50  (34%) |
+
+. . .
+
+::: {.callout-box .red}
+In *both* income groups, voucher does worse than no voucher. But in the aggregate, voucher does better. **Same data. Opposite story.**
+:::
+
+
+# This has a name {background-color="#005CB9"}
+
+
+## Simpson's Paradox
+
+A pattern that holds in every subgroup can *reverse* when the subgroups are combined.
+
+. . .
+
+::: {.definition-box}
+**Simpson's Paradox.** Named for Edward Simpson, who described it in a famous 1951 paper. It is not really a paradox — it is a warning about what averaging hides.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+And here is the unsettling part: **the arithmetic is correct in both views**. The numbers do not lie. The question is *which view answers the question you actually care about*.
+:::
+
+
+## Why the reversal happens
+
+Look at the table again:
+
+. . .
+
+::: {.incremental}
+
+- **Most voucher recipients are low-income.** *(60 out of 100 voucher households are low income.)*
+- **Most non-recipients are high-income.** *(50 out of 100 non-voucher households are high income.)*
+- **High-income households deliver in clinics more often anyway** — even without a voucher.
+
+:::
+
+. . .
+
+::: {.callout-box}
+The aggregate is comparing apples (mostly low-income) to oranges (mostly high-income). The income split takes the apples-and-oranges out of the comparison.
+:::
+
+
+# When to disaggregate {background-color="#005CB9"}
+
+
+## The picture decides
+
+Whether to trust the aggregate or the split depends entirely on **the picture**.
+
+<br>
+
+::: {style="text-align: center; font-size: 0.9em;"}
+
+[Income]{.dag-node .confounder}
+
+⬇  ⬇
+
+[Voucher received]{.dag-node .treatment}     [Delivers in clinic]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+This is a **fork** — exactly the shape from Chapter 2. Income causes both whether you get the voucher (because the programme prioritised lower-income areas) *and* whether you deliver in a clinic.
+
+When there is a fork, **you have to disaggregate to remove the confounding**. The split is right; the aggregate is wrong.
+:::
+
+
+## But sometimes the aggregate is right
+
+Now imagine a different picture for the same data:
+
+<br>
+
+::: {style="text-align: center; font-size: 0.9em;"}
+
+[Voucher]{.dag-node .treatment}  →  [Income status (after voucher)]{.dag-node}  →  [Delivers in clinic]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+If income is *downstream* of the voucher — say, the voucher includes a cash transfer that affects measured income — then "income" is not a confounder. It is a **mediator**.
+
+In this picture, **disaggregating by income blocks the very effect you are trying to measure**. The aggregate is right; the split is wrong.
+:::
+
+
+## Same data. Opposite advice.
+
+::: {.incremental}
+
+- **Picture 1 (income → voucher and outcome):** disaggregate. Trust the split.
+- **Picture 2 (voucher → income → outcome):** do not disaggregate. Trust the aggregate.
+
+:::
+
+. . .
+
+::: {.callout-box .red}
+**The data alone cannot tell you which picture is right.** Only your causal picture from Chapters 2–3 can. Without the picture, "to disaggregate or not" is a coin toss.
+:::
+
+
+# The collider trap, in disguise {background-color="#005CB9"}
+
+
+## Why this connects to Chapter 5
+
+Remember rule three from Chapter 5? *"Conditioning on a collider creates fake correlations between things that are unrelated."*
+
+. . .
+
+Simpson's Paradox is the *flip side* of that: **conditioning on the wrong variable can also hide real causal effects**, or reverse them.
+
+. . .
+
+::: {.callout-box .orange}
+The two errors come from the same source — adjusting for the wrong variable — and the same fix: **draw the picture, then let the picture tell you what to adjust for**.
+:::
+
+
+## Hassan's resolution
+
+Hassan looks at the picture. The voucher programme prioritised low-income areas, so income is *upstream* of voucher receipt. **It is a confounder, not a mediator.**
+
+. . .
+
+::: {.callout-box .green}
+He goes back to his board with the *split* numbers and a new sentence: *"The voucher does not help. It looks like it does only because the programme reaches lower-income areas, where clinic delivery is harder for other reasons."*
+
+That is a much more useful answer than "+26 percentage points."
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — Always have a picture before splitting
+
+::: {.callout-box .orange}
+Splitting data feels safer than aggregating. **It is not.** You can produce just as much nonsense by splitting on the wrong variable as by failing to split on the right one.
+:::
+
+
+## Warning 2 — More splits ≠ more truth
+
+Once you have the right adjustment, *stop splitting*. Splitting further into smaller and smaller cells will eventually produce nonsense, because each cell has too few people in it (warning 2 from Chapter 4).
+
+. . .
+
+::: {.callout-box .orange}
+There is a sweet spot. The picture tells you where it is.
+:::
+
+
+## Warning 3 — Beware the "I disaggregated and the result changed" reflex
+
+A reversed result is *interesting*. It is not automatically *truer*.
+
+. . .
+
+::: {.callout-box .red}
+Whenever you split data and the answer flips, the very next thing to do is **draw the picture and ask whether the variable you split on is a confounder or a mediator**. If you cannot tell, get more interviews. Do not publish.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A national report says women who use mobile money are more likely to seek antenatal care.
+
+Then someone splits the same data by *region* and finds that within every region, mobile money users are *less* likely to seek antenatal care.
+
+**Before you decide which version to publish: draw the picture. Where does "region" go on it? Is region a confounder or a mediator? What is the one piece of evidence that would settle it?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: does region cause both mobile money use and ANC seeking — or does mobile money use determine which region you live in? The arrow direction is everything.*
+:::
+
+
+## Looking ahead
+
+In **Chapter 7**, we turn from "what is happening?" to *"what should I do?"*.
+
+. . .
+
+So far we have built pictures, put numbers on them, updated the numbers, and learned when to split and when not to. In Chapter 7 we use all of that to answer **decision** questions — which intervention, in which place, with what budget.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind the example**
+
+- **Simpson, E. H. (1951)** — *The Interpretation of Interaction in Contingency Tables*. Journal of the Royal Statistical Society. The original paper. Surprisingly readable.
+- **Pearl, J. (2014)** — *Comment: Understanding Simpson's Paradox*. American Statistician, 68(1). Open-access. The clearest modern treatment.
+- **DHS Kenya 2014/15 + DHS Tanzania 2015/16** — for the underlying voucher / income / delivery patterns. *dhsprogram.com*.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 7 walks through the same paradox in a business setting.
+- **Pearl, J. & Mackenzie, D. (2018)** — *The Book of Why*. Chapter 6 contains the most accessible explanation of Simpson's Paradox in print.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**When data tells you opposite things at the aggregate and split levels, the data is not lying. The picture is what tells you which view to trust.**
+
+A picture with a fork → split. A picture with a mediator → don't. Either way, the picture comes first.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 6]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

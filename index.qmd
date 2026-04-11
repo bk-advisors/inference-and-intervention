@@ -3,77 +3,40 @@ title: "Inference and Intervention"
 subtitle: "Causal Thinking for Maternal & Newborn Health"
 ---
 
-## Course Overview
+## Almaz had a baby in Tigray in 2015.
 
-[View the Course Introduction slides](course-intro/index.html){target="_blank"}
+Her baby lived. A Health Extension Worker was in the room. So was a new road that had cut the trip to the nearest hospital from four hours to ninety minutes. So was a school year that had kept her in class until she was nineteen.
 
-This course teaches you how to think about **cause and effect** in complex health systems. Across 10 chapters, you will build a complete toolkit for causal reasoning — from drawing simple diagrams to making real decisions about where to invest resources to save the most lives.
+**Which of those things saved her baby?**
 
-The ideas come from *Inference and Intervention: Causal Models for Business Analysis* (Ryall & Bramson, 2014), but every example is new and grounded in real maternal and newborn health (MNH) challenges in **Ethiopia, Rwanda, Kenya, and Tanzania** — using publicly available data.
+That question — which of the things happening at the same time actually mattered — is the question this course is about.
 
-::: {.callout-box}
-**The central message:** Causal models are **practical tools** for answering the questions that matter most in global health: *Where should we invest? What should we do? How do we know it will work?*
+::: {.callout-note}
+**A practical course on causal thinking for global health.** Designed for high school learners with no statistics or programming background. Built around real Maternal & Newborn Health stories from Ethiopia, Rwanda, Kenya, and Tanzania, using public data from WHO, UNICEF, DHS, and Lancet.
 :::
 
-## What You Will Learn
+## Start here
 
-By the end of this course, you will be able to:
+- [**Course Introduction (slides)**](course-intro/index.html){target="_blank"} — what the course is, who it is for, and how it is organised
+- [**Schedule**](schedule.qmd) — the ten-session syllabus with the mystery for each chapter
+- [**R Setup**](r-setup.qmd) — installing R, RStudio, and the seven packages you'll need
+- [**References**](references.qmd) — the public sources every chapter draws from
 
-1. **Draw a causal diagram** (DAG) from interviews and program knowledge (Chapters 1--3)
-2. **Put numbers on the arrows** using data and expert judgment (Chapters 4--5)
-3. **Spot common reasoning traps** like Simpson's Paradox (Chapter 6)
-4. **Make better decisions** about where to invest resources (Chapters 7--8)
-5. **Think strategically** about how other people will respond (Chapter 9)
-6. **Use data to check your model** — and improve it (Chapter 10)
+## The ten chapters
 
-## Chapters
+| Part | Chapter | The mystery |
+|------|---------|-------------|
+| **1. Draw the Picture** | [**Ch 1 — Did It Actually Work?**](chapters/ch01.qmd) | Almaz, the Health Extension Workers, and the three traps |
+| | [**Ch 2 — Drawing the Picture**](chapters/ch02.qmd) | Beatrice the *Animatrice* and the grammar of causal diagrams |
+| | [**Ch 3 — Building the Picture from Scratch**](chapters/ch03.qmd) | Faith, three interviews, and one shared picture |
+| **2. Add the Numbers** | [**Ch 4 — Putting Numbers on the Picture**](chapters/ch04.qmd) | Joyce, the last 100 mothers, and lookup tables |
+| | [**Ch 5 — When New Evidence Arrives**](chapters/ch05.qmd) | Hiwot, three explanations, and the redistribution rule |
+| | [**Ch 6 — When the Data Lies in Two Directions**](chapters/ch06.qmd) | Hassan, Naomi, and Simpson's Paradox |
+| **3. Make Decisions** | [**Ch 7 — From Understanding to Deciding**](chapters/ch07.qmd) | David, one envelope, and one new midwife |
+| | [**Ch 8 — Spreading the Money**](chapters/ch08.qmd) | Grace, four countries, and three risk shapes |
+| | [**Ch 9 — When the Other Side Reacts**](chapters/ch09.qmd) | Wangari, Patrick, and the same offer |
+| | [**Ch 10 — Can the Computer Just Tell Us?**](chapters/ch10.qmd) | Esther, the DHIS2 database, and the wall |
 
-### Part 1: Draw the Picture
+## What you will need
 
-| Chapter | Title | What You Will Learn |
-|---------|-------|---------------------|
-| 1 | [Introduction to Causal Analysis](chapters/ch01.qmd) | Why correlation is not causation; three traps to avoid |
-| 2 | [Qualitative Causal Models](chapters/ch02.qmd) | How to draw causal diagrams; chains, forks, and colliders |
-| 3 | [The MNH Diagnostic Case Study](chapters/ch03.qmd) | Building a diagram step by step through interviews |
-
-### Part 2: Add the Numbers
-
-| Chapter | Title | What You Will Learn |
-|---------|-------|---------------------|
-| 4 | [Quantitative Causal Models](chapters/ch04.qmd) | Putting numbers on your diagram; Bayes' rule made simple |
-| 5 | [Situational Analysis](chapters/ch05.qmd) | Updating your beliefs when you learn new information |
-| 6 | [Simpson's Paradox & Cost-Effectiveness](chapters/ch06.qmd) | When combined data lies — and how to spot it |
-
-### Part 3: Make Decisions
-
-| Chapter | Title | What You Will Learn |
-|---------|-------|---------------------|
-| 7 | [Decision Analysis & Value of Information](chapters/ch07.qmd) | Choosing between options; the difference between watching and doing |
-| 8 | [Multi-Country Resource Allocation](chapters/ch08.qmd) | Splitting a budget across countries under uncertainty |
-| 9 | [Game Theory & Strategic Interactions](chapters/ch09.qmd) | What happens when other people react to your decisions |
-| 10 | [Structure Learning from Observational Data](chapters/ch10.qmd) | Can computers discover causes? What data can and cannot tell you |
-
-## The Four Countries
-
-All examples draw from publicly available data about MNH challenges in:
-
-| Country | Key Context |
-|---------|-------------|
-| **Ethiopia** | ~40,000 Health Extension Workers; MMR ~267/100K (WHO); major regional variation |
-| **Rwanda** | ~58,000 community health workers; Mutuelle de Santé (universal health insurance); 94%+ facility delivery |
-| **Kenya** | 47 devolved counties; ~89% facility delivery but high county-level variation; MMR ~342/100K |
-| **Tanzania** | 26 regions; DHIS2/GOTHOMIS data system at most facilities; ~55% health workforce shortage |
-
-## Prerequisites
-
-- **Curiosity about how the world works.** No math background needed.
-- Some basic familiarity with R programming is helpful but not required (see the [R Setup](r-setup.qmd) page)
-- No prior knowledge of causal inference or statistics is assumed
-
-## Textbook
-
-Ryall, M. D., & Bramson, A. (2014). *Inference and Intervention: Causal Models for Business Analysis*. Routledge.
-
-::: {.callout-box .green}
-**Note:** We teach the same core concepts from the textbook but use entirely new examples drawn from public MNH data — not the business examples from the book.
-:::
+Curiosity, and a willingness to sketch your ideas on paper. No math degree, no programming background. The R code on the companion pages is there to read first; you can run it later.

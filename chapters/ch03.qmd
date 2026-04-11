@@ -1,47 +1,19 @@
 ---
-title: "Chapter 3: The MNH Diagnostic Case Study"
-subtitle: "Iterative model building from stakeholder interviews in Kenya"
+title: "Chapter 3 — Building the Picture from Scratch"
+subtitle: "Faith, three interviews, and one shared picture"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-After this chapter, you will be able to:
+Kenya devolved health to **47 counties** in 2013 *(Constitution of Kenya, Schedule 4)*. Some counties have cut maternal mortality dramatically. Others have barely moved *(Kenya Health Information System, county dashboards)*. The county dashboards can tell you *which* counties are improving — but not *why*.
 
-- Apply the **iterative model-building process** -- hypothesis, interview, revision -- to a real health system
-- Start with a simple 3-4 node model and **expand it systematically** through stakeholder conversations
-- Explain why both **supply-side** improvements (staffing, equipment, training) and **demand-side** factors (geographic access, cost, trust) must work together for outcomes to improve
-- Identify **root nodes** as the highest-leverage intervention points in a causal system
-- Use a completed causal model to **prioritize recommendations** based on structure, not gut feeling
+To find out why, you have to go talk to people. The question is who, in what order, and what to do with what they tell you.
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** The fastest way to build a useful causal picture is to interview the people who actually do the work — in three different groups, in a particular order — and draw their answers.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Diagnostic Causal Modeling
-
-Building a causal model from interviews is like solving a mystery. You do not start with a massive 20-node diagram on day one. You start with the simplest possible model -- maybe three or four nodes -- and let each conversation reveal what is missing. The cycle goes: draw a simple model, interview a stakeholder, listen for new variables and mechanisms, revise the model, then use the updated model to generate sharper questions for the next conversation. Each round deepens your understanding. In Kenya's case, three rounds of interviews -- with a county health director, a senior midwife, and a community health worker -- transformed a naive 4-node chain into a rich 12-node model that told a coherent causal story.
-:::
-
-::: {.key-concept .green}
-#### The Four Diagnostic Principles
-
-The diagnostic approach follows four key principles. First, **focus on significant drivers** -- not all variables matter equally, so identify the factors with the largest causal effects on the outcome and leave out the noise. Second, **seek common causes** -- when one variable drives multiple problems simultaneously, that is a high-leverage intervention point (look for the forks in your diagram). Third, **ask specific questions** -- use the model to generate targeted hypotheses rather than open-ended inquiries like "What is going wrong?". A sharper question: "Of the 60 health workers you trained last year, how many are still in your county?" Fourth, **bring it all together** -- the final model should tell a coherent causal story linking decisions to outcomes, with clear recommendations about where to intervene.
-:::
-
-::: {.key-concept .orange}
-#### Supply Side vs. Demand Side
-
-A complete diagnostic model must capture both halves of the health system. On the **supply side**, investment flows through channels like staffing, equipment, and training -- but can be undermined by transmission failures such as staff attrition, equipment breakdown, and referral gaps. On the **demand side**, geographic access, financial barriers, and health-seeking behavior determine whether communities actually benefit from facility-level improvements. Kenya illustrates this perfectly: the national facility delivery rate is roughly 89% (DHS/WHO), but in rural sub-counties of high-burden areas, the rate can drop to 50-60%. Improving facility quality without improving access does not help the women who never arrive. Improving access without improving quality sends more women into facilities that cannot save them. Both halves must move together.
-:::
-
-::: {.key-concept .teal}
-#### Root Nodes as Leverage Points
-
-Root nodes are variables without any parents in the causal model -- nothing in the diagram causes them. They are the ultimate upstream causes. Intervening on a root node has the broadest downstream effects because every pathway in the model flows *from* these nodes. In the Kenya diagnostic case, **staff retention** and **equipment maintenance** emerged as critical root-level bottlenecks that the initial investment plan had overlooked. Staff retention alone had at least three downstream effects: it shaped competency, equipment utilization, and effective staffing ratios -- all feeding into quality of care and then mortality. Fix retention, and you improve three pathways at once. Fix training alone (a non-root node), and trained staff still leave -- so the effect evaporates.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
 <iframe src="../ch03-interview-case/index.html"></iframe>
@@ -50,208 +22,97 @@ Root nodes are variables without any parents in the causal model -- nothing in t
 </div>
 :::
 
-## R Code Workshop
+## R workshop — assemble Faith's three interviews
 
-This chapter demonstrates how to formalize each round of the diagnostic interview process in R, building progressively more complex DAGs with `dagitty` and `ggdag`. We start with the simplest supply-side model and expand it round by round, exactly as the consulting engagement unfolded in Kenya.
+In the lecture, Faith built her picture from three interviews — Mary the midwife, Lokol the husband, Esther the finance officer. Each one added boxes the others couldn't see. In this workshop you'll do the same thing in R: start with Mary's chain, add Lokol's permission box, add Esther's stockout box, and watch how the picture grows.
 
-Kenya's vital statistics set the stage: a maternal mortality ratio of approximately 342 per 100,000 live births (WHO), a neonatal mortality rate of roughly 21 per 1,000 (WHO), and a devolved health system spread across 47 counties with enormous variation in outcomes.
-
-### Round 1: Simple Supply-Side Model
-
-After the initial interview with a county health director, we decompose the investment-to-outcome chain into its supply-side components. The director revealed that quality of care is not a single black box -- it depends on staffing levels, equipment availability, and training. But at this stage, our model is still relatively simple.
+### Setting up
 
 ```{r}
-#| label: round1-dag
-#| echo: true
-#| fig-width: 9
-#| fig-height: 4
-
+#| label: ch03-setup
 library(dagitty)
 library(ggdag)
-library(ggplot2)
-
-# Round 1: After interviewing the County Health Director
-# Simple supply-side decomposition (7 nodes)
-round1 <- dagitty('dag {
-  Budget     [pos="0,1"]
-  Staffing   [pos="1,0"]
-  Equipment  [pos="1,1"]
-  Training   [pos="1,2"]
-  Quality    [pos="2,1"]
-  Fac_Births [pos="3,1"]
-  Mortality  [pos="4,1"]
-
-  Budget -> Staffing
-  Budget -> Equipment
-  Budget -> Training
-  Staffing  -> Quality
-  Equipment -> Quality
-  Training  -> Quality
-  Quality   -> Mortality
-}')
-
-# Draw the Round 1 model
-ggdag(round1) + theme_dag() +
-  labs(title = "Round 1: Supply-Side Model (7 nodes)",
-       subtitle = "After interviewing the County Health Director")
 ```
 
-This model already raises specific questions for the next interview: Why is staffing so low even though the budget funds positions? Why does training not seem to translate into better competency? Is the equipment actually working?
-
-### Round 2: Adding Transmission Failures
-
-The senior midwife's interview revealed the "transmission problem" -- why inputs were delivered but effective use remained low. Trained midwives transferred to Nairobi for better pay. CPAP machines broke and nobody could repair them. Ambulances were shared across multiple facilities and unavailable when needed. Three new variables enter the model: Retention, Maintenance, and Referral.
+### Step 1 — Mary's picture (the bedside)
 
 ```{r}
-#| label: round2-dag
-#| echo: true
-#| fig-width: 10
-#| fig-height: 5
-
-# Round 2: After interviewing the Senior Midwife
-# Transmission failures emerge (11 nodes)
-round2 <- dagitty('dag {
-  Budget      [pos="0,1"]
-  Staffing    [pos="1,0"]
-  Equipment   [pos="1,1"]
-  Training    [pos="1,2"]
-  Retention   [pos="1.5,0.3"]
-  Maintenance [pos="1.5,1.3"]
-  Referral    [pos="1.5,2.3"]
-  Competency  [pos="2,0.5"]
-  Utilization [pos="2,1.5"]
-  Quality     [pos="3,1"]
-  Mortality   [pos="4,1"]
-
-  Budget    -> Staffing
-  Budget    -> Equipment
-  Budget    -> Training
-  Budget    -> Referral
-  Staffing  -> Retention
-  Training  -> Competency
-  Retention -> Competency
-  Retention -> Utilization
-  Equipment   -> Utilization
-  Maintenance -> Utilization
-  Competency  -> Quality
-  Utilization -> Quality
-  Referral    -> Quality
-  Quality     -> Mortality
+#| label: ch03-mary
+mary_dag <- dagitty('dag {
+  Bleeding -> FamilyWaits
+  FamilyWaits -> Motorbike
+  Motorbike -> ArrivesAtFacility
+  ArrivesAtFacility -> MotherSurvives
 }')
-
-# Draw the Round 2 model
-ggdag(round2) + theme_dag() +
-  labs(title = "Round 2: Adding Transmission Failures (11 nodes)",
-       subtitle = "After interviewing the Senior Midwife")
+ggdag(mary_dag, text_size = 3) + theme_dag()
 ```
 
-Notice that Retention and Maintenance are **common causes** -- forks that affect multiple downstream variables at once. When trained midwives leave, *both* clinical competency drops *and* equipment goes unused (because nobody remaining knows how to operate it). Two symptoms, one root cause. This is exactly the kind of pattern that makes a variable a high-leverage intervention point.
+A clean chain. Five boxes, four arrows. This is what Mary saw — and only what Mary saw.
 
-### Round 3: Complete Model with Demand Side
+### Step 2 — Lokol's correction (the household)
 
-The community health worker opened our eyes to a completely different set of barriers. Geographic access, financial costs (despite free maternity policies), and health-seeking behavior all determine whether women reach facilities in time. These demand-side variables create a second pathway to mortality that is entirely independent of facility quality.
+Lokol's interview reveals that "FamilyWaits" was actually two boxes — the deciding, and the permission from the head of family. Let's split it.
 
 ```{r}
-#| label: round3-dag
-#| echo: true
-#| fig-width: 11
-#| fig-height: 6
-
-# Round 3: After interviewing the Community Health Worker
-# Demand-side variables added (15 nodes)
-round3 <- dagitty('dag {
-  Budget         [pos="0,1"]
-  Staffing       [pos="1,0"]
-  Equipment      [pos="1,1"]
-  Training       [pos="1,2"]
-  Retention      [pos="1.5,0.3"]
-  Maintenance    [pos="1.5,1.3"]
-  Referral       [pos="1.5,2.3"]
-  Competency     [pos="2,0.5"]
-  Utilization    [pos="2,1.5"]
-  Quality        [pos="3,1"]
-  Geo_Access     [pos="1,3.5"]
-  Fin_Barriers   [pos="1,4.5"]
-  Health_Seeking [pos="1,5.5"]
-  Fac_Births     [pos="2.5,4.5"]
-  Mortality      [pos="4,3"]
-
-  Budget    -> Staffing
-  Budget    -> Equipment
-  Budget    -> Training
-  Budget    -> Referral
-  Staffing  -> Retention
-  Training  -> Competency
-  Retention -> Competency
-  Retention -> Utilization
-  Equipment   -> Utilization
-  Maintenance -> Utilization
-  Competency  -> Quality
-  Utilization -> Quality
-  Referral    -> Quality
-  Geo_Access     -> Fac_Births
-  Fin_Barriers   -> Fac_Births
-  Health_Seeking -> Fac_Births
-  Quality    -> Mortality
-  Fac_Births -> Mortality
+#| label: ch03-lokol
+mary_lokol_dag <- dagitty('dag {
+  Bleeding -> FamilyDecides
+  FamilyDecides -> Permission
+  Permission -> Motorbike
+  Motorbike -> ArrivesAtFacility
+  ArrivesAtFacility -> MotherSurvives
 }')
-
-# Draw the complete model
-ggdag(round3) + theme_dag() +
-  labs(title = "Round 3: Complete Kenya MNH Model (15 nodes)",
-       subtitle = "Supply + Demand after all three interviews")
+ggdag(mary_lokol_dag, text_size = 3) + theme_dag()
 ```
 
-The complete model now has two distinct halves converging on the outcome. The supply side flows from Budget through staffing, equipment, and training -- filtered by retention and maintenance -- into Quality of Care. The demand side flows from geographic access, financial barriers, and health-seeking behavior into Facility Births. Both Quality and Facility Births are parents of Mortality.
+The chain grew by one box. The new box (`Permission`) sits where Mary's "waits" used to be — and it's the box Mary couldn't see, because she wasn't in the household.
 
-### Analyzing the Complete Model
+### Step 3 — Esther's layer (the supply chain)
 
-With the full model in hand, we can ask R to tell us what to control for, what the model predicts about the data, and how many causal pathways connect the budget to mortality.
+Esther's stockout has nothing to do with the bedside chain — it sits in a different part of the picture entirely, with its own arrow into the survival box.
 
 ```{r}
-#| label: model-analysis
-#| echo: true
+#| label: ch03-full
+faith_dag <- dagitty('dag {
+  NationalSupplier -> CountyStockout
+  CountyStockout -> DrugAtFacility
+  DrugAtFacility -> MotherSurvives
 
-# What must we control for to estimate the causal effect
-# of Budget on Mortality?
-adjustmentSets(round3,
-               exposure = "Budget",
-               outcome = "Mortality")
+  Bleeding -> FamilyDecides
+  FamilyDecides -> Permission
+  Permission -> Motorbike
+  Motorbike -> ArrivesAtFacility
+  ArrivesAtFacility -> MotherSurvives
+}')
 
-# How many paths connect Budget to Mortality?
-# Each path is a different route the investment takes
-paths(round3,
-      from = "Budget",
-      to = "Mortality")
+coordinates(faith_dag) <- list(
+  x = c(NationalSupplier = 0, CountyStockout = 1, DrugAtFacility = 2,
+        Bleeding = 0, FamilyDecides = 1, Permission = 2,
+        Motorbike = 3, ArrivesAtFacility = 4, MotherSurvives = 5),
+  y = c(NationalSupplier = 2, CountyStockout = 2, DrugAtFacility = 2,
+        Bleeding = 0, FamilyDecides = 0, Permission = 0,
+        Motorbike = 0, ArrivesAtFacility = 0, MotherSurvives = 1)
+)
 
-# What are all the testable predictions of the model?
-# If Kenya's DHIS2 data violates any, the model needs revision
-impliedConditionalIndependencies(round3)
-
-# Key structural question: Is Retention d-separated from Maintenance?
-# If not, they may share a hidden common cause we missed
-dseparated(round3, "Retention", "Maintenance", c())
+ggdag(faith_dag, text_size = 2.5) + theme_dag()
 ```
 
-The `adjustmentSets()` function tells us which variables we *must* measure to evaluate the program's causal effect. The implied conditional independencies generate testable predictions -- when Kenya's DHIS2 data arrives, we can check each one. If the data violates any of them, our model needs revision. And the d-separation test between Retention and Maintenance checks whether our model is missing a connection between these two critical bottlenecks.
+What you should see: two layers feeding into a single survival outcome. The bedside layer at the bottom. The supply-chain layer up top. Joined only at the very end.
 
-## Key Takeaways
+### Asking the picture which arrows you'd need to test
 
-::: {.key-takeaway}
-**Build models iteratively.** Start with 3-4 nodes and let stakeholder interviews reveal what is missing. You cannot build the right model from a desk -- you have to talk to people. Each perspective (director, midwife, community health worker) reveals variables the others cannot see.
+```{r}
+#| label: ch03-paths
+# How many distinct paths run from the start of the bleeding chain to survival?
+paths(faith_dag, from = "Bleeding", to = "MotherSurvives")
+```
 
-**Root nodes are leverage points.** Staff retention and equipment maintenance emerged as the critical bottlenecks that initial investment plans overlooked. They sit upstream and affect multiple pathways at once.
+R will show you that there's only one path — but it has six links in it. Every one of those links is a place a programme could intervene. And the picture tells you that *DrugAtFacility* is on a completely separate path, controlled by an entirely different set of people.
 
-**Supply and demand both matter.** Kenya's 89% facility delivery rate masks huge rural variation. Demand-side barriers -- geography, cost, trust -- are invisible if you only look at the supply side.
+This is the practical payoff of the interview method: the finished picture *makes the intervention points visible*.
 
-**The model does the prioritization.** Count the downstream paths from each node to the outcome. The variables with the most connections are the ones to invest in first.
-:::
+## Try it yourself
 
-## Looking Ahead
+You have one week and a budget for petrol. You need to build a causal picture explaining why one ward in a Kenyan county has much higher under-5 mortality than its three neighbours. Who do you interview, in what order, and what is the opening question for each?
 
-Next in **Chapter 4 -- Quantitative Causal Models**, we take the qualitative diagrams built in this chapter and add numbers:
-
-- Replacing [+] and [-] signs with actual **conditional probability tables** (CPTs) for each node
-- Computing **joint probability distributions** across the full network
-- Using **Bayes' rule** to update beliefs when new evidence arrives -- for instance, what is the probability that mortality is high given that staffing is low *and* equipment maintenance is poor?
-- Building the mathematical foundation for precise inference and budget allocation decisions
+In Chapter 4, we'll take a picture like Faith's and start putting actual numbers on the arrows.

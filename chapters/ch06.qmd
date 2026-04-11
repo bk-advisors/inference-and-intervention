@@ -1,202 +1,129 @@
 ---
-title: "Chapter 6: Simpson's Paradox"
-subtitle: "When aggregated data lies -- and how causal reasoning sets the record straight"
+title: "Chapter 6 — When the Data Lies in Two Directions"
+subtitle: "Hassan, Naomi, and Simpson's Paradox"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-- Identify **Simpson's Paradox** -- when a trend in aggregated data reverses once you split by a confounding variable
-- Distinguish a **confounder** (condition on it) from a **mediator** (leave it alone) and explain why getting this wrong flips your conclusions
-- Spot the **Prosecutor's Fallacy** -- confusing "how likely is the evidence if the hypothesis is true" with "how likely is the hypothesis given the evidence"
-- Conduct a **cross-country comparison** across Ethiopia, Rwanda, Kenya, and Tanzania that avoids the paradox
-- Use R to simulate, visualize, and correctly analyze data that exhibits these traps
+A Kenyan voucher programme looks like a 26-percentage-point success in the aggregate. Split by income, the relationship *reverses* — the voucher does worse than no voucher in *every* income group. Same data. Opposite story. Which version should you trust?
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** When data tells you opposite things at the aggregate and split levels, the data is not lying. The picture is what tells you which view to trust. A fork → split. A mediator → don't.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Simpson's Paradox
-
-Imagine comparing a health intervention across Ethiopia, Rwanda, Kenya, and Tanzania. In every single country, facilities with the intervention have better outcomes. But when you pool all the data together, the intervention appears to *hurt*. How? Because the intervention was deployed mostly in high-burden countries with worse baseline outcomes. The aggregate mixes apples and oranges. Simpson's Paradox is not rare or exotic -- it lurks in any cross-country or cross-site comparison where a hidden variable drives both the treatment assignment and the outcome. The fix is not more data. It is causal reasoning.
-:::
-
-::: {.key-concept .green}
-#### Confounder vs. Mediator
-
-A **confounder** is a common cause of both the treatment and the outcome -- like disease burden, which determines both where interventions are deployed and how high mortality is. You must condition on confounders to remove the spurious association they create. A **mediator** sits on the causal path between treatment and outcome -- like quality of care, which is *how* the intervention works. You must *not* condition on mediators, because doing so blocks the very effect you are trying to measure. In DAG terms: condition on the fork's center node, leave the chain's middle node alone. Mix them up and you get Simpson's Paradox -- or you erase a real treatment effect.
-:::
-
-::: {.key-concept .orange}
-#### The Prosecutor's Fallacy
-
-A screening test for birth complications has 90% sensitivity -- it catches 90 out of 100 true cases. A prosecutor might claim: "The test was positive, so there is a 90% chance the complication is present." Wrong. That confuses P(positive test | complication) with P(complication | positive test). If the complication is rare (say 5% prevalence), most positive tests are false alarms. Bayes' rule shows that P(complication | positive test) is only about 24%, not 90%. The base rate matters enormously. This fallacy appears whenever people mistake the likelihood for the posterior -- in courtrooms, in medical screening, and in program evaluation.
-:::
-
-::: {.key-concept .red}
-#### Cross-Country Comparison
-
-Comparing health outcomes across Ethiopia, Rwanda, Kenya, and Tanzania is essential for allocating resources wisely -- but naive comparisons are dangerous. Each country has a different baseline burden, different health system capacity, and different population structure. A country with low cost per outcome might simply have had less severe problems to begin with. Adjusting for confounders -- baseline mortality, urbanization, health worker density -- can completely reverse which country looks most "efficient." The DAG tells you which variables to adjust for and which to leave alone.
-:::
-
-::: {.key-concept .teal}
-#### Causal Adjustment Fixes the Paradox
-
-Once you draw the DAG, the solution is mechanical. Identify every backdoor path between treatment and outcome. Find the confounders along those paths. Condition on them (stratify, or include them in a regression). The adjusted estimate removes the bias and reveals the true causal effect. In the cross-country case, adjusting for baseline burden shows that the intervention helps in every country -- exactly what the within-country data already showed. The paradox disappears because you are no longer mixing high-burden and low-burden contexts.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
-<iframe src="../ch06-business-financials/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+<iframe src="../ch06-simpsons-paradox/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch06-business-financials/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch06-simpsons-paradox/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
 :::
 
-## R Code Workshop
+## R workshop — see Simpson's Paradox happen, then resolve it
 
-We simulate a dataset where Simpson's Paradox appears, visualize it, and show how stratifying by the confounder (or using a regression that includes it) recovers the true treatment effect.
+In the lecture, we walked Hassan through the trap and back out using a picture. In this workshop you'll see the paradox appear in real numbers and watch how the choice of adjustment variable flips the answer.
 
-### Simulate the Paradox
-
-We create data for four countries. In every country, the intervention improves survival. But because high-burden countries receive more of the intervention, the pooled data reverses the effect.
+### Setting up
 
 ```{r}
-#| label: simulate-paradox
-#| echo: true
-
-library(tidyverse)
-set.seed(42)
-
-n <- 2000
-
-sim_data <- tibble(
-  # Confounder: country burden group
-  burden = sample(c("High-burden", "Low-burden"), n, replace = TRUE,
-                  prob = c(0.6, 0.4)),
-  # Treatment is more common in high-burden countries (the confounder at work)
-  treated = case_when(
-    burden == "High-burden" ~ rbinom(n, 1, 0.75),
-    burden == "Low-burden"  ~ rbinom(n, 1, 0.25)),
-  # Outcome depends on BOTH burden and treatment
-  # Treatment always helps (+7pp), but high-burden baseline is worse
-  surv_prob = case_when(
-    burden == "High-burden" & treated == 1 ~ 0.68,
-    burden == "High-burden" & treated == 0 ~ 0.61,
-    burden == "Low-burden"  & treated == 1 ~ 0.85,
-    burden == "Low-burden"  & treated == 0 ~ 0.78),
-  survived = rbinom(n, 1, surv_prob))
-
-# Pooled result (misleading -- treatment looks harmful)
-sim_data |> group_by(treated) |>
-  summarise(survival = mean(survived), .groups = "drop")
-
-# Stratified result (correct -- treatment helps in both groups)
-sim_data |> group_by(burden, treated) |>
-  summarise(survival = mean(survived), .groups = "drop")
+#| label: ch06-setup
+library(dplyr)
+library(dagitty)
+library(ggdag)
 ```
 
-### Visualize Aggregated vs. Stratified
-
-Side-by-side bar charts make the paradox unmistakable. Same data, opposite conclusions.
+### Build the dataset from the lecture
 
 ```{r}
-#| label: viz-paradox
-#| echo: true
-#| fig-width: 10
-#| fig-height: 5
+#| label: ch06-data
+# Same numbers as the lecture table.
+voucher_data <- tibble::tribble(
+  ~Income,    ~Voucher,    ~ClinicDelivery, ~n,
+  "low",      "yes",       "yes",           40,
+  "low",      "yes",       "no",            20,
+  "low",      "no",        "yes",           35,
+  "low",      "no",        "no",            15,
+  "high",     "yes",       "yes",           38,
+  "high",     "yes",       "no",            2,
+  "high",     "no",        "yes",           17,
+  "high",     "no",        "no",            33
+) |>
+  tidyr::uncount(n)
 
-library(patchwork)
-
-sim_data <- sim_data |>
-  mutate(group = ifelse(treated == 1, "Treated", "Control"))
-
-# Pooled view (misleading)
-p1 <- ggplot(sim_data, aes(x = group, y = survived, fill = group)) +
-  stat_summary(fun = mean, geom = "bar", width = 0.6) +
-  scale_fill_manual(values = c("Treated" = "#005CB9", "Control" = "#FA7650")) +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Pooled: Treatment Looks Harmful", y = "Survival Rate", x = NULL) +
-  theme_minimal(base_size = 14) + theme(legend.position = "none")
-
-# Stratified view (correct)
-p2 <- ggplot(sim_data, aes(x = group, y = survived, fill = group)) +
-  stat_summary(fun = mean, geom = "bar", width = 0.6) +
-  facet_wrap(~ burden) +
-  scale_fill_manual(values = c("Treated" = "#005CB9", "Control" = "#FA7650")) +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Stratified: Treatment Helps Both Groups", y = "Survival Rate", x = NULL) +
-  theme_minimal(base_size = 14) + theme(legend.position = "none")
-
-p1 + p2 + plot_annotation(
-  title = "Simpson's Paradox: Same Data, Opposite Conclusions")
+nrow(voucher_data)  # 200 rows
 ```
 
-### Regression: Naive vs. Adjusted
-
-The naive regression omits the confounder and gets the sign wrong. The adjusted regression includes it and recovers the true positive effect.
+### The aggregate view (what Hassan saw first)
 
 ```{r}
-#| label: regression-fix
-#| echo: true
-
-# Naive: treatment coefficient is NEGATIVE (wrong!)
-naive <- lm(survived ~ treated, data = sim_data)
-
-# Adjusted: include the confounder, coefficient is POSITIVE (correct)
-adjusted <- lm(survived ~ treated + burden, data = sim_data)
-
-# Compare side by side
-tibble(
-  Model = c("Naive (no confounder)", "Adjusted (with confounder)"),
-  Treatment_Effect = c(coef(naive)["treated"], coef(adjusted)["treated"]),
-  Verdict = c("Treatment looks harmful", "Treatment is beneficial"))
+#| label: ch06-aggregate
+voucher_data |>
+  group_by(Voucher) |>
+  summarise(
+    pct_clinic = mean(ClinicDelivery == "yes")
+  )
 ```
 
-### Prosecutor's Fallacy Calculator
+You'll see voucher = 78%, no voucher = 52%. A clean +26 percentage points.
 
-This function shows how base rate (prevalence) changes the meaning of a positive test result. High sensitivity does not mean high predictive value when the condition is rare.
+### The split view (what Naomi told Hassan to look at)
 
 ```{r}
-#| label: bayes-calculator
-#| echo: true
-
-bayes_ppv <- function(sensitivity, specificity, prevalence) {
-  p_pos <- (sensitivity * prevalence) + ((1 - specificity) * (1 - prevalence))
-  ppv   <- (sensitivity * prevalence) / p_pos
-  tibble(
-    Sensitivity = scales::percent(sensitivity),
-    Specificity = scales::percent(specificity),
-    Prevalence  = scales::percent(prevalence),
-    PPV         = scales::percent(ppv, accuracy = 0.1),
-    Fallacy_Claims = scales::percent(sensitivity))
-}
-
-# Rare condition (5% prevalence) -- PPV is only ~24%
-bayes_ppv(0.90, 0.85, 0.05)
-
-# Common condition (20% prevalence) -- PPV rises to ~60%
-bayes_ppv(0.90, 0.85, 0.20)
+#| label: ch06-split
+voucher_data |>
+  group_by(Income, Voucher) |>
+  summarise(
+    pct_clinic = mean(ClinicDelivery == "yes"),
+    .groups = "drop"
+  )
 ```
 
-## Key Takeaways
+Now look at every Income × Voucher cell. **In both income groups, voucher does worse than no voucher.** Same data. Opposite story. Simpson's Paradox is staring at you from your console.
 
-::: {.key-takeaway}
-**Simpson's Paradox is not a curiosity -- it is a constant threat.** Any time you pool data across groups that differ in baseline risk, the aggregate can reverse the true effect. Draw the DAG first.
+### Let the picture decide which view to trust
 
-**Confounders vs. mediators: the most important distinction in causal analysis.** Condition on confounders (common causes). Never condition on mediators (the causal pathway). Mixing them up produces exactly wrong conclusions.
+```{r}
+#| label: ch06-picture
+# Hassan's picture: income is upstream of voucher AND of clinic delivery.
+# That makes income a confounder — exactly the fork shape from Chapter 2.
+voucher_dag <- dagitty('dag {
+  Income  -> Voucher
+  Income  -> ClinicDelivery
+  Voucher -> ClinicDelivery
+}')
 
-**The Prosecutor's Fallacy kills intuition.** A 90% sensitive test does not mean a 90% chance the condition is present. Base rates matter. Always use Bayes' rule.
+ggdag(voucher_dag, text_size = 4) + theme_dag()
 
-**Cross-country comparisons require causal adjustment.** Naive rankings by cost or outcomes will send resources to the wrong places. Adjusting for baseline burden and health system capacity can flip the rankings entirely.
-:::
+# Ask the picture: to estimate Voucher -> ClinicDelivery, what do we need to adjust for?
+adjustmentSets(voucher_dag,
+               exposure = "Voucher",
+               outcome  = "ClinicDelivery")
+```
 
-## Looking Ahead
+R will tell you: **Income**. The picture says income is a confounder, so you have to adjust for it — meaning the *split* view is the right one. The aggregate is misleading.
 
-Next in **Chapter 7 -- Decision Analysis**, we move from inference to action in Kenya:
+### What if the picture were different?
 
-- **Influence diagrams** -- adding decisions and objectives to causal models
-- **Expected value** -- choosing the intervention that maximizes lives saved under uncertainty
-- **Watching vs. doing** -- why the do-operator matters for real-world decisions
-- **Value of information** -- how much should you pay for a pilot study before committing resources?
+```{r}
+#| label: ch06-mediator
+# Alternative picture: voucher causes income (e.g., the voucher includes a cash transfer).
+# In this picture, income is a mediator — adjusting for it BLOCKS the very effect you're measuring.
+mediator_dag <- dagitty('dag {
+  Voucher -> Income
+  Income  -> ClinicDelivery
+  Voucher -> ClinicDelivery
+}')
+
+adjustmentSets(mediator_dag,
+               exposure = "Voucher",
+               outcome  = "ClinicDelivery")
+```
+
+R will return an empty set — meaning, in *this* picture, you should *not* adjust for income. The aggregate is right, the split is wrong.
+
+**Same data. Two pictures. Opposite advice.** This is exactly the point from the lecture: the data alone cannot pick a winner. The picture has to.
+
+## Try it yourself
+
+A national report says women who use mobile money are more likely to seek antenatal care. Then someone splits the same data by region and finds that within every region, mobile money users are *less* likely to seek antenatal care. Before you decide which version to publish: draw the picture. Where does region go? Is region a confounder, or a mediator? What is the one piece of evidence that would settle it?

@@ -8,6 +8,16 @@ project:
     - chapters/*.qmd
   resources:
     - course-intro/**
+    - ch01-intro/**
+    - ch02-qualitative-models/**
+    - ch03-interview-case/**
+    - ch04-quantitative-models/**
+    - ch05-situational-analysis/**
+    - ch06-simpsons-paradox/**
+    - ch07-decision-analysis/**
+    - ch08-resource-allocation/**
+    - ch09-game-theory/**
+    - ch10-structure-learning/**
   output-dir: _site
 
 website:
@@ -15,10 +25,12 @@ website:
   navbar:
     background: "#005CB9"
     foreground: "#ffffff"
-    logo: ch01-intro/bka-logo.png
+    logo: course-intro/bka-logo.png
     left:
       - text: Home
         href: index.qmd
+      - text: Course Intro
+        href: course-intro/index.html
       - text: Schedule
         href: schedule.qmd
       - text: R Setup

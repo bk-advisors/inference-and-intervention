@@ -1,220 +1,100 @@
 ---
-title: "Chapter 7: Decision Analysis"
-subtitle: "Influence diagrams, expected value, and knowing when better information is worth the wait"
+title: "Chapter 7 — From Understanding to Deciding"
+subtitle: "David, one envelope, and one new midwife"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-- Construct a **decision map (influence diagram)** with decision nodes, chance nodes, and objective nodes
-- Compute the **expected value** of competing intervention strategies under uncertainty
-- Explain the difference between **watching and doing** -- why observing a correlation is not the same as causing a change
-- Apply **graph surgery (cutting the arrows)** to isolate the true causal effect of an intervention
-- Calculate the **Expected Value of Perfect Information (EVPI)** to decide whether a pilot study or survey is worth funding
+A county budget director in Nakuru has enough money for one new midwife. Two facilities are competing for her — one busy and urban, one rural and unstaffed. Both managers have written passionate letters. He needs an answer he can defend at the next public budget hearing — not a gut call.
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** A decision is just a question with consequences — and the value of more information is exactly how much it would change your decision.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Decision Maps (Influence Diagrams)
-
-Up to now, our causal models have contained only chance nodes -- variables whose values are uncertain. A decision map adds two new ingredients. **Decision nodes** (drawn as rectangles) represent choices you control: which intervention to fund, where to deploy staff, whether to run a pilot first. **Objective nodes** (drawn as hexagons) represent the outcomes you care about: lives saved, cost-effectiveness, equity. Arrows into the objective node show what drives it. Arrows into a decision node show what information is available when the choice is made. In Kenya, a decision map might show a health ministry choosing between workforce investment, equipment procurement, or a split strategy -- with the objective of maximizing neonatal lives saved across 47 counties.
-:::
-
-::: {.key-concept .green}
-#### Expected Value
-
-When outcomes are uncertain, you cannot guarantee the best result. But you can choose the option with the highest *average* payoff. Expected value (EV) multiplies each possible outcome by its probability and adds them up. If a workforce strategy in Kenya saves 3,600 lives when government support is high (probability 0.40) and 1,000 lives when it is low (probability 0.60), the EV is 3,600 x 0.40 + 1,000 x 0.60 = 2,040 lives. Compare that to every alternative and pick the highest EV. It does not guarantee the best outcome every time, but across many decisions it is the smartest long-run strategy.
-:::
-
-::: {.key-concept .orange}
-#### Watching vs. Doing
-
-This is one of the biggest ideas in the course. **Watching** means observing a pattern in existing data: "Facilities with more equipment have lower mortality." **Doing** means intervening: "If we *give* facilities more equipment, will mortality drop?" These are different questions with potentially different answers. Why? Because what you observe might be confounded. Well-resourced counties may have both more equipment *and* better staffing, so the equipment-mortality correlation partly reflects staffing. The do-operator strips away the confounding by asking: "If we force equipment to be available regardless of everything else, what happens to mortality?" Only the do-operator gives you the causal effect.
-:::
-
-::: {.key-concept .red}
-#### Cutting the Arrows (Graph Surgery)
-
-Graph surgery is how we implement "doing" in a Bayesian network. To compute the effect of do(Equipment = Available), you delete all arrows pointing *into* the Equipment node and set it to "Available." This severs the link between Equipment and its causes (like county budget or supply chain capacity), isolating the pure causal effect of equipment on downstream outcomes. In the original network, P(NMR | Equipment = Available) includes confounding. In the surgically modified network, P(NMR | do(Equipment = Available)) is the true causal effect. Same network, different question, potentially different answer.
-:::
-
-::: {.key-concept .teal}
-#### Value of Information
-
-Before committing resources in Kenya, should you run a pilot project first? The Expected Value of Perfect Information (EVPI) answers this. EVPI is the difference between the expected value if you could know the uncertain variable perfectly *before* deciding and the expected value of the best decision made under uncertainty. If EVPI is large, the pilot is worth running -- the information will improve your decision enough to justify the delay. If EVPI is small, just pick the best current option and go. EVPI puts a hard ceiling on how much any study, survey, or pilot should cost.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
-<iframe src="../ch07-single-agent/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+<iframe src="../ch07-decision-analysis/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch07-single-agent/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch07-decision-analysis/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
 :::
 
-## R Code Workshop
+## R workshop — compute David's expected value, then his EVPI
 
-We build a decision analysis for Kenya's health ministry: three intervention strategies, uncertain government support, and a clear objective -- maximize neonatal lives saved.
+In the lecture, David weighed Bahati against Nakuru using natural-frequency expected values. In this workshop you'll do the same calculation in R, then compute the Expected Value of Perfect Information (EVPI) — the answer to "would more research actually change my decision?".
 
-### Set Up the Decision Problem
-
-Three strategies, two scenarios, known probabilities, and estimated payoffs.
+### Setting up
 
 ```{r}
-#| label: decision-setup
-#| echo: true
-
+#| label: ch07-setup
 library(dplyr)
-
-# Kenya decision problem: three strategies, two scenarios
-strategies <- data.frame(
-  strategy    = rep(c("Equipment Only", "Workforce", "Split"), each = 2),
-  gov_support = rep(c("High", "Low"), 3),
-  probability = rep(c(0.40, 0.60), 3),
-  lives_saved = c(2800, 1200,    # Equipment: great with support, weak without
-                  3600, 1000,    # Workforce: highest ceiling, lowest floor
-                  3100, 1400))   # Split: balanced, less risky
-
-# Compute expected value per strategy
-ev_table <- strategies |>
-  group_by(strategy) |>
-  summarise(EV = sum(probability * lives_saved), .groups = "drop") |>
-  arrange(desc(EV))
-
-ev_table
+library(tibble)
 ```
 
-### Calculate EVPI
-
-How much is it worth to learn Kenya's government support level before committing?
+### David's two options
 
 ```{r}
-#| label: evpi-calc
-#| echo: true
+#| label: ch07-options
+# Each row is one possible future for one option, with the lives saved and
+# the probability of that future.
+options <- tribble(
+  ~option,        ~scenario,    ~lives_saved, ~prob,
+  "Bahati",       "good year",  8,            0.60,
+  "Bahati",       "bad year",   2,            0.40,
+  "Nakuru town",  "good year",  5,            0.80,
+  "Nakuru town",  "bad year",   1,            0.20
+)
 
-# Best decision in each scenario (if you knew the future)
-best_per_scenario <- strategies |>
-  group_by(gov_support) |>
-  slice_max(lives_saved) |>
-  ungroup()
-
-# EV with perfect information
-ev_perfect <- sum(best_per_scenario$probability * best_per_scenario$lives_saved)
-
-# EV without information (best overall strategy)
-ev_no_info <- max(ev_table$EV)
-
-# EVPI = the value of knowing before you decide
-evpi <- ev_perfect - ev_no_info
-cat("EV with perfect info:", ev_perfect, "lives\n")
-cat("EV best uninformed:  ", ev_no_info, "lives\n")
-cat("EVPI:                ", evpi, "lives\n")
-cat("\nIf a pilot costs less than", evpi, "lives worth of resources, fund it.")
+options
 ```
 
-### Sensitivity Analysis
-
-How does the optimal strategy change as the probability of high government support shifts? The crossover points reveal where the optimal strategy flips.
+### Compute the expected value for each option
 
 ```{r}
-#| label: sensitivity-plot
-#| echo: true
-#| fig-width: 9
-#| fig-height: 5
-
-library(ggplot2)
-
-# Vary P(High support) from 0 to 1
-p_seq <- seq(0, 1, by = 0.01)
-
-sens <- data.frame(
-  p = rep(p_seq, 3),
-  strategy = rep(c("Equipment Only", "Workforce", "Split"), each = length(p_seq)),
-  ev = c(1200 + 1600 * p_seq,    # Equipment
-         1000 + 2600 * p_seq,    # Workforce
-         1400 + 1700 * p_seq))   # Split
-
-ggplot(sens, aes(x = p, y = ev, color = strategy)) +
-  geom_line(linewidth = 1.2) +
-  geom_vline(xintercept = 0.40, linetype = "dashed", alpha = 0.5) +
-  annotate("text", x = 0.42, y = 2800, label = "Current estimate\np = 0.40",
-           hjust = 0, size = 3.5) +
-  scale_color_manual(values = c("#005CB9", "#83BD00", "#FA7650")) +
-  labs(x = "P(High Government Support)",
-       y = "Expected Lives Saved",
-       title = "Sensitivity Analysis: Which Strategy Wins?",
-       subtitle = "Crossover points show where the optimal strategy changes") +
-  theme_minimal(base_size = 14)
+#| label: ch07-ev
+options |>
+  group_by(option) |>
+  summarise(
+    expected_lives_saved = sum(lives_saved * prob)
+  )
 ```
 
-### Graph Surgery: Watching vs. Doing
+You should see Bahati at 5.6 and Nakuru town at 4.2. Bahati wins by 1.4 lives per year.
 
-We build two versions of a simple network -- one with confounding, one with the arrow cut -- and show how the causal estimate differs from the observational one.
+### Compute the Expected Value of Perfect Information
 
 ```{r}
-#| label: graph-surgery
-#| echo: true
+#| label: ch07-evpi
+# Step 1: under uncertainty (no perfect info), the best David can do is pick
+# the option with the highest expected value.
+ev_no_info <- options |>
+  group_by(option) |>
+  summarise(ev = sum(lives_saved * prob)) |>
+  pull(ev) |>
+  max()
 
-library(bnlearn)
+# Step 2: with perfect information, David would know which scenario is going
+# to happen *before* he chooses. So in each scenario, he can pick the BEST
+# option for that scenario.
+ev_with_info <- options |>
+  group_by(scenario) |>
+  summarise(
+    best_lives = max(lives_saved),
+    prob       = first(prob)
+  ) |>
+  summarise(ev = sum(best_lives * prob)) |>
+  pull(ev)
 
-# Original model: Resources confounds both Equipment and NMR
-original <- model2network(
-  "[Resources][Equipment|Resources][NMR|Equipment:Resources]")
-
-# After graph surgery: do(Equipment) -- cut Resources -> Equipment
-intervened <- model2network(
-  "[Resources][Equipment][NMR|Equipment:Resources]")
-
-# Original: P(NMR | Equipment) includes confounding via Resources
-# Intervened: P(NMR | do(Equipment)) is the true causal effect
-# The difference is the confounding bias -- graph surgery removes it.
+# EVPI is the difference.
+evpi <- ev_with_info - ev_no_info
+evpi
 ```
 
-### Tornado Diagram
+What you should see: an EVPI of around 1 life per year. That tells David that a one-month study of Bahati's complication rate would, in the best case, save about one extra newborn life — which is meaningful but not enormous. He'd weigh that against the cost of waiting a month before placing the midwife.
 
-Which uncertain parameter swings the result the most? Parameters with wider bars deserve the most attention.
+This is the "would more research change my decision?" question, made into a number.
 
-```{r}
-#| label: tornado
-#| echo: true
-#| fig-width: 9
-#| fig-height: 4
+## Try it yourself
 
-params <- data.frame(
-  parameter = c("P(Gov Support)", "Lives if High", "Lives if Low"),
-  low_ev  = c(1840, 1960, 1960),
-  high_ev = c(2320, 2200, 2200))
-params$swing <- params$high_ev - params$low_ev
-params <- params[order(params$swing), ]
-params$parameter <- factor(params$parameter, levels = params$parameter)
-
-ggplot(params, aes(y = parameter)) +
-  geom_segment(aes(x = low_ev, xend = high_ev, yend = parameter),
-               linewidth = 8, color = "#005CB9", alpha = 0.7) +
-  geom_vline(xintercept = 2080, linetype = "dashed") +
-  labs(x = "Expected Lives Saved", y = "",
-       title = "Tornado Diagram: What Matters Most for the Split Strategy?") +
-  theme_minimal(base_size = 14)
-```
-
-## Key Takeaways
-
-::: {.key-takeaway}
-**Influence diagrams add decisions and objectives to causal models.** This is the bridge from understanding the world (inference) to changing it (intervention).
-
-**Expected value gives you a principled way to choose under uncertainty.** You will not always get the best outcome, but you will make the smartest bet on average.
-
-**Watching is not doing.** Observational correlations include confounding. The do-operator (graph surgery) isolates the true causal effect by cutting incoming arrows to the intervention variable.
-
-**EVPI tells you the value of better information.** If the pilot costs more than the EVPI, skip it and decide now. If it costs less, the information is worth the wait.
-:::
-
-## Looking Ahead
-
-Next in **Chapter 8 -- Multi-Country Resource Allocation**, we scale up from a single country decision to a portfolio problem:
-
-- Allocating a fixed budget across Ethiopia, Rwanda, Kenya, and Tanzania simultaneously
-- Sequential decisions -- pilot first, or scale immediately?
-- Country-specific risk profiles and the tension between maximizing total impact and ensuring equity
+A donor offers your county a free newborn resuscitation device. Two hospitals want it. Hospital A is large and busy with reliable electricity (3 lives saved, high confidence). Hospital B is smaller and rural, with power cuts about half the time (6 lives saved when power holds, 1 when it doesn't). Compute the expected value for each. Where does the device go?

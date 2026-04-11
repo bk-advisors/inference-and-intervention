@@ -1,0 +1,318 @@
+---
+title: "Chapter 7 — From Understanding to Deciding"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet David
+
+**David, 52, county budget director, Nakuru County, Kenya** *(a composite drawn from county budget circulars and Auditor-General reports)*
+
+. . .
+
+David has an envelope on his desk with **enough money for one new midwife**.
+
+. . .
+
+Two facilities are competing for her. One in **Nakuru town** — busy, on the highway, already has three midwives. One in **Bahati ward** — rural, on a rough road, currently has none.
+
+. . .
+
+Both managers have written him passionate letters.
+
+. . .
+
+::: {.callout-box}
+**The question:** Where does the midwife go — and how do you make that decision in a way you can defend at the next public budget hearing?
+:::
+
+
+## And here is the puzzle
+
+David could just go with his gut. *(Many do.)*
+
+. . .
+
+But he wants a number. He wants to be able to say: *"Placing her in Bahati saves an estimated X more newborn lives per year than placing her in Nakuru town, with this much uncertainty."*
+
+. . .
+
+::: {.callout-box .orange}
+**To get that sentence, he needs three things:** the picture from Chapters 2–3, the lookup tables from Chapter 4, and one new tool — a way to attach a *decision* to the picture.
+:::
+
+
+# Decision maps {background-color="#005CB9"}
+
+
+## A new shape on the picture
+
+Until now, our boxes have all been *things that happen* — facts about the world. Today we add a new shape for *things you choose*.
+
+. . .
+
+::: {.definition-box}
+**Three shapes for decision pictures:**
+
+- **Oval** = an uncertain event *(the world decides)*
+- **Rectangle** = a decision *(you choose)*
+- **Hexagon** = the outcome you care about *(what you are trying to move)*
+
+:::
+
+. . .
+
+::: {.callout-box}
+A picture with all three is called a **decision map**.
+:::
+
+
+## David's decision map
+
+<br>
+
+::: {style="text-align: center; font-size: 0.85em;"}
+
+[Place midwife in Bahati or Nakuru?]{.dag-node .decision .rect}
+
+⬇
+
+[Volume of complicated births]{.dag-node}     [Distance to next-nearest facility]{.dag-node}     [Quality of supervision]{.dag-node}
+
+⬇                                              ⬇                                                ⬇
+
+[Newborn lives saved this year]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+The rectangle at the top is David's choice. The ovals in the middle are things he is *uncertain* about. The hexagon is what he cares about.
+:::
+
+
+# Expected value, in counts {background-color="#005CB9"}
+
+
+## What "expected value" really means
+
+Suppose Bahati has two possible futures over the next year:
+
+. . .
+
+::: {.incremental}
+
+- **The good year:** **8 lives saved** *(probability: 60 out of 100)*
+- **The bad year:** **2 lives saved** *(probability: 40 out of 100)*
+
+:::
+
+. . .
+
+::: {.definition-box}
+**Expected value** = the average over the futures, weighted by how likely each future is.
+
+For Bahati: *(60 × 8 + 40 × 2) ÷ 100 = (480 + 80) ÷ 100 = **5.6 lives saved per year, on average***.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Counts. Not formulas.** "60 out of 100 futures save 8, 40 out of 100 save 2." The maths is the same as Chapter 4.
+:::
+
+
+## The same calculation for Nakuru town
+
+::: {.incremental}
+
+- **The good year:** **5 lives saved** *(probability: 80 out of 100)*
+- **The bad year:** **1 life saved** *(probability: 20 out of 100)*
+
+:::
+
+. . .
+
+::: {.definition-box}
+Nakuru: *(80 × 5 + 20 × 1) ÷ 100 = (400 + 20) ÷ 100 = **4.2 lives saved per year, on average***.
+:::
+
+. . .
+
+::: {.callout-box}
+**Bahati: 5.6.** **Nakuru: 4.2.** *On these numbers*, the midwife should go to Bahati.
+:::
+
+
+# Watching ≠ Doing {background-color="#005CB9"}
+
+
+## The most important sentence in the chapter
+
+David has data showing facilities with more midwives have better newborn outcomes. He could just *stare at the data* and conclude: more midwives = more lives saved.
+
+. . .
+
+::: {.bad-example}
+But that data was **observed**. It tells you about facilities that *already chose* to staff up. They might be wealthier, in safer locations, with better roads.
+:::
+
+. . .
+
+::: {.good-example}
+David is not *observing*. He is **acting**. He is picking up a midwife and *putting her somewhere*. The two questions are different.
+:::
+
+. . .
+
+::: {.definition-box}
+This is the difference between **inference** *(watching)* and **intervention** *(doing)*. The whole course title is here.
+:::
+
+
+## Graph surgery in plain language
+
+When you intervene on a box, you have to **cut all the arrows pointing into it**, because *you* are now the cause of that box, not whatever else used to be.
+
+. . .
+
+::: {.callout-box}
+On David's picture, the box **"midwife placement"** had arrows from things like *facility caseload* and *community pressure*. When David decides to place her, those arrows get cut. He is the one doing the placing, not the caseload.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Numbers from observed data are not always the same as numbers from interventional data.** A picture lets you see when they will diverge.
+:::
+
+
+# Value of information {background-color="#005CB9"}
+
+
+## When is more research worth the wait?
+
+David's numbers above are uncertain. He could commission a one-month study of Bahati's actual complication rate — but that delays the placement by a month, and the midwife is not helping anyone in the meantime.
+
+. . .
+
+::: {.callout-box .orange}
+**Question:** would the new study change his decision? *If the answer is no, the study is not worth doing.*
+:::
+
+
+## EVPI in plain language
+
+::: {.definition-box}
+**Expected Value of Perfect Information (EVPI):** *imagine a magical study that told you the answer with 100% certainty. By how much would your average outcome improve?*
+
+If EVPI is small, more research is wasted. If EVPI is large, more research is essential. *Either way, you have an answer about whether to wait.*
+:::
+
+. . .
+
+::: {.callout-box .green}
+This single idea — "would more information actually change my decision?" — quietly resolves more analyst-vs-manager arguments than any other tool in this course.
+:::
+
+
+## Three quiet warnings
+
+::: {.incremental}
+
+1. **Expected value averages out the bad years.** Sometimes you should not average — you should plan for the bad year specifically. *(Ch 8.)*
+2. **Your probabilities came from somewhere.** Whose interview? Whose database? Trust them only as much as you trust the source.
+3. **A confident number from a wrong picture is the most dangerous thing in this chapter.** Always go back to Chapter 2 first.
+
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A donor offers your county a free newborn resuscitation device. Two hospitals want it. Hospital A is large and busy but has reliable electricity. Hospital B is smaller, rural, and has frequent power cuts.
+
+You estimate Hospital A would save *3 newborns per year* with the device, with high confidence. You estimate Hospital B would save *6 newborns per year if the power held*, but only *1 if it didn't* — and you think the power holds about half the time.
+
+**Compute the expected value for each hospital. Where does the device go?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: for hospital B, weight 6 by 0.5 and 1 by 0.5.*
+:::
+
+
+## Looking ahead
+
+In **Chapter 8**, we move from one decision to a *whole portfolio* of decisions across many places at once.
+
+. . .
+
+When you have to spread a budget across four countries, do you concentrate, spread evenly, or tier? Each strategy has a different shape of risk — and Chapter 8 will show you how to see those shapes before you commit.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind David's story**
+
+- **Office of the Auditor-General, Kenya** — county budget execution reports, publicly available at *oagkenya.go.ke*.
+- **Kenya County Public Expenditure Reviews (World Bank, 2014–2020)** — open-access analyses of county-level health budgeting.
+- **Nakuru County Health at a Glance, Ministry of Health (annual)** — facility-level staffing and outcome data.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapters 8–9 cover decision maps, expected value, and intervention vs observation in business settings.
+- **Howard, R. A. & Abbas, A. E. (2015)** — *Foundations of Decision Analysis*. The textbook on decision trees and EVPI. Dense but careful.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**A decision is just a question with consequences — and the value of more information is exactly how much it would change your decision.**
+
+David did not need a PhD. He needed a picture, two lookup tables, and the discipline to compute one expected value per option.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 7]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

@@ -61,6 +61,7 @@ inference-and-intervention/
   references.qmd            # Bibliography
   styles.scss               # Website SCSS theme
   chapters/                 # Chapter companion pages (website)
+  course-intro/             # Course intro slide deck (standalone, pre-rendered revealjs)
   ch01-intro/               # Ch 1 slide deck (standalone)
   ch02-qualitative-models/  # Ch 2 slide deck
   ch03-interview-case/      # Ch 3 slide deck
@@ -71,7 +72,7 @@ inference-and-intervention/
   ch08-resource-allocation/ # Ch 8 slide deck
   ch09-multi-agent/         # Ch 9 slide deck
   ch10-data-driven/         # Ch 10 slide deck
-  reflections on course videos/  # Video transcript review workflow
+  reflections on course videos/  # Video transcript review workflow (gitignored — private)
     input/                     #   YouTube transcripts (.docx), reference examples, photo, CV
     output/                    #   Revised scripts (.docx) and slide decks (Quarto revealjs)
   country-plans/            # Source .docx files (reference only — use public data from these)

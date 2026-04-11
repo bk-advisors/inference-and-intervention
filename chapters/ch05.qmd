@@ -1,210 +1,133 @@
 ---
-title: "Chapter 5: Situational Analysis"
-subtitle: "Running the model backward -- from what you observe to what is probably true"
+title: "Chapter 5 — When New Evidence Arrives"
+subtitle: "Hiwot, three explanations, and the redistribution rule"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-- Compute **marginal probabilities** by summing across all possible parent combinations
-- **Update beliefs with evidence** using Bayes' rule -- start with a prior, see evidence, get a posterior
-- Trace how information flows through **serial chains, forks, and colliders** and explain why each behaves differently
-- Apply the **explaining away** phenomenon -- when two causes compete to explain the same effect
-- Run a complete **district diagnosis** in R, ranking the most likely upstream problems given observed outcomes
+A regional health director in Amhara opens her email Monday morning. Maternal deaths in one of her districts jumped from **9 to 14** in a single quarter. Three explanations sit on the table within the hour: personnel attrition, a measles surge, or a reporting pipeline cleanup. Over the next two weeks, evidence will arrive piece by piece. Her belief has to update each time — without overreacting.
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** Bayesian updating is just redistributing your "out of 100" between explanations — keeping the total at 100 — based on which ones the new evidence fits.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Belief Updating
-
-Chapter 4 ran models forward: "If staffing is low, what happens to mortality?" Situational analysis runs them backward: "Mortality is high -- what is probably causing it?" This is how doctors diagnose patients, how mechanics troubleshoot engines, and how health program managers in Ethiopia figure out why a district is struggling. You start with a prior belief (your best guess before seeing any data), observe evidence (the outcome data from the district), and compute a posterior belief (your updated guess). Bayes' rule is the engine that drives this update.
-:::
-
-::: {.key-concept .green}
-#### Marginal Probabilities
-
-A marginal probability answers: "What is the overall chance of this outcome, before I know anything specific?" To compute it, you sum over all possible parent states, weighting each by how likely that parent state is. For example, P(NMR = High) in Ethiopia averages across districts with good staffing, bad staffing, good equipment, bad equipment -- everything. The marginal is your baseline. It is where you start before any district-specific evidence arrives. Once evidence comes in, the marginal gets replaced by a posterior -- and the gap between the two tells you how much you learned.
-:::
-
-::: {.key-concept .orange}
-#### Evidence Flow in the Three Triplet Structures
-
-The three building blocks of every DAG each handle information differently. In a **serial chain** (Staffing -> Quality -> NMR), information flows from end to end -- but if you already know Quality, learning about Staffing tells you nothing new about NMR. The chain is blocked. In a **fork** (Quality <- Disease Burden -> Mortality), the common cause creates a spurious link -- but conditioning on Disease Burden removes it. In a **collider** (Staffing -> Quality <- Equipment), the two causes are independent by default. But the moment you observe Quality, they become linked. These three rules scale to any size network.
-:::
-
-::: {.key-concept .red}
-#### Explaining Away
-
-This is the most counterintuitive idea in the entire course. Picture a collider: Staffing -> Quality <- Equipment. Normally, staffing levels and equipment availability have nothing to do with each other. But suppose you learn that a district in Ethiopia has good-quality care despite low staffing. Suddenly, equipment availability must be high -- because *something* has to explain the good quality, and if it is not staffing, it must be equipment. Confirming one cause makes the competing cause less likely. Disconfirming one makes the other more likely. This "explaining away" effect only kicks in when you condition on the collider (the shared effect).
-:::
-
-::: {.key-concept .teal}
-#### Diagnostic Inference
-
-Diagnostic inference is the practical payoff of everything above. Given an observation -- say, a district in Ethiopia's Amhara region reporting high neonatal mortality -- you feed that evidence into the Bayesian network and read off the posterior probabilities for every upstream cause. Which shifted the most from its prior? That is your top suspect. This turns a vague question ("Why is this district struggling?") into a ranked list of probable causes, ordered by how much the evidence shifted each belief. It is data-driven diagnosis.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
-<iframe src="../ch05-situational-analysis/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+<iframe src="../ch05-situational-analysis/index.html"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch05-situational-analysis/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
 :::
 
-## R Code Workshop
+## R workshop — update Hiwot's belief as evidence arrives
 
-We build a five-node Bayesian network for Ethiopia's health system, then use it to diagnose districts -- reasoning backward from observed mortality to the most likely upstream problems.
+In the lecture, we walked through Hiwot's three competing explanations, started with a 33-33-33 prior, and watched the numbers move twice — once on Tuesday, once on Wednesday. In this workshop you'll do the same updating in R, using the same Bayesian network machinery from Chapter 4.
 
-### Build the Ethiopia Network
-
-Three root nodes (Staffing, Equipment, Training) feed into Quality, which feeds into NMR. The CPTs are calibrated to publicly available data from Ethiopia's DHS and WHO reports.
+### Setting up
 
 ```{r}
-#| label: build-network
-#| echo: true
-
+#| label: ch05-setup
 library(bnlearn)
 library(gRain)
+```
 
-# Five-node DAG for Ethiopia
-dag <- model2network(
-  "[Staffing][Equipment][Training][Quality|Staffing:Equipment:Training][NMR|Quality]"
+### A picture for the three competing explanations
+
+```{r}
+#| label: ch05-structure
+# Three boxes: each is one of Hiwot's three explanations.
+# All three feed into the observed rise in deaths.
+hiwot_dag <- model2network("[Personnel][Measles][Reporting][DeathsRose|Personnel:Measles:Reporting]")
+
+plot(hiwot_dag)
+```
+
+What you should see: three parents (Personnel, Measles, Reporting) and one child (DeathsRose). Each parent could on its own explain the rise — that's the *collider* shape from Chapter 2.
+
+### Fill in the lookup tables
+
+```{r}
+#| label: ch05-tables
+# Hiwot's prior: roughly 33-33-33 across the three explanations.
+prior_personnel <- c(yes = 0.33, no = 0.67)
+prior_measles   <- c(yes = 0.33, no = 0.67)
+prior_reporting <- c(yes = 0.33, no = 0.67)
+
+# DeathsRose is "yes" if any of the three parents is "yes".
+# (Simplified — in reality you'd give each parent a weight.)
+deaths_table <- array(
+  c(
+    # Reporting=no
+    0.05, 0.95,   # Personnel=no, Measles=no
+    0.70, 0.30,   # Personnel=no, Measles=yes
+    0.70, 0.30,   # Personnel=yes, Measles=no
+    0.95, 0.05,   # Personnel=yes, Measles=yes
+    # Reporting=yes
+    0.70, 0.30,
+    0.95, 0.05,
+    0.95, 0.05,
+    0.99, 0.01
+  ),
+  dim = c(2, 2, 2, 2),
+  dimnames = list(
+    DeathsRose = c("yes", "no"),
+    Personnel  = c("no", "yes"),
+    Measles    = c("no", "yes"),
+    Reporting  = c("no", "yes")
+  )
 )
 
-# Root node CPTs (based on Ethiopia DHS/WHO public data)
-cpt_s <- array(c(0.40, 0.60), dim = 2,
-  dimnames = list(Staffing = c("Adequate", "Low")))
+hiwot_bn <- custom.fit(hiwot_dag, dist = list(
+  Personnel  = prior_personnel,
+  Measles    = prior_measles,
+  Reporting  = prior_reporting,
+  DeathsRose = deaths_table
+))
 
-cpt_e <- array(c(0.35, 0.65), dim = 2,
-  dimnames = list(Equipment = c("Available", "Unavailable")))
-
-cpt_t <- array(c(0.50, 0.50), dim = 2,
-  dimnames = list(Training = c("Completed", "Not_Completed")))
-
-# Quality CPT: 8 rows (2 x 2 x 2 parent combinations)
-cpt_q <- array(
-  c(0.95, 0.05,  0.80, 0.20,  0.65, 0.35,  0.45, 0.55,
-    0.55, 0.45,  0.35, 0.65,  0.20, 0.80,  0.08, 0.92),
-  dim = c(2, 2, 2, 2),
-  dimnames = list(Quality = c("Good", "Poor"),
-    Staffing = c("Adequate", "Low"),
-    Equipment = c("Available", "Unavailable"),
-    Training = c("Completed", "Not_Completed")))
-
-# NMR CPT
-cpt_nmr <- array(c(0.85, 0.15, 0.30, 0.70), dim = c(2, 2),
-  dimnames = list(NMR = c("Low", "High"), Quality = c("Good", "Poor")))
-
-# Assemble the fitted network
-bn_eth <- custom.fit(dag, list(
-  Staffing = cpt_s, Equipment = cpt_e, Training = cpt_t,
-  Quality = cpt_q, NMR = cpt_nmr))
+hiwot_grain <- as.grain(hiwot_bn)
 ```
 
-### Forward vs. Backward Queries
-
-Forward: "Given the cause, predict the effect." Backward: "Given the effect, infer the cause." Backward queries are the heart of situational analysis.
+### Monday: Hiwot only knows the deaths rose
 
 ```{r}
-#| label: forward-backward
-#| echo: true
-
-# FORWARD: P(NMR = High | Staffing = Low)
-# "If staffing is low, how likely is high mortality?"
-cpquery(bn_eth,
-  event = (NMR == "High"), evidence = (Staffing == "Low"), n = 1e6)
-
-# BACKWARD: P(Staffing = Low | NMR = High)
-# "Mortality is high -- how likely is it that staffing is the problem?"
-cpquery(bn_eth,
-  event = (Staffing == "Low"), evidence = (NMR == "High"), n = 1e6)
-
-# Marginal baseline (no evidence at all)
-cpquery(bn_eth, event = (NMR == "High"), evidence = TRUE, n = 1e6)
+#| label: ch05-monday
+# Just the observation that deaths rose. No other evidence yet.
+querygrain(setEvidence(hiwot_grain, evidence = list(DeathsRose = "yes")),
+           nodes = c("Personnel", "Measles", "Reporting"))
 ```
 
-### Compare Prior vs. Posterior
+You'll see all three explanations sitting roughly close to one another — the prior plus the simple fact "deaths rose".
 
-When we observe high NMR in a district, how much does each root cause shift from its baseline? The biggest shift points to the most likely culprit.
+### Tuesday: the chief of staff calls
+
+The personnel story gains support; the measles story loses support.
 
 ```{r}
-#| label: prior-posterior
-#| echo: true
-
-library(ggplot2)
-
-# Compute posteriors for each root node given NMR = High
-priors    <- c(Staffing = 0.60, Equipment = 0.65, Training = 0.50)
-posteriors <- c(
-  cpquery(bn_eth, (Staffing == "Low"), (NMR == "High"), n = 1e6),
-  cpquery(bn_eth, (Equipment == "Unavailable"), (NMR == "High"), n = 1e6),
-  cpquery(bn_eth, (Training == "Not_Completed"), (NMR == "High"), n = 1e6))
-
-# Side-by-side comparison
-results <- data.frame(
-  Variable = rep(c("Staffing\n(Low)", "Equipment\n(Unavail)", "Training\n(Not Done)"), 2),
-  Belief   = rep(c("Prior", "Posterior"), each = 3),
-  Prob     = c(priors, posteriors))
-
-results$Belief <- factor(results$Belief, levels = c("Prior", "Posterior"))
-
-ggplot(results, aes(x = Variable, y = Prob, fill = Belief)) +
-  geom_col(position = "dodge", width = 0.6) +
-  scale_fill_manual(values = c("Prior" = "#00A1DF", "Posterior" = "#E24A3F")) +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 1)) +
-  labs(title = "Belief Updating: Prior vs. Posterior Given NMR = High",
-       subtitle = "All 'bad' states become more likely after observing high mortality",
-       x = NULL, y = "Probability") +
-  theme_minimal(base_size = 14)
+#| label: ch05-tuesday
+querygrain(setEvidence(hiwot_grain,
+                       evidence = list(DeathsRose = "yes",
+                                       Measles    = "no")),
+           nodes = c("Personnel", "Measles", "Reporting"))
 ```
 
-### District Diagnosis Function
+Personnel is now meaningfully more likely than reporting.
 
-This reusable function takes a fitted network and a set of observations, then ranks every root node by how much its belief shifted. The biggest movers are your top diagnostic priorities.
+### Wednesday: the HMIS officer confirms a coding cleanup
+
+This is the *explaining away* moment from the lecture.
 
 ```{r}
-#| label: diagnosis-function
-#| echo: true
-
-diagnose_district <- function(bn, evidence_expr, n_samples = 1e6) {
-  nodes_info <- data.frame(
-    Node = c("Staffing", "Equipment", "Training"),
-    Bad_State = c("Low", "Unavailable", "Not_Completed"),
-    Prior = c(0.60, 0.65, 0.50))
-
-  nodes_info$Posterior <- c(
-    cpquery(bn, (Staffing == "Low"), evidence_expr, n = n_samples),
-    cpquery(bn, (Equipment == "Unavailable"), evidence_expr, n = n_samples),
-    cpquery(bn, (Training == "Not_Completed"), evidence_expr, n = n_samples))
-
-  nodes_info$Shift <- nodes_info$Posterior - nodes_info$Prior
-  nodes_info[order(-abs(nodes_info$Shift)), ]
-}
-
-# Diagnose a district in Amhara region with high NMR
-diagnose_district(bn_eth, (NMR == "High"))
+#| label: ch05-wednesday
+querygrain(setEvidence(hiwot_grain,
+                       evidence = list(DeathsRose = "yes",
+                                       Measles    = "no",
+                                       Reporting  = "yes")),
+           nodes = c("Personnel", "Measles", "Reporting"))
 ```
 
-## Key Takeaways
+Watch what happens to **Personnel**. Even though no new evidence about personnel arrived, its probability *drops* — because reporting is now absorbing more of the rise. That's the redistribution rule from the lecture, doing the work without you.
 
-::: {.key-takeaway}
-**Situational analysis runs the model backward.** Instead of predicting outcomes from causes, you observe outcomes and infer the most likely causes. This is how real diagnosis works.
+## Try it yourself
 
-**Marginal probabilities are your baseline.** The gap between the marginal (before evidence) and the posterior (after evidence) tells you exactly how much you learned from each observation.
-
-**The three triplet structures control information flow.** Chains and forks are blocked by conditioning on the middle node. Colliders are opened by it. Get this wrong and you introduce bias instead of removing it.
-
-**Explaining away is real and powerful.** When two independent causes share a common effect, observing the effect makes them compete. This is not a bug -- it is the correct way to reason under uncertainty.
-:::
-
-## Looking Ahead
-
-Next in **Chapter 6 -- Simpson's Paradox**, we tackle the most dangerous trap in data analysis:
-
-- When aggregated data tells you the *opposite* of the truth
-- Why you must always condition on confounders but never on mediators
-- The Prosecutor's Fallacy -- confusing P(evidence | hypothesis) with P(hypothesis | evidence)
-- A cross-country comparison across Ethiopia, Rwanda, Kenya, and Tanzania that gets the wrong answer without causal reasoning
+A regional director in Kenya sees antenatal coverage in one county jump from 65% to 78% in a single quarter. Three explanations: a new SMS reminder programme, a DHIS2 coding change, or a measles vaccination drive that brought women into clinics where they were also screened for ANC. Start with 33-33-33. A phone call confirms the DHIS2 coding change is real. How do your numbers move? What's the next piece of evidence you should ask for?

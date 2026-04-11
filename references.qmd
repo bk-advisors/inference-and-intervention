@@ -1,70 +1,82 @@
 ---
 title: "References"
-subtitle: "Textbook, data sources, R packages, and supplementary reading"
+subtitle: "Public sources, every chapter"
 ---
 
-## Primary Textbook
+This course uses only publicly available sources. Every number, every story, every protagonist is drawn from data anyone with a browser can verify. This page lists those sources, organised by what each one is for.
 
-Ryall, M. D., & Bramson, A. (2014). *Inference and Intervention: Causal Models for Business Analysis*. Routledge.
+## The textbook this course is adapted from
 
-::: {.callout-box}
-This course teaches the core concepts from the textbook using entirely new examples drawn from publicly available MNH data for Ethiopia, Rwanda, Kenya, and Tanzania.
-:::
+**Ryall, M. D. & Bramson, A. L. (2014).** *Inference and Intervention: Causal Models for Business Analysis.* Routledge.
 
-## Public Data Sources
+The textbook this course is built on. Ryall and Bramson developed the framework — qualitative pictures, quantitative tables, decision maps, game theory, structure learning — for business decisions. We have adapted every chapter for public health and Maternal & Newborn Health, with new examples drawn entirely from public MNH data.
 
-All MNH examples in this course use data from these publicly available sources:
+## Causal inference and decision theory
 
-| Source | What It Provides | Link |
-|--------|-----------------|------|
-| WHO | Maternal and newborn mortality estimates | [who.int](https://www.who.int/data/gho) |
-| UNICEF | Child mortality trends and coverage data | [data.unicef.org](https://data.unicef.org/) |
-| DHS Program | Demographic and Health Surveys by country | [dhsprogram.com](https://dhsprogram.com/) |
-| DHIS2 | District Health Information System documentation | [dhis2.org](https://dhis2.org/) |
-| World Bank | Health expenditure and workforce indicators | [data.worldbank.org](https://data.worldbank.org/) |
+- **Pearl, J. & Mackenzie, D. (2018).** *The Book of Why: The New Science of Cause and Effect.* Basic Books. The most readable introduction to causal inference in print.
+- **Pearl, J., Glymour, M. & Jewell, N. (2016).** *Causal Inference in Statistics: A Primer.* Wiley. Short, careful, with worked examples.
+- **Hernán, M. A. & Robins, J. M. (2020).** *Causal Inference: What If.* Chapman & Hall/CRC. Open-access at [hsph.harvard.edu/miguel-hernan/causal-inference-book](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/).
+- **Spirtes, P., Glymour, C. & Scheines, R. (2000).** *Causation, Prediction, and Search* (2nd ed.). MIT Press. The foundational text on the PC algorithm and structure learning. Open-access online.
+- **Howard, R. A. & Abbas, A. E. (2015).** *Foundations of Decision Analysis.* Pearson. The textbook on decision trees, expected value, and the value of perfect information.
+- **Dixit, A. & Nalebuff, B. (2008).** *The Art of Strategy.* Norton. The most readable introduction to game theory ever written. No equations.
+- **Gigerenzer, G. (2002).** *Calculated Risks: How to Know When Numbers Deceive You.* Simon & Schuster. The book that convinced an entire generation of doctors to teach probability in natural frequencies.
+- **Markowitz, H. (1952).** *Portfolio Selection.* Journal of Finance, 7(1). The classic finance paper that started portfolio thinking. Twelve pages. Worth reading once.
 
-## Causal Inference Literature
+## Maternal & Newborn Health data sources
 
-Pearl, J. (2009). *Causality: Models, Reasoning, and Inference* (2nd ed.). Cambridge University Press.
+| Source | What's there | Where |
+|--------|--------------|-------|
+| **WHO Global Health Observatory** | Country-level MNH indicators | [who.int/data/gho](https://www.who.int/data/gho) |
+| **UNICEF Data Warehouse** | Child and maternal health indicators by country | [data.unicef.org](https://data.unicef.org/) |
+| **DHS Program** | Household-level Demographic and Health Surveys for Ethiopia, Rwanda, Kenya, Tanzania, and many others | [dhsprogram.com](https://dhsprogram.com/) |
+| **DHIS2** | Open-source national health information system used in 70+ countries | [dhis2.org](https://dhis2.org/) |
+| **Lives Saved Tool (LiST)** | Open-source modelling tool from Johns Hopkins for estimating lives saved by MNH interventions | [livessavedtool.org](https://www.livessavedtool.org/) |
+| **World Bank Open Data** | Country-level economic, demographic, and health indicators | [data.worldbank.org](https://data.worldbank.org/) |
 
-Pearl, J., Glymour, M., & Jewell, N. P. (2016). *Causal Inference in Statistics: A Primer*. Wiley.
+## Country-specific sources used in this course
 
-Hernán, M. A., & Robins, J. M. (2020). *Causal Inference: What If*. Chapman & Hall/CRC. Available free at [miguelhernan.org](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/).
+### Ethiopia (Chapters 1, 5)
 
-## Decision Analysis & Game Theory
+- **DHS Ethiopia 2000, 2005, 2011, 2016** — successive Demographic and Health Surveys
+- **WHO, 2013** — *Success Factors for Women's and Children's Health: Ethiopia*
+- **Wang, H. et al., 2014** — "Global, regional, and national levels of neonatal, infant, and under-5 mortality." *The Lancet*, 384(9947). Open-access.
+- **Federal Ministry of Health Ethiopia** — Health Sector Transformation Plan II (2020/21–2024/25)
+- **Tigray Regional Health Bureau, 2014** — public summary of regional health programme outputs
 
-Dixit, A. K., & Nalebuff, B. J. (2008). *The Art of Strategy: A Game Theorist's Guide to Success in Business and Life*. W.W. Norton.
+### Rwanda (Chapter 2)
 
-## R Package References
+- **DHS Rwanda 2000, 2010, 2014/15, 2019/20**
+- **Rwanda Biomedical Centre, 2020** — *Annual Health Statistics Booklet*
+- **Farmer, P. et al., 2013** — "Reduced premature mortality in Rwanda: lessons from success." *BMJ*, 346:f65. Open-access.
 
-### dagitty
+### Kenya (Chapters 3, 7, 9)
 
-Textor, J., van der Zander, B., Gilthorpe, M. S., Liśkiewicz, M., & Ellison, G. T. H. (2016). Robust causal inference using directed acyclic graphs: The R package 'dagitty'. *International Journal of Epidemiology*, 45(6), 1887–1894.
+- **Constitution of Kenya, 2010**, Schedule 4 — the legal basis for devolution to 47 counties
+- **Kenya Health Information System (KHIS)** — county dashboards at [hiskenya.org](https://hiskenya.org)
+- **Office of the Auditor-General, Kenya** — county budget execution reports at [oagkenya.go.ke](https://oagkenya.go.ke)
+- **Office of the Controller of Budget, Kenya** — quarterly county budget implementation reports at [cob.go.ke](https://cob.go.ke)
+- **Kenya County Public Expenditure Reviews (World Bank, 2014–2020)** — open-access analyses of county-level health budgeting
+- **Bourbonnais, N., 2013** — *Implementing Free Maternal Health Care in Kenya: Challenges, Strategies, and Recommendations.* Kenya National Commission on Human Rights.
 
-- CRAN: [cran.r-project.org/package=dagitty](https://cran.r-project.org/package=dagitty)
+### Tanzania (Chapters 4, 10)
 
-### bnlearn
+- **Tanzania Service Provision Assessment (TSPA) 2014/15** — facility-level survey at [dhsprogram.com](https://dhsprogram.com)
+- **WHO, 2017** — *Trends in maternal mortality: 1990 to 2015*
+- **DHIS2 Tanzania** — national HMIS at [moh.go.tz](https://moh.go.tz)
+- **Tanzania Health Sector Strategic Plan V (2021–2026)** — Ministry of Health policy document
 
-Scutari, M. (2010). Learning Bayesian networks with the bnlearn R package. *Journal of Statistical Software*, 35(3), 1–22.
+## Methodological notes used in this course
 
-- CRAN: [cran.r-project.org/package=bnlearn](https://cran.r-project.org/package=bnlearn)
+- **Simpson, E. H. (1951).** "The Interpretation of Interaction in Contingency Tables." *Journal of the Royal Statistical Society*, B 13. The original paper on what we now call Simpson's Paradox.
+- **Pearl, J. (2014).** "Comment: Understanding Simpson's Paradox." *American Statistician*, 68(1). Open-access. The clearest modern treatment.
+- **Lu, C. et al., 2010.** "Public financing of health in developing countries: a cross-national systematic analysis." *The Lancet*, 375(9723). The classic open-access study of donor crowding-out.
+- **Croicu, M. et al., 2017.** *Reporting bias in routine health information systems.* WHO Bulletin, 95(7). Open-access.
+- **Brookings Institution, 2021.** *Financing the SDGs: Health and Education.* Open-access methodological notes on portfolio allocation in global health.
 
-### ggdag
+## Pedagogy
 
-Barrett, M. (2023). ggdag: Analyze and Create Elegant Directed Acyclic Graphs.
+- **Heath, C. & Heath, D. (2007).** *Made to Stick: Why Some Ideas Survive and Others Die.* Random House. The pedagogical framework this course is built on — every chapter follows the SUCCES principles (Simple, Unexpected, Concrete, Credible, Emotional, Stories) deliberately.
 
-- CRAN: [cran.r-project.org/package=ggdag](https://cran.r-project.org/package=ggdag)
+## A note on protagonists
 
-### ggplot2
-
-Wickham, H. (2016). *ggplot2: Elegant Graphics for Data Analysis* (2nd ed.). Springer.
-
-- CRAN: [cran.r-project.org/package=ggplot2](https://cran.r-project.org/package=ggplot2)
-
-## MNH Domain References
-
-World Health Organization. (2023). *Trends in Maternal Mortality 2000 to 2020*. WHO.
-
-UNICEF. (2023). *Levels and Trends in Child Mortality: Report 2023*. UN Inter-agency Group for Child Mortality Estimation.
-
-Bhutta, Z. A., et al. (2014). Can available interventions end preventable deaths in mothers, newborn babies, and stillbirths, and at what cost? *The Lancet*, 384(9940), 347–370.
+Every named protagonist in this course — Almaz, Beatrice, Faith, Joyce, Hiwot, Hassan, Naomi, David, Grace, Wangari, Patrick, Esther — is a **composite**. The details (ages, locations, situations, decisions) are drawn from the public sources listed above. The names are not real. Composites are clearly labeled at every introduction. We use this convention to give each chapter an emotional anchor without putting any real person on the spot.

@@ -1,192 +1,123 @@
 ---
-title: "Chapter 4: Quantitative Causal Models"
-subtitle: "Adding numbers to your causal diagrams with probability tables, Bayes' rule, and Bayesian networks"
+title: "Chapter 4 — Putting Numbers on the Picture"
+subtitle: "Joyce, the last 100 mothers, and lookup tables"
 ---
 
-## Learning Objectives
+## The mystery
 
-::: {.learning-objectives}
-- Translate everyday observations into **natural frequencies** ("55 out of 100 facilities") and then into probabilities
-- Build a **Conditional Probability Table (CPT)** -- a lookup table that answers "given the parents, how likely is each outcome?"
-- Apply **Bayes' rule** using a tree diagram to flip from "what would I see if this were true?" to "given what I see, what is probably true?"
-- Combine a DAG with CPTs to create a **Bayesian network** and query it in R using `bnlearn`
-- Explain why the **Causal Markov Condition** keeps the math manageable even in large models
+Tanzania's national maternal mortality ratio is **524 per 100,000 live births** *(WHO 2017)*. But Joyce — a midwife in Mwanza Region — does not deliver 100,000 births. She delivers about 100 a year. A number that's right at the country level can be useless at the bedside. We need a way to take the picture from Chapters 2–3 and turn each arrow into a number Joyce can actually use.
+
+::: {.callout-note}
+**The one thing to remember from this chapter:** A picture from Chapter 2 + a lookup table on every arrow = a Bayesian network. The picture tells you the structure; the counts tell you the strengths.
 :::
 
-## Key Concepts
-
-::: {.key-concept}
-#### Natural Frequencies and Conditional Probability
-
-Probabilities are easier to grasp when you start with counts. Imagine 100 health facilities in Tanzania. About 40 have adequate staffing; 60 do not. Among the 40 with adequate staffing, 34 deliver good-quality care. Among the 60 without, only 12 do. Those raw counts -- 34 out of 40, 12 out of 60 -- are natural frequencies. Divide them to get conditional probabilities: P(Good Quality | Adequate Staffing) = 34/40 = 0.85. Natural frequencies make the numbers feel real before we ever write a formula.
-:::
-
-::: {.key-concept .green}
-#### Lookup Tables (Conditional Probability Tables)
-
-A CPT is just a lookup table. You find the row that matches the parent states, and you read off the probability of each child state. Every row must add up to 1 (something has to happen). For a node with two parents each having two states, the table has four rows -- one for every combination. CPTs are the building blocks that turn a qualitative DAG into a number-crunching machine. In Tanzania's context, a CPT might encode: "If staffing is adequate AND equipment is available, there is an 85% chance of good-quality care."
-:::
-
-::: {.key-concept .orange}
-#### Bayes' Rule (Tree Diagram Version)
-
-Bayes' rule lets you reason backward. You observe an outcome -- say, high neonatal mortality in a Tanzanian district -- and you want to know the most likely cause. The tree diagram makes this visual: draw branches for each possible cause (staffing adequate vs. low), then sub-branches for the outcome (high vs. low mortality). Multiply along each branch to get the joint probability, then normalize. The result? Your updated belief about staffing, given what you observed. Prior belief in, evidence applied, posterior belief out.
-:::
-
-::: {.key-concept .red}
-#### Bayesian Networks
-
-A Bayesian network = DAG + one CPT per node. That is it. The DAG tells you what causes what. The CPTs tell you how strong each link is. Together, they let you compute any probability you want, update beliefs when new evidence arrives, and compare interventions side by side. For Tanzania, a four-node network (Staffing, Equipment, Quality, Neonatal Mortality) can answer questions like: "If we fix staffing but not equipment, how much does mortality drop?"
-:::
-
-::: {.key-concept .teal}
-#### The Causal Markov Condition
-
-Here is the trick that makes Bayesian networks practical. Each variable is independent of its non-descendants once you know its parents. This means the full joint distribution -- which could have millions of entries -- factors into a small product of CPTs. Instead of specifying every possible combination of every variable, you only specify each node's relationship with its direct parents. The DAG structure does the heavy lifting.
-:::
-
-## Lecture Slides
+## Watch the lecture
 
 ::: {.slide-embed}
-<iframe src="../ch04-quantitative-models/index.html" width="100%" height="500px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+<iframe src="../ch04-quantitative-models/index.html"></iframe>
 <div class="slide-embed-footer">
 <a href="../ch04-quantitative-models/index.html" target="_blank">Open slides full-screen &rarr;</a>
 </div>
 :::
 
-## R Code Workshop
+## R workshop — build Joyce's first Bayesian network
 
-Time to build a Bayesian network from scratch in R. We will model a simplified version of Tanzania's neonatal health system: four nodes, three arrows, and one big question -- which investment saves the most lives?
+In the lecture, we built a small two-arrow picture for Joyce's facility: **Anaemia → Bleeding → BadOutcome**, and we filled in counts from her last 100 mothers. In this workshop you'll do the same in R using the `bnlearn` package — and then ask the network the same questions Joyce asks at the bedside.
 
-### Define the DAG
-
-We use `bnlearn` to specify the structure. The notation `[Node|Parent]` means "this node depends on that parent."
+### Setting up
 
 ```{r}
-#| label: dag-structure
-#| echo: true
-
+#| label: ch04-setup
+# bnlearn handles Bayesian networks (pictures with lookup tables on the arrows).
+# gRain lets us ask the network specific questions.
 library(bnlearn)
-
-# Four-node DAG for Tanzania neonatal health
-# Staffing and Equipment both cause Quality; Quality causes NMR
-dag <- model2network(
-  "[Staffing][Equipment][Quality|Staffing:Equipment][NMR|Quality]"
-)
-
-# Check what we built
-dag
-nodes(dag)   # "Staffing" "Equipment" "Quality" "NMR"
-arcs(dag)    # Three directed edges
-```
-
-### Fill in the CPTs
-
-Each CPT is an array whose dimensions match the node's states and its parents' states. Root nodes (no parents) get simple marginal distributions.
-
-```{r}
-#| label: cpt-specification
-#| echo: true
-
-# Root nodes: simple probabilities based on Tanzania DHS data
-cpt_staffing <- array(c(0.40, 0.60), dim = 2,
-  dimnames = list(Staffing = c("Adequate", "Low")))
-
-cpt_equipment <- array(c(0.35, 0.65), dim = 2,
-  dimnames = list(Equipment = c("Available", "Unavailable")))
-
-# Quality depends on both Staffing and Equipment (4 rows, each sums to 1)
-cpt_quality <- array(
-  c(0.85, 0.15,   # Adequate staffing + Available equipment
-    0.50, 0.50,   # Low staffing + Available equipment
-    0.55, 0.45,   # Adequate staffing + Unavailable equipment
-    0.20, 0.80),  # Low staffing + Unavailable equipment
-  dim = c(2, 2, 2),
-  dimnames = list(
-    Quality   = c("Good", "Poor"),
-    Staffing  = c("Adequate", "Low"),
-    Equipment = c("Available", "Unavailable")))
-
-# NMR depends on Quality
-cpt_nmr <- array(
-  c(0.85, 0.15,   # Good quality -> 85% chance of low NMR
-    0.40, 0.60),  # Poor quality -> 60% chance of high NMR
-  dim = c(2, 2),
-  dimnames = list(NMR = c("Low", "High"), Quality = c("Good", "Poor")))
-
-# Assemble into a fitted Bayesian network
-bn_tz <- custom.fit(dag, list(
-  Staffing = cpt_staffing, Equipment = cpt_equipment,
-  Quality = cpt_quality, NMR = cpt_nmr))
-```
-
-### Query the Network
-
-Now the fun part. We can ask the network any conditional probability question using `cpquery()`.
-
-```{r}
-#| label: bn-queries
-#| echo: true
-
-# Question 1: What is P(NMR = High) overall in Tanzania?
-cpquery(bn_tz, event = (NMR == "High"), evidence = TRUE, n = 1e6)
-
-# Question 2: If staffing is low, how likely is high NMR?
-cpquery(bn_tz,
-  event    = (NMR == "High"),
-  evidence = (Staffing == "Low"), n = 1e6)
-
-# Question 3: Best case -- adequate staffing AND available equipment
-cpquery(bn_tz,
-  event    = (NMR == "High"),
-  evidence = (Staffing == "Adequate" & Equipment == "Available"), n = 1e6)
-```
-
-### Compare Interventions
-
-The `mutilated()` function implements the do-operator -- it forces a variable to a specific value and severs its incoming arrows. This lets us compare what happens when we *intervene* rather than just *observe*.
-
-```{r}
-#| label: intervention-comparison
-#| echo: true
-
 library(gRain)
-
-# Status quo
-p_baseline <- querygrain(as.grain(bn_tz), nodes = "NMR")$NMR["High"]
-
-# do(Staffing = Adequate) -- what if we fix staffing everywhere?
-bn_do_staff <- mutilated(bn_tz, evidence = list(Staffing = "Adequate"))
-p_staff <- querygrain(as.grain(bn_do_staff), nodes = "NMR")$NMR["High"]
-
-# do(Equipment = Available) -- what if we fix equipment everywhere?
-bn_do_equip <- mutilated(bn_tz, evidence = list(Equipment = "Available"))
-p_equip <- querygrain(as.grain(bn_do_equip), nodes = "NMR")$NMR["High"]
-
-# Compare all three scenarios
-data.frame(
-  Scenario = c("Status Quo", "Fix Staffing", "Fix Equipment"),
-  P_High_NMR = round(c(p_baseline, p_staff, p_equip), 3)
-)
 ```
 
-## Key Takeaways
+### Joyce's picture, with structure only
 
-::: {.key-takeaway}
-**Bayesian network = DAG + CPTs.** The diagram says what causes what; the tables say how strongly. Together they answer any probability question you can ask.
+```{r}
+#| label: ch04-structure
+# First, just the picture (no numbers yet).
+# This is the same kind of structure we drew in Chapter 2.
+joyce_dag <- model2network("[Anaemia][Bleeding|Anaemia][BadOutcome|Bleeding]")
 
-**Natural frequencies first, formulas second.** "34 out of 40 facilities" is easier to grasp than P(Q|S) = 0.85. Always ground the math in real counts.
+# Show the structure
+plot(joyce_dag)
+```
 
-**Bayes' rule flips the direction.** You see the outcome (high mortality) and reason backward to the most likely cause (staffing? equipment? both?). The tree diagram makes this visual and intuitive.
+What you should see: three boxes in a chain. Anaemia → Bleeding → BadOutcome. Same shape as the lecture diagram.
 
-**The do-operator reveals causal effects.** Observing that well-staffed facilities have lower mortality is not the same as knowing that *fixing* staffing will lower mortality. Graph surgery (the do-operator) isolates the true causal effect.
-:::
+### Now add Joyce's lookup tables
 
-## Looking Ahead
+Here are the counts straight from Joyce's logbook, in the same form as the lecture table:
 
-Next in **Chapter 5 -- Situational Analysis**, we put this Bayesian network to work on a real diagnostic puzzle in Ethiopia:
+```{r}
+#| label: ch04-tables
+# Joyce had 40 anaemia mothers and 60 non-anaemia mothers out of 100.
+# That's 0.40 vs 0.60 — but think of it as "40 out of 100".
+prob_anaemia <- array(
+  c(0.40, 0.60),
+  dim = 2,
+  dimnames = list(Anaemia = c("yes", "no"))
+)
 
-- Running the model *backward* -- from observed outcomes to hidden causes
-- Updating beliefs as multiple pieces of evidence arrive, one at a time
-- The **explaining away** phenomenon -- why confirming one cause makes a competing cause less likely
-- A complete district diagnosis workflow using Bayesian inference
+# Of every 40 anaemia mothers, 24 had bleeding (60%); of every 60 non-anaemia
+# mothers, only 12 had bleeding (20%).
+prob_bleeding_given_anaemia <- array(
+  c(0.60, 0.40,   # Anaemia = yes  → bleeding 60%, no bleeding 40%
+    0.20, 0.80),  # Anaemia = no   → bleeding 20%, no bleeding 80%
+  dim = c(2, 2),
+  dimnames = list(
+    Bleeding = c("yes", "no"),
+    Anaemia  = c("yes", "no")
+  )
+)
+
+# Of every 36 women who bled, 5 had a bad outcome (~14%); of every 64 who
+# didn't bleed, 1 had a bad outcome (~1.5%).
+prob_bad_given_bleeding <- array(
+  c(0.14, 0.86,
+    0.015, 0.985),
+  dim = c(2, 2),
+  dimnames = list(
+    BadOutcome = c("yes", "no"),
+    Bleeding   = c("yes", "no")
+  )
+)
+
+# Stitch the tables onto the picture.
+joyce_bn <- custom.fit(joyce_dag, dist = list(
+  Anaemia    = prob_anaemia,
+  Bleeding   = prob_bleeding_given_anaemia,
+  BadOutcome = prob_bad_given_bleeding
+))
+```
+
+### Ask the network Joyce's bedside questions
+
+```{r}
+#| label: ch04-query
+# Convert to gRain format so we can run queries.
+joyce_grain <- as.grain(joyce_bn)
+
+# Question 1: a new mother walks in with anaemia. What's the chance of a bad outcome?
+querygrain(setEvidence(joyce_grain,
+                       evidence = list(Anaemia = "yes")),
+           nodes = "BadOutcome")
+
+# Question 2 (the reverse): a mother had a bad outcome. What's the chance she had anaemia?
+querygrain(setEvidence(joyce_grain,
+                       evidence = list(BadOutcome = "yes")),
+           nodes = "Anaemia")
+```
+
+What you should see: question 1 gives you a probability that's much higher than the 6% baseline — because the anaemia evidence has flowed *forward* through the picture. Question 2 gives you a probability that's much higher than the 40% baseline — because the bad-outcome evidence has flowed *backward* through the picture.
+
+That's the magic of putting numbers on the picture. The arrows can run in both directions when you ask the network a question.
+
+## Try it yourself
+
+In a Tanzanian district, 100 women were tested for HIV during antenatal care last month. 20 tested positive. Of those 20, 3 had a low-birth-weight baby. Of the 80 who tested negative, 6 had a low-birth-weight baby.
+
+Build a tiny lookup table. Then answer: a new HIV-positive mother is how many times more likely to have a low-birth-weight baby than an HIV-negative mother?

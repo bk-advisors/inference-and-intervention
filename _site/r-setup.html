@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R Environment Setup – Inference and Intervention</title>
+<title>R Setup – Inference and Intervention</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -115,8 +115,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./ch01-intro/bka-logo.png" alt="" class="navbar-logo light-content">
-    <img src="./ch01-intro/bka-logo.png" alt="" class="navbar-logo dark-content">
+    <img src="./course-intro/bka-logo.png" alt="" class="navbar-logo light-content">
+    <img src="./course-intro/bka-logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Inference and Intervention</span>
@@ -131,6 +131,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li class="nav-item">
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./course-intro/index.html"> 
+<span class="menu-text">Course Intro</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./schedule.html"> 
@@ -160,18 +164,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#first-time-using-r" id="toc-first-time-using-r" class="nav-link active" data-scroll-target="#first-time-using-r">First Time Using R?</a></li>
-  <li><a href="#required-software" id="toc-required-software" class="nav-link" data-scroll-target="#required-software">Required Software</a></li>
-  <li><a href="#package-installation" id="toc-package-installation" class="nav-link" data-scroll-target="#package-installation">Package Installation</a></li>
-  <li><a href="#packages-by-chapter" id="toc-packages-by-chapter" class="nav-link" data-scroll-target="#packages-by-chapter">Packages by Chapter</a></li>
-  <li><a href="#verification-script" id="toc-verification-script" class="nav-link" data-scroll-target="#verification-script">Verification Script</a></li>
-  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a>
+  <li><a href="#you-dont-need-this-to-follow-the-lectures" id="toc-you-dont-need-this-to-follow-the-lectures" class="nav-link active" data-scroll-target="#you-dont-need-this-to-follow-the-lectures">You don’t need this to follow the lectures</a></li>
+  <li><a href="#what-you-will-need" id="toc-what-you-will-need" class="nav-link" data-scroll-target="#what-you-will-need">What you will need</a></li>
+  <li><a href="#the-r-packages-used-in-this-course" id="toc-the-r-packages-used-in-this-course" class="nav-link" data-scroll-target="#the-r-packages-used-in-this-course">The R packages used in this course</a></li>
+  <li><a href="#what-each-package-does" id="toc-what-each-package-does" class="nav-link" data-scroll-target="#what-each-package-does">What each package does</a></li>
+  <li><a href="#verifying-the-install" id="toc-verifying-the-install" class="nav-link" data-scroll-target="#verifying-the-install">Verifying the install</a></li>
+  <li><a href="#common-installation-problems" id="toc-common-installation-problems" class="nav-link" data-scroll-target="#common-installation-problems">Common installation problems</a>
   <ul class="collapse">
-  <li><a href="#bnlearn-installation-issues-on-windows" id="toc-bnlearn-installation-issues-on-windows" class="nav-link" data-scroll-target="#bnlearn-installation-issues-on-windows">bnlearn installation issues on Windows</a></li>
-  <li><a href="#grain-dependency-issues" id="toc-grain-dependency-issues" class="nav-link" data-scroll-target="#grain-dependency-issues">gRain dependency issues</a></li>
-  <li><a href="#dagitty-on-older-r-versions" id="toc-dagitty-on-older-r-versions" class="nav-link" data-scroll-target="#dagitty-on-older-r-versions">dagitty on older R versions</a></li>
+  <li><a href="#bnlearn-fails-to-install-on-windows" id="toc-bnlearn-fails-to-install-on-windows" class="nav-link" data-scroll-target="#bnlearn-fails-to-install-on-windows"><code>bnlearn</code> fails to install on Windows</a></li>
+  <li><a href="#grain-complains-about-bioconductor-dependencies" id="toc-grain-complains-about-bioconductor-dependencies" class="nav-link" data-scroll-target="#grain-complains-about-bioconductor-dependencies"><code>gRain</code> complains about Bioconductor dependencies</a></li>
+  <li><a href="#older-r-version" id="toc-older-r-version" class="nav-link" data-scroll-target="#older-r-version">Older R version</a></li>
   </ul></li>
-  <li><a href="#consistent-mnh-variables" id="toc-consistent-mnh-variables" class="nav-link" data-scroll-target="#consistent-mnh-variables">Consistent MNH Variables</a></li>
+  <li><a href="#dont-have-time-to-install-anything" id="toc-dont-have-time-to-install-anything" class="nav-link" data-scroll-target="#dont-have-time-to-install-anything">Don’t have time to install anything?</a></li>
   </ul>
 </nav>
     </div>
@@ -180,8 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R Environment Setup</h1>
-<p class="subtitle lead">Installing R, RStudio, and the required packages for this course</p>
+<h1 class="title">R Setup</h1>
+<p class="subtitle lead">Installing the tools the companion pages use</p>
 </div>
 
 
@@ -198,222 +202,128 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="first-time-using-r" class="level2">
-<h2 class="anchored" data-anchor-id="first-time-using-r">First Time Using R?</h2>
-<p>If you have never used R before, don’t worry! R is a free programming tool that helps us create diagrams, run simulations, and analyze data. Think of it as a very powerful calculator that can also draw pictures.</p>
-<p>Here is what you need to do:</p>
-<ol type="1">
-<li><strong>Download R</strong> — this is the engine that runs the code</li>
-<li><strong>Download RStudio</strong> — this is the app where you type and run your code (like a word processor for code)</li>
-<li><strong>Install packages</strong> — these are add-ons that give R extra powers (like apps on your phone)</li>
-</ol>
-<p>Follow the steps below and you will be up and running in about 15 minutes.</p>
+<section id="you-dont-need-this-to-follow-the-lectures" class="level2">
+<h2 class="anchored" data-anchor-id="you-dont-need-this-to-follow-the-lectures">You don’t need this to follow the lectures</h2>
+<p>Every chapter slide deck is self-contained. You can watch the entire course and never touch R. The R code on the companion pages is there to <em>read</em> first; running it is optional, and only needed if you want to try the exercises hands-on.</p>
+<p>If you do want to run the code yourself, this page tells you what to install.</p>
 </section>
-<section id="required-software" class="level2">
-<h2 class="anchored" data-anchor-id="required-software">Required Software</h2>
+<section id="what-you-will-need" class="level2">
+<h2 class="anchored" data-anchor-id="what-you-will-need">What you will need</h2>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th>Software</th>
-<th>Version</th>
-<th>Download</th>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Where to get it</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><strong>R</strong></td>
-<td>4.3 or later</td>
+<td><strong>R 4.3+</strong></td>
+<td>The programming language</td>
 <td><a href="https://www.r-project.org/">r-project.org</a></td>
 </tr>
 <tr class="even">
-<td><strong>RStudio</strong> (recommended IDE)</td>
-<td>Latest</td>
-<td><a href="https://posit.co/download/rstudio-desktop/">posit.co/downloads</a></td>
+<td><strong>RStudio</strong></td>
+<td>A friendly editor for R</td>
+<td><a href="https://posit.co/download/rstudio-desktop/">posit.co/download/rstudio-desktop</a></td>
 </tr>
 <tr class="odd">
-<td><strong>Quarto</strong> (for rendering slides)</td>
-<td>1.8 or later</td>
+<td><strong>Quarto 1.8+</strong></td>
+<td>(optional) for re-rendering the slide decks yourself</td>
 <td><a href="https://quarto.org/docs/get-started/">quarto.org</a></td>
 </tr>
 </tbody>
 </table>
-<div class="callout-box">
-<p><strong>Note:</strong> The slide decks and this website use <code>eval: false</code> for all R code blocks, meaning R code is displayed but not executed during rendering. You do <strong>not</strong> need R installed to view the slides or website. However, to run the workshop exercises interactively, you will need R and the packages below.</p>
-</div>
+<p>Install in that order. R first. RStudio second. Quarto third.</p>
 </section>
-<section id="package-installation" class="level2">
-<h2 class="anchored" data-anchor-id="package-installation">Package Installation</h2>
-<p>Run this once in your R console to install all packages used across the 10 chapters:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dagitty"</span>,   <span class="co"># DAG specification and analysis</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggdag"</span>,     <span class="co"># DAG visualization with ggplot2</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"bnlearn"</span>,   <span class="co"># Bayesian network structure and parameter learning</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggplot2"</span>,   <span class="co"># Data visualization</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ivreg"</span>,     <span class="co"># Instrumental variable regression (2SLS)</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyr"</span>,     <span class="co"># Data reshaping (pivot_longer)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"gRain"</span>      <span class="co"># Exact inference in Bayesian networks (junction tree)</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="the-r-packages-used-in-this-course" class="level2">
+<h2 class="anchored" data-anchor-id="the-r-packages-used-in-this-course">The R packages used in this course</h2>
+<p>Open RStudio. In the <strong>console</strong> at the bottom, paste this line and press Enter:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"dagitty"</span>, <span class="st">"ggdag"</span>, <span class="st">"bnlearn"</span>, <span class="st">"ggplot2"</span>,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"tidyr"</span>, <span class="st">"dplyr"</span>, <span class="st">"tibble"</span>, <span class="st">"gRain"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>That installs everything the companion pages need. The first install can take a few minutes — be patient.</p>
 </section>
-<section id="packages-by-chapter" class="level2">
-<h2 class="anchored" data-anchor-id="packages-by-chapter">Packages by Chapter</h2>
+<section id="what-each-package-does" class="level2">
+<h2 class="anchored" data-anchor-id="what-each-package-does">What each package does</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 27%">
-<col style="width: 27%">
-<col style="width: 45%">
+<col style="width: 28%">
+<col style="width: 43%">
+<col style="width: 28%">
 </colgroup>
 <thead>
 <tr class="header">
 <th>Package</th>
-<th>Purpose</th>
-<th>Chapters Used</th>
+<th>What it does</th>
+<th>Used in</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code>dagitty</code></td>
-<td>Define and analyze DAGs, d-separation, adjustment sets</td>
-<td>1, 2, 3, 4, 5, 10</td>
+<td><strong>dagitty</strong></td>
+<td>Builds and queries causal diagrams</td>
+<td>Ch 1, 2, 3, 6</td>
 </tr>
 <tr class="even">
-<td><code>ggdag</code></td>
-<td>Visualize DAGs using ggplot2</td>
-<td>1, 2, 3, 10</td>
+<td><strong>ggdag</strong></td>
+<td>Draws dagitty diagrams nicely</td>
+<td>Ch 1, 2, 3, 6</td>
 </tr>
 <tr class="odd">
-<td><code>bnlearn</code></td>
-<td>Bayesian network structure and parameter learning</td>
-<td>4, 5, 7, 10</td>
+<td><strong>bnlearn</strong></td>
+<td>Builds Bayesian networks (pictures with lookup tables)</td>
+<td>Ch 4, 5, 10</td>
 </tr>
 <tr class="even">
-<td><code>ggplot2</code></td>
-<td>All data visualizations</td>
-<td>4, 5, 6, 7, 8, 9, 10</td>
+<td><strong>gRain</strong></td>
+<td>Asks Bayesian networks specific questions</td>
+<td>Ch 4, 5</td>
 </tr>
 <tr class="odd">
-<td><code>gRain</code></td>
-<td>Exact inference via junction trees (companion to bnlearn)</td>
-<td>4, 5</td>
+<td><strong>ggplot2</strong></td>
+<td>Makes histograms and plots</td>
+<td>Ch 8</td>
 </tr>
 <tr class="even">
-<td><code>ivreg</code></td>
-<td>Instrumental variable regression (two-stage least squares)</td>
-<td>10</td>
-</tr>
-<tr class="odd">
-<td><code>tidyr</code></td>
-<td>Data reshaping (<code>pivot_longer</code>)</td>
-<td>8</td>
+<td><strong>dplyr / tidyr / tibble</strong></td>
+<td>Data manipulation helpers</td>
+<td>Ch 6, 7, 8, 9</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="verification-script" class="level2">
-<h2 class="anchored" data-anchor-id="verification-script">Verification Script</h2>
-<p>After installing, run this script to verify all packages load correctly:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Verification: load each package and print version</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dagitty"</span>, <span class="st">"ggdag"</span>, <span class="st">"bnlearn"</span>, <span class="st">"ggplot2"</span>, <span class="st">"ivreg"</span>, <span class="st">"tidyr"</span>, <span class="st">"gRain"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> packages) {</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">requireNamespace</span>(pkg, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) {</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"✓ %s %s</span><span class="sc">\n</span><span class="st">"</span>, pkg, <span class="fu">packageVersion</span>(pkg)))</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"✗ %s — NOT INSTALLED</span><span class="sc">\n</span><span class="st">"</span>, pkg))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Expected output (version numbers may vary):</p>
-<pre><code>✓ dagitty 0.3-4
-✓ ggdag 0.2.12
-✓ bnlearn 4.9.4
-✓ ggplot2 3.5.1
-✓ ivreg 0.6-3
-✓ tidyr 1.3.1
-✓ gRain 1.4.3</code></pre>
+<section id="verifying-the-install" class="level2">
+<h2 class="anchored" data-anchor-id="verifying-the-install">Verifying the install</h2>
+<p>Paste this into the RStudio console. If every line returns a version number without an error, you are set:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"dagitty"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggdag"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"bnlearn"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"gRain"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"dplyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="troubleshooting" class="level2">
-<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
-<section id="bnlearn-installation-issues-on-windows" class="level3">
-<h3 class="anchored" data-anchor-id="bnlearn-installation-issues-on-windows">bnlearn installation issues on Windows</h3>
-<p><code>bnlearn</code> requires compilation. If you encounter errors:</p>
-<ol type="1">
-<li>Install <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a> (match the version to your R version)</li>
-<li>Restart R and try <code>install.packages("bnlearn")</code> again</li>
-</ol>
+<section id="common-installation-problems" class="level2">
+<h2 class="anchored" data-anchor-id="common-installation-problems">Common installation problems</h2>
+<section id="bnlearn-fails-to-install-on-windows" class="level3">
+<h3 class="anchored" data-anchor-id="bnlearn-fails-to-install-on-windows"><code>bnlearn</code> fails to install on Windows</h3>
+<p>You may need <a href="https://cran.r-project.org/bin/windows/Rtools/"><strong>Rtools</strong></a>, which provides the compiler <code>bnlearn</code> needs on Windows. Install Rtools, restart RStudio, then re-run the install.packages line.</p>
 </section>
-<section id="grain-dependency-issues" class="level3">
-<h3 class="anchored" data-anchor-id="grain-dependency-issues">gRain dependency issues</h3>
-<p><code>gRain</code> depends on Bioconductor packages. If <code>install.packages("gRain")</code> fails:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">requireNamespace</span>(<span class="st">"BiocManager"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">"BiocManager"</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"RBGL"</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"Rgraphviz"</span>)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"gRain"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="grain-complains-about-bioconductor-dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="grain-complains-about-bioconductor-dependencies"><code>gRain</code> complains about Bioconductor dependencies</h3>
+<p><code>gRain</code> depends on a package called <code>graph</code> from Bioconductor. Install it with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"BiocManager"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)) <span class="fu">install.packages</span>(<span class="st">"BiocManager"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="fu">c</span>(<span class="st">"graph"</span>, <span class="st">"RBGL"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then re-run the install.packages line.</p>
 </section>
-<section id="dagitty-on-older-r-versions" class="level3">
-<h3 class="anchored" data-anchor-id="dagitty-on-older-r-versions">dagitty on older R versions</h3>
-<p>If <code>dagitty</code> installation fails, ensure your R version is 4.3 or later. The package uses features not available in older versions.</p>
+<section id="older-r-version" class="level3">
+<h3 class="anchored" data-anchor-id="older-r-version">Older R version</h3>
+<p>The course is tested against R 4.3 and later. If you are on R 4.2 or earlier, please update — several of the packages above will fail or behave unexpectedly on older versions.</p>
 </section>
 </section>
-<section id="consistent-mnh-variables" class="level2">
-<h2 class="anchored" data-anchor-id="consistent-mnh-variables">Consistent MNH Variables</h2>
-<p>These variable names are used consistently across chapters in the R code workshops:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 38%">
-<col style="width: 30%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Variable</th>
-<th>Values</th>
-<th>R Name</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Staffing</td>
-<td>Adequate / Low</td>
-<td><code>Staffing</code></td>
-</tr>
-<tr class="even">
-<td>Equipment (CPAP)</td>
-<td>Available / Unavailable</td>
-<td><code>Equipment</code> or <code>CPAP</code></td>
-</tr>
-<tr class="odd">
-<td>Training</td>
-<td>Completed / Not Completed</td>
-<td><code>Training</code></td>
-</tr>
-<tr class="even">
-<td>Quality of Care</td>
-<td>Good / Poor</td>
-<td><code>Quality</code></td>
-</tr>
-<tr class="odd">
-<td>Neonatal Mortality Rate</td>
-<td>High (&gt;25/1000) / Low (≤25/1000)</td>
-<td><code>NMR</code></td>
-</tr>
-<tr class="even">
-<td>Maternal Mortality Ratio</td>
-<td>High (&gt;300/100K) / Low (≤300/100K)</td>
-<td><code>MMR</code></td>
-</tr>
-<tr class="odd">
-<td>Coverage</td>
-<td>&gt;80% / ≤80%</td>
-<td><code>Coverage</code></td>
-</tr>
-</tbody>
-</table>
+<section id="dont-have-time-to-install-anything" class="level2">
+<h2 class="anchored" data-anchor-id="dont-have-time-to-install-anything">Don’t have time to install anything?</h2>
+<p>You can read every R workshop on the companion pages without running it. The code is annotated line-by-line, and the explanatory paragraphs around each block tell you what the code does and what to expect from the output. Reading is enough to get the ideas; running is for when you are ready to try them on your own data.</p>
 
 
 </section>

@@ -1,0 +1,319 @@
+---
+title: "Chapter 10 — Can the Computer Just Tell Us?"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Esther
+
+**Esther, 36, data scientist at the Ministry of Health, Tanzania** *(a composite drawn from publicly available DHIS2 case studies — the role and tools are real, the name is not)*
+
+. . .
+
+Esther sits in front of **ten years of monthly data from every health facility in Tanzania**. The data lives in **DHIS2** — the open-source national health information system that runs across most of sub-Saharan Africa.
+
+. . .
+
+Sixty thousand rows. Forty columns. Every district, every month, every indicator from antenatal coverage to drug stockouts.
+
+. . .
+
+Her director walks in. *"Just run an algorithm on this and tell us what's causing what."*
+
+. . .
+
+::: {.callout-box}
+**The question:** Can a computer actually discover causal arrows from data alone? Or is there a hidden limit nobody warned her about?
+:::
+
+
+## And here is the puzzle
+
+Modern algorithms can do remarkable things with this kind of data:
+
+. . .
+
+::: {.incremental}
+
+- **Find correlations** between any two columns
+- **Find conditional independences** *(do these two columns become independent once you hold a third constant?)*
+- **Find clusters** of districts that behave similarly
+- **Predict next month's value** for any indicator
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**But there is one thing they fundamentally cannot do, and it is the thing Esther was hired to figure out.** The next eight slides explain what — and why.
+:::
+
+
+# What machines can do {background-color="#005CB9"}
+
+
+## Conditional independence — the algorithm's superpower
+
+Remember the three shapes from Chapter 2 — chain, fork, collider? Each one leaves a *specific fingerprint* in the data:
+
+. . .
+
+::: {.incremental}
+
+- **Chain** (A → B → C): A and C are correlated, but **become independent once you hold B constant**.
+- **Fork** (A ← B → C): A and C are correlated, but **become independent once you hold B constant**.
+- **Collider** (A → B ← C): A and C are independent, but **become correlated once you hold B constant**.
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The algorithm can detect every one of these fingerprints automatically.** This is the part where machines really shine.
+:::
+
+
+## Esther runs the algorithm
+
+She hands the DHIS2 data to a **structure learning algorithm** — *bnlearn* in R, *pgmpy* in Python, the underlying method is called the **PC algorithm**.
+
+. . .
+
+It returns a picture. **An automatically discovered network** of nodes and edges, based purely on the conditional independences it found.
+
+. . .
+
+::: {.callout-box}
+This is genuinely impressive. Twenty years ago, doing this for sixty thousand rows of data would have taken a research team months. Now Esther does it in an afternoon.
+:::
+
+
+# What machines cannot do {background-color="#005CB9"}
+
+
+## The wall
+
+The algorithm gives Esther a network with about **fifteen edges**. But every single edge is *undirected* — a line, not an arrow.
+
+. . .
+
+::: {.callout-box .red}
+**Why?** Because three different pictures — **A → B**, **A ← B**, and **A ← C → B** — produce the *same* conditional-independence fingerprint. **The data alone cannot tell them apart.**
+:::
+
+. . .
+
+::: {.definition-box}
+This is not a flaw in the algorithm. It is a **fundamental mathematical limit** of what data can do without help.
+:::
+
+
+## A picture of the limit
+
+<br>
+
+::: {style="text-align: center; font-size: 0.85em;"}
+
+[Stockouts]{.dag-node}  ───  [Maternal deaths]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+The algorithm tells Esther these two are *related*. It cannot tell her:
+
+. . .
+
+::: {.incremental}
+
+- **Stockouts → deaths** *(missing drugs cause deaths)*, or
+- **Deaths → stockouts** *(deaths trigger emergency restocking that causes future shortages)*, or
+- **Both share a hidden parent** *(a budget cut that reduces drugs and overburdens staff)*
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*All three explanations are mathematically equivalent for the algorithm.* The arrow direction has to come from outside.
+:::
+
+
+# The expert + algorithm loop {background-color="#005CB9"}
+
+
+## A better recipe
+
+Esther's first instinct was *"let the algorithm do it all"*. Her second, after the wall, is much more powerful.
+
+. . .
+
+::: {.incremental}
+
+1. **Draw a partial picture from interviews** *(Chapter 3 — talk to clinicians, supply chain officers, district medical officers).*
+2. **Run the algorithm** to find the conditional-independence fingerprints in the data.
+3. **Compare.** Where the algorithm and the picture agree, you have found something solid. Where they disagree, you have found a question worth investigating.
+4. **Use experiments or domain knowledge** to orient the undirected edges the algorithm leaves behind.
+5. **Iterate.** Updated picture, re-run algorithm, repeat.
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is the loop that actually works.** Pure algorithm misses too much. Pure interviews miss too much. Together they find what neither could alone.
+:::
+
+
+## What Esther actually delivers
+
+Esther goes back to her director with two pictures, not one:
+
+. . .
+
+::: {.incremental}
+
+- **Picture A:** the algorithm-only network — a beautiful but mostly undirected web of fifteen edges
+- **Picture B:** the same network *with directions added* by interviewing four district medical officers and one supply-chain manager
+
+:::
+
+. . .
+
+::: {.callout-box}
+*Picture B is not "more accurate" in some abstract sense. It is **decision-useful** in a way Picture A is not.* Her director can act on Picture B. Picture A is just a wall ornament.
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — The algorithm is loud about uncertainty in the wrong way
+
+A structure-learning algorithm will happily report a network even when the data is far too thin to support it.
+
+. . .
+
+::: {.callout-box .orange}
+**It will give you an answer with confidence even when the answer is wrong.** Always check sample sizes per node. Cells with fewer than 50 observations are not reliable.
+:::
+
+
+## Warning 2 — Hidden variables break everything
+
+If two of your "discovered" variables are both caused by something you did not measure, the algorithm will draw a *spurious* edge between them.
+
+. . .
+
+::: {.callout-box .orange}
+**The algorithm assumes you measured everything that matters.** You did not. *Nobody ever does.* Check the picture against domain knowledge for "edges that should not be there".
+:::
+
+
+## Warning 3 — Even with directions, "correlation in observational data" ≠ "intervention will work"
+
+Even when Esther's final picture has all the right arrows, it is built from *observational* data — Tanzania's existing patterns, not its possible futures.
+
+. . .
+
+::: {.callout-box .red}
+**The "intervention vs observation" distinction from Chapter 7 still applies.** A picture built from data can describe the world. To predict what an intervention will *do*, you still need the graph-surgery move from Chapter 7.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+You run a structure learning algorithm on a Kenyan county dataset. It finds a strong undirected edge between **"facility births"** and **"newborn deaths"**.
+
+**What are at least three different stories the data could be telling?** *(Hint: review chains, forks, colliders, and hidden variables — and do not forget that the most dangerous explanation is "the algorithm picked up a reporting artefact, not a real causal link".)*
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: think about who decides which deaths get recorded, and where.*
+:::
+
+
+## Looking ahead — and looking back
+
+This is the last lecture of the course.
+
+. . .
+
+You started with Almaz in Tigray and a question — *did the Health Extension Worker save her baby, or would the baby have been fine anyway?*
+
+. . .
+
+You now have an answer to that question. Not "yes" or "no" — but a *toolkit*: draw the picture, put numbers on it, update with new evidence, watch out for Simpson, decide with expected value, account for the other side's reaction, and never let the algorithm choose your arrows for you.
+
+. . .
+
+::: {.callout-box .green}
+That toolkit is what the next thirty years of your career will run on. Use it well.
+:::
+
+
+## Further reading
+
+::: {.callout-box}
+**The data and tools behind Esther's story**
+
+- **DHIS2** — open-source national health information system, used by 70+ countries. *dhis2.org*. Tanzania's deployment is documented in MOH publications.
+- **Tanzania Health Sector Strategic Plan V (2021–2026)** — the policy document framing data-driven decision-making in Tanzanian MNH.
+- **Spirtes P., Glymour C., Scheines R. (2000)** — *Causation, Prediction, and Search*. MIT Press. The foundational text on the PC algorithm and structure learning. Open-access second edition online.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 14 covers structure learning and the limits of automated causal discovery for business decisions.
+- **Pearl, J. & Mackenzie, D. (2018)** — *The Book of Why*. Chapter 10 is the most accessible explanation of why data alone cannot orient causal arrows, and why the expert-plus-algorithm loop is the only way out.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**Data alone cannot tell you the direction of a causal arrow. Data plus a few expert assumptions can — and that is what structure learning really is.**
+
+Esther's algorithm was powerful. The expert was indispensable. The two together did what neither could do alone.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 10 | The end of the course — and the start of the work]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::
