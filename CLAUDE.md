@@ -60,24 +60,36 @@ inference-and-intervention/
   r-setup.qmd               # R setup guide
   references.qmd            # Bibliography
   styles.scss               # Website SCSS theme
-  chapters/                 # Chapter companion pages (website)
-  course-intro/             # Course intro slide deck (standalone, pre-rendered revealjs)
-  ch01-intro/               # Ch 1 slide deck (standalone)
-  ch02-qualitative-models/  # Ch 2 slide deck
-  ch03-interview-case/      # Ch 3 slide deck
-  ch04-quantitative-models/ # Ch 4 slide deck
-  ch05-situational-analysis/# Ch 5 slide deck
-  ch06-business-financials/ # Ch 6 slide deck
-  ch07-single-agent/        # Ch 7 slide deck
-  ch08-resource-allocation/ # Ch 8 slide deck
-  ch09-multi-agent/         # Ch 9 slide deck
-  ch10-data-driven/         # Ch 10 slide deck
+  chapters/                 # Chapter companion pages (website) — embed both lecture + tutorial decks
+  course-intro/             # Course intro slide deck (Made-to-Stick style)
+  # Main lecture decks (textbook v2 style) — one per chapter
+  ch01-intro/
+  ch02-qualitative-models/
+  ch03-interview-case/
+  ch04-quantitative-models/
+  ch05-situational-analysis/
+  ch06-business-financials/
+  ch07-single-agent/
+  ch08-resource-allocation/
+  ch09-multi-agent/
+  ch10-data-driven/
+  # Tutorial / breakout session decks (Made-to-Stick style) — one per chapter
+  ch01-intro-tutorial/
+  ch02-qualitative-models-tutorial/
+  ch03-interview-case-tutorial/
+  ch04-quantitative-models-tutorial/
+  ch05-situational-analysis-tutorial/
+  ch06-simpsons-paradox-tutorial/
+  ch07-decision-analysis-tutorial/
+  ch08-resource-allocation-tutorial/
+  ch09-game-theory-tutorial/
+  ch10-structure-learning-tutorial/
   reflections on course videos/  # Video transcript review workflow (gitignored — private)
     input/                     #   YouTube transcripts (.docx), reference examples, photo, CV
     output/                    #   Revised scripts (.docx) and slide decks (Quarto revealjs)
   country-plans/            # Source .docx files (reference only — use public data from these)
   context/                  # Reference PDFs (do not modify)
-  _archive/                 # Archived v1 graduate-level content
+  _archive/                 # Archived versions: v1-graduate-level/, v2-mnh-high-school/ (v2 = source of current lecture decks)
 ```
 
 ## Build Commands
