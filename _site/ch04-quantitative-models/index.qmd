@@ -1,7 +1,7 @@
 ---
-title: "Chapter 4 — Putting Numbers on the Picture"
+title: "Chapter 4: Quantitative Causal Models"
 subtitle: "Inference and Intervention | BK Advisors"
-author: "Matthew Luke Kuch | BK Advisors"
+author: "BK Advisors"
 date: today
 format:
   revealjs:
@@ -16,290 +16,1160 @@ format:
     center: false
     width: 1280
     height: 720
-    self-contained: false
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
 ---
 
-## Meet Joyce
+## Learning Objectives
 
-**Joyce, 41, midwife at a rural facility in Mwanza Region, Tanzania** *(a composite drawn from the Tanzania Service Provision Assessment 2014/15 — the details are real, the name is not)*
+After this chapter, you will be able to:
+
+::: {.incremental}
+- Turn real-world counts into **probabilities** using natural frequencies
+- Read and build **lookup tables** (Conditional Probability Tables) that capture how parent variables shape a child variable
+- Use **Bayes' rule** to think backwards -- "we see a bad outcome; what probably caused it?"
+- Explain why each node in a Bayesian network **only depends on its direct parents** and why that simplifies everything
+- Build and query a **Bayesian network** in R using `bnlearn`
+:::
+
+
+## Chapter Overview -- From Arrows to Numbers
+
+::: {.callout-box}
+**Where we are:** In Chapters 2 and 3 we built qualitative causal models -- diagrams with arrows and [+]/[-] signs. Those diagrams tell us *what affects what* and *in which direction*. But they cannot tell us *by how much*. This chapter adds numbers.
+:::
 
 . . .
 
-Joyce has delivered hundreds of babies in her career.
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Qualitative DAG<br>(Ch 2-3)</div>
+<div class="step-arrow">+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Lookup<br>Tables</div>
+<div class="step-arrow">=</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Bayesian<br>Network</div>
+</div>
 
 . . .
 
-Last week she opened her stockroom and counted. **Of the 100 women she has delivered in the last twelve months, 55 came in with at least one major risk factor** — bleeding history, anaemia, prior caesarean, or eclampsia signs *(consistent with TSPA 2014/15 facility-level data)*.
+::: {.callout-box .green}
+Think of it this way: a qualitative model is like a road map that shows which towns are connected. A **quantitative** model adds the distances between towns -- now you can actually plan a trip.
+:::
+
+
+# Counting to Probability {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Start with what you can count</span>
+
+
+## Start with Counts
+
+The most natural way to think about uncertainty is to **count things**.
 
 . . .
 
-Of those 55, **6 ended badly** — either the mother or the baby did not come home.
+::: {.example-block}
+[Tanzania Health Facilities]{.example-label}
+
+Tanzania has roughly 8,000 health facilities across 26 regions. The country faces a workforce shortage estimated at about 55% (WHO/Lancet). So:
+
+- Out of **100 health facilities** in rural Tanzania, about **55 have a severe workforce shortage**.
+- The other **45** have staffing closer to what is needed.
+
+That is a fact you can picture: line up 100 facilities, and more than half are short-staffed.
+:::
 
 . . .
 
 ::: {.callout-box}
-**The question:** A new mother walks in tomorrow with anaemia. **What is the chance she has a bad outcome — and how do we get an answer that is actually useful to Joyce, in plain numbers, not in formulas?**
+These counts -- "55 out of 100" -- are called **natural frequencies**. They are easier to reason with than abstract decimals, so we will use them as our starting point throughout this chapter.
 :::
 
 
-## And here is the puzzle
+## From Counts to Probability
 
-Tanzania's national surveys give us numbers like *"the maternal mortality ratio is 524 per 100,000 live births"* *(WHO, 2017)*.
-
-. . .
-
-But Joyce does not deliver 100,000 births. She delivers about 100 a year.
+Probability is just a shorthand for natural frequencies.
 
 . . .
 
-::: {.callout-box .orange}
-**A number that is right at the country level can be useless at the bedside.** What we need is a way to take the picture from Chapters 2 and 3 and turn each arrow into a number Joyce can actually use.
-:::
-
-
-# Counts before formulas {background-color="#005CB9"}
-
-
-## Forget probability for a minute
-
-People say *"the probability is 0.06"* and most of the room glazes over.
-
-. . .
-
-People say *"6 out of 100"* and everybody gets it.
+| Natural Frequency | Probability |
+|---|---|
+| 55 out of 100 facilities are short-staffed | P(Staffing = Low) = 0.55 |
+| 45 out of 100 facilities have adequate staffing | P(Staffing = Adequate) = 0.45 |
+| 20 out of 1,000 newborns do not survive the first month | P(Neonatal Death) = 0.020 |
 
 . . .
 
 ::: {.definition-box}
-**Natural frequencies** — counts out of a round number — are how human brains were built to think about chance. We are going to use them for the entire chapter.
+**Probability:** The fraction of times something happens out of the total. If 55 of 100 facilities are short-staffed, the probability of picking a short-staffed facility at random is 55/100 = 0.55.
 :::
 
 . . .
 
 ::: {.callout-box .green}
-*Probability is just frequency in disguise.* If you ever get lost in this chapter, translate everything back into "X out of 100".
+**Two ground rules** that always hold:
+
+- Every probability is between 0 (never happens) and 1 (always happens)
+- The probabilities of all possible states add up to 1. If P(Low) = 0.55, then P(Adequate) = 1 - 0.55 = 0.45
 :::
 
 
-## Joyce's last 100 mothers
+## Where Do These Numbers Come From?
 
-Out of the 100 mothers Joyce delivered in the last year:
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**From data:**
 
-<br>
+Tanzania's DHIS2 system (used at most facilities) and periodic facility surveys give us real counts -- how many facilities have enough staff, how many have essential medicines, how many reported neonatal deaths.
 
-| | Anaemia | No anaemia | Total |
+When data exists, use it.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**From expert judgment:**
+
+Sometimes the data is incomplete or missing. In those cases, experienced health workers, district officers, or program managers provide their best estimates. "I would say about 3 in 10 facilities in this region have functioning CPAP."
+
+When data is sparse, informed judgment fills the gap.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .green}
+**In practice, we use both.** The numbers in this chapter are illustrative -- clearly marked as such -- but they are grounded in publicly available data on Tanzania's health system (WHO, DHS, Lancet).
+:::
+
+
+# Conditional Probability {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Given what we already know, what changes?</span>
+
+
+## The Key Question
+
+Plain probability asks: "What fraction of all facilities have high neonatal mortality?"
+
+**Conditional** probability asks a sharper question:
+
+. . .
+
+::: {.callout-box .orange}
+**"Given that a facility has low staffing, what fraction have high neonatal mortality?"**
+:::
+
+. . .
+
+That word *given* changes everything. We are no longer looking at all 100 facilities. We are zooming in on just the 55 that are short-staffed and asking: among *those*, how many have high mortality?
+
+
+## A 2x2 Table of 100 Facilities
+
+Imagine we survey 100 facilities in rural Tanzania and count how many fall into each combination of staffing and neonatal mortality:
+
+. . .
+
+| | NMR = High | NMR = Low | **Row Total** |
 |---|---|---|---|
-| **Bad outcome** | 5 | 1 | 6 |
-| **Good outcome** | 35 | 59 | 94 |
-| **Total** | **40** | **60** | **100** |
+| **Staffing = Low** | 33 | 22 | **55** |
+| **Staffing = Adequate** | 9 | 36 | **45** |
+| **Column Total** | **42** | **58** | **100** |
+
+. . .
+
+::: {.callout-box .green}
+*These are illustrative counts designed to reflect publicly available estimates of Tanzania's ~55% workforce shortage and ~20/1,000 neonatal mortality rate.*
+:::
+
+
+## Reading the Table
+
+Now we can answer both the plain and conditional questions:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Plain probability:**
+
+P(NMR = High) = 42 / 100 = **0.42**
+
+Overall, 42 out of 100 facilities have high neonatal mortality.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Conditional probability:**
+
+P(NMR = High | Staffing = Low) = 33 / 55 = **0.60**
+
+Among the 55 short-staffed facilities, 33 have high mortality. That is 60%.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Compare:** P(NMR = High | Staffing = Adequate) = 9 / 45 = **0.20**
+
+Among adequately staffed facilities, only 20% have high mortality. The gap between 60% and 20% is enormous -- 40 percentage points. Staffing matters.
+:::
+
+
+## Conditional Probability: The Idea
+
+::: {.definition-box}
+**Conditional Probability** answers: "Among the cases where B is true, what fraction also have A?"
+
+P(A | B) = (number with both A and B) / (number with B)
+:::
 
 . . .
 
 ::: {.callout-box}
-That is the whole picture in one table. Every row, every column, every cell — *people, not probabilities*.
+**Crucial warning:** P(NMR=High | Staffing=Low) and P(Staffing=Low | NMR=High) are **not the same thing**.
+
+- P(NMR=High | Staffing=Low) = 33/55 = 0.60 -- "Of the short-staffed, 60% have high mortality"
+- P(Staffing=Low | NMR=High) = 33/42 = 0.79 -- "Of the high-mortality facilities, 79% are short-staffed"
+
+Mixing these up is one of the most common mistakes in health data analysis. Bayes' rule (coming soon) is the tool that connects them correctly.
 :::
 
 
-## Reading the table
+# Lookup Tables (CPTs) {background-color="#005CB9"}
 
-::: {.incremental}
-
-- **Out of every 100 mothers Joyce sees, 40 have anaemia.**
-- **Out of those 40 with anaemia, 5 have a bad outcome.** That is 5 out of 40 — or about 1 in every 8.
-- **Out of the 60 without anaemia, only 1 has a bad outcome.** That is 1 in 60.
-- **A mother with anaemia is roughly 8 times more likely to end badly than a mother without.**
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-Notice what we just did. We answered Joyce's question — *"a new mother walks in with anaemia, what is the chance?"* — in counts. No formulas.
-:::
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Your cheat sheet for how parents shape a child node</span>
 
 
-# Putting counts on the picture {background-color="#005CB9"}
+## What Is a Lookup Table?
 
-
-## From a chain to a lookup table
-
-Remember Faith's bleeding chain from Chapter 3? *(bleeding → family decides → permission → motorbike → arrives → survives)*
-
-. . .
-
-Each arrow on that chain can carry a **lookup table** — a small box of counts that says *"out of every 100 women who reach this point, X go this way and Y go that way"*.
+In Chapter 2, we drew arrows like Staffing --> Quality of Care. That arrow says staffing *affects* quality. But how much? A **lookup table** -- formally called a Conditional Probability Table, or CPT -- gives us the answer.
 
 . . .
 
 ::: {.definition-box}
-A picture with a lookup table on every arrow has a name. We call it a **Bayesian network**.
-
-Don't be intimidated by the name. It is just a picture from Chapter 2 with counts attached.
-:::
-
-
-## Joyce's tiny picture, with the table on it
-
-<br>
-
-::: {style="text-align: center; font-size: 0.95em;"}
-
-[Anaemia]{.dag-node .treatment}  →  [Bad outcome]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-| | Bad outcome | Good outcome | Total |
-|---|---|---|---|
-| **Anaemia** | 5 | 35 | **40** |
-| **No anaemia** | 1 | 59 | **60** |
-
-. . .
-
-::: {.callout-box}
-**Two boxes. One arrow. One lookup table.** That is the smallest possible picture-with-numbers — and it already answers Joyce's question.
-:::
-
-
-## Why this is a big deal
-
-Once an arrow has a lookup table on it, you can ask the picture *new questions* — running the arrow in *both directions*.
-
-. . .
-
-::: {.incremental}
-
-- **Forward — a mother walks in with anaemia. What's the chance of a bad outcome?** *5 out of 40 = roughly 1 in 8.*
-- **Backward — a bad outcome happened. What's the chance the mother had anaemia?** *5 out of 6, because 5 of the 6 bad outcomes were in anaemia mothers.*
-- **Comparison — does anaemia matter?** *1 in 8 versus 1 in 60 — anaemia mothers are about 8 times more likely to have a bad outcome.*
-
+**Lookup Table (CPT):** A table that tells you the probability of each state of a child node, for every combination of its parent nodes. Think of it as: "If I know the parents, this table tells me what to expect from the child."
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**Same table, three different questions, three different answers.** The picture *with* numbers can answer questions the picture *without* numbers cannot.
+**This table is your cheat sheet.** You look up the row that matches what you know about the parent variables, and the table tells you the probability of each outcome for the child variable. Every row adds up to 1.
 :::
 
 
-## Where do the numbers come from?
+## CPT for Quality of Care
 
-::: {.incremental}
+Suppose Quality of Care depends on two parent variables: **Staffing** and **Essential Medicines**. Here is the lookup table:
 
-- **The facility logbook.** Joyce literally counted the last 100 mothers.
-- **The DHIS2 database.** Tanzania's national health information system — public, free, district-level data on bleeding rates and maternal outcomes.
-- **The Service Provision Assessment.** A survey of facility readiness done every few years — anaemia screening rates, drug availability, staffing.
-- **The interviews from Chapter 3.** Mary, Lokol, and Esther can give you rough fractions even when the database cannot.
+. . .
 
+| Staffing | Essential Medicines | P(Quality = Good) | P(Quality = Poor) |
+|---|---|---|---|
+| Adequate | Available | 0.85 | 0.15 |
+| Adequate | Unavailable | 0.50 | 0.50 |
+| Low | Available | 0.45 | 0.55 |
+| Low | Unavailable | 0.15 | 0.85 |
+
+. . .
+
+::: {.callout-box}
+**How to read it:** Find the row that matches the facility's situation. If a facility has adequate staffing but essential medicines are unavailable, go to row 2: there is a 50/50 chance of good vs. poor quality care. If both staffing and medicines are lacking (row 4), there is only a 15% chance of good quality.
 :::
 
 . . .
 
 ::: {.callout-box .orange}
-You almost never need to estimate a number perfectly. You need to estimate it *well enough that the picture starts giving useful answers*. Better to be roughly right than precisely wrong.
+*These probabilities are illustrative but grounded in published literature on care quality in low-resource settings. Tanzania reports low availability of essential medicines in many facilities (WHO Service Availability and Readiness Assessment).*
 :::
 
 
-# Three quiet warnings {background-color="#005CB9"}
+## CPT for Neonatal Mortality
+
+Now the second link in the chain. Given quality of care, what is the probability of high vs. low neonatal mortality?
+
+. . .
+
+| Quality of Care | P(NMR = Low) | P(NMR = High) |
+|---|---|---|
+| Good | 0.82 | 0.18 |
+| Poor | 0.35 | 0.65 |
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Good quality care:** 82% chance of low NMR. Quality care makes a huge difference.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Poor quality care:** Only a 35% chance of low NMR. Nearly two in three facilities with poor care have high neonatal mortality.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**Notice the structure.** NMR depends *only* on Quality of Care in this table -- not directly on Staffing or Medicines. Those upstream variables affect NMR, but only *through* Quality. The lookup table respects the arrows in our DAG.
+:::
 
 
-## Warning 1 — Your numbers will be local
+## Root Nodes Get Simple Tables
 
-Joyce's 100 mothers are not the same as Mwanza Region's 1,000 mothers, which are not the same as Tanzania's 1.8 million births a year.
+Nodes with no parents -- root nodes -- just need a single probability (no conditioning):
+
+. . .
+
+| Variable | P(Adequate / Available) | P(Low / Unavailable) |
+|---|---|---|
+| **Staffing** | 0.45 | 0.55 |
+| **Essential Medicines** | 0.40 | 0.60 |
+
+. . .
+
+::: {.callout-box}
+These reflect Tanzania's reality: about 55% of facilities face staffing shortages, and essential medicine availability is low in many rural facilities.
+:::
+
+. . .
+
+::: {.key-takeaway}
+**A lookup table for every node = a complete quantitative model.** Root nodes get a simple one-row table. Every other node gets a table conditioned on its parents. Put them all together, and the model can compute any probability you ask it.
+:::
+
+
+# Bayes' Rule -- Thinking Backwards {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">We see an outcome. What probably caused it?</span>
+
+
+## The Backwards Question
+
+So far we have been thinking **forwards**: given the causes, what outcome do we expect?
+
+But in real life, managers often face the **backwards** question:
 
 . . .
 
 ::: {.callout-box .orange}
-**The lookup table is local.** Use it locally. When you need national numbers, get national counts.
+**A district in Tanzania has high neonatal mortality. Before checking, you thought there was a 55% chance that any given facility is short-staffed. Now that you know mortality is high -- what is the updated chance that staffing is the problem?**
 :::
-
-
-## Warning 2 — Small counts lie
-
-Joyce had **6** bad outcomes out of 100. That sounds solid. But 6 is a small number.
 
 . . .
 
-If two of those bad outcomes had been on different days, the picture would have looked very different.
+This is the kind of question Bayes' rule answers. Let's walk through it with natural frequencies -- no formulas first, just counting.
+
+
+## Step 1: Start with 100 Facilities
+
+Imagine 100 facilities. We know that about 55 are short-staffed and 45 have adequate staffing. That is our **starting belief** (before seeing any mortality data).
 
 . . .
 
-::: {.callout-box .orange}
-**With small counts, your numbers are noisy.** We mark this on the picture by putting a *range* on each cell — not just "5 out of 40" but "5 out of 40, somewhere between 2 and 10."
-:::
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">100<br>Facilities</div>
+<div class="step-arrow">--></div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">55<br>Low Staffing</div>
+<div class="step-arrow"> </div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">45<br>Adequate Staffing</div>
+</div>
 
 
-## Warning 3 — Numbers can hide a missing arrow
+## Step 2: How Many Have High NMR?
 
-You can put a beautiful lookup table on every arrow you drew — and still be wrong, because there is an arrow you forgot to draw.
+From our 2x2 table earlier, we know the mortality rates for each group:
+
+- Of the **55 short-staffed** facilities: 60% have high NMR = **33 facilities**
+- Of the **45 adequately staffed** facilities: 20% have high NMR = **9 facilities**
+
+. . .
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #E24A3F;">55 Low Staffing<br><small>33 High NMR</small><br><small>22 Low NMR</small></div>
+<div class="step-arrow"> </div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">45 Adequate<br><small>9 High NMR</small><br><small>36 Low NMR</small></div>
+</div>
+
+. . .
+
+**Total with high NMR:** 33 + 9 = **42 facilities**
+
+
+## Step 3: Among High-NMR Facilities, How Many Are Short-Staffed?
+
+Now comes the key move. We have 42 facilities with high NMR. We zoom in on *just those 42* and ask: how many are short-staffed?
 
 . . .
 
 ::: {.callout-box .red}
-**The picture has to be right first.** A wrong picture with perfect numbers is worse than a right picture with rough numbers. Always come back to Chapter 2's grammar before you start counting.
+**Answer:** 33 out of 42 = **0.79 (79%)**
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Before** seeing the mortality data:
+
+P(Low Staffing) = 55/100 = **0.55**
+
+We started with a 55% belief that a facility is short-staffed.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**After** learning NMR is high:
+
+P(Low Staffing | NMR = High) = 33/42 = **0.79**
+
+The evidence pushed our belief up to 79%.
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**That is Bayes' rule in action.** Seeing high mortality is strong evidence of a staffing problem. Our belief jumped from 55% to 79% -- a 24 percentage-point shift. No formulas needed, just careful counting.
 :::
 
 
-# Try it yourself {background-color="#005CB9"}
+## The Tree Diagram
+
+Here is the same logic drawn as a tree -- a picture that makes the counting visible:
+
+. . .
+
+```
+                        100 Facilities
+                       /              \
+              55 Low Staffing    45 Adequate Staffing
+              /          \          /          \
+        33 High NMR  22 Low NMR  9 High NMR  36 Low NMR
+
+  Total High NMR = 33 + 9 = 42
+
+  P(Low Staffing | High NMR) = 33 / 42 = 0.79
+```
+
+. . .
+
+::: {.callout-box .green}
+**The tree diagram approach:** Start at the top with your total. Branch by the *cause* you are interested in. Then branch again by the *evidence* you observed. Count the relevant leaves. Divide.
+
+This is the same thing as Bayes' formula, but you never have to memorize a formula. You just draw the tree and count.
+:::
 
 
-## You are the analyst
+## Why Does This Matter?
 
 ::: {.example-block}
-[scenario]{.example-label}
+[Policy Implication]{.example-label}
 
-In a Tanzanian district, 100 women were tested for HIV during antenatal care last month. **20** tested positive. Of those 20, **3** had a low-birth-weight baby. Of the 80 who tested negative, **6** had a low-birth-weight baby.
+A district health officer in one of Tanzania's 26 regions sees that a cluster of facilities has high neonatal mortality. The natural question is: *why?*
 
-**Build a tiny lookup table. Then answer: a new HIV-positive mother is how many times more likely to have a low-birth-weight baby than an HIV-negative mother?**
+Before any investigation, the officer knows that staffing shortages affect about 55% of facilities nationally. But after seeing the mortality data, Bayes' rule tells them: **there is now a 79% chance the problem is staffing**.
+
+That updated belief can guide where to send the audit team first -- and that matters when audit resources are scarce.
 :::
 
 . . .
-
-::: {.callout-box .orange}
-*Hint: count the rates first — 3 out of 20 versus 6 out of 80 — then divide them.*
-:::
-
-
-## Looking ahead
-
-In **Chapter 5**, you will take a picture-with-numbers like Joyce's and learn what to do when **new evidence arrives**.
-
-. . .
-
-A new test result comes back. A new survey lands on your desk. A new patient walks in. The picture does not get thrown out — it gets *updated*. That is what "Bayesian thinking" actually means in plain language.
-
-
-## Further reading
 
 ::: {.callout-box}
-**The data behind Joyce's story**
+**This is the logic behind mortality audits.** Deaths are diagnostic signals. Bayes' rule tells you how to update your beliefs about upstream causes when you observe a downstream outcome. It turns outcome data into actionable intelligence about what went wrong.
+:::
 
-- **Tanzania Service Provision Assessment (TSPA) 2014/15** — the most recent national facility-level survey. Open-access at *dhsprogram.com*.
-- **WHO, 2017** — *Trends in maternal mortality: 1990 to 2015*. The source for Tanzania's maternal mortality ratio. Open-access.
-- **DHIS2 Tanzania** — national health information system, district-level dashboards at *moh.go.tz*.
+
+## Bayes' Rule: The General Pattern
+
+For those who want to see the formula, here it is. But notice -- it is just a compact way of writing the tree:
+
+. . .
+
+::: {.definition-box}
+**Bayes' Rule:**
+
+P(Cause | Evidence) = P(Evidence | Cause) x P(Cause) / P(Evidence)
+
+In our example:
+
+- P(Cause) = P(Low Staffing) = 0.55 -- our starting belief
+- P(Evidence | Cause) = P(High NMR | Low Staffing) = 0.60 -- how likely is the evidence if the cause is present
+- P(Evidence) = P(High NMR) = 0.42 -- the total chance of seeing this evidence
+- P(Cause | Evidence) = (0.60 x 0.55) / 0.42 = 0.33 / 0.42 = **0.79** -- our updated belief
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**If you want to go deeper**
-
-- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 5 walks through lookup tables and conditional probability tables for business decisions; the same machinery applies here.
-- **Gigerenzer, G. (2002)** — *Calculated Risks*. The book that convinced every doctor in Europe to teach probability in natural frequencies instead of percentages.
+**You do not need to memorize this formula.** If you can draw the tree and count, you get the same answer. The formula is just the shortcut.
 :::
 
 
-## The one thing to remember
+# Smart Diagrams -- Bayesian Networks {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">A DAG that does math for you</span>
+
+
+## What Is a Bayesian Network?
+
+::: {.definition-box}
+**Bayesian Network:** A DAG (the arrows from Chapters 2-3) plus a lookup table (CPT) for every node. Together, they form a model that can answer probability questions automatically.
+:::
+
+. . .
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">DAG<br>(arrows)</div>
+<div class="step-arrow">+</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Lookup Tables<br>(CPTs)</div>
+<div class="step-arrow">=</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Bayesian<br>Network</div>
+</div>
+
+. . .
+
+Think of it this way: the DAG is the **skeleton** of the model -- it shows the shape of the causal relationships. The lookup tables are the **muscle** -- they give the model the numbers it needs to compute things. Put them together and you have a smart diagram that can answer "what if" questions.
+
+
+## What Can a Bayesian Network Do?
+
+Once you have a Bayesian network, you can ask it questions like:
+
+. . .
+
+::: {.incremental}
+- **Forward:** "If we improve staffing to adequate levels across the district, what happens to expected neonatal mortality?"
+- **Backward:** "We observe high mortality. What is the most likely cause -- staffing, medicines, or both?"
+- **What-if:** "If essential medicines suddenly become available (but staffing stays low), how much does mortality improve?"
+:::
+
+. . .
+
+::: {.callout-box .green}
+The network computes the answers using the lookup tables and the arrows. You do not have to do the math by hand -- software (like R's `bnlearn` package) handles it. But understanding the logic helps you trust the answers and catch mistakes.
+:::
+
+
+# The Key Rule {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Each node only depends on its direct parents</span>
+
+
+## The Rule That Simplifies Everything
+
+Here is the single most important idea that makes Bayesian networks practical:
+
+. . .
 
 ::: {.key-takeaway}
-**A picture from Chapter 2 + a lookup table on every arrow = a Bayesian network.**
+**Each node only depends on its direct parents.**
 
-That is all there is to it. The picture tells you the structure. The counts tell you the strengths. Together, they answer questions neither could answer alone.
+Once you know the parents of a node, nothing else in the network gives you additional information about that node.
+:::
+
+. . .
+
+::: {.example-block}
+[Think of It This Way]{.example-label}
+
+Consider the chain: **Staffing --> Quality of Care --> NMR**
+
+If you already know that Quality of Care is Poor, does it matter *why* it is poor? Whether it was caused by low staffing, missing medicines, or both -- the probability of high NMR is the same. Quality of Care "screens off" everything upstream from NMR.
+
+That is why the NMR lookup table only has a Quality column -- not a Staffing column.
 :::
 
 
-##  {background-color="white"}
+## Why This Rule Matters: Fewer Numbers to Specify
+
+Without this rule, we would need a huge table listing every possible combination of every variable:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Without the rule (brute force):**
+
+4 variables, each with 2 states = 2 x 2 x 2 x 2 = **16** rows in a giant table.
+
+10 variables? **1,024** rows.
+
+20 variables? Over **1 million** rows.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**With the rule (Bayesian network):**
+
+Each node only needs parents in its table. Typical nodes have 1-3 parents, so each table has 2-8 rows.
+
+20 variables with up to 3 parents each? About **160** rows total.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**The DAG structure tells us which probabilities we can skip.** Most variables are not directly connected, so we do not need to specify every possible combination. The causal structure does the work of simplifying the numbers.
+:::
+
+
+## The Rule in Our Tanzania Model
+
+Let's see this in our MNH example:
+
+. . .
+
+<table style="width: 85%; margin: 0.4em auto; font-size: 0.5em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect" style="padding: 0.5em 0.8em;">Staffing<br><small>P(Adequate)=0.45</small></div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node decision rect" style="padding: 0.5em 0.8em;">Essential<br>Medicines<br><small>P(Available)=0.40</small></div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center;"><span class="dag-arrow positive">|</span></td>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow positive">|</span></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="3" style="text-align: center; padding: 0.6em;">
+<div class="dag-node" style="padding: 0.5em 0.8em;">Quality of Care<br><small>CPT: 4 rows</small></div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow negative">|</span></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome" style="padding: 0.5em 0.8em;">NMR<br><small>CPT: 2 rows</small></div>
+</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+. . .
+
+::: {.callout-box}
+**Quality of Care** depends on Staffing and Medicines (its parents) -- so its lookup table has 4 rows (2 x 2 combinations). **NMR** depends only on Quality (its sole parent) -- so its table has just 2 rows. NMR does *not* need to know about Staffing or Medicines directly. The rule keeps things manageable.
+:::
+
+
+# MNH Application: Tanzania's Health System {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Building a Bayesian network with real-world structure</span>
+
+
+## Tanzania at a Glance
+
+| Indicator | Value | Source |
+|---|---|---|
+| **Maternal Mortality Ratio** | ~238 per 100,000 live births | WHO |
+| **Neonatal Mortality Rate** | ~20 per 1,000 live births | WHO |
+| **Regions** | 26 | Government of Tanzania |
+| **Health workforce gap** | ~55% shortage | WHO / Lancet |
+| **Health information system** | DHIS2 / GOTHOMIS at most facilities | MoH Tanzania |
+| **Essential medicine availability** | Low in many rural facilities | WHO SARA |
+
+. . .
+
+::: {.callout-box}
+Tanzania has made real progress -- but significant gaps remain, especially in rural areas. The numbers below are illustrative, grounded in these publicly available estimates.
+:::
+
+
+## The Tanzania MNH Bayesian Network
+
+We build a 4-node network with lookup tables for each node:
+
+. . .
+
+**Nodes:**
+
+::: {.incremental}
+- **Staffing** {Adequate, Low} -- root node
+- **Essential Medicines** {Available, Unavailable} -- root node
+- **Quality of Care** {Good, Poor} -- depends on Staffing and Medicines
+- **Neonatal Mortality** {Low, High} -- depends on Quality
+:::
+
+
+## Full Lookup Tables
+
+**Root nodes (starting probabilities):**
+
+| Variable | P(Adequate / Available) | P(Low / Unavailable) |
+|---|---|---|
+| **Staffing** | 0.45 | 0.55 |
+| **Essential Medicines** | 0.40 | 0.60 |
+
+. . .
+
+**Quality of Care | Staffing, Essential Medicines:**
+
+| Staffing | Medicines | P(Quality = Good) | P(Quality = Poor) |
+|---|---|---|---|
+| Adequate | Available | 0.85 | 0.15 |
+| Adequate | Unavailable | 0.50 | 0.50 |
+| Low | Available | 0.45 | 0.55 |
+| Low | Unavailable | 0.15 | 0.85 |
+
+. . .
+
+**NMR | Quality of Care:**
+
+| Quality | P(NMR = Low) | P(NMR = High) |
+|---|---|---|
+| Good | 0.82 | 0.18 |
+| Poor | 0.35 | 0.65 |
+
+
+## Querying the Model: Best vs. Worst Case
+
+What can this network tell us? Let's compare the best and worst scenarios:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Best case:** Staffing = Adequate, Medicines = Available
+
+P(Quality = Good) = 0.85
+
+P(NMR = High) = 0.18 x 0.85 + 0.65 x 0.15
+
+= 0.153 + 0.098 = **0.25**
+
+About 1 in 4 facilities still has high NMR -- care is complex even in the best conditions.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Worst case:** Staffing = Low, Medicines = Unavailable
+
+P(Quality = Good) = 0.15
+
+P(NMR = High) = 0.18 x 0.15 + 0.65 x 0.85
+
+= 0.027 + 0.553 = **0.58**
+
+Nearly 3 in 5 facilities have high NMR when both inputs are missing.
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**The gap is 33 percentage points.** Moving from worst case to best case cuts the probability of high NMR from 58% to 25%. That is the combined payoff of adequate staffing and available medicines.
+:::
+
+
+## Which Parent Matters More?
+
+We can isolate each parent's effect by fixing one and changing the other:
+
+. . .
+
+| Scenario | P(NMR = High) | Change vs. Worst |
+|---|---|---|
+| **Worst:** Low Staff, No Medicines | 0.58 | -- |
+| **Fix Staffing only:** Adequate Staff, No Medicines | 0.37 | **-0.21** |
+| **Fix Medicines only:** Low Staff, Has Medicines | 0.44 | **-0.14** |
+| **Best:** Adequate Staff, Has Medicines | 0.25 | **-0.33** |
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Staffing has the larger individual effect** -- a 21 percentage-point reduction compared to 14 for medicines. In resource-constrained settings, workforce investment may yield greater returns.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**But fixing both is better than the sum of fixing each alone.** The combined improvement (33 pp) shows that staffing and medicines reinforce each other. A trained midwife with the right medicines can do far more than either resource alone.
+:::
+:::
+:::
+
+
+## Exercise: Try It Yourself
+
+::: {.callout-box}
+**Your turn:** Using the lookup tables from the previous slides, answer these questions:
+
+1. What is the **overall** P(Quality = Good) across all 100 facilities? (Hint: there are 4 types of facility -- weight each by how common it is.)
+
+2. What is the **overall** P(NMR = High)?
+
+3. Using Bayes' rule (or the tree approach): if a facility has high NMR, what is the probability it has **low staffing**?
+:::
+
+. . .
+
+**Hints:**
+
+::: {.incremental}
+- For (1): Multiply each row's P(Quality = Good) by the probability of that row's combination of parents, then add them up
+- For (2): Use your answer to (1) with the NMR|Quality table
+- For (3): Draw the tree! Start with 100 facilities, split by staffing, then split by NMR
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Answers will be computed in the R workshop below -- no peeking until you try!**
+:::
+
+
+# R Workshop: Building a Bayesian Network {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using bnlearn to build, fill, and query the Tanzania model</span>
+
+
+## R Block 1: Define the Network Structure
+
+We start by telling R which nodes exist and which arrows connect them -- the DAG skeleton.
+
+```{r}
+#| label: bn-structure
+#| echo: true
+
+# Load the bnlearn package (install it first if needed:
+# install.packages("bnlearn"))
+library(bnlearn)
+
+# Define the DAG using a model string.
+# Square brackets hold node names.
+# A vertical bar "|" means "depends on."
+# A colon ":" separates multiple parents.
+#
+# [Staffing]              = root node, no parents
+# [Medicines]             = root node, no parents
+# [Quality|Staffing:Medicines] = Quality depends on Staffing AND Medicines
+# [NMR|Quality]           = NMR depends on Quality only
+
+dag <- model2network(
+  "[Staffing][Medicines][Quality|Staffing:Medicines][NMR|Quality]"
+)
+
+# Check what we built
+dag                # prints the structure
+nodes(dag)         # "Staffing" "Medicines" "Quality" "NMR"
+arcs(dag)          # shows the 3 directed edges
+```
+
+. . .
+
+::: {.callout-box}
+**Reading the model string:** Each `[...]` block defines one node. If a node has parents, they appear after `|`. This is how bnlearn knows the shape of the DAG.
+:::
+
+
+## R Block 2: Fill In the Lookup Tables
+
+Now we attach the CPTs we built on the earlier slides. Each lookup table is an R array.
+
+```{r}
+#| label: bn-cpts
+#| echo: true
+
+# --- Root nodes: just a simple probability for each state ---
+
+cpt_staffing <- array(
+  c(0.45, 0.55),                    # P(Adequate), P(Low)
+  dim = 2,
+  dimnames = list(Staffing = c("Adequate", "Low"))
+)
+
+cpt_medicines <- array(
+  c(0.40, 0.60),                    # P(Available), P(Unavailable)
+  dim = 2,
+  dimnames = list(Medicines = c("Available", "Unavailable"))
+)
+
+# --- Quality of Care: depends on Staffing and Medicines ---
+# Each pair of numbers = P(Good), P(Poor) for one parent combo
+# The order follows R's array filling: Staffing changes fastest
+
+cpt_quality <- array(
+  c(0.85, 0.15,    # Adequate staffing + Available medicines
+    0.45, 0.55,    # Low staffing      + Available medicines
+    0.50, 0.50,    # Adequate staffing + Unavailable medicines
+    0.15, 0.85),   # Low staffing      + Unavailable medicines
+  dim = c(2, 2, 2),
+  dimnames = list(
+    Quality   = c("Good", "Poor"),
+    Staffing  = c("Adequate", "Low"),
+    Medicines = c("Available", "Unavailable")
+  )
+)
+
+# --- NMR: depends on Quality only ---
+
+cpt_nmr <- array(
+  c(0.82, 0.18,    # Good quality -> P(Low NMR), P(High NMR)
+    0.35, 0.65),   # Poor quality -> P(Low NMR), P(High NMR)
+  dim = c(2, 2),
+  dimnames = list(
+    NMR     = c("Low", "High"),
+    Quality = c("Good", "Poor")
+  )
+)
+
+# --- Combine everything into a fitted Bayesian network ---
+
+bn_tz <- custom.fit(dag, list(
+  Staffing  = cpt_staffing,
+  Medicines = cpt_medicines,
+  Quality   = cpt_quality,
+  NMR       = cpt_nmr
+))
+
+# Check one of the tables
+bn_tz$Quality    # prints the Quality lookup table
+```
+
+
+## R Block 3: Query the Network
+
+Now comes the payoff. We ask the network questions and it computes the answers.
+
+```{r}
+#| label: bn-query
+#| echo: true
+
+# ----- Question 1: Overall probability of high NMR -----
+# cpquery() uses simulation (sampling) to estimate probabilities.
+# We set n = 1,000,000 samples for a stable answer.
+
+cpquery(bn_tz,
+  event    = (NMR == "High"),       # What we want to know
+  evidence = TRUE,                  # No conditions -- overall
+  n = 1e6
+)
+# Expected: around 0.44 (44% of facilities have high NMR)
+
+# ----- Question 2: P(NMR = High | Staffing = Low) -----
+cpquery(bn_tz,
+  event    = (NMR == "High"),
+  evidence = (Staffing == "Low"),
+  n = 1e6
+)
+# Expected: around 0.52
+
+# ----- Question 3: P(NMR = High | Adequate staff + Available meds) -----
+cpquery(bn_tz,
+  event    = (NMR == "High"),
+  evidence = (Staffing == "Adequate" & Medicines == "Available"),
+  n = 1e6
+)
+# Expected: around 0.25
+```
+
+. . .
+
+::: {.callout-box .green}
+**Exercise answers:** Question 2 from the exercise = the first query above. The overall P(NMR = High) is about 0.44 -- nearly half of facilities. The Bayesian network computed that by combining all four lookup tables automatically.
+:::
+
+
+## R Block 4: Bayes' Rule in Action
+
+Let's use the network to answer our backwards question: given high NMR, what is the chance of low staffing?
+
+```{r}
+#| label: bn-bayes
+#| echo: true
+
+# ----- Bayes' rule query -----
+# "Given that we observe high NMR, what is the probability
+#  that staffing is low?"
+
+cpquery(bn_tz,
+  event    = (Staffing == "Low"),    # Cause we are asking about
+  evidence = (NMR == "High"),        # Evidence we observed
+  n = 1e6
+)
+# Expected: around 0.68-0.70
+
+# Compare to the prior (before seeing any evidence):
+# P(Staffing = Low) = 0.55
+
+# The evidence (high NMR) shifted our belief upward --
+# from 55% to about 69%. High mortality is a signal
+# that staffing is likely the problem.
+```
+
+. . .
+
+::: {.callout-box}
+**Note:** `cpquery()` uses random sampling, so answers vary slightly each run. For exact answers, you can use the `gRain` package (shown in the next block). Both give the same result -- `cpquery()` is simpler, `gRain` is exact.
+:::
+
+
+## R Block 5: Exact Inference and Scenario Comparison
+
+For precise answers (no randomness), we convert to the gRain package and compare intervention scenarios.
+
+```{r}
+#| label: bn-exact
+#| echo: true
+
+# Load gRain for exact probability calculations
+library(gRain)
+
+# Convert our bnlearn network to a gRain object
+bn_grain <- as.grain(bn_tz)
+
+# ----- Overall marginal probabilities -----
+querygrain(bn_grain, nodes = "NMR")
+querygrain(bn_grain, nodes = "Quality")
+
+# ----- Scenario comparison: what if we intervene? -----
+# "What if we ensure adequate staffing everywhere?"
+# mutilated() sets a variable to a fixed value (the do-operator)
+
+bn_do_staff <- mutilated(bn_tz,
+  evidence = list(Staffing = "Adequate"))
+querygrain(as.grain(bn_do_staff), nodes = "NMR")
+
+# "What if we ensure medicines are available everywhere?"
+bn_do_meds <- mutilated(bn_tz,
+  evidence = list(Medicines = "Available"))
+querygrain(as.grain(bn_do_meds), nodes = "NMR")
+
+# "What if we fix both?"
+bn_do_both <- mutilated(bn_tz,
+  evidence = list(Staffing = "Adequate",
+                  Medicines = "Available"))
+querygrain(as.grain(bn_do_both), nodes = "NMR")
+```
+
+. . .
+
+::: {.callout-box .green}
+**This is the payoff of the whole chapter.** The `mutilated()` function implements the do-operator -- it simulates an intervention by forcing a variable to a specific value. We can now compare "do nothing" vs. "fix staffing" vs. "fix medicines" vs. "fix both" and see exactly how much each intervention reduces the probability of high NMR.
+:::
+
+
+## R Block 6: Visualize the Network
+
+```{r}
+#| label: bn-visualize
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+# Option 1: bnlearn's built-in plot
+graphviz.plot(bn_tz,
+  main = "Tanzania MNH Bayesian Network",
+  shape = "rectangle",
+  highlight = list(
+    nodes = "NMR",
+    col = "#E24A3F",
+    fill = "#E24A3F"
+  )
+)
+
+# Option 2: dagitty + ggdag for publication-quality figures
+library(dagitty)
+library(ggdag)
+
+tz_dag <- dagitty('dag {
+  Staffing  [pos="0,0"]
+  Medicines [pos="2,0"]
+  Quality   [pos="1,1"]
+  NMR       [pos="1,2"]
+  Staffing  -> Quality
+  Medicines -> Quality
+  Quality   -> NMR
+}')
+
+ggdag(tz_dag) +
+  theme_dag() +
+  labs(title = "Tanzania MNH Causal Model (4 Nodes)")
+```
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Bayesian network = DAG + lookup tables.** The DAG gives you the shape. The lookup tables give you the numbers. Together, they answer probability questions automatically.
+:::
+
+. . .
+
+::: {.incremental}
+- **Natural frequencies** make probability intuitive: "55 out of 100 facilities are short-staffed"
+- **Conditional probability** sharpens our questions: "among short-staffed facilities, what fraction have high mortality?"
+- **Lookup tables (CPTs)** are your cheat sheets: find the row, read the probability
+- **Bayes' rule** lets you think backwards: "we see a bad outcome; what probably caused it?" -- use the tree diagram
+- **The key rule** -- each node depends only on its direct parents -- keeps the model manageable even as it grows
+- **R + bnlearn** lets you build, query, and compare intervention scenarios in a few lines of code
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 5 -- Situational Analysis**
+
+Now that we can build and query quantitative models, we turn to their first major application:
+
+- **Updating beliefs with evidence** -- combining facility surveys, DHIS2 data, and expert judgment
+- **Diagnostic inference** -- given high mortality in a district, which upstream causes are most likely?
+- **Explaining away** -- how one piece of evidence changes the relevance of another
+- **Full district diagnosis** -- walking through a realistic case using Bayesian inference
+:::
+
+. . .
+
+::: {.callout-box .green}
+**From Ch 4 to Ch 5:** We built the engine (a Bayesian network). Now we learn to drive it -- using evidence to diagnose problems before prescribing interventions.
+:::
+
+
+## {background-color="white"}
 
 <br><br><br>
 
@@ -308,7 +1178,7 @@ That is all there is to it. The picture tells you the structure. The counts tell
 
 <br>
 
-[Inference and Intervention | Chapter 4]{style="color: #005CB9; font-size: 0.6em;"}
+[Inference and Intervention | Chapter 4: Quantitative Causal Models]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

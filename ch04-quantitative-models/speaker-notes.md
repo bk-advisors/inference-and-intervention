@@ -1,267 +1,120 @@
-# Chapter 4 Speaker Notes — Putting Numbers on the Picture
+# Speaker Notes -- Chapter 4: Quantitative Causal Models
 
-**Commander's Intent:** A picture from Chapter 2 plus a lookup table on every arrow is a Bayesian network — and natural frequencies (counts out of 100) are how you make the numbers human-readable.
+## Overview
+Alright, welcome to Chapter 4. This is the chapter where we put numbers on the arrows. Up until now, we have been drawing diagrams that say "this causes that" and labeling arrows with plus and minus signs. That is valuable -- it tells us the shape of the story. But today we go further. We are going to learn how to make those diagrams actually *compute* things. And I promise -- no scary formulas. We are going to start with plain counting, the way you already think about uncertainty, and build up from there.
 
-**Plot:** Creativity — turning words into testable counts.
+## Slide: Learning Objectives
+Five things I want you to walk away with today. *(pause)* First, turning real-world counts into probabilities -- nothing fancier than "55 out of 100." Second, reading and building lookup tables that capture how parent variables shape a child. Third, using Bayes' rule to think backwards -- "we see a bad outcome; what probably caused it?" Fourth, understanding the key rule that makes the whole thing practical: each node only depends on its direct parents. And fifth, building and querying an actual Bayesian network in R. Each piece builds on the one before it, so we will take them in order.
 
-**Protagonist:** Joyce, 41, midwife in Mwanza Region, Tanzania. Composite from the Tanzania Service Provision Assessment 2014/15.
+## Slide: Chapter Overview -- From Arrows to Numbers
+Take a look at the flow up on the slide. *(pause)* We start with the qualitative DAG from Chapters 2 and 3 -- that is the arrows. We add lookup tables -- those are the numbers. And what we get is a Bayesian network -- a smart diagram that does math for you. Think of it this way: a qualitative model is like a road map that shows which towns are connected. A quantitative model adds the distances between towns. Now you can actually plan a trip.
 
-**Estimated runtime:** 22–25 minutes.
+## Slide: Start with Counts
+The most natural way to think about uncertainty is to count things. That is where we start. *(pause)* Look at the Tanzania example on the slide. Tanzania has roughly 8,000 health facilities across 26 regions. The country faces a workforce shortage of about 55 percent -- that number comes from WHO and the Lancet. So out of 100 health facilities in rural Tanzania, about 55 have a severe workforce shortage. The other 45 have staffing closer to what is needed. *(pause)* That is a fact you can picture. Line up 100 facilities, and more than half are short-staffed. These counts -- "55 out of 100" -- are called natural frequencies. They are easier to reason with than abstract decimals, so we will use them as our starting point throughout this chapter. Why are natural frequencies easier? Because your brain was built to process counts. When someone says "0.55 probability," your eyes glaze over. When someone says "55 out of 100," you can picture the room.
 
----
+## Slide: From Counts to Probability
+Probability is just shorthand for natural frequencies. *(pause)* Look at the table. "55 out of 100 facilities are short-staffed" becomes P(Staffing = Low) = 0.55. "20 out of 1,000 newborns do not survive the first month" becomes P(Neonatal Death) = 0.020. That is literally all probability is -- a fraction. And there are only two ground rules. Every probability is between 0 and 1. And the probabilities of all possible states add up to 1. So if P(Low) = 0.55, then P(Adequate) = 1 minus 0.55 = 0.45. Simple as that.
 
-## Overview (before slide 1)
+## Slide: Where Do These Numbers Come From?
+Good question, and there are two answers. *(pause)* On the left, from data. Tanzania's DHIS2 system and periodic facility surveys give us real counts. When data exists, use it. On the right, from expert judgment. Sometimes the data is incomplete. In those cases, experienced health workers or district officers give their best estimates. "I would say about 3 in 10 facilities in this region have functioning CPAP." *(pause)* In practice, we use both. The numbers in this chapter are illustrative, but they are grounded in publicly available data on Tanzania's health system.
 
-Welcome back. *(pause)*
+## Slide: The Key Question
+Now we get to the sharp version of the probability question. *(pause)* Plain probability asks: "What fraction of all facilities have high neonatal mortality?" Conditional probability asks something sharper: "Given that a facility has low staffing, what fraction have high neonatal mortality?" That word "given" changes everything. We are no longer looking at all 100 facilities. We are zooming in on just the 55 that are short-staffed and asking: among those, how many have high mortality?
 
-Three chapters in and you can now do something most people in global health cannot. You can draw a picture of how a programme works. You learned the grammar in Chapter 2. You learned the interview method in Chapter 3.
+## Slide: A 2x2 Table of 100 Facilities
+Let me walk you through this table. *(pause)* Imagine we survey 100 facilities in rural Tanzania. We count how many fall into each combination of staffing and neonatal mortality. Look at the numbers. Of the 55 short-staffed facilities, 33 have high NMR and 22 have low NMR. Of the 45 adequately staffed facilities, only 9 have high NMR and 36 have low NMR. *(pause)* These are illustrative counts, but they reflect real estimates of Tanzania's workforce shortage and neonatal mortality rate.
 
-But there is still something missing. Pictures alone cannot answer the question *"how much?"*. A picture says *"anaemia raises the risk of bleeding"*. It does not say *"by how much"*. *(pause)*
+## Slide: Reading the Table
+Now we can answer both the plain and conditional questions. *(pause)* Plain probability: P(NMR = High) = 42 out of 100 = 0.42. Overall, 42 percent of facilities have high neonatal mortality. Conditional probability: P(NMR = High given Staffing = Low) = 33 out of 55 = 0.60. Among the short-staffed facilities, 60 percent have high mortality. *(pause)* And compare that with adequately staffed facilities: only 9 out of 45 = 0.20. The gap between 60 percent and 20 percent is enormous -- 40 percentage points. Staffing matters.
 
-This chapter is where we put numbers on the arrows. And we are going to do it in a way that does not make you reach for a textbook. We are going to do it with **counts out of 100**. Because that is how human brains were built to think about chance. *(pause)*
+Here is a question for you. If someone told you "42 percent of facilities have high mortality" and also "55 percent of facilities have low staffing," could you compute the conditional probability from those two facts alone? *(pause)* No. You need the joint counts -- the inside of the table. The margins are not enough. That is exactly why lookup tables give us the joint information we need.
 
-Today we go to Tanzania. To meet a midwife named Joyce.
+## Slide: Conditional Probability: The Idea
+Here is the crucial warning I need you to burn into your memory. *(pause)* P(NMR = High given Staffing = Low) and P(Staffing = Low given NMR = High) are NOT the same thing. The first one is 33 out of 55 = 0.60 -- "of the short-staffed, 60 percent have high mortality." The second is 33 out of 42 = 0.79 -- "of the high-mortality facilities, 79 percent are short-staffed." Mixing these up is one of the most common mistakes in health data analysis. Bayes' rule, which we are about to learn, is the tool that connects them correctly.
 
----
+## Slide: What Is a Lookup Table?
+In Chapter 2 we drew an arrow from Staffing to Quality of Care. That arrow says staffing affects quality. But how much? A lookup table -- formally called a Conditional Probability Table, or CPT -- gives us the answer. *(pause)* Think of it as your cheat sheet. You look up the row that matches what you know about the parent variables, and the table tells you the probability of each outcome for the child variable. Every row adds up to 1.
 
-## Slide: Meet Joyce
+## Slide: CPT for Quality of Care
+Look at this table. *(pause)* Quality of Care depends on two parents: Staffing and Essential Medicines. Four rows, one for each combination. When a facility has adequate staffing AND available medicines, there is an 85 percent chance of good quality care. When a facility has adequate staffing but medicines are unavailable, it drops to 50-50. Low staffing but medicines available? Only 45 percent chance of good quality. And when both are lacking? Just 15 percent. *(pause)* That is the quantitative version of what we already knew qualitatively. Now we can see exactly how much each input matters.
 
-Joyce is forty-one years old. She works at a rural facility in Mwanza Region, on the southern shore of Lake Victoria, in Tanzania. *(pause)*
+## Slide: CPT for Neonatal Mortality
+The second link in the chain. *(pause)* Good quality care gives an 82 percent chance of low NMR. Poor quality care? Only a 35 percent chance of low NMR. Nearly two in three facilities with poor care have high neonatal mortality. *(pause)* And notice the structure -- NMR depends only on Quality of Care in this table, not directly on Staffing or Medicines. Those upstream variables affect NMR, but only through Quality. The lookup table respects the arrows in our DAG.
 
-Same disclosure. Joyce is a composite drawn from the Tanzania Service Provision Assessment for 2014 and 2015 — that is publicly available — and the details are real, the name is not. *(pause)*
+Why does this matter practically? Because it means a district officer does not need to know every detail about staffing and medicines at a specific facility to estimate that facility's mortality risk. If she can assess quality of care -- maybe through a quick checklist -- that one variable captures everything upstream. The lookup table tells her: good quality? About 18 percent chance of high NMR. Poor quality? About 65 percent. That is a usable estimate from a single observation.
 
-Joyce has delivered hundreds of babies in her career. She knows the work the way you know the route home from work — without thinking. *(pause)*
+## Slide: Root Nodes Get Simple Tables
+Nodes with no parents just need a single probability. No conditioning required. *(pause)* Staffing: 45 percent adequate, 55 percent low. Essential Medicines: 40 percent available, 60 percent unavailable. These reflect Tanzania's reality -- about 55 percent of facilities face staffing shortages, and essential medicine availability is low in many rural areas. *(pause)* And here is the key takeaway. A lookup table for every node equals a complete quantitative model. Root nodes get a simple one-row table. Every other node gets a table conditioned on its parents. Put them all together, and the model can compute any probability you ask it.
 
-Last week she did something almost no clinician does. She opened her stockroom logbook and *counted*. Out of the hundred women she has delivered in the last twelve months — about a hundred is the typical caseload for a small rural facility — fifty-five came in with at least one major risk factor. Bleeding history. Anaemia. Prior caesarean. Eclampsia signs. *(pause)*
+## Slide: The Backwards Question
+So far we have been thinking forwards: given the causes, what outcome do we expect? But in real life, managers often face the backwards question. *(pause)* A district in Tanzania has high neonatal mortality. Before checking, you thought there was a 55 percent chance that any given facility is short-staffed. Now that you know mortality is high -- what is the updated chance that staffing is the problem? This is the kind of question Bayes' rule answers. Let us walk through it with natural frequencies -- no formulas first, just counting.
 
-Out of those fifty-five, six ended badly. Either the mother or the baby did not come home. *(pause)*
+## Slide: Step 1 -- Start with 100 Facilities
+Imagine 100 facilities. We know that about 55 are short-staffed and 45 have adequate staffing. *(pause)* That is our starting belief -- before seeing any mortality data. Look at the tree on the slide. One hundred facilities split into two branches: 55 low staffing, 45 adequate.
 
-Now look at the box on the screen. **A new mother walks in tomorrow with anaemia. What is the chance she has a bad outcome — and how do we get an answer that is actually useful to Joyce, in plain numbers, not in formulas?** *(pause)*
+## Slide: Step 2 -- How Many Have High NMR?
+Now we apply what we know from our lookup table. *(pause)* Of the 55 short-staffed facilities, 60 percent have high NMR. That is 33 facilities. Of the 45 adequately staffed facilities, 20 percent have high NMR. That is 9 facilities. Total with high NMR: 33 plus 9 equals 42 facilities.
 
-That is the question of this chapter.
+## Slide: Step 3 -- Among High-NMR Facilities, How Many Are Short-Staffed?
+Now comes the key move. We have 42 facilities with high NMR. We zoom in on just those 42 and ask: how many are short-staffed? *(pause)* Answer: 33 out of 42, which equals 0.79 -- that is 79 percent. Before seeing the mortality data, we had a 55 percent belief that a facility is short-staffed. After learning NMR is high, that jumped to 79 percent. A 24 percentage-point shift. *(pause)* That is Bayes' rule in action. Seeing high mortality is strong evidence of a staffing problem. No formulas needed, just careful counting.
 
----
+## Slide: The Tree Diagram
+Here is the same logic drawn as a tree. *(pause)* Start at the top with your total. Branch by the cause you are interested in. Then branch again by the evidence you observed. Count the relevant leaves. Divide. This is the same thing as the Bayes' formula, but you never have to memorize a formula. You just draw the tree and count. *(pause)* Let me say that again because it is important. The tree diagram approach and the formula approach always give the same answer. The tree is just friendlier for humans. If you ever get stuck on a Bayes' rule problem, draw the tree. Every time.
 
-## Slide: And here is the puzzle
+## Slide: Why Does This Matter?
+Let me connect this to a real decision. *(pause)* A district health officer in one of Tanzania's 26 regions sees that a cluster of facilities has high neonatal mortality. Before any investigation, the officer knows that staffing shortages affect about 55 percent of facilities nationally. But after seeing the mortality data, Bayes' rule tells them: there is now a 79 percent chance the problem is staffing. That updated belief can guide where to send the audit team first -- and that matters when audit resources are scarce. *(pause)* This is the logic behind mortality audits. Deaths are diagnostic signals. Bayes' rule turns outcome data into actionable intelligence about what went wrong.
 
-Here is the trap.
+## Slide: Bayes' Rule -- The General Pattern
+For those who want to see the formula, here it is. *(pause)* P(Cause given Evidence) = P(Evidence given Cause) times P(Cause) divided by P(Evidence). In our example: 0.60 times 0.55 divided by 0.42 equals 0.79. But you do not need to memorize this formula. If you can draw the tree and count, you get the same answer. The formula is just the shortcut.
 
-Tanzania's national surveys give us numbers like *"the maternal mortality ratio is five hundred and twenty-four per one hundred thousand live births"*. WHO 2017. Big number. Famous number. Cited everywhere. *(pause)*
+## Slide: What Is a Bayesian Network?
+Now let us put the pieces together. *(pause)* A Bayesian network is a DAG -- the arrows from Chapters 2 and 3 -- plus a lookup table for every node. Together, they form a model that can answer probability questions automatically. The DAG is the skeleton -- it shows the shape. The lookup tables are the muscle -- they give the model the numbers it needs. Put them together and you have a smart diagram that can answer "what if" questions.
 
-But Joyce does not deliver one hundred thousand births. She delivers about a hundred a year. *(pause)*
+## Slide: What Can a Bayesian Network Do?
+Once you have a Bayesian network, you can ask it three types of questions. *(pause)* Forward: "If we improve staffing to adequate levels across the district, what happens to expected neonatal mortality?" Backward: "We observe high mortality. What is the most likely cause -- staffing, medicines, or both?" And what-if: "If essential medicines suddenly become available but staffing stays low, how much does mortality improve?" The network computes the answers using the lookup tables and the arrows. You do not have to do the math by hand -- software like R's bnlearn package handles it.
 
-A number that is *right at the country level* can be *useless at the bedside*. The country number is averaging across two thousand facilities. Joyce works in one of them. The country number cannot tell her what is going to happen tomorrow. *(pause)*
+Think about how powerful that is. A district officer with four variables and three connections can now run dozens of scenarios instantly. What if we fix staffing but not medicines? What if we fix medicines but not staffing? What if a new supply chain improves medicine availability from 40 percent to 70 percent? Each scenario is just a query to the same network.
 
-Look at the orange box. **What we need is a way to take the picture from Chapters 2 and 3 and turn each arrow into a number Joyce can actually use.** *(pause)*
+## Slide: The Rule That Simplifies Everything
+Here is the single most important idea that makes Bayesian networks practical. *(pause)* Each node only depends on its direct parents. Once you know the parents of a node, nothing else in the network gives you additional information about that node. Consider the chain: Staffing goes to Quality of Care goes to NMR. If you already know that Quality of Care is poor, does it matter why it is poor? Whether it was caused by low staffing, missing medicines, or both -- the probability of high NMR is the same. Quality "screens off" everything upstream from NMR. That is why the NMR lookup table only has a Quality column, not a Staffing column.
 
-The trick to doing this is older than statistics. It is so simple it is almost embarrassing. Let me show you.
+## Slide: Why This Rule Matters -- Fewer Numbers to Specify
+Without this rule, we would need a giant table. *(pause)* Four variables with 2 states each means 16 rows. Ten variables means 1,024 rows. Twenty variables means over a million rows. But with the rule, each node only needs its parents in its table. Typical nodes have 1 to 3 parents, so each table has 2 to 8 rows. Twenty variables with up to 3 parents each? About 160 rows total. The DAG structure tells us which probabilities we can skip. The causal structure does the work of simplifying the numbers.
 
----
+## Slide: The Tanzania MNH Bayesian Network
+Now let us put the whole thing together with Tanzania's data. *(pause)* Four nodes. Staffing and Essential Medicines are root nodes at the top. Quality of Care sits in the middle, depending on both Staffing and Medicines. And NMR is the outcome, depending only on Quality. Four nodes, three connections, and the lookup tables we already built. It is small enough to work through by hand, but rich enough to illustrate every concept we have covered today.
 
-## Slide: Counts before formulas (section divider)
+## Slide: Full Lookup Tables
+Here are all the numbers. *(pause)* Root nodes: P(Adequate Staffing) = 0.45, P(Medicines Available) = 0.40. The Quality CPT has four rows. When both parents are favorable, 85 percent chance of good quality. When both are unfavorable, only 15 percent. The NMR CPT: good quality maps to 18 percent chance of high NMR, poor quality maps to 65 percent. These tables are the complete specification of the model. From these numbers alone, we can answer any probability question about these four variables.
 
-*(pause for transition)*
+## Slide: Querying the Model -- Best vs. Worst Case
+Let us compute the extremes. *(pause)* Best case: adequate staffing and available medicines. That gives 85 percent chance of good quality, and when we work through the NMR probabilities, we get P(NMR = High) of about 25 percent. Worst case: low staffing, no medicines. Only a 15 percent chance of good quality, and P(NMR = High) jumps to about 58 percent. *(pause)* The gap is 33 percentage points. Moving from worst case to best case cuts the probability of high NMR from 58 percent to 25 percent. That is the combined payoff of adequate staffing and available medicines.
 
----
+## Slide: Which Parent Matters More?
+This is the analysis that actually helps with resource decisions. *(pause)* Fix staffing alone -- go from low to adequate while keeping medicines unavailable -- and P(NMR = High) drops by 21 percentage points. Fix medicines alone? A 14 percentage-point drop. Fix both? A 33 percentage-point drop. *(pause)* Staffing has the larger individual effect. But fixing both is better than the sum of fixing each alone. The combined improvement shows that staffing and medicines reinforce each other. A trained midwife with the right medicines can do far more than either resource alone. In a resource-constrained setting, this tells you: invest in workforce first, but do not neglect the tools they need.
 
-## Slide: Forget probability for a minute
+## Slide: Exercise -- Try It Yourself
+Your turn. *(pause)* Using the lookup tables from the previous slides, answer three questions. One: what is the overall P(Quality = Good) across all 100 facilities? There are four types of facility -- weight each by how common it is, then add them up. Two: what is the overall P(NMR = High)? Use your answer from question one with the NMR lookup table. Three: using Bayes' rule or the tree approach, if a facility has high NMR, what is the probability it has low staffing? *(pause)* Take a few minutes. The hints are on the slide. We will check the answers in the R workshop.
 
-People say *"the probability is zero point zero six"* and most of the room glazes over. *(pause)*
+## Slide: R Block 1 -- Define the Network Structure
+Okay, let us move to R and build this thing for real. *(pause)* We are using bnlearn's model string syntax to define the DAG. The notation is compact -- square brackets for each node, and a vertical bar for conditioning. So [Quality|Staffing:Medicines] means Quality depends on both Staffing and Medicines. Once you run this, you can inspect the structure with nodes() and arcs() to confirm it matches our four-node diagram.
 
-People say *"six out of a hundred"* and everybody gets it. *(pause)*
+## Slide: R Block 2 -- Fill In the Lookup Tables
+Now we add the numbers. *(pause)* We are creating CPT arrays for all four nodes. Root nodes are simple -- just the probabilities for each state. The Quality CPT is a multi-dimensional array that matches our four-row table. The trickiest part is getting the array dimensions right, but the pattern is the same every time. Once you have all four CPTs, custom.fit() combines them with the DAG structure into a complete Bayesian network. A tip: read the comments in the code carefully. Each row is labeled so you know which combination of parents it corresponds to. If you get a row out of order, your model will give wrong answers. Always double-check the dimnames against your lookup table.
 
-That is not because some people are smart and others are not. It is because human brains were built to count people, not to do decimal arithmetic. The technical term for this is **natural frequencies**, and there is a whole literature showing that when you teach probability this way, doctors get the right answer ten times more often. Gerd Gigerenzer wrote a whole book about it. We will use natural frequencies for the entire chapter. *(pause)*
+## Slide: R Block 3 -- Query the Network
+Now the fun part -- asking questions. *(pause)* The cpquery function uses simulation to estimate conditional probabilities. Overall P(NMR = High) should come out around 0.44 -- about 44 percent of facilities have high NMR. P(NMR = High given Staffing = Low) should be around 0.52. And P(NMR = High given both parents favorable) should be around 0.25, matching our best-case calculation. These are the exercise answers computed by the network.
 
-If you ever get lost in this chapter — at any point — translate everything back into "X out of 100". Promise me. *(pause)* OK. Let me show you Joyce's last hundred mothers.
+## Slide: R Block 4 -- Bayes' Rule in Action
+Here is the backwards question implemented in R. *(pause)* Given that we observe high NMR, what is the probability that staffing is low? The answer should come out around 0.68 to 0.70. Compare that to the prior of 0.55. The evidence shifted our belief upward. High mortality is a signal that staffing is likely the problem.
 
----
+## Slide: R Block 5 -- Exact Inference and Scenario Comparison
+For precise answers with no randomness, we convert to the gRain package and compare intervention scenarios. *(pause)* This is the payoff of the whole chapter. The mutilated function implements the do-operator -- it simulates an intervention by forcing a variable to a specific value. We can compare "do nothing" versus "fix staffing" versus "fix medicines" versus "fix both" and see exactly how much each intervention reduces the probability of high NMR.
 
-## Slide: Joyce's last 100 mothers
+Look at the output table when it prints. You will see four rows -- one for each scenario. The "do nothing" row is the baseline. The "fix both" row is the best case. And the two single-fix rows let you see exactly how much each intervention contributes on its own. This table is the quantitative answer to the question every district officer asks: "Where should I put my resources first?"
 
-This is the table I want you to learn to read.
+## Slide: Key Takeaways
+Let me pull it all together. *(pause)* Bayesian network equals DAG plus lookup tables. Natural frequencies make probability intuitive. Conditional probability sharpens our questions. Lookup tables are your cheat sheets. Bayes' rule lets you think backwards -- use the tree diagram. The key rule keeps the model manageable. And R plus bnlearn lets you build, query, and compare intervention scenarios in a few lines of code. *(pause)* We built the engine. Next chapter, we learn to drive it.
 
-*Look at the table.* Across the top: anaemia, no anaemia. Down the side: bad outcome, good outcome. Four cells in the middle. Plus the totals. *(pause)*
-
-Out of Joyce's hundred mothers, forty had anaemia and sixty did not. That is the bottom row. *(pause)*
-
-Of the forty with anaemia, five had bad outcomes and thirty-five had good outcomes. Of the sixty without anaemia, one had a bad outcome and fifty-nine had good outcomes. *(pause)*
-
-Look at the grey box. **That is the whole picture in one table. Every row, every column, every cell — people, not probabilities.** *(pause)*
-
-If the table feels obvious to you, good. That is the point. Tables of counts are obvious. Tables of probabilities are not. We are going to do everything from now on with tables of counts, and translate to probabilities only at the end if anyone asks.
-
----
-
-## Slide: Reading the table
-
-Now let's read the table for what it tells us.
-
-*Bullet by bullet.* Out of every hundred mothers Joyce sees, forty have anaemia. *(pause)* Of those forty with anaemia, five have a bad outcome — that is five out of forty, or about one in every eight. *(pause)* Of the sixty without anaemia, only one has a bad outcome — that is one in sixty. *(pause)*
-
-So a mother with anaemia is roughly *eight times more likely* to end badly than a mother without. One-in-eight versus one-in-sixty is roughly an eight-fold difference. *(pause)*
-
-Look at the green box. **Notice what we just did.** We answered Joyce's question — *a new mother walks in with anaemia, what is the chance?* — without using a formula. We just counted. *(pause)*
-
-That is the whole magic of natural frequencies. The brain that wakes you up to your child crying in the night is also the brain that handles five-out-of-forty effortlessly. The brain that does decimal arithmetic is a much later, much weaker brain. We use the older one whenever we can.
-
----
-
-## Slide: Putting counts on the picture (section divider)
-
-*(pause for transition)*
-
-OK. Now here is the move that puts this chapter together with Chapters 2 and 3.
-
----
-
-## Slide: From a chain to a lookup table
-
-Remember Faith's bleeding chain from Chapter 3? Bleeding starts → family decides → permission → motorbike → arrives → survives. Six boxes. Five arrows. *(pause)*
-
-Now imagine that *each arrow* on that chain carries a small table. Not a big table. A small one. Just three numbers maybe: out of every hundred women who reach this point, *X* go this way and *Y* go that way. *(pause)*
-
-That is a **lookup table**. One per arrow. And a picture with a lookup table on every arrow has a name. We call it a **Bayesian network**. *(pause)*
-
-Look at the green box. *Don't be intimidated by the name.* "Bayesian network" sounds like something a computer science PhD would invent. It is actually just a picture from Chapter 2 with counts attached. The name comes from a man named Thomas Bayes who lived in the eighteenth century, and we will explain what he actually did in Chapter 5. For now, the name is just a label for *picture-plus-numbers*. *(pause)*
-
-Let me show you the smallest possible Bayesian network — just one arrow from Joyce's facility.
-
----
-
-## Slide: Joyce's tiny picture, with the table on it
-
-Two boxes. One arrow. One lookup table. *(pause)*
-
-*Look at the diagram.* On the left: anaemia (a factor — Joyce cannot choose it). On the right: bad outcome (the hexagon — what we are trying to move). One arrow connecting them. *(pause)*
-
-And below the picture is the *same* lookup table we already filled in two slides ago — Joyce's hundred mothers, broken down by anaemia and bad outcome. Five anaemia mothers had bad outcomes, thirty-five had good outcomes. Forty anaemia mothers in total. One non-anaemia mother had a bad outcome, fifty-nine had good outcomes. Sixty non-anaemia mothers in total. *(pause)*
-
-Look at the box. **Two boxes. One arrow. One lookup table.** That is the smallest possible picture-with-numbers. And it is already enough to answer Joyce's question. *(pause)*
-
-This is what a Bayesian network is. Pictures plus tables. The next slide is the moment you see *why* it is a big deal.
-
----
-
-## Slide: Why this is a big deal
-
-Now here is why this is the big chapter of Part 2 of the course.
-
-Once an arrow has a lookup table on it, you can ask the picture *brand-new questions* — and you can run the arrow in *both directions*. *(pause)*
-
-*Bullet by bullet.* **Forward.** A mother walks in with anaemia. What is the chance of a bad outcome? *(pause)* Look at the table. Anaemia row: five bad, thirty-five good, out of forty. So five out of forty. That is roughly one in eight. *(pause)*
-
-Now flip it. **Backward.** A bad outcome happened. What is the chance the mother had anaemia? *(pause)* This is the *reverse* question — and it has a different answer. Look at the bad-outcome column. There were six bad outcomes total — five in anaemia mothers, one in a non-anaemia mother. So five out of six. About eighty-three percent of bad outcomes happened in anaemia mothers. *(pause)*
-
-That is a *completely different question* and a *completely different answer*. The forward question — *if I have anaemia, how worried should I be?* — is one in eight. The backward question — *given that something went wrong, how likely is anaemia to be involved?* — is five out of six. *(pause)*
-
-Now the third question. **Comparison.** Does anaemia matter? Compare the anaemia rate (one in eight) to the non-anaemia rate (one in sixty). About eight times higher. *(pause)*
-
-Three questions. Same table. Three different answers. *That* is the magic of putting numbers on a picture. *(pause)*
-
-Look at the green box. **The picture *with* numbers can answer questions the picture *without* numbers cannot.** That is the entire reason we are doing this.
-
----
-
-## Slide: Where do the numbers come from?
-
-But Joyce did not invent her numbers. She got them from somewhere. So where do *you* get yours? *(pause)*
-
-*Bullet by bullet.* The facility logbook. Joyce literally counted the last hundred mothers. Most clinics keep a logbook. Most logbooks have everything you need. Almost nobody actually counts. Be the person who counts. *(pause)*
-
-The DHIS2 database. Tanzania's national health information system. Free, public, district-level data on bleeding rates, maternal outcomes, drug stockouts. You can download it. The link is in the further-reading section. *(pause)*
-
-The Service Provision Assessment. A facility readiness survey done every few years — anaemia screening rates, drug availability, staffing levels. Also free. *(pause)*
-
-And — this matters — the *interviews from Chapter 3*. Mary, Lokol, and Esther can give you rough fractions even when no database exists. *"About half the women here bleed for more than thirty minutes before the family decides."* That is a number. It is a rough one. It is good enough to start. *(pause)*
-
-Look at the orange box. **You almost never need to estimate a number perfectly. You need to estimate it well enough that the picture starts giving useful answers. Better to be roughly right than precisely wrong.** *(pause)*
-
-That sentence is from Keynes. Tape it next to Chapter 3's three rules.
-
----
-
-## Slide: Three quiet warnings (section divider)
-
-*(pause for transition)*
-
-OK. Three warnings before you go off and do this on your own.
-
----
-
-## Slide: Warning 1 — Your numbers will be local
-
-Joyce's hundred mothers are not the same as Mwanza Region's thousand mothers, which are not the same as Tanzania's one-point-eight million births a year. *(pause)*
-
-A lookup table you build from one facility will be true for *that facility*. It may be very wrong for the country. *(pause)*
-
-Look at the orange box. **Use it locally.** When you need national numbers, get national counts. When you need facility numbers, count the facility. Do not extrapolate from a hundred mothers to a country. That is one of the most common analytic mistakes in global health.
-
----
-
-## Slide: Warning 2 — Small counts lie
-
-Joyce had *six* bad outcomes out of a hundred. That sounds solid. But six is a small number. *(pause)*
-
-If two of those six bad outcomes had happened on different days — if the dice had rolled slightly differently — the picture would have looked very different. With six events, the difference between "rare" and "common" can be a coincidence. *(pause)*
-
-Look at the orange box. **With small counts, your numbers are noisy.** We mark this on the picture by putting a *range* on each cell — not just "five out of forty" but "five out of forty, somewhere between two and ten." *(pause)*
-
-You will learn how to compute that range properly in a stats course one day. For now, the rule of thumb is: if the cell has fewer than ten events in it, do not trust it on its own.
-
----
-
-## Slide: Warning 3 — Numbers can hide a missing arrow
-
-The third warning is the most important.
-
-You can put a beautiful lookup table on every arrow you drew — and still be wrong. Because there is an arrow you forgot to draw. *(pause)*
-
-Look at the red box. **The picture has to be right first.** A wrong picture with perfect numbers is *worse* than a right picture with rough numbers. *(pause)*
-
-This is why we did Chapters 2 and 3 first. The grammar matters. The interviews matter. Adding numbers comes *last*, because numbers are convincing — and an unconvincing picture is much easier to challenge than a convincing one with numbers. *(pause)*
-
-Always come back to the grammar before you start counting.
-
----
-
-## Slide: Try It (You are the analyst)
-
-OK. Try it.
-
-In a Tanzanian district, one hundred women were tested for HIV during antenatal care last month. Twenty tested positive. *(pause)* Of those twenty, three had a low-birth-weight baby. Of the eighty who tested negative, six had a low-birth-weight baby. *(pause)*
-
-**Build a tiny lookup table. Then answer: a new HIV-positive mother is how many times more likely to have a low-birth-weight baby than an HIV-negative mother?** *(pause)*
-
-A hint. Count the rates first — three out of twenty versus six out of eighty — then divide them. *(pause)*
-
-If you got "twice as likely", you are right. Three out of twenty is fifteen percent. Six out of eighty is seven and a half percent. The HIV-positive mother is twice as likely. *(pause)* Notice you did not need a single formula. You counted, then divided.
-
----
-
-## Slide: Looking ahead
-
-So that is Chapter 4.
-
-In Chapter 5, you will take a picture-with-numbers like Joyce's and learn what to do when **new evidence arrives**. A new test result comes back. A new survey lands on your desk. A new patient walks in. *(pause)*
-
-You do not throw out your picture. You *update* it. That is what the word "Bayesian" actually means. Not the algebra — the act of updating. We will do it in counts, the same way we did everything else.
-
----
-
-## Slide: The one thing to remember
-
-If you remember nothing else from this chapter, remember this. *(pause)*
-
-**A picture from Chapter 2 plus a lookup table on every arrow is a Bayesian network.** *(pause)*
-
-The picture tells you the structure. The counts tell you the strengths. Together, they answer questions neither could answer alone. *(pause)*
-
-And the counts are always counts of *people*. Out of a hundred. Never percentages, never decimals, until the very end. *(pause)*
-
-See you in Chapter 5.
-
----
-
-## Slide: Closing (white)
-
-*(pause; no narration)*
+## Slide: Looking Ahead
+Next chapter, we run this model backwards. We will observe outcomes in Ethiopia and use Bayes' rule to figure out what is most likely going wrong upstream. We will learn about a phenomenon called "explaining away" -- and I promise it will surprise you. Think of it as detective work: you see the crime scene, and you work backwards to figure out who did it. See you next time.

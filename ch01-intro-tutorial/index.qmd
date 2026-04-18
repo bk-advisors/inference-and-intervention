@@ -1,0 +1,364 @@
+---
+title: "Chapter 1 — Did It Actually Work?"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Almaz
+
+**Almaz, 22, Tigray region, Ethiopia** *(a composite story drawn from DHS Ethiopia 2016 narratives — the details are real, the name is not)*
+
+. . .
+
+It is 2015. Almaz is having her first baby.
+
+. . .
+
+She gives birth at home. Her mother is in the room. So is a young woman in a green uniform — a **Health Extension Worker** sent by the government.
+
+. . .
+
+The labour is long but the baby comes out crying. Both survive.
+
+. . .
+
+::: {.callout-box}
+**The question:** Did the woman in the green uniform save Almaz's baby? Or would the baby have been fine anyway?
+:::
+
+
+## And here is the puzzle
+
+Between 2000 and 2016, maternal mortality in Ethiopia fell from **673 to 412 deaths per 100,000 live births** *(DHS Ethiopia 2000; 2016)*.
+
+. . .
+
+Over the same period, Ethiopia trained and deployed roughly **38,000 Health Extension Workers** like the one in Almaz's story *(WHO 2013)*.
+
+. . .
+
+::: {.callout-box .orange}
+At first glance, this looks easy: more workers, fewer deaths. The program worked.
+:::
+
+
+## But here is the twist
+
+In 2005, only **5 out of 100** Ethiopian women gave birth in a health facility.
+
+. . .
+
+By 2016, that number had risen — but only to **26 out of 100** *(DHS Ethiopia 2005; 2016)*.
+
+. . .
+
+So most births in Ethiopia, including Almaz's, were still happening **at home** during the years when mortality was falling fastest.
+
+. . .
+
+::: {.callout-box .red}
+If most women were not going to clinics, then something other than "more clinic visits" was driving the drop. What?
+:::
+
+
+# What if I told you... {background-color="#005CB9"}
+
+
+## ...there are three traps hiding inside that question?
+
+::: {.incremental}
+
+1. **Two things happening together is not the same as one causing the other.**
+
+2. **A third thing you didn't think of can be driving both.**
+
+3. **You have to draw the picture before you trust the numbers.**
+
+:::
+
+. . .
+
+::: {.callout-box}
+For the rest of this chapter, we are going to walk through these three traps using Almaz's story.
+:::
+
+
+## Trap 1 — Two things together ≠ one caused the other
+
+Every morning you see your neighbour walk out the door carrying an umbrella.
+
+. . .
+
+Every morning it rains.
+
+. . .
+
+::: {.bad-example}
+The umbrella caused the rain.
+:::
+
+. . .
+
+::: {.good-example}
+Your neighbour checked the forecast. The forecast caused both — her umbrella *and* the rain landing on her head.
+:::
+
+. . .
+
+::: {.definition-box}
+**The lesson:** Things that happen at the same time often share a cause. They do not always cause each other.
+:::
+
+
+## Trap 1 in Almaz's story
+
+The Health Extension Worker was in the room when Almaz's baby cried.
+
+. . .
+
+But "in the room when it happened" is the same kind of evidence as "carrying an umbrella when it rained".
+
+. . .
+
+::: {.callout-box .green}
+**The aha:** We cannot tell from this one moment whether the HEW *caused* the safe birth, or whether she was simply *present* during a birth that would have gone fine anyway.
+:::
+
+
+## Trap 2 — A hidden third thing
+
+Across many countries, ice cream sales and drowning deaths rise together every summer.
+
+. . .
+
+::: {.bad-example}
+Ice cream causes drowning.
+:::
+
+. . .
+
+::: {.good-example}
+**Hot weather** causes both — more people eat ice cream *and* more people swim.
+:::
+
+. . .
+
+::: {.definition-box}
+**The lesson:** When two things move together, look for a hidden third thing — a *confounder* — that might be driving both.
+:::
+
+
+## Trap 2 in Almaz's story
+
+The same year the Health Extension Worker arrived in Almaz's village, a new road also reached the village.
+
+. . .
+
+The road cut the trip to the nearest district hospital from **four hours** to **ninety minutes**.
+
+. . .
+
+So when something went wrong in a difficult birth, families could now reach a hospital in time. *(Tigray Regional Health Bureau, 2014, public summary)*
+
+. . .
+
+::: {.callout-box .green}
+**The aha:** Was it the HEW? Was it the road? Was it both? You cannot tell which until you separate them — and "they arrived together" is exactly what makes it hard.
+:::
+
+
+## Trap 3 — Draw the picture first
+
+When everything is tangled together — the HEW, the road, the school, the radio campaign, the new bus that brought the nurse — you need a way to **see** the tangle before you start counting things.
+
+. . .
+
+The tool we use is a **directed acyclic graph**. Don't be intimidated by the name. It is just **a picture made of boxes and arrows**.
+
+. . .
+
+::: {.definition-box}
+**A box** = a thing that can vary (the HEW being there or not; the road being open or not; the baby surviving or not).
+
+**An arrow** = "this one influences that one".
+:::
+
+
+## Trap 3 in Almaz's story
+
+Here is Almaz's situation as a picture:
+
+<br>
+
+::: {style="text-align: center; font-size: 0.85em;"}
+
+[Government funding]{.dag-node .confounder}
+
+⬇  ⬇
+
+[Health Extension Worker]{.dag-node .treatment}     [New road]{.dag-node .treatment}
+
+⬇  ⬇
+
+[Almaz's baby survives]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The aha:** Once you draw this, you can *see* why the simple question "did the HEW work?" cannot be answered without also asking about the road. They share a parent — the funding decision that paid for both.
+:::
+
+
+# Back to the puzzle {background-color="#005CB9"}
+
+
+## So what was actually going on?
+
+The Lancet's analysis of Ethiopia's mortality decline points to **three things at once** — and probably others — moving in the same direction *(Wang et al., Lancet Global Health, 2014)*:
+
+. . .
+
+::: {.incremental}
+
+- **Health Extension Workers** in villages, doing antenatal visits and recognising danger signs
+- **New roads and transport** making it possible to actually reach a hospital when something went wrong
+- **Girls staying in school longer**, marrying later, having their first baby older
+
+:::
+
+. . .
+
+::: {.callout-box}
+**The hidden piece:** "The program worked" is the wrong question. The right question is *which parts* worked, *for whom*, and *how much* — and you cannot answer that without first drawing the picture.
+:::
+
+
+## Why this matters
+
+Almaz is one story. Ethiopia is one country. But the trap is everywhere.
+
+. . .
+
+Every time someone says **"we did X and the outcome got better, so X worked"** — about a vaccine campaign, a cash transfer, a school feeding programme, a new clinic — they are at risk of confusing all three traps.
+
+. . .
+
+::: {.callout-box .orange}
+The job of this course is to give you the tools to **not** make that mistake.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A neighbouring district to Almaz's launches a free SMS reminder service for pregnant women in 2018. By 2020, antenatal visit rates in that district have risen by 12 percentage points.
+
+The district health officer tells you the SMS service caused the rise. He wants more funding to expand it.
+
+**What is the first question you would ask him before recommending the funding?**
+:::
+
+. . .
+
+::: {.callout-box .green}
+*Hint: think about what else might have changed in that district between 2018 and 2020.*
+:::
+
+. . .
+
+::: {.callout-box .orange}
+In **Chapter 2** we will turn this kind of question into a picture you can actually draw — and use that picture to decide what to ask next.
+:::
+
+
+# What you will do in R {background-color="#005CB9"}
+
+
+## On the companion page
+
+When you go to the companion page for this chapter, you will write **a few lines of R** that draw Almaz's diagram from earlier — the boxes for the HEW, the road, and the baby's survival, with the funding box up top.
+
+. . .
+
+You will then ask R one specific question: *if I add the road to my picture, does the apparent effect of the HEW change?*
+
+. . .
+
+::: {.callout-box .green}
+You do not need to install anything yet. The code on the companion page is there to read first, run later.
+:::
+
+
+## Looking ahead
+
+In **Chapter 2**, we will learn how to draw these pictures properly — what the boxes can mean, what the arrows can mean, and what the rules are for connecting them.
+
+. . .
+
+By the end of Chapter 2, you will be able to draw a picture for *any* programme someone tells you about — even if you have never heard of it before.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Almaz's story**
+
+- **DHS Ethiopia, 2000 / 2005 / 2011 / 2016** — the four Demographic and Health Surveys this chapter draws from. All publicly available at *dhsprogram.com*.
+- **WHO, 2013** — *Success Factors for Women's and Children's Health: Ethiopia.* The country case study on the Health Extension Worker programme.
+- **Wang H. et al., 2014** — "Global, regional, and national levels of neonatal, infant, and under-5 mortality." *The Lancet*, 384(9947). Open-access.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper on the ideas**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention: Causal Models for Business Analysis.* Routledge. The textbook this course is adapted from. Same tools, different setting — written for business decisions; we use them here for public health and MNH.
+- **Pearl, J. & Mackenzie, D. (2018)** — *The Book of Why.* The most readable introduction to causal inference ever written. Start with chapters 1 and 4.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**Two things happening together is not the same as one causing the other.**
+
+Almaz's baby lived. The HEW was in the room. So was a new road. So was a longer school year for girls. The whole job of causal analysis is figuring out which of those mattered — and how much.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 1]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

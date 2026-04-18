@@ -1,287 +1,190 @@
-# Chapter 2 Speaker Notes — Drawing the Picture
+# Speaker Notes — Chapter 2: Qualitative Causal Models
 
-**Commander's Intent:** A causal diagram is just three node types, signed arrows, and three shapes — and once you know that grammar, you can draw a picture for any programme you encounter.
+## Overview
+Welcome back. Today is our grammar lesson for causal thinking. Last time we learned *why* causal models matter — the correlation traps, the confounding, the danger of acting on misleading data. Now we're going to learn *how* to actually build one. The payoff is three simple patterns — chain, fork, and collider — that control how information flows through any causal diagram, no matter how big. Memorize those three patterns and you can reason about anything. We'll finish by building a complete model of Rwanda's health system together.
 
-**Plot:** Creativity — turning vague hypotheses into testable pictures.
+## Slide: Learning Objectives
+Five objectives today, and they build like a staircase. *(pause)* First, we learn the three main types of nodes — the building blocks. Then we learn how to connect them with signed links — plus and minus. Then we get to the heart of it: the three fundamental triplet structures. From there, we learn the formal rule called d-separation — when does information flow, and when does it stop? And finally, we put it all together and build a complete DAG for Rwanda's maternal and newborn health system. *(pause)* Each piece is simple on its own. The power comes from combining them.
 
-**Protagonist:** Beatrice, 34, Animatrice de Santé in Northern Province, Rwanda. Composite drawn from DHS Rwanda 2019/20 narratives.
+## Slide: Chapter Overview
+Look at the five-step flow across the top. We go from mental models to formal DAGs, then node types and links, then the three triplets, then information flow rules, and finally the Rwanda application. *(pause)* Here's where we are in the course: Chapter 1 showed us *why* causal thinking matters. Now we learn *how* to draw a causal model. By the end of today, you'll have a complete diagram of Rwanda's health system on paper and in R.
 
-**Estimated runtime:** 20–24 minutes.
+## Slide: From Intuition to Structure
+Let's talk about why writing down your causal beliefs changes everything.
 
----
+## Slide: Everyone Has a Mental Model
+You already carry causal beliefs around in your head. *(pause)* "If we train more community health workers, outcomes will improve." "Insurance coverage drives facility delivery rates." "Better equipment leads to better care." Those are all causal claims. The problem? They live in your head, where nobody can challenge them.
 
-## Overview (before slide 1)
+Think about it — everyone has a mental model. The question is whether yours is written down where others can see it, poke holes in it, and help you improve it.
 
-Welcome back. *(pause)*
+## Slide: Implicit vs. Explicit Models
+Look at the two columns. *(pause)* On the left — implicit models, the ones stuck in your head. They're vague and shifting. Assumptions are hidden. Two people can disagree without even knowing *why* they disagree. You can't test them against data.
 
-Last chapter, we met Almaz in Tigray. We learned that two things happening together is not the same as one causing the other. And we ended with a question: how do you actually *see* the tangle when everything is happening at once?
+On the right — explicit models on paper. Precise and shareable. Assumptions are out in the open. Disagreements become *productive* because you can point to the exact arrow you disagree about. And they generate testable predictions. *(pause)* A qualitative causal model is just a disciplined way of writing down what you believe about how things connect — before you add any numbers. That's all it is. Let's learn how.
 
-This chapter answers that question. Today, you are going to learn the grammar of causal pictures. By the end of these twenty minutes, you will be able to draw a picture for *any* programme someone tells you about — even one you have never heard of before. *(pause)*
+## Slide: The Model-Building Process
+Five steps, every time. *(pause)* List your variables. Classify your node types. Draw your arrows. Assign your signs. Check the structure.
 
-To learn it, we are going to Rwanda. And we are going to meet someone named Beatrice.
+Here's an everyday example to make it click. A school principal says: "I think class size affects teacher attention, and teacher attention affects test scores." That one sentence *is* a causal model: Class Size, arrow with a minus sign to Teacher Attention, arrow with a plus sign to Test Scores. We just gave it structure. *(pause)* The rest of this chapter teaches you the formal rules for each step.
 
----
+## Slide: Three Node Types
+The building blocks of every causal diagram.
 
-## Slide: Meet Beatrice
+## Slide: Probabilistic Nodes (Ovals)
+Probabilistic nodes are the things the world throws at you — variables whose values are uncertain. You observe them, but you don't directly control them. Drawn as ovals. *(pause)* Everyday examples: tomorrow's weather, a student's exam score, traffic on your drive to school. In our health context: Quality of Care — is it good or poor? Care-Seeking Behavior — high or low? Workforce Competency — competent or still developing?
 
-Beatrice is thirty-four years old. She lives in Northern Province, Rwanda. *(pause)*
+These are the variables where you have to deal with uncertainty. Nature decides, not you.
 
-Same disclosure as last time. Beatrice is a composite. The details are real, drawn from the Rwanda Demographic and Health Survey for 2019 and 2020 — that is publicly available data — but the name is not.
+## Slide: Decision Nodes (Rectangles)
+Decision nodes are the levers you can pull — variables you *choose*. Drawn as rectangles. *(pause)* Everyday: which university to apply to, how much to spend on advertising, whether to study tonight or watch TV. In our health context: how much to invest in community health worker training, whether to buy more equipment, whether to expand Rwanda's Mutuelle insurance program.
 
-Beatrice is what Rwanda calls an *Animatrice de Santé*. The word in French means "animator of health". In English we usually translate it as community health worker. Rwanda has about forty-five thousand of them. Almost all women. Almost all volunteers. The official figure is from the Rwanda Biomedical Centre's 2020 statistics booklet. *(pause)*
+These are the handles you can grab. The choices are yours.
 
-Six days. *(pause)* That is how much training she has had. Six days. *(pause)* She has a bicycle. She has a phone. And she has a list of every pregnant woman in three nearby villages.
+## Slide: Objective Nodes (Hexagons)
+Objective nodes are the scoreboard — what you're ultimately trying to achieve. Drawn as hexagons. Arrows flow *into* objective nodes but never *out*. *(pause)* Everyday: your final GPA, a company's annual profit, a team's win-loss record. In our context: Neonatal Mortality and Maternal Mortality.
 
-She is not a nurse. She is not a midwife. She does not earn a salary. *(pause)*
+Nobody "controls" the objective directly. It's the result of everything upstream. It just sits at the end and collects the effects of all your decisions and all the uncertainty.
 
-Now look at the box on the screen. **How can a volunteer with six days of training help drive one of the fastest declines in newborn mortality on record?** *(pause)*
+## Slide: Node Types: Quick Reference
+Here's the cheat sheet. *(pause)* Probabilistic — ovals — uncertain things nature determines. Decision — rectangles — choices you make. Objective — hexagons — goals you're trying to achieve. There's also a fourth type — function nodes — for variables that are calculated exactly from their parents, like "Total Spending equals Training plus Equipment plus Systems." We won't focus on those, but just know they exist for accounting-type formulas.
 
-That question is the puzzle of this chapter.
+## Slide: Signed Links
+Arrows that tell you which direction things move.
 
----
+## Slide: How Links Work
+An arrow from A to B means changing A can change B. The sign tells you the direction. *(pause)* Plus means more A leads to more B — "A pushes B up." Minus means more A leads to less B — "A pushes B down."
 
-## Slide: And here is the puzzle
+Look at the diagram. CHW Training Investment, plus arrow to Workforce Competency, minus arrow to Neonatal Mortality. Read it out loud: "Training investment *increases* workforce competency, and higher competency *decreases* neonatal mortality." *(pause)* Two arrows and two signs, and we've already captured a meaningful causal story.
 
-Here are the numbers.
+## Slide: Sign Multiplication Along Paths
+Here's a trick that makes everything easier. When you follow a path through multiple arrows, you multiply the signs — just like multiplying positive and negative numbers. *(pause)* Plus times plus equals plus. Minus times minus equals plus. Plus times minus equals minus.
 
-In the year 2000, Rwanda's neonatal mortality rate — that is, deaths in the first twenty-eight days of life, per one thousand live births — was forty-one. *(pause)*
+Look at the examples. Training to Competency to Mortality: plus times minus equals minus overall. Training reduces mortality. Makes sense, right? And the everyday example: Rain increases wet roads — that's plus. Wet roads increase accidents — that's plus. Overall: plus times plus equals plus. Rain increases accidents. *(pause)* Simple rule, but incredibly useful when you're tracing effects through a big diagram.
 
-By 2019, it was nineteen. *(pause)*
+## Slide: The Three Triplets
+Every causal diagram is built from just three patterns. This is the most important part of the whole chapter. Learn these three and you understand every DAG.
 
-Less than half. In one generation. And the women like Beatrice — the volunteer Animatrices de Santé — were the front line of that change. *(pause)*
+## Slide: Why Three Triplets Matter
+Look at the table. *(pause)* Number one: the Chain — A causes B, B causes C. B is a mediator, passing information along. Number two: the Fork — B causes both A and C. B is a common cause. Number three: the Collider — A and C both cause B. B is a collision point.
 
-So look at the orange box. Something in the system is making volunteers far more powerful than their training would suggest. *(pause)* What is it?
+Each one has its own rule about when information flows and when it stops. Get these rules wrong and your entire analysis falls apart. *(pause)* So let's go through them one at a time. Pay close attention. I'm going to ask you to burn this into your memory.
 
-The answer is not "she is just a really good volunteer". The answer is in the *picture*. Let me show you.
+## Slide: Triplet 1: The Chain
+A causes B, B causes C. B sits in the middle, passing information from A to C. *(pause)* The everyday example: Rain causes Wet Roads, Wet Roads cause Car Accidents. If you already know the roads are wet, does learning it rained tell you anything *new* about accident risk? No. The road condition already captured everything rain had to say.
 
----
+Here's the rule: information flows from A to C through B. But if you hold B fixed — if you already know B's value — the flow stops. Think of it like a water pipe. Water flows from the faucet through the pipe to the bucket. Close the valve in the middle? Nothing gets through.
 
-## Slide: We need a better picture (section divider)
+## Slide: Chain: MNH Example
+Look at the health example. *(pause)* CHW Training Investment, plus arrow to Workforce Competency, minus arrow to Neonatal Mortality.
 
-*(pause for transition)*
+Left side, the green box — we're *not* holding competency fixed. Training and mortality are connected. Knowing a district invested in training, you'd predict lower mortality. Information flows through the chain.
 
----
+Right side, the orange box — we *are* holding competency fixed. If we already know a health worker is competent, it doesn't matter *how* she became competent — training, years of experience, natural talent. The training information is blocked by the competency information. *(pause)* For Rwanda, this means training's value is entirely mediated through competency. Competency is what actually matters at the end of the day.
 
-## Slide: Words are not enough
+## Slide: Triplet 2: The Fork
+A gets an arrow from B, and C gets an arrow from B. B is in the middle, causing both A and C. *(pause)* Here's our old friend the ice cream example. Ice Cream Sales and Drowning Deaths are both caused by Summer Heat. They look correlated, but neither one causes the other. Summer heat is the common cause hiding in the background.
 
-People who work in this field say things all the time like *"community health workers reduce mortality through early referral and behaviour change."* You will read that exact sentence in dozens of reports. *(pause)*
+The rule works just like the chain: A and C look associated, but only because of B. Hold B fixed — control for temperature — and the link between ice cream and drowning vanishes.
 
-And it sounds reasonable. But look at it. *Six nouns. Zero arrows.* You cannot draw it. You cannot test it. You cannot tell what would break if you changed one piece. It is the *kind* of sentence that people nod along to and then get back to their day.
+## Slide: Fork: MNH Example
+Now the health version. *(pause)* CHW Deployment and Neonatal Mortality are both driven by Disease Burden. The naive observation says districts with more CHWs have higher mortality — health workers cause harm? Of course not. Disease burden is the common cause. High-burden districts get more workers *and* have higher mortality.
 
-This chapter is about how to turn that kind of sentence — six nouns and zero arrows — into a picture you can actually argue about. *(pause)*
+Control for disease burden, and the spurious link disappears. *(pause)* For Rwanda, across its 30 districts, the Ministry of Health deploys more CHWs to higher-burden areas. Any comparison of CHW numbers versus mortality *must* control for baseline disease burden, or you'll get the wrong answer.
 
-The grammar of those pictures has three parts. Three node types, signed arrows, and three shapes. We will take them one at a time.
+## Slide: Triplet 3: The Collider
+Okay, here's where it gets counterintuitive. Pay very close attention, because this one behaves *opposite* to everything we just learned. *(pause)*
 
----
+A causes B, and C also causes B. Two arrows collide at B. That's why it's called a collider.
 
-## Slide: Three things a box can mean
+The everyday example: High Grades and Athletic Talent both help you get into a selective university. Among the general population, grades and athletic ability are unrelated. But among *admitted students* — if you know someone got in and they're not a great athlete — they must be an academic star. One cause "explains away" the other.
 
-OK. The first part of the grammar. **Three things a box can mean.** *(pause)*
+## Slide: Collider: MNH Example
+Staffing Level and Equipment Availability both contribute to Quality of Care. Quality is the collider. *(pause)*
 
-When you see a box on a causal picture, it is always one of three things.
+Left side, the green box — not looking at quality. Staffing and equipment are independent — separate decisions, no connection.
 
-It is either a **factor** — something that varies but you cannot directly choose. Like whether Beatrice's villages are mostly poor or mostly not poor. She did not choose that. It varies, but it is not under her control.
+Right side, the red box — among facilities with *good* quality. If staffing is low at a good-quality facility, equipment must be excellent. The two causes "explain away" each other. *(pause)* This creates a fake negative relationship between staffing and equipment that doesn't actually exist. That's collider bias, and it trips up even experienced researchers.
 
-Or it is an **action** — something a person actively decides to do. Like Beatrice deciding to visit a particular pregnant woman this week. That is a choice.
+## Slide: Information Flow Rules
+d-Separation: when does information flow, and when does it stop?
 
-Or it is an **outcome** — the thing you ultimately care about. The newborn surviving. *(pause)*
+## Slide: The Three Rules
+Burn this into your memory. I'm serious. This is the single most important table in the entire course. *(pause)*
 
-Same square shape on the page, three different roles. Knowing which is which is most of the work — because the kind of box determines what kind of arrow can come out of it.
+Chain: A to B to C. Default? Information flows. Condition on the middle? Blocked. Fork: A from B, C from B. Default? Flows. Condition on the middle? Blocked. Collider: A to B, C to B. Default? Blocked. Condition on the middle? Flows.
 
----
+*(pause)* See the pattern? Chains and forks behave the same — conditioning on the middle blocks the flow. The collider is the rebel — conditioning on the middle *opens* the flow. The collider flips the rule. Everything else is the same; the collider is the odd one out.
 
-## Slide: Beatrice's three boxes
+The fancy name for these rules is d-separation — the "d" stands for directional. If every path between two variables is blocked, they're d-separated, and knowing one tells you nothing about the other.
 
-So here is Beatrice's situation in three boxes.
+## Slide: Applying d-Separation
+In real diagrams, two variables might be connected by multiple paths. You have to check every path. *(pause)* The rule is: walk along each path. At each node, ask — is this a chain or fork middle, or a collider? Chain or fork middle that you're conditioning on? Blocked. Collider that you're *not* conditioning on? Blocked. One blocked node is enough to block the whole path.
 
-*Look at the diagram.* On the left: "mother is poor". That is a factor — Beatrice cannot choose it. We have given it the orange-amber colour, which throughout this course will mean *factor* or *confounder*. *(pause)*
+If *all* paths between two variables are blocked, they're independent. Even one open path means information can still flow.
 
-In the middle: "Beatrice visits". That is an action. Green colour, which will mean *action* or *treatment*. *(pause)*
+## Slide: d-Separation: Worked Example
+Let's work through this together. *(pause)* Look at the diagram. Training flows to Quality, Quality flows to Mortality. Equipment also flows into Quality from below.
 
-On the right: "newborn survives". That is the outcome. Red, with the hexagon shape, which will mean *outcome*. *(pause)*
+First question: is Training independent of Mortality given Quality? The path is Training to Quality to Mortality. That's a chain, and Quality is in our conditioning set. Chain with the middle conditioned on — blocked. Yes, d-separated.
 
-Three boxes. Three roles. One sentence. *Beatrice can choose to visit or not, and that visit influences whether the newborn survives — but the family's poverty is also influencing the outcome, and Beatrice cannot do anything about it.* *(pause)*
+Second question: is Training independent of Equipment given Quality? The path goes Training to Quality and Equipment to Quality. Quality is a collider here — two arrows point into it. And it's in our conditioning set. Collider conditioned on — opened! So no, Training and Equipment are *not* independent given Quality. *(pause)* Conditioning on quality created a spurious link between training and equipment. That's collider bias, right here in our own model.
 
-That sentence is harder to nod along to. It is also more useful.
+## Slide: MNH Application: Rwanda
+Now let's build a real model for a real country.
 
----
+## Slide: Rwanda at a Glance
+Here are the numbers. *(pause)* Neonatal mortality: about 16 per 1,000. Maternal mortality: about 248 per 100,000. Facility delivery rate: over 94 percent — that's really high. Health insurance through Mutuelle de Sante: about 85 percent coverage. They've got roughly 58,000 community health workers across 30 districts. But nurses per population is only about 1.3 per 1,000, way below the WHO target of 4.45.
 
-## Slide: Arrows have signs
+Rwanda's CHW program and Mutuelle insurance are widely studied success stories. But the workforce is stretched thin, and neonatal mortality has been harder to crack than under-5 mortality.
 
-OK. Second part of the grammar. **Arrows have signs.** *(pause)*
+## Slide: Choosing Our Variables
+We want a diagram rich enough to capture the key dynamics but small enough to reason about. Seven nodes. *(pause)* Three decision nodes — rectangles, the levers we pull: CHW Training Investment, Equipment Procurement, and Insurance Policy. Three probabilistic nodes in the middle: Workforce Competency, Equipment Availability, and Care-Seeking Behavior. One more probabilistic node that acts as the bottleneck: Quality of Care. And one objective node — the hexagon, the scoreboard: Neonatal Mortality.
 
-An arrow does not just say "this affects that". It also says *which direction*.
+## Slide: The Rwanda MNH DAG
+Look at the diagram. Read it left to right. *(pause)* Decisions on the left — what we control. Mediators in the middle — how they work. Quality of Care is the bottleneck where everything converges. And Neonatal Mortality on the right — what we want to reduce.
 
-A **positive** arrow — written with a plus sign — means "more of this leads to more of that". *More antenatal visits lead to more birth-preparedness.* That is a positive arrow.
+Each of the three decisions flows through its own channel. Training builds competency. Procurement gets equipment into facilities. Insurance drives care-seeking. All three channels pour into Quality, and Quality reduces mortality.
 
-A **negative** arrow — written with a minus sign — means "more of this leads to less of that". *More distance to the clinic leads to a lower chance of delivering there.* That is a negative arrow. *(pause)*
+## Slide: Signs and Path Analysis
+Let's assign signs. *(pause)* Training to Competency — plus. Procurement to Availability — plus. Insurance to Care-Seeking — plus. Competency to Quality — plus. Availability to Quality — plus. Care-Seeking to Quality — plus. Quality to Mortality — minus.
 
-A picture without signs is half a picture. So from now on, every arrow you draw should have either a plus or a minus next to it. If you cannot decide which, that is a useful thing to notice — it usually means you do not actually know how the variable works yet.
+Now follow any path from a decision to mortality. Training to Competency to Quality to Mortality: plus times plus times minus equals minus overall. Training reduces mortality. Same for all three channels — every one carries an overall minus sign. All three reduce mortality. *(pause)* The question is: which one has the *strongest* effect? That's what we'll need actual numbers for in Chapter 4.
 
----
+## Slide: Spotting Triplets in the Rwanda DAG
+Time for pattern recognition. *(pause)* Look at the green box — chains. Training to Competency to Quality. Insurance to Care-Seeking to Quality. Procurement to Availability to Quality to Mortality. Conditioning on the mediator blocks each of these paths.
 
-## Slide: Beatrice's picture, with signs
+Now the red box — colliders. Competency and Availability both flow into Quality. Competency and Care-Seeking both flow into Quality. Quality is a collider for all of these pairs. *(pause)* That means if you condition on Quality — say, you only study high-quality facilities — you create a fake link between staffing and equipment. With Rwanda's nurse shortage of 1.3 per 1,000, if you only look at high-performing facilities, staffing and equipment will appear negatively related. That's a statistical illusion from collider bias. Be careful what you condition on.
 
-Now look at Beatrice's picture again, but with signs on the arrows.
+## Slide: R Workshop
+Let's build Rwanda's DAG in R with dagitty and ggdag.
 
-*Look at the diagram.* "Mother is poor" has a *minus* arrow into "Beatrice visits" — which means *more poverty leads to fewer visits*, perhaps because poorer households are harder to reach. That is something we should test, but it is the working assumption. *(pause)*
+## Slide: Setting Up
+Same three packages as last time — dagitty, ggdag, and ggplot2. *(pause)* If they're already installed, just load them. If not, uncomment the install line and run it first.
 
-"Beatrice visits" has a *plus* arrow into "newborn survives" — more visits, better survival. *(pause)*
+## Slide: Step 1: Define Rwanda's DAG
+Here we define the full seven-node model in code. *(pause)* Look at the dagitty syntax. Three decision nodes on the left: CHW_Training, Equipment_Procure, Insurance_Policy. Three mediators in the middle: Competency, Equip_Avail, Care_Seeking, plus Quality. And Neonatal_Mortality on the right. Seven arrows connecting them. Then we check isAcyclic — it should return TRUE, confirming we haven't accidentally created any loops. That's our sanity check.
 
-But there is a *second* arrow on the picture. "Mother is poor" has its own direct minus arrow into "newborn survives". Because poverty harms survival through *many* paths — not just through whether Beatrice visits. *(pause)*
+## Slide: Step 2: Visualize the DAG
+Now let's see it. *(pause)* The first call, ggdag, gives us the basic picture. The second call, ggdag_status, color-codes the exposure and outcome — so we can see the path from CHW Training to Neonatal Mortality highlighted. Run both and see how the structure pops visually.
 
-So look at the orange box. **Two arrows point at the outcome. Which one is doing the work?** *(pause)* That is the puzzle of every causal study. And we cannot answer it with words alone. We need to be able to *see* the shapes the arrows make.
+## Slide: Step 3: Test d-Separation
+Here's where we check our understanding against the computer. Three tests. *(pause)* Test 1: Is Training independent of Mortality given Quality? That's a chain — we expect TRUE, blocked. Test 2: Is Competency independent of Equipment Availability unconditionally? No connecting path — we expect TRUE. Test 3: Is Competency independent of Equipment Availability given Quality? That's a collider — we expect FALSE, opened!
 
-Which brings us to part three of the grammar.
+Run the code. If your predictions match, you've got the triplet rules down. If any surprise you, go back and trace the path by hand. *(pause)* TRUE means independent, path blocked. FALSE means information flows. Test 3 is the collider effect in action.
 
----
+## Slide: Step 4: Paths and Adjustment Sets
+Two more powerful tools. *(pause)* The paths function lists every route from CHW_Training to Neonatal_Mortality. The impliedConditionalIndependencies function generates every testable prediction our model makes — if data violates any of these, our model needs fixing. And adjustmentSets tells us what we need to control for.
 
-## Slide: Three shapes that show up everywhere (section divider)
+Notice it returns the empty set for CHW_Training. Why? Because Training has no parents in this DAG — it's a root node. No backdoor paths to close. The causal effect can be estimated without any adjustment, *if* the DAG is correct. That's a big "if," and it's why getting the diagram right matters so much.
 
-*(pause for transition)*
+## Slide: Key Takeaways
+Three things to take away. *(pause)* First, a qualitative causal model makes your assumptions visible, shareable, and testable. It gets beliefs out of your head and onto paper.
 
-There are three shapes that show up over and over again in these pictures. Three. Just three. Once you can recognise them, you can understand almost any causal diagram you will ever see.
+Second, every DAG is built from three triplets — chains, forks, and colliders — each with its own information flow rule. Chains and forks: conditioning on the middle blocks the flow. Colliders: conditioning on the middle opens the flow. Get this backwards and you introduce bias instead of removing it.
 
----
+Third, for Rwanda: three investment decisions flow through three mediators into Quality of Care, then Neonatal Mortality. The diagram tells us *where* to look — the numbers will tell us *how much*.
 
-## Slide: Shape 1 — The chain
+## Slide: Looking Ahead
+Next session we put these tools to work on a real consulting case. *(pause)* We'll build a DAG from stakeholder interviews in Kenya — talking to a County Health Director, a midwife, and a community health worker. Each conversation reveals new variables our model was missing. It's detective work, and it's where the theory becomes practice.
 
-Shape one. **The chain.** *(pause)*
-
-Three boxes in a row. *A* causes *B*, which causes *C*. *(pause)*
-
-Beatrice visits a pregnant mother. The visit teaches the mother to recognise danger signs in late pregnancy. When a danger sign appears, the mother goes to the clinic in time. *(pause)*
-
-That is a chain. Three boxes. Two arrows. The middle box — *mother knows danger signs* — passes the message along.
-
-The most important property of a chain: **block the middle box and the chain breaks**. If the message about danger signs does not land — say, because the mother forgot, or did not understand the dialect, or was too tired — then the visit had no effect on the outcome through that path. The arrow from "Beatrice visits" still exists, but the chain is dead. *(pause)*
-
-This will turn out to matter a lot when we start asking questions like *"which part of the programme is doing the work?"*. The answer is almost always *"the middle box of the chain"*. So learn to look for it.
-
----
-
-## Slide: Shape 2 — The fork
-
-Shape two. **The fork.** *(pause)*
-
-One box causes two others. The two are not connected to each other — they just share a parent. *(pause)*
-
-Look at the picture. At the top, "government rolls out CHW programme". From that one box, two arrows come down. One goes to "Beatrice gets training". The other goes to "new ambulance lands in district". *(pause)*
-
-This is the same shape as the trap from Chapter 1, with Almaz and the Health Extension Worker and the new road. The HEW arrived. The road arrived. The same year. In the same village. They looked like they caused each other. They did not. They shared a parent — the government decision to fund both. *(pause)*
-
-A fork is the most common confounder in real life. Whenever two things show up together, the first question to ask is: *do they share a parent?* If yes, you have a fork, and you cannot interpret their correlation as one causing the other.
-
----
-
-## Slide: Shape 3 — The collider
-
-Shape three. **The collider.** *(pause)*
-
-This one is the strangest. It catches almost everyone the first time. Take it slow.
-
-A collider is when two boxes both cause a third. The third box — the one with two arrows pointing *into* it — is called the collider. *(pause)*
-
-Look at the picture. Two parents: "Beatrice visits" and "distance to clinic is short". Both arrows point down to "mother delivers in clinic". *(pause)*
-
-Now here is the strange thing. Look at the green box. *(pause)* The two parents — Beatrice's visits and the short distance — are unrelated to each other. There is no arrow between them. They are independent. *(pause)*
-
-But the moment you look only at the families who *delivered in the clinic* — that is, only the families where the collider box is "yes" — those two parents *suddenly look related*. And the relationship is fake. It is an artefact of looking at only one branch of the collider. *(pause)*
-
-I know that sounds bizarre. We are going to come back to it in Chapter 6 with a much more careful example. For now, just remember the shape: two arrows colliding into one box. And remember the warning: **do not condition on a collider unless you have thought about it very carefully**. We will explain what "condition on" means properly later. For now, file it away.
-
----
-
-## Slide: Putting it together (section divider)
-
-*(pause for transition)*
-
-OK. Three node types. Signed arrows. Three shapes — chain, fork, collider. That is the whole grammar. *(pause)*
-
-Let's put it back together and look at Beatrice's full picture.
-
----
-
-## Slide: Beatrice's full picture
-
-Here is Beatrice's situation, with everything we have learned now in one diagram.
-
-*Look at the picture.* At the top, "government CHW programme" — a parent that splits two ways. Down the left: "Beatrice's training" → "Beatrice visits" → "mother knows danger signs" → "newborn survives". That is a chain. *(pause)*
-
-Down the right side, the same parent feeds into "distance to clinic" — and distance has its own arrow into the survival box. *(pause)*
-
-So you can see *all three shapes at once on this picture*. There is the **chain** running from Beatrice's training all the way to the outcome. There is the **fork** at the top, where the government programme spawns both Beatrice and the ambulance route. And there is a **collider** at the outcome — multiple things all crashing into the same survival box. *(pause)*
-
-This is what a useful picture looks like. It is not pretty. It is not simple. But it is something you can argue about. You can point at any single arrow and ask *"do we believe this one? on what evidence? what would change if it were the other direction?"*. That is the difference between a picture and a six-noun sentence.
-
----
-
-## Slide: So how do volunteers drive that much change?
-
-Now let's go back to the puzzle. **How can a volunteer with six days of training help drive one of the fastest neonatal mortality declines on record?** *(pause)*
-
-Look at the picture. Beatrice's training is *one box*. Her visits are *one box*. But the outcome at the end has *three different paths leading to it*. *(pause)*
-
-There is the **chain** path — she teaches danger signs, the mother recognises them, the mother gets to a clinic in time.
-
-There is the **shared-parent** path — the same programme that put Beatrice in the village also paid for the ambulance.
-
-And there is the **distance** path — closer clinics make every other arrow more powerful, because every visit, every referral, every emergency is operating against a shorter distance. *(pause)*
-
-So look at the box. **Volunteers look small. The system around them is what makes them powerful.** *(pause)*
-
-That is the answer. And notice — we did not get there with more data. We got there with a *better picture*. The picture told us the question. The data only filled in the answer.
-
----
-
-## Slide: Try It (You are the analyst)
-
-OK. Try it. *(pause)*
-
-A new programme in a neighbouring district will train CHWs to use a smartphone app for danger-sign screening. The pitch deck claims the smartphone screening will reduce neonatal mortality by twenty percent. *(pause)*
-
-Before you fund it: **draw the picture**. *(pause)*
-
-What boxes go on it? *(pause)* Which arrows have signs you can guess? Which arrows are you uncertain about? *(pause)*
-
-A hint. Where does *the smartphone* go on the picture? Where does *phone signal* go? Where does *literacy* go? Where does *the mother's trust in technology* go? *(pause)*
-
-If you start drawing, you will quickly notice that the simple sentence "smartphones reduce mortality by twenty percent" has at least seven boxes and a dozen arrows hiding inside it. Some of those arrows you can guess the sign of. Others you cannot. *Those are the ones you should ask about before you write the cheque.* *(pause)*
-
-In Chapter 3, we are going to do exactly this exercise — but as a real method, by interviewing the people who run a programme.
-
----
-
-## Slide: Looking ahead
-
-So that is Chapter 2.
-
-In Chapter 3, you will learn how to *build* one of these pictures from scratch. Not by reading a paper. By sitting down with health workers, mothers, finance officers, and district managers — and asking them questions in a particular order until the picture emerges. *(pause)*
-
-You will use the grammar from this chapter — three node types, signed arrows, three shapes — to turn what they tell you into something you can put on a wall and argue about.
-
----
-
-## Slide: Further reading
-
-*(brief pause; let the audience read the boxes if they want; do not read them aloud)*
-
----
-
-## Slide: The one thing to remember
-
-If you remember nothing else from this chapter, remember this. *(pause)*
-
-**A causal diagram is three node types, signed arrows, and three shapes.** *(pause)*
-
-That is the whole grammar. Three node types: factor, action, outcome. Signs on the arrows: plus or minus. Three shapes: chain, fork, collider. *(pause)*
-
-Once you know that grammar, you can draw a picture for *any* programme you encounter. And the picture will tell you which questions are answerable — which is, by the way, what every analyst's job actually is. *(pause)*
-
-See you in Chapter 3.
-
----
-
-## Slide: Closing (white)
-
-*(pause; no narration)*
+Then in Chapter 4, we replace the plus and minus signs with actual probabilities — answering not just *what* affects what, but *how much*. See you next time.

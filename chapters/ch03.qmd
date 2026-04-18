@@ -13,12 +13,23 @@ To find out why, you have to go talk to people. The question is who, in what ord
 **The one thing to remember from this chapter:** The fastest way to build a useful causal picture is to interview the people who actually do the work — in three different groups, in a particular order — and draw their answers.
 :::
 
-## Watch the lecture
+## Main lecture
 
 ::: {.slide-embed}
 <iframe src="../ch03-interview-case/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch03-interview-case/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch03-interview-case/index.html" target="_blank">Open lecture slides full-screen &rarr;</a>
+</div>
+:::
+
+## Tutorial / breakout session
+
+The tutorial deck takes the same ideas and retells them as a story — built for a live breakout session, not a lecture.
+
+::: {.slide-embed}
+<iframe src="../ch03-interview-case-tutorial/index.html"></iframe>
+<div class="slide-embed-footer">
+<a href="../ch03-interview-case-tutorial/index.html" target="_blank">Open tutorial slides full-screen &rarr;</a>
 </div>
 :::
 

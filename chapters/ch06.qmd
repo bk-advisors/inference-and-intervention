@@ -11,12 +11,23 @@ A Kenyan voucher programme looks like a 10-percentage-point success in the aggre
 **The one thing to remember from this chapter:** When data tells you opposite things at the aggregate and split levels, the data is not lying. The picture is what tells you which view to trust. A fork → split. A mediator → don't.
 :::
 
-## Watch the lecture
+## Main lecture
 
 ::: {.slide-embed}
-<iframe src="../ch06-simpsons-paradox/index.html"></iframe>
+<iframe src="../ch06-business-financials/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch06-simpsons-paradox/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch06-business-financials/index.html" target="_blank">Open lecture slides full-screen &rarr;</a>
+</div>
+:::
+
+## Tutorial / breakout session
+
+The tutorial deck takes the same ideas and retells them as a story — built for a live breakout session, not a lecture.
+
+::: {.slide-embed}
+<iframe src="../ch06-simpsons-paradox-tutorial/index.html"></iframe>
+<div class="slide-embed-footer">
+<a href="../ch06-simpsons-paradox-tutorial/index.html" target="_blank">Open tutorial slides full-screen &rarr;</a>
 </div>
 :::
 

@@ -1,0 +1,312 @@
+---
+title: "Chapter 5 — When New Evidence Arrives"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Hiwot
+
+**Hiwot, 47, regional health director, Amhara Region, Ethiopia** *(a composite drawn from Federal Ministry of Health quarterly reports — the details are real, the name is not)*
+
+. . .
+
+It is Monday morning. Hiwot opens her email.
+
+. . .
+
+The latest quarterly report from one of her districts shows **maternal deaths jumped from 9 last quarter to 14 this quarter** — a 56% increase *(consistent with FMOH district-level reporting trends)*.
+
+. . .
+
+Her phone is already ringing.
+
+. . .
+
+::: {.callout-box}
+**The question:** What is the most likely explanation — and how should new evidence arriving over the next two weeks change her answer?
+:::
+
+
+## And here is the puzzle
+
+Three explanations sit on the table within an hour:
+
+. . .
+
+::: {.incremental}
+
+- **The new district hospital lost two midwives.** *(Personnel attrition.)*
+- **A measles outbreak is overwhelming the inpatient ward.** *(Surge.)*
+- **The district just started reporting deaths it had been quietly missing.** *(Reporting improvement.)*
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**They cannot all be the main story. But Hiwot does not yet know which is.** Worse — different evidence will arrive in a different order, and her belief has to update each time.
+:::
+
+
+# How belief actually works {background-color="#005CB9"}
+
+
+## Start with what you already believe
+
+Before any new evidence arrives, Hiwot has an *opinion* — based on history, on her sense of the district, on her knowledge of the staffing situation.
+
+. . .
+
+::: {.callout-box}
+She thinks the three explanations are *roughly equally likely*: about **33 out of 100** for each. That is her starting belief.
+:::
+
+. . .
+
+::: {.definition-box}
+We call this the **prior**. It is just a fancy word for "what I believed before the new evidence arrived."
+:::
+
+
+## Then evidence arrives
+
+Tuesday. The chief of staff at the district hospital calls. The two midwives are real — they did leave. *But* she also confirms there has been no unusual measles activity this quarter.
+
+. . .
+
+::: {.callout-box .green}
+**Two pieces of information at once.** One makes "personnel attrition" more likely. The other makes "measles surge" less likely.
+:::
+
+. . .
+
+Hiwot updates.
+
+
+## Counts, not formulas
+
+Out of her 100 mental "scenarios", here is how the picture moves:
+
+. . .
+
+| | Before Tuesday | After Tuesday |
+|---|---|---|
+| **Personnel** | 33 | **55** |
+| **Measles** | 33 | **8** |
+| **Reporting** | 33 | **37** |
+| **Total** | 100 | 100 |
+
+. . .
+
+::: {.callout-box}
+The numbers shifted. Nobody changed Hiwot's mind for her. The new facts made some scenarios more plausible and others less plausible, **and the totals always still add to 100**.
+:::
+
+
+## What just happened, in one sentence
+
+::: {.definition-box}
+**Bayesian updating is just this: when new evidence arrives, you redistribute your "out of 100" between the explanations — keeping the total at 100 — based on which explanations the evidence fits.**
+:::
+
+. . .
+
+::: {.callout-box .green}
+That is the entire idea. There is no formula you need to memorise. There is just this redistribution rule, applied carefully.
+:::
+
+
+# Information flows along the picture {background-color="#005CB9"}
+
+
+## The picture decides where evidence flows
+
+Hiwot's three explanations live on a picture. Each explanation has its own boxes and arrows. **New evidence enters the picture at one box — and spreads outward along the arrows.**
+
+. . .
+
+::: {.callout-box}
+This is why we drew the picture in Chapters 2 and 3. *The picture tells you which boxes the new evidence is allowed to update — and which boxes it is not.*
+:::
+
+
+## Three rules for how evidence flows
+
+::: {.incremental}
+
+1. **Along a chain, evidence flows freely.** New evidence about a midstream box updates everything upstream and downstream.
+2. **Across a fork, evidence flows freely *until you observe the parent*.** Once you know the parent, the two children become independent.
+3. **Across a collider, evidence does *not* flow — unless you observe the collider, in which case it suddenly does.**
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+Rule 3 is the strange one we warned you about in Chapter 2. We will see it bite in Chapter 6.
+:::
+
+
+## Hiwot's most useful trick — explaining away
+
+Wednesday. A second piece of evidence: the district HMIS officer confirms that **the reporting pipeline was indeed cleaned up** last quarter, and 4 of this quarter's 14 deaths had been previously unrecorded.
+
+. . .
+
+::: {.example-block}
+[explaining away]{.example-label}
+
+The reporting explanation just got *more* likely. **And — this is the strange bit — the personnel explanation got *less* likely**, even though no new evidence about personnel arrived.
+
+Because if reporting is suddenly carrying more of the rise, *less of the rise needs to be carried by anything else*.
+:::
+
+. . .
+
+::: {.callout-box .green}
+This is called **explaining away**. One cause becoming more likely automatically makes its competitors less likely — even without new evidence about them.
+:::
+
+
+## The picture after explaining away
+
+| | Before Wednesday | After Wednesday |
+|---|---|---|
+| **Personnel** | 55 | **32** |
+| **Measles** | 8 | **5** |
+| **Reporting** | 37 | **63** |
+| **Total** | 100 | 100 |
+
+. . .
+
+::: {.callout-box}
+Personnel dropped from 55 to 32 — *not because anything new about personnel came in*, but because reporting absorbed more of the rise.
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — Your prior matters
+
+If Hiwot had started with *"personnel never matters here"* instead of *"all three are equally likely"*, the same Tuesday call would have moved her to a different place.
+
+. . .
+
+::: {.callout-box .orange}
+**Different priors lead to different conclusions from the same evidence.** That is not a bug — it is honest. The fix is to *write down* your prior so others can challenge it.
+:::
+
+
+## Warning 2 — Updating is not the same as overreacting
+
+Each new piece of evidence shifts the picture. But evidence has *weight*, and small evidence should produce small shifts.
+
+. . .
+
+::: {.callout-box .orange}
+A single anecdote should not flip your belief from 33-33-33 to 5-5-90. If it did, your weights were wrong. **Strong shifts require strong evidence.**
+:::
+
+
+## Warning 3 — Rule 3 (colliders) catches almost everyone
+
+Conditioning on a collider creates fake correlations between things that are actually unrelated.
+
+. . .
+
+::: {.callout-box .red}
+**If you find yourself surprised by a sudden correlation in your data, ask: did I just filter on a downstream collider?** This is the error that hides inside half the famous "paradoxes" in epidemiology.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A regional director in Kenya sees that **antenatal coverage in one county jumped from 65% to 78% in a single quarter**. Three explanations sit on the table:
+
+1. The new SMS reminder programme is working.
+2. A coding change in DHIS2 reclassified some clinic visits.
+3. A measles vaccination drive brought more women to clinics, where they were also screened for ANC.
+
+**Start with 33-33-33. Then: a phone call confirms the DHIS2 coding change is real. How do your numbers move? What is the *next* piece of evidence you should ask for?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: which one of the three explanations does the coding change support — and which does it weaken via explaining away?*
+:::
+
+
+## Looking ahead
+
+In **Chapter 6**, we will look at one of the strangest patterns in all of statistics: when the same data tells you opposite things at the country level and the regional level.
+
+. . .
+
+It has a name. **Simpson's Paradox.** And it is closely related to the collider trap from Rule 3 above. We will see exactly how, and when to disaggregate, and when *not* to.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Hiwot's story**
+
+- **Federal Ministry of Health Ethiopia, Health Sector Transformation Plan II (2020/21–2024/25)** — reporting pipeline reforms and quarterly review structure. Open-access.
+- **DHS Ethiopia 2016, 2019** — regional-level maternal mortality estimates and trends. *dhsprogram.com*.
+- **Croicu M. et al., 2017** — *Reporting bias in routine health information systems*. WHO Bulletin, 95(7). Open-access.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 6 covers belief updating with the same lookup-table machinery from our Chapter 4.
+- **McGrayne, S. B. (2011)** — *The Theory That Would Not Die*. The history of Bayesian updating, told as a story. Surprisingly readable.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**Bayesian updating is just redistributing your "out of 100" between explanations — keeping the total at 100 — based on which ones the new evidence fits.**
+
+Hiwot did not throw out her picture when new evidence arrived. She updated the numbers on it. That is what an analyst does all day.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 5]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

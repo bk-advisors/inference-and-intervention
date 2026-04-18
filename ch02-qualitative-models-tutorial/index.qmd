@@ -1,0 +1,356 @@
+---
+title: "Chapter 2 — Drawing the Picture"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Beatrice
+
+**Beatrice, 34, Northern Province, Rwanda** *(a composite drawn from DHS Rwanda 2019/20 narratives — the details are real, the name is not)*
+
+. . .
+
+Beatrice is an **Animatrice de Santé** — one of Rwanda's roughly **45,000 community health workers**, almost all of them women, almost all of them volunteers *(Rwanda Biomedical Centre, 2020)*.
+
+. . .
+
+She has six days of training, a bicycle, a phone, and a list of every pregnant woman in three nearby villages.
+
+. . .
+
+She is not a nurse. She is not a midwife. She is not paid a salary.
+
+. . .
+
+::: {.callout-box}
+**The question:** How can a volunteer with six days of training help drive one of the fastest declines in newborn mortality on record?
+:::
+
+
+## And here is the puzzle
+
+In 2000, Rwanda's neonatal mortality rate was **41 deaths per 1,000 live births** *(DHS Rwanda 2000)*.
+
+. . .
+
+By 2019, it had fallen to **19 per 1,000** *(DHS Rwanda 2019/20)*.
+
+. . .
+
+Less than half. In one generation. With volunteers like Beatrice doing most of the front-line work.
+
+. . .
+
+::: {.callout-box .orange}
+**Something in the system is making volunteers far more powerful than their training would suggest.** What?
+:::
+
+
+# We need a better picture {background-color="#005CB9"}
+
+
+## Words are not enough
+
+People say things like *"community health workers reduce mortality through early referral and behaviour change."*
+
+. . .
+
+::: {.bad-example}
+That sentence has six nouns and zero arrows. You cannot draw it. You cannot test it. You cannot tell what would break if you changed one piece.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This chapter teaches you how to turn that kind of sentence into a picture you can actually use.**
+:::
+
+
+## Three things a box can mean
+
+In our pictures, every box is one of three things:
+
+. . .
+
+::: {.incremental}
+
+- **A factor** — something that varies but you cannot directly choose. *Beatrice's eligible villages are mostly poor or mostly not poor.*
+- **An action** — something a person actively decides to do. *Beatrice visits a pregnant woman, or she does not.*
+- **An outcome** — the thing you ultimately care about. *The newborn survives, or does not.*
+
+:::
+
+. . .
+
+::: {.definition-box}
+Same shape on the page, three different roles. Knowing which is which is most of the work.
+:::
+
+
+## Beatrice's three boxes
+
+<br>
+
+::: {style="text-align: center; font-size: 0.95em;"}
+
+[Mother is poor]{.dag-node .confounder}     [Beatrice visits]{.dag-node .treatment}     [Newborn survives]{.dag-node .outcome .hexagon}
+
+:::
+
+<br>
+
+. . .
+
+- The **factor** is on the left. Beatrice cannot choose how poor a household is.
+- The **action** is in the middle. Beatrice can choose to visit, or not.
+- The **outcome** is on the right. That is the thing we are trying to move.
+
+
+## Arrows have signs
+
+An arrow does not just say *"this affects that"*. It also says *which direction*.
+
+. . .
+
+::: {.incremental}
+
+- A **positive arrow** means *"more of this leads to more of that"*. More antenatal visits → more birth-preparedness.
+- A **negative arrow** means *"more of this leads to less of that"*. More distance to clinic → less likely to deliver there.
+
+:::
+
+. . .
+
+::: {.callout-box}
+A picture without signs is half a picture. *(We will mark them with + or − next to the arrow.)*
+:::
+
+
+## Beatrice's picture, with signs
+
+<br>
+
+::: {style="text-align: center; font-size: 0.9em;"}
+
+[Mother is poor]{.dag-node .confounder}  −→  [Beatrice visits]{.dag-node .treatment}  +→  [Newborn survives]{.dag-node .outcome .hexagon}
+
+<br><br>
+
+[Mother is poor]{.dag-node .confounder}  −−−−−−−−−−−−→  [Newborn survives]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+Two arrows point at the outcome. That is the start of the puzzle: which one is doing the work?
+:::
+
+
+# Three shapes that show up everywhere {background-color="#005CB9"}
+
+
+## Shape 1 — The chain
+
+Three boxes in a row. *A* causes *B*, which causes *C*.
+
+<br>
+
+::: {style="text-align: center; font-size: 0.95em;"}
+[Beatrice visits]{.dag-node .treatment}  →  [Mother knows danger signs]{.dag-node}  →  [Mother goes to clinic in time]{.dag-node .outcome .hexagon}
+:::
+
+. . .
+
+::: {.definition-box}
+**The middle box passes the message along.** Block the middle box (no danger-signs message) and the chain breaks.
+:::
+
+
+## Shape 2 — The fork
+
+One box causes two others. The two are not connected to each other — they just share a parent.
+
+<br>
+
+::: {style="text-align: center; font-size: 0.95em;"}
+
+[Government rolls out CHW programme]{.dag-node .confounder}
+
+⬇  ⬇
+
+[Beatrice gets training]{.dag-node .treatment}     [New ambulance lands in district]{.dag-node .treatment}
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+This is the trap from Chapter 1. Beatrice and the ambulance look like they cause each other. They do not. They share a parent.
+:::
+
+
+## Shape 3 — The collider
+
+Two boxes both cause a third. The third is the *collider*.
+
+<br>
+
+::: {style="text-align: center; font-size: 0.95em;"}
+
+[Beatrice visits]{.dag-node .treatment}     [Distance to clinic is short]{.dag-node .treatment}
+
+⬇  ⬇
+
+[Mother delivers in clinic]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The strange thing about colliders:** the two parents are unrelated *until* you look at families who delivered in the clinic. Then they suddenly look related — and that "relationship" is fake.
+
+We'll come back to this in Chapter 6. For now, just remember the shape.
+:::
+
+
+# Putting it together {background-color="#005CB9"}
+
+
+## Beatrice's full picture
+
+<br>
+
+::: {style="text-align: center; font-size: 0.85em;"}
+
+[Government CHW programme]{.dag-node .confounder}
+
+⬇  ⬇
+
+[Beatrice's training]{.dag-node .treatment}     [Distance to clinic]{.dag-node .confounder}
+
+⬇                                           ⬇
+
+[Beatrice visits]{.dag-node .treatment}      →     [Mother knows danger signs]{.dag-node}     →     [Newborn survives]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**You can see chains, forks, and colliders all at once.** This is what a useful picture looks like.
+:::
+
+
+## So how do volunteers drive that much change?
+
+Look at the picture. Beatrice's training is one box. Her visits are one box. But the outcome at the end has **three different paths leading to it**.
+
+. . .
+
+::: {.incremental}
+
+- The **chain** path: she teaches danger signs, the mother recognises them, the mother gets to a clinic in time.
+- The **shared-parent** path: the same programme that put Beatrice in the village also paid for the new ambulance.
+- The **distance** path: closer clinics make every other arrow more powerful.
+
+:::
+
+. . .
+
+::: {.callout-box}
+Volunteers look small. The **system around them** is what makes them powerful.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+A new programme in a neighbouring district will train CHWs to use a smartphone app for danger-sign screening. The pitch deck claims: *"smartphone screening will reduce neonatal mortality by 20%"*.
+
+**Before you fund it: draw the picture.** What boxes go on it? Which arrows have signs you can guess? Which arrows are you uncertain about?
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: where does "the smartphone" go on the picture? Where does "phone signal" go? Where does "literacy" go?*
+:::
+
+. . .
+
+In **Chapter 3**, we will turn this exercise into a real method — building a causal picture by sitting down and interviewing the people who run the programme.
+
+
+## Looking ahead
+
+In **Chapter 3**, you will learn how to *build* a picture from scratch by interviewing people — health workers, mothers, finance officers, district managers.
+
+. . .
+
+You will use the rules from this chapter — three node types, signed arrows, three shapes — to turn what they tell you into something you can put on a wall and argue about.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Beatrice's story**
+
+- **DHS Rwanda 2000, 2010, 2014/15, 2019/20** — the four surveys this chapter draws from. All publicly available at *dhsprogram.com*.
+- **Rwanda Biomedical Centre, 2020** — *Annual Health Statistics Booklet*. The official source for community health worker counts.
+- **Farmer P. et al., 2013** — "Reduced premature mortality in Rwanda: lessons from success." *BMJ*, 346:f65. Open-access.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention: Causal Models for Business Analysis*. Routledge. Chapters 2 and 3 are the textbook treatment of the picture-drawing rules we just walked through.
+- **Pearl, J., Glymour, M. & Jewell, N. (2016)** — *Causal Inference in Statistics: A Primer*. Wiley. Chapter 1 covers chains, forks, and colliders with worked examples.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**A causal diagram is just three node types, signed arrows, and three shapes.**
+
+That is the whole grammar. Once you know it, you can draw a picture for *any* programme you encounter — and the picture will tell you which questions are answerable.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 2]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

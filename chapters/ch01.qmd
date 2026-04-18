@@ -17,12 +17,23 @@ So what was actually working?
 **The one thing to remember from this chapter:** Two things happening together is not the same as one causing the other — and figuring out which is which is the whole job of causal analysis.
 :::
 
-## Watch the lecture
+## Main lecture
 
 ::: {.slide-embed}
 <iframe src="../ch01-intro/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch01-intro/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch01-intro/index.html" target="_blank">Open lecture slides full-screen &rarr;</a>
+</div>
+:::
+
+## Tutorial / breakout session
+
+The tutorial deck takes the same ideas and retells them as a story — built for a live breakout session, not a lecture.
+
+::: {.slide-embed}
+<iframe src="../ch01-intro-tutorial/index.html"></iframe>
+<div class="slide-embed-footer">
+<a href="../ch01-intro-tutorial/index.html" target="_blank">Open tutorial slides full-screen &rarr;</a>
 </div>
 :::
 

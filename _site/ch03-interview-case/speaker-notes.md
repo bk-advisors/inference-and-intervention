@@ -1,273 +1,199 @@
-# Chapter 3 Speaker Notes — Building the Picture from Scratch
+# Speaker Notes — Chapter 3: The MNH Diagnostic Case Study
 
-**Commander's Intent:** The fastest way to build a useful causal picture is to interview the people who actually do the work — in three different groups, in a particular order — and draw their answers.
+## Overview
+Welcome to Chapter 3. This is where we roll up our sleeves and actually *do* this. In Chapter 1 we learned why causal thinking matters. In Chapter 2 we learned the grammar — nodes, arrows, triplets, d-separation. Now we're going to use all of that to solve a real mystery. We'll build a causal model of Kenya's health system from scratch, expanding it through three rounds of interviews with people who work in the system. By the end, the model will basically write our recommendations for us.
 
-**Plot:** Connection — three different people each see one part of the same picture, and the picture only emerges when their views are joined.
+## Slide: Learning Objectives
+Five objectives today, and notice — every one is about *doing* something, not just understanding a concept. *(pause)* You'll practice the iterative cycle: form a hypothesis, interview someone, revise your model, repeat. You'll learn to tell apart root nodes — the highest-leverage places to intervene — from intermediate nodes that just pass effects along. You'll see why fixing the supply side alone isn't enough without tackling demand-side barriers. And by the end, you'll see how the structure of a well-built model basically does the prioritization for you.
 
-**Protagonist:** Faith, 29, M&E officer, Turkana County, Kenya. Composite from county health reports.
+## Slide: Chapter Overview
+Look at the flow across the bottom. *(pause)* Five steps: case setup, then three rounds of interviews, then final model and recommendations. This is how real consulting work happens. You don't show up on day one with the answer. You show up with a simple model, go talk to people, and let each conversation tell you what you were missing.
 
-**Estimated runtime:** 22–25 minutes.
+And here's the detective metaphor I want you to keep in mind throughout today. Building a causal model from interviews is like solving a mystery. Each conversation reveals new suspects, new motives, new connections. You don't build a 20-node diagram on day one. You start simple and let the evidence guide you.
 
----
+## Slide: The Diagnostic Mindset
+How do consultants and analysts actually build causal models from real conversations?
 
-## Overview (before slide 1)
+## Slide: The Iterative Process
+This is the methodological heart of everything we're doing today. *(pause)* Diagnostic causal modeling is an iterative cycle: start with a hypothesis, interview a stakeholder, revise the model, generate sharper questions, and repeat.
 
-Welcome back. *(pause)*
+The key principle is "start simple." Begin with the most stripped-down model you can draw — maybe three or four nodes. Then talk to someone. Listen for causes, mechanisms, and surprises. Come back and add the new variables their story reveals. The updated model tells you exactly what to ask next. Each round deepens the model and narrows your uncertainty.
 
-In Chapter 1 we met Almaz and learned that two things happening together is not the same as one causing the other. In Chapter 2 we met Beatrice and learned the *grammar* of causal pictures — three node types, signed arrows, three shapes.
+Why not just build the big model from the start? *(pause)* Because you don't know what you don't know. The first interview *always* reveals variables you never considered. If you lock in a complex model too early, you'll miss the real story.
 
-Today is the chapter where it stops being theory and becomes a method you could actually go and do tomorrow. *(pause)*
+## Slide: Key Principles
+Four principles for good diagnostic work. *(pause)* First — focus on significant drivers. Not every variable matters equally. Model what matters, leave out the noise. Second — seek common causes. When one variable drives multiple problems simultaneously, that's a gold mine. That's your highest-leverage intervention point. Third — let the model guide your questions. Vague interviews get vague answers. Use your current diagram to generate *specific* hypotheses for the next conversation. Fourth — supply and demand both matter. A health system has two sides. Improving facility quality is wasted if mothers can't reach the facility.
 
-We are going to follow an M&E officer named Faith as she builds a causal picture from scratch — by interviewing three different people, in a particular order, and turning what they tell her into boxes and arrows. *(pause)*
+## Slide: The Case Setup
+Alright, let's set the stage.
 
-This is the most practical chapter in the course. If you only ever do one thing with what you learn here, do this — pick a programme you actually work on, schedule three interviews, and draw the picture. You will be amazed what you find out.
+## Slide: The Brief: Why Is Maternal Mortality Still So High?
+Here's our case. *(pause)* Kenya — 47 counties with a devolved health system since 2013. Despite a facility delivery rate of roughly 89 percent, the maternal mortality ratio remains around 342 per 100,000, and neonatal mortality sits at about 21 per 1,000.
 
-Let's meet Faith.
+Look at the numbers in the table. 89 percent of women are delivering in health facilities. That's impressive. But mortality is still high. *(pause)* So here's the central question, and I want you to sit with how strange it is: women are reaching facilities, but outcomes aren't improving fast enough. Why? Something is broken between "getting to the facility" and "surviving."
 
----
+## Slide: County-Level Variation
+One of Kenya's most striking features is how much outcomes vary across its 47 counties. *(pause)* Some counties are doing great — mortality well below the national average, more midwives, functional referral networks. Others — Bungoma, Kakamega, Kilifi — report much higher mortality despite having health facilities in place.
 
-## Slide: Meet Faith
+This variation is a clue. *(pause)* If the problem were purely about whether facilities *exist*, every county with facilities would do well. The variation tells us that what happens *inside* the facility — and whether women can reach it *in time* — matters more than whether the building is there.
 
-Faith is twenty-nine years old. She lives in Lodwar, the county town of Turkana, in the far north of Kenya. *(pause)*
+## Slide: The Initial (Simple) Model
+Before we talk to anyone, let's draw the simplest model we can. *(pause)* Four nodes in a chain: Facility Access, plus arrow to Facility Births, plus arrow to Quality of Care, minus arrow to Maternal Mortality.
 
-Same disclosure as always. Faith is a composite drawn from publicly available county health reports — the details are real, the name is not. *(pause)*
+Round 0: 4 nodes, 3 links. The logic seems reasonable, right? More access leads to more facility births, which means better care, which reduces deaths.
 
-She has been the monitoring and evaluation officer for Turkana's maternal health programme for two years. M&E. That is her title. Her job is to figure out **what is working**. *(pause)*
+But look at the problems. *(pause)* This treats Quality of Care as a black box — what drives it? It assumes getting women to facilities is enough — but Kenya already has 89 percent facility delivery. And there's no detail on the supply side — no staffing, no equipment, no training. We need to go talk to people who actually work in the system.
 
-Her tools are a laptop, a notebook, and a budget for petrol. *(pause)* I am going to repeat that so you hear it. *A laptop, a notebook, and a budget for petrol.* That is what she has. No econometrician on call. No randomised trial. Just a budget for petrol so she can drive out to facilities. *(pause)*
+## Slide: Interview Round 1: County Health Director
+Time for our first interview — the supply-side view.
 
-Last month her county director walked into her office and asked her one sentence. *"Why is our maternal mortality not falling as fast as the neighbouring county's?"* *(pause)*
+## Slide: The County Health Director's Perspective
+We sit down with a County Health Director from one of Kenya's high-burden counties. *(pause)*
 
-Now look at the box on the screen. **How do you build a useful causal picture for a programme you have never studied — in two weeks, with no prior research, and with people who do not speak the language of statistics?** *(pause)*
+First quote: "We have 14 health facilities that handle deliveries. But only 4 of them have enough midwives for round-the-clock coverage. The rest rely on general nurses who haven't had emergency obstetric training. When a woman comes in with a hemorrhage at 2 AM, sometimes there's nobody on shift who knows how to manage it." *(pause)* That's a staffing problem.
 
-That is Faith's problem. And by the end of this chapter, you will know exactly how she solved it.
+Second quote: "We received the equipment. But we have one midwife for every 15 deliveries per shift. She's exhausted. She can't monitor a CPAP machine, manage a complicated delivery, and attend to three other women at the same time. The equipment sits there." *(pause)* So equipment without enough staff is useless.
 
----
+Third quote: "We ran a training last year — 60 health workers attended. But the training was two weeks long and follow-up was weak. I'd estimate maybe a third of them are actually applying what they learned." *(pause)* Training happened, but it didn't translate into practice.
 
-## Slide: And here is the puzzle
+## Slide: What We Learned: Round 1
+The Director revealed three new variables hiding inside our "Quality of Care" black box. *(pause)* Staffing Levels — the ratio of midwives to deliveries is dangerously low. Equipment Availability — it's physically present but not being used effectively because of staffing constraints. Training Effectiveness — workshops were delivered but only a fraction of workers are actually applying new skills.
 
-A bit of background first.
+Each quote mapped to a new node in our model.
 
-Kenya devolved health to forty-seven counties in 2013. That came out of the 2010 Constitution — Schedule 4 — and it is a real, big, public reform. You can look it up. *(pause)*
+## Slide: Updating the Model: Round 1
+New variables: Staffing, Equipment, Training. *(pause)* Now the County Health Budget flows into three channels — Staffing Levels, Equipment Available, and Training Delivered — and all three feed into Quality of Care, which reduces Maternal Mortality.
 
-Since then, some counties have cut maternal mortality dramatically. Others have barely moved. The Kenya Health Information System publishes county-level dashboards, which are public, and you can see the spread. *(pause)*
+Round 1: 7 nodes, 6 links. The black box has been cracked open. *(pause)* And here's the key insight: the Director's testimony suggests staffing is the binding constraint. Equipment without staff to operate it is a wasted investment. Training without enough staff to apply it evaporates. Everything keeps pointing back to staffing.
 
-Now here is the key thing. The county-level numbers can tell you *which* counties are improving. They cannot tell you *why*. *(pause)*
+## Slide: What Questions to Ask Next?
+Look at what the model tells us to ask. *(pause)* Why is staffing so low — is it a hiring problem, a retention problem, or a deployment problem? Why doesn't training translate into competency — is the training poorly designed, or do trained staff leave? Is the equipment actually functional — the Director said "we have it," but does it work?
 
-You can stare at a dashboard for a month and you will not figure out why some counties are pulling ahead. The information is not in the dashboard. The information is in the heads of the people who run those counties. *(pause)*
+Without the model, we'd ask vague questions like "What's going wrong?" With the model, we can ask: "Of the 60 health workers you trained last year, how many are still in your county?" That's a much sharper question. The model guides the next interview.
 
-So look at the orange box. **To find out why, you have to go talk to people. The question is — who, and in what order, and what do you do with what they tell you?** *(pause)*
+## Slide: Interview Round 2: Midwife at District Hospital
+Round two — let's go see the front-line reality.
 
-That is what Faith is about to figure out. And it is what we are going to learn together.
+## Slide: The Midwife's Reality
+We visit a district hospital and interview a senior midwife who's worked there for eight years. *(pause)*
 
----
+First quote: "When I started, we had six midwives in the maternity ward. Now we're three. Two transferred to Nairobi — better pay, better housing. One went to work for an NGO. We were promised replacements, but the county government hasn't hired anyone in two years." *(pause)* Staff retention is wiping out the workforce.
 
-## Slide: The interview method (section divider)
+Second quote: "We received two CPAP machines. One broke after three months — the humidifier cracked. There's no biomedical technician in this county. We submitted a repair request, but spare parts have to come from Nairobi. It's been three months and we're still waiting." *(pause)* Equipment breaks and stays broken because there's nobody to fix it.
 
-*(pause for transition)*
+Third quote: "We're supposed to refer complicated cases to the county hospital. But the ambulance is shared with four facilities. Sometimes we call and it's already out. Last month a woman waited four hours for transport. She didn't survive." *(pause)* Let that sink in. Four hours.
 
-OK. Three rules. Print these out. Tape them to your monitor.
+## Slide: Here's What Surprised Us
+The midwife revealed something our Round 1 model completely missed: the transmission problem. *(pause)*
 
----
+The money went in at the top, but it leaked out — or got stuck. Training was delivered, but trained staff *left* — that's a retention failure. Equipment was procured, but it *broke* and nobody could fix it — that's a maintenance failure. Referral systems were designed, but ambulances weren't available when needed — that's a referral failure.
 
-## Slide: Three rules before you walk in
+Three new variables: Staff Retention, Equipment Maintenance, and Referral System. These are the transmission mechanisms between "money spent" and "lives saved," and they're all broken.
 
-Three rules.
+## Slide: Updating the Model: Round 2
+Round 2: 9 nodes, 10 links. *(pause)* Staff Retention now sits between staffing levels and actual competency on the ground. Equipment Maintenance sits between equipment procured and equipment actually working. The Referral System is an independent pathway to mortality.
 
-**Rule one. Start with the outcome, not the programme.** *(pause)* This is the most counterintuitive one and the most important. When you walk into someone's office to interview them, do *not* ask them about the programme you are studying. Ask them about the *outcome*. The same opening question every time. *"When a mother dies in this county, what is the most common chain of events?"* *(pause)*
+The model is getting richer, and a critical pattern is emerging.
 
-Why? Because if you ask about the programme, they will tell you what they think you want to hear about the programme. If you ask about the outcome, they will tell you what *actually happens*. Big difference.
+## Slide: Spotting the Common Causes
+Here's the discovery that changes everything. *(pause)* Staff Retention is a fork — a common cause. When trained midwives leave, *both* clinical competency drops *and* equipment goes unused because nobody remaining knows how to operate it. Two symptoms, one root cause.
 
-**Rule two. Listen for nouns. Sketch them as boxes.** *(pause)* Every noun that comes out of their mouth is a candidate for a box on your picture. *Referral form. Fuel. Stockout. Husband's permission.* All boxes. Just write them down as they come. Do not try to organise them yet. The organising happens later.
+Equipment Maintenance is also a fork. When there's no biomedical technician, *all* equipment degrades — not just one machine. A single maintenance failure ripples through multiple care pathways.
 
-**Rule three. Ask the connecting question.** *(pause)* After every box: *"And what does that depend on?"* That is the question that builds the arrows. You ask it again and again, and the picture grows backwards from the outcome toward the upstream causes. *(pause)*
+Why does this matter? *(pause)* Common causes are the highest-leverage intervention points in any system. Fixing retention alone could improve both competency *and* utilization at the same time. That's two results for one intervention.
 
-That is the method. Three rules. You can teach it to a colleague in five minutes. Now let's watch Faith use it.
+## Slide: Interview Round 3: Community Health Worker
+Round three opens up an entirely new dimension.
 
----
+## Slide: We'd Been Looking at Half the Picture
+Two rounds of interviews focused entirely on the supply side — what happens inside health facilities. A community health worker based in a rural sub-county opens our eyes to a completely different set of barriers. *(pause)*
 
-## Slide: Faith's first interview — the midwife
+First quote: "The nearest facility that handles deliveries is 18 kilometers away. There's no paved road. During the rainy season, a motorcycle ride takes two hours — if you can find a motorcycle. Some women start walking when labor begins, but labor doesn't wait for the road to improve." *(pause)* Geographic access.
 
-Faith's first interview is with **Mary**. Mary is a midwife at a rural facility about two hours from the county town — out in the dry country, the kind of place that has one road in and one road out. *(pause)*
+Second quote: "The delivery is free, yes. But the motorcycle costs 500 shillings. You need to bring your own basin, your own razor blade, your own cotton wool. For a family earning 200 shillings a day, that's a week's income. Some women just stay home." *(pause)* Financial barriers, even when the service itself is free.
 
-Faith asks the opening question. The same one she will ask everyone else. *"When a mother dies in your facility, what is the most common chain of events?"* *(pause)*
+Third quote: "Some older women in the community tell young mothers that hospitals are dangerous. And some women say they were shouted at by nurses during their last delivery. They'd rather deliver at home with a traditional birth attendant who treats them with respect." *(pause)* Trust and past experience shape whether women choose facility care at all.
 
-Mary thinks. She has seen this before. Many times. And then she says — and look at the example block on the screen — *"Most of the deaths I see come down to this: the woman bleeds at home, the family waits four hours hoping it will stop, by the time they get a motorbike to bring her here, she has lost too much blood. We have the drugs. We do not have her in time."* *(pause)*
+## Slide: The Demand-Side Revelation
+We'd been looking at half the picture. *(pause)* Kenya's 89 percent facility delivery rate is a national average. In rural sub-counties of high-burden counties, it drops to 50 or 60 percent. And even women who do reach a facility may arrive too late because of transport delays.
 
-That sentence has six nouns in it. Look at the green box. **Bleeding. Family. Waiting. Motorbike. Drugs. Time.** *(pause)* Faith writes them all down. Six new boxes.
+Three new demand-side variables: Geographic Access — can she physically get there? Financial Barriers — can her family afford the trip? Health-Seeking Behavior — does she trust the facility enough to go?
 
----
+## Slide: Updating the Model: Round 3
+The model now has two distinct halves that converge on the outcome. *(pause)* On the supply side from Rounds 1 and 2: Budget flows through staffing, equipment, and training, but gets undermined by retention failures and equipment breakdowns at the transmission layer. On the demand side from Round 3: geographic access, financial barriers, and health-seeking behavior determine whether women reach facilities at all.
 
-## Slide: Mary's picture, in boxes
+Here's the structural insight: Quality of Care and Facility Births are both parents of Maternal Mortality. Improving quality without improving access doesn't help the women who never arrive. Improving access without improving quality sends more women into facilities that can't save them. *(pause)* Both halves must move together.
 
-Now Faith does the second part of the method. She turns Mary's nouns into a picture.
+## Slide: The Complete Causal Model
+Round 3: 12 nodes. *(pause)* Look at it. Supply side on the left, demand side on the right, and they converge on Maternal Mortality at the bottom. Every single arrow tells a part of the story. This is the complete diagnostic picture, built one interview at a time.
 
-*Look at the diagram.* **Bleeding starts at home → family waits → motorbike arranged → mother arrives too late → mother dies.** *(pause)*
+## Slide: Model Evolution Summary
+Let's see how our understanding grew round by round.
 
-Five boxes. Four arrows. A simple chain — exactly the shape from Chapter 2. The hexagon at the end is *the death*, in red — because Mary's quote was about deaths, and we want the picture to match what Mary actually said. Once we have this chain, every arrow on it is a place where someone could intervene to *break* the chain and save the life. *(pause)*
+## Slide: Evolution of the Model
+Look at the table. *(pause)* Round 0 — nobody talked to, 4 nodes, just the basic chain. Round 1 — County Health Director, 7 nodes, added staffing, equipment, training. Round 2 — Senior Midwife, 9 nodes, added retention, maintenance, referral system. Round 3 — Community Health Worker, 12 nodes, added geographic access, financial barriers, health-seeking behavior.
 
-Look at the bottom box. **The nouns become boxes. The order of events becomes the arrows. That is the whole trick.** *(pause)*
+Each round roughly doubled the model's explanatory power. *(pause)* And notice who taught us what. The Director saw the system from the top. The midwife saw it from the front line. The community health worker saw it from the community. Each perspective revealed variables the others couldn't see. This is why you need multiple stakeholders. No single person has the full picture.
 
-If Faith stopped here, she would have a picture. It would be Mary's picture. And it would be — and this is the hard truth — *incomplete*. Not wrong. Just incomplete. Because Mary only sees what walks through the door of her facility. She does not see what happens before the family decides. She does not see why the motorbike took four hours.
+## Slide: Prioritizing Recommendations
+Now here's the payoff. The model doesn't just diagnose problems — it tells you where to fix them first.
 
-Which is why Faith does not stop here.
+## Slide: Using Model Structure to Prioritize
+How do we decide where to intervene? We could go with gut instinct, but the model gives us a more disciplined answer. *(pause)*
 
----
+A root node is a node with no parents — nothing in the diagram causes it. Root nodes are the ultimate causes. Intervening on them has the broadest downstream effects because every pathway flows *from* them. The principle: count the downstream paths from each node to the outcome. Nodes with more paths are higher-leverage.
 
-## Slide: Faith's second interview — the husband
+## Slide: The Priority Ranking
+Highest priority — root causes with multiple downstream effects. *(pause)*
 
-Faith's second interview is with someone who is *not* a health worker. *(pause)* This is critical. If you only interview health workers, you only get the picture as health workers see it.
+Number one: Staff Retention. Root cause affecting *both* competency and equipment utilization. Every midwife who leaves takes her training, her experience, and her equipment skills with her. Invest in housing allowances, career development, rural service incentives.
 
-She drives out to a small village and meets **Lokol**. Lokol's wife survived a difficult delivery six months ago. He agrees to talk to her.
+Number two: Equipment Maintenance. Root cause affecting all equipment pathways. Deploy county-level biomedical technicians and establish spare parts supply chains. Equipment without maintenance is a wasted investment — it breaks, and it stays broken. *(pause)*
 
-Faith asks the same opening question. Word for word. *"When a mother in your village dies, what is the most common chain of events?"* *(pause)*
+Number three: Geographic Access and Referral System. Independent pathway to mortality. Women who can't reach a facility in time die regardless of facility quality. Ambulance networks, maternity waiting homes.
 
-And Lokol — look at the example block — says: *"My wife was bleeding. I knew she needed to go. But in our compound, my older brother is the elder — he is the one who decides about big expenses. And he was at the market that day. I am her husband, but I am not the elder of the compound. I had to wait until he came back to give permission to spend the money on transport. By then it was very late."* *(pause)*
+Number four: Demand-side barriers. Financial barriers and health-seeking behavior. Transport subsidies, respectful care training, community health worker engagement.
 
-I want to pause on something Lokol just said, because it might surprise you. He says *"I am her husband, but I am not the elder of the compound."* In many extended-family households in rural Kenya — and Turkana especially — the senior male elder of the compound holds authority over major financial decisions, even when the husband is present. A young husband may not have the standing to spend a large sum on transport without the elder's permission. So *Lokol is the husband, but he is not the financial decision-maker for his own household.* That is a real cultural pattern. The chapter acknowledges it because the picture has to reflect how the actual households actually work, not how outsiders assume they work. *(pause)*
+Notice how the prioritization follows directly from the DAG structure. We didn't guess. The model told us: intervene where the most downstream paths originate.
 
-A new noun. **Permission.** *(pause)*
+## Slide: Why Root Nodes Are Highest-Leverage
+Let me show you why root nodes matter so much. *(pause)* Staff Retention is a root node — nothing in our model causes it. But it has at least three downstream effects: Retention affects Competency, which affects Quality, which affects Mortality. Retention affects Equipment Utilization, which affects Quality, which affects Mortality. Retention affects staffing ratios, which affects Quality, which affects Mortality.
 
-Lokol used the word *permission*. Mary did not. Mary said "the family waited four hours". Lokol explained *why* they waited. The waiting was not because the family was confused or scared. The waiting was because the household had a structure of authority, and the person with the authority was not in the village that day. *(pause)*
+Fix retention, and you improve three pathways at once. Fix training alone — a non-root node — and trained staff still leave, so the effect evaporates. *(pause)* The model does the prioritization for you. Count the downstream paths. The variables with the most connections to the outcome are the ones to invest in first.
 
-Look at the orange box. **Permission was not on Mary's picture. But it sits *before* the motorbike box, and it changes the meaning of "family waits".** *(pause)*
+## Slide: MNH Application: The Full Kenya DAG
+The completed diagnostic model.
 
----
+## Slide: The Full Kenya MNH Causal Model
+Look at the summary table. *(pause)* Inputs — budget, staffing, equipment, training — are funded and delivered. Check. But the transmission layer — retention, maintenance, referral system — is broken. The demand side — geographic access, financial barriers, health-seeking behavior — was underestimated and missed until Round 3. Outcomes — quality, facility births, maternal mortality — are below target.
 
-## Slide: Updating Mary's picture with Lokol's words
+The program invested in the right inputs. But it missed the transmission mechanisms and the demand-side barriers. *(pause)* Redirecting even a modest portion of the budget toward these neglected nodes could unblock the entire system. The money went in at the top, but it leaked out before it could reach the people it was meant to help.
 
-So Faith updates her picture.
+## Slide: R Workshop: Building the DAG Iteratively
+Let's move to R and formalize each interview round.
 
-*Look at the diagram.* The "family waits" box has split into two boxes. **Family decides.** *(pause)* And **permission from the head of family.** *(pause)* The arrows now run: bleeding → family decides → permission → motorbike → arrives → survives. *(pause)*
+## Slide: R: Round 1 — The Simple Supply-Side Model
+Here we build the 7-node model from Round 1 in dagitty. *(pause)* Budget flows into Staffing, Equipment, and Training. Those feed into Quality, and Quality drives Mortality. Run this code and you'll get a clean picture of the supply-side model the County Health Director helped us build.
 
-Look at the green box. **The aha moment.** *Family waits* was not really one box. It was *two* boxes. The deciding, and the permission. *(pause)*
+## Slide: R: Round 2 — Adding Transmission Failures
+Now we expand to capture what the midwife revealed. *(pause)* Retention feeds into both Competency and Utilization — that's the fork structure, the common cause. Maintenance feeds into Utilization. Referral feeds into Quality. The common-cause structures are now formally encoded in the DAG. Trace the paths and you'll see how retention failures ripple through multiple channels.
 
-And here is the most important sentence in this whole chapter: **Mary did not see the permission box because she only sees what arrives at the clinic. Lokol saw it because he lived it.** *(pause)*
+## Slide: R: Round 3 — The Complete Model
+Here's the full model with all the demand-side variables from Round 3. *(pause)* Geographic Access, Financial Barriers, and Health-Seeking Behavior all flow into Facility Births. Quality and Facility Births both flow into Mortality. This is the complete diagnostic framework. Take a moment to trace paths from Budget all the way to Mortality — there are multiple routes, and each one tells a different part of the story.
 
-This is the entire reason you interview multiple people. Not because more interviews give you more data. Because *different* people sit at *different points* on the picture, and they each see different boxes. The picture only becomes whole when you join their views. *(pause)*
+## Slide: R: Analyzing the Complete Model
+Three powerful functions. *(pause)* adjustmentSets tells us which variables we *must* measure to evaluate the program's causal effect. impliedConditionalIndependencies generates testable predictions — when data arrives, we can check each one, and if the data disagrees, our model needs revision. And paths shows every route from Budget to Mortality.
 
-OK. Faith has two interviews. Mary the midwife and Lokol the husband. Bedside view and household view. There is one more group she needs to talk to.
+The d-separation test at the bottom — is Retention independent of Maintenance? — checks whether we might be missing a hidden common cause. If the data says they're related and our model says they should be independent, we know where to look for what we missed.
 
----
+## Slide: Key Takeaways
+Four things to take away. *(pause)* Build models iteratively. Start with 3 or 4 nodes and let stakeholder interviews reveal what's missing. You can't build the right model from a desk — you have to talk to people.
 
-## Slide: Faith's third interview — the county finance officer
+Root nodes are leverage points. Staff Retention and Equipment Maintenance emerged as the critical bottlenecks that initial investment plans overlooked. They have the most downstream effects.
 
-Faith's third interview is at the county headquarters. She meets **Esther**, who runs the county finance office for the health department. *(pause)*
+Supply and demand both matter. Kenya's 89 percent facility delivery rate masks huge variation. Demand-side barriers are invisible from the supply side.
 
-She asks the same opening question. Esther laughs gently. *(pause)* Then she says — look at the example block — *"I cannot tell you about deaths. I can tell you that we have run out of misoprostol — the drug that stops bleeding — three times this year, because the national supplier delivered late. We always pay on time. The drug just is not in the warehouse."* *(pause)*
+The model does the prioritization. You don't need to guess which interventions matter most. The structure of the diagram tells you: intervene where the most downstream paths originate.
 
-A new noun. Far up the chain. **Stockout.** *(pause)*
-
-Esther never sees a single mother bleed. She has never been in the room when a baby is born. But she just told Faith something that none of the bedside people could have told her: *the drug that stops the bleeding is not always in the cupboard, and the reason is upstream of the county.* *(pause)*
-
-Look at the orange box. **Stockout is nowhere near the bedside. But it is what made the bedside picture possible.** *(pause)*
-
-Esther just gave Faith the supply-chain layer. Mary gave her the bedside layer. Lokol gave her the household layer. *(pause)* Three different views. One picture.
-
----
-
-## Slide: The picture grows again
-
-Here is what Faith's picture looks like now.
-
-*Look at the diagram.* At the top: national supplier delays → county stockout → drug not at facility. That is Esther's contribution. *(pause)* In the middle row: bleeding starts → family decides → permission → motorbike → arrives → survives. That is Mary and Lokol joined together. And the "drug not at facility" box has an arrow into the survival box at the end of the chain — because if the drug is not there, the chain breaks. *(pause)*
-
-Three people. Three different parts of the picture. Look at the bottom box. **None of them was wrong. None of them had the whole thing.** *(pause)*
-
-That is the magic of the interview method. It assumes everyone is partly right. It assumes nobody is fully right. And it builds the picture by joining their pieces.
-
----
-
-## Slide: Three traps when you do this (section divider)
-
-OK. Three traps. Because this method sounds simple, and it is — but there are three ways to do it badly.
-
----
-
-## Slide: Trap 1 — Believing the loudest voice
-
-Trap one. **Believing the loudest voice.** *(pause)*
-
-The first person you interview is the most dangerous. You walk in. They tell you a clear, confident story. You walk out thinking you have the picture. You stop interviewing. *(pause)*
-
-Look at the bad example. The midwife told a clear story. If Faith had stopped there, she would have missed the permission box. She would have missed the stockout. She would have built a picture that explained one slice of the truth and nothing else. *(pause)*
-
-Look at the green box. **Always interview at least one person from each of three groups.** The bedside — midwives, families, mothers. The supply chain — finance, logistics, pharmacy. And the leadership — the district medical officer, the programme manager. *(pause)*
-
-Each group sees boxes the others cannot see. Skip a group, miss the boxes.
-
----
-
-## Slide: Trap 2 — Drawing arrows you do not have evidence for
-
-Trap two. **Drawing arrows you do not have evidence for.** *(pause)*
-
-When you start sketching, it is tempting to add arrows because they "feel right". You have read papers. You know what the literature says. You add an arrow because the literature has it. *(pause)*
-
-Look at the orange box. **The rule.** Every arrow on the picture should come from at least one specific sentence somebody actually said in your interviews. If you cannot quote the source — *"this arrow is here because Mary said this, and Lokol said that"* — then the arrow is a hypothesis, not a fact. *(pause)*
-
-We mark unsourced arrows with a *dotted line* on our pictures. Not solid. Dotted. So that anyone reading the picture knows: this one is a guess, the others are evidence-based. *(pause)*
-
-You will be surprised how many of your starting arrows turn out to be dotted.
-
----
-
-## Slide: Trap 3 — Confusing what people say with what is true
-
-Trap three. **Confusing what people say with what is true.** *(pause)*
-
-People tell you their *understanding* of the system. Their understanding may be wrong. Sometimes it is wildly wrong. Mary may believe motorbikes are the bottleneck when actually it is permission. Lokol may believe permission is the bottleneck when actually it is the drug stockout. *(pause)*
-
-Look at the green box. **And that is fine.** *(pause)*
-
-The point of the interview-built picture is not to be true on day one. The point is to be *specific enough that you can test it*. The next chapters in this course are going to teach you how to put numbers on this picture and see which arrows survive contact with real data. *(pause)*
-
-The interview method gives you the *structure*. The data tells you whether the structure is right. You need both.
-
----
-
-## Slide: Try It (You are the analyst)
-
-OK. Try it.
-
-You have one week and a budget for petrol. You need to build a causal picture explaining why one ward in a Kenyan county has much higher under-five mortality than its three neighbours. *(pause)*
-
-**Who do you interview, in what order, and what is the opening question for each?** *(pause)*
-
-A hint. Who is closest to the death? Visit them first. Who is closest to the supply chain? Visit them next. Who is closest to the budget? Visit them last. The opening question is the same one every time — *"When a child in this ward dies, what is the most common chain of events?"* *(pause)*
-
-If you do this exercise on a real programme you actually work on, send me the picture. I would love to see what you find. *(pause)*
-
-In Chapter 4, we are going to take a picture like Faith's and start putting actual numbers on the arrows.
-
----
-
-## Slide: Looking ahead
-
-So that is Chapter 3.
-
-In Chapter 4, you will take a finished interview-built picture — like Faith's — and add the missing piece: numbers. *(pause)*
-
-You will learn how to turn a sentence like *"Mary says about half the women bleed for more than thirty minutes before the family decides"* into a number you can put on an arrow. And then how to combine all those numbers into a model that can be tested against real data. *(pause)*
-
-That is when the picture stops being a sketch and becomes an instrument.
-
----
-
-## Slide: The one thing to remember
-
-If you remember nothing else from this chapter, remember this. *(pause)*
-
-**The fastest way to build a useful causal picture is to ask the people who actually do the work — in three different groups, in a particular order — and draw their answers.** *(pause)*
-
-Faith built her picture in three interviews. The midwife. The husband. The finance officer. None of them had the whole story. All of them needed each other. *(pause)*
-
-You do not need a PhD to do this. You need a notebook, a budget for petrol, and the discipline to ask the same opening question every time. *(pause)*
-
-See you in Chapter 4.
-
----
-
-## Slide: Closing (white)
-
-*(pause; no narration)*
+## Slide: Looking Ahead
+Next chapter, we add numbers to these models. *(pause)* Conditional probability tables replace the plus and minus signs with actual probabilities. Bayes' rule lets us update our beliefs when new evidence arrives. We'll compute the probability that mortality is high given specific combinations of supply and demand conditions. The qualitative model tells you *what* affects what. The quantitative model tells you *by how much*. And that's what we need to make real budget allocation decisions. See you in Chapter 4.

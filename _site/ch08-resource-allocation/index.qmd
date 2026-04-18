@@ -1,7 +1,7 @@
 ---
-title: "Chapter 8 — Spreading the Money"
+title: "Chapter 8: Multi-Country Resource Allocation"
 subtitle: "Inference and Intervention | BK Advisors"
-author: "Matthew Luke Kuch | BK Advisors"
+author: "BK Advisors"
 date: today
 format:
   revealjs:
@@ -16,273 +16,996 @@ format:
     center: false
     width: 1280
     height: 720
-    self-contained: false
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
 ---
 
-## Meet Grace
+## Learning Objectives
 
-**Grace, 40, programme officer at a global health partnership** *(a composite drawn from public donor reports — the role and constraints are real, the name is not)*
+After this chapter, you will be able to:
 
-. . .
+::: {.incremental}
+- Frame a **multi-country resource allocation** problem as a puzzle with real tradeoffs
+- Compare three intuitive allocation strategies: **Concentrate, Spread, and Tiered**
+- Explain why **uncertainty** makes the "obvious best answer" less obvious
+- Use **Monte Carlo simulation** ("replaying the future 1,000 times") to compare strategies
+- Apply **sequential decision making** -- "invest a little, watch, then decide"
+:::
 
-Grace has just received approval for a four-country MNH portfolio. Her budget is limited. Her four countries are **Ethiopia, Rwanda, Kenya, and Tanzania**. Her board meets in three weeks.
 
-. . .
+## Chapter Overview
 
-The board wants one slide. *"How are you splitting the money?"*
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">The Allocation<br>Puzzle</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Three<br>Strategies</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Uncertainty &<br>Scenarios</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Replaying<br>the Future</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Sequential<br>Decisions</div>
+</div>
 
 . . .
 
 ::: {.callout-box}
-**The question:** Concentrate it on the country most likely to deliver? Spread it evenly? Tier it? Each strategy has a different *shape of risk* — and Grace needs to see those shapes before she walks into the room.
+**The big idea:** You have a fixed budget. Four countries need help. Each country is different -- different problems, different strengths, different risks. How do you split the money? There is no formula that spits out the "right" answer, but there *are* smart ways to think about the tradeoffs.
 :::
 
 
-## And here is the puzzle
+# The Allocation Puzzle {background-color="#005CB9"}
 
-Grace runs the numbers under the simplest assumption: equal split. Each country gets one quarter of the budget. *(Sources: WHO, DHS, country MOH reports, all public.)*
-
-. . .
-
-| Country | Expected lives saved | Range *(low – high)* |
-|---------|---------------------|---------------------|
-| **Ethiopia** | 1,200 | 600 – 1,800 |
-| **Rwanda** | 900 | 700 – 1,100 |
-| **Kenya** | 1,000 | 400 – 1,600 |
-| **Tanzania** | 1,100 | 500 – 1,700 |
-| **Total** | **4,200** | **2,200 – 6,200** |
-
-. . .
-
-::: {.callout-box .orange}
-The expected total looks fine. **The range is enormous.** Twenty-two hundred to sixty-two hundred. That is the difference between *"we did okay"* and *"we missed by half"*.
-:::
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Four countries, limited budget, different needs</span>
 
 
-# Three strategies, three risk shapes {background-color="#005CB9"}
-
-
-## Strategy 1 — Concentrate
-
-Put all the money on the country with the *highest expected return* — Ethiopia at 1,200 lives saved per quarter-budget.
-
-. . .
-
-::: {.incremental}
-
-- **If you scale up four-fold:** maybe 4,800 lives. Maybe much less if scale-up runs into bottlenecks.
-- **Range estimate:** 1,500 – 7,000.
-- **Best case is huge.** Worst case is the worst of any strategy.
-
-:::
-
-. . .
-
-::: {.callout-box .orange}
-**Concentration is a bet.** It is the right move if you have very strong evidence about the chosen country and a high tolerance for downside.
-:::
-
-
-## Strategy 2 — Spread evenly
-
-Quarter, quarter, quarter, quarter. The original 4,200 number, with the original range.
-
-. . .
-
-::: {.incremental}
-
-- **Total range:** 2,200 – 6,200.
-- **No country can crash the whole portfolio.**
-- **No country can singlehandedly carry it either.**
-
-:::
-
-. . .
-
-::: {.callout-box}
-The **safe** strategy. Lower upside, much smaller downside. The strategy that gets approved and is rarely celebrated.
-:::
-
-
-## Strategy 3 — Tier
-
-Two countries get **40% each** *(higher confidence)*. Two get **10% each** *(lower confidence — kept as learning bets)*.
-
-. . .
-
-::: {.incremental}
-
-- **Most of the money rides on the strongest evidence.**
-- **The smaller bets keep two countries warm**, so you can scale them up if they prove out.
-- **Range estimate:** 2,800 – 6,500.
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-The **portfolio** strategy. Higher floor than concentrate, higher ceiling than spread. Most experienced grant officers gravitate here.
-:::
-
-
-## A side-by-side picture
-
-| Strategy | Expected total | Worst case | Best case |
-|---|---|---|---|
-| **Concentrate** | 4,800 | 1,500 | 7,000 |
-| **Spread evenly** | 4,200 | 2,200 | 6,200 |
-| **Tier** | 4,500 | 2,800 | 6,500 |
-
-. . .
-
-::: {.callout-box .orange}
-**The expected value alone does not pick a winner.** The shape of the range — the distance between worst and best — does much of the work.
-:::
-
-
-# Seeing the shape with simulation {background-color="#005CB9"}
-
-
-## Why one number is not enough
-
-A single expected value tells you *the average over all the futures*. It does not tell you what *most* of the futures look like.
-
-. . .
-
-::: {.callout-box}
-For Grace's board, the question is not *"what is the average?"*. The question is *"could we end up under 3,000 lives saved? How likely is that?"* — and an average cannot answer it.
-:::
-
-
-## Monte Carlo, in plain language
+## The Question
 
 ::: {.definition-box}
-**Monte Carlo simulation:** instead of asking "what is the average outcome?", you *play out* many possible futures — say, **10,000 futures** — using the picture and the lookup tables. Then you count how many of those futures landed where.
+**The core puzzle:** Imagine you lead a maternal and neonatal health (MNH) program with a fixed annual budget. Four East African countries need support. Each country has a different health burden, a different health system, and a different set of risks. How do you divide the budget?
 :::
 
 . . .
 
-::: {.callout-box .green}
-The output is not a single number. It is a *distribution* — a histogram showing the *shape* of risk. You can read it like a weather forecast: *"there is a 20% chance of less than 3,000 lives saved."*
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**What makes this hard:**
+
+- Sending everything to one country might save the most lives -- *if things go well*
+- Spreading money equally feels fair, but might waste resources in places that cannot absorb them
+- You do not know the future: governments change, crises happen, programs surprise you
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**What this is NOT:**
+
+- Not a math optimization problem with one "correct" answer
+- Not about picking a winner and ignoring everyone else
+- Not about guessing the future perfectly
+
+It is about making a **smart bet** when you do not have all the information.
+:::
+:::
 :::
 
 
-## What Grace's three histograms look like
+## Why Not Just Give It All to the Country With the Biggest Problem?
+
+::: {.callout-box}
+Intuition says: "Find the country with the worst maternal mortality, and send all the money there." Sounds logical, right?
+:::
+
+. . .
+
+But here is why that can backfire:
 
 ::: {.incremental}
-
-- **Concentrate** → tall narrow bell on the right, with a very long left tail. *Most futures look great — but a small fraction look catastrophic.*
-- **Spread** → fat blob in the middle. *Almost no futures are great. Almost no futures are terrible. Most are okay.*
-- **Tier** → bell shifted slightly left of concentrate, with a much shorter left tail. *Catches most of the upside, cuts off most of the downside.*
-
-:::
-
-. . .
-
-::: {.callout-box}
-That difference in *shape* is the conversation Grace needs to have with her board — not a fight about whose expected value is bigger.
-:::
-
-
-# Three quiet warnings {background-color="#005CB9"}
-
-
-## Warning 1 — Probabilities of countries are not independent
-
-If a regional drought hits East Africa, it affects Ethiopia, Kenya, *and* Tanzania at the same time.
-
-. . .
-
-::: {.callout-box .orange}
-**Spreading across countries that share the same risk is not real diversification.** It just feels like it.
-:::
-
-
-## Warning 2 — The "tier" strategy assumes you will follow up
-
-If you put 10% into a learning bet, you have to *use* the learning. If next year's grant cycle ignores the small bet's results, you have wasted the money.
-
-. . .
-
-::: {.callout-box .orange}
-**Tiering only works if there is a feedback loop.** Build the review meeting into the grant agreement.
-:::
-
-
-## Warning 3 — The numbers came from somewhere
-
-Every cell in Grace's table started as someone's *guess*. The guesses were informed — by DHS surveys, by country reports, by interviews — but they were guesses.
-
-. . .
-
-::: {.callout-box .red}
-**A beautiful Monte Carlo on top of bad inputs is dangerous.** The simulation gives you the *shape* of the risk you can see. It cannot show you the risks you forgot to put in.
-:::
-
-
-# Try it yourself {background-color="#005CB9"}
-
-
-## You are the analyst
-
-::: {.example-block}
-[scenario]{.example-label}
-
-You have a fixed MNH budget. You can spend it on:
-
-- **(A)** A national rollout in a country with strong recent results but moderate uncertainty,
-- **(B)** A regional pilot in a country with weak recent results but very high upside if it works,
-- **(C)** A 50/50 split.
-
-**Sketch the three risk shapes — concentrate-on-A, concentrate-on-B, 50/50 — without computing anything. Which one would you bring to the board, and why?**
-:::
-
-. . .
-
-::: {.callout-box .orange}
-*Hint: a strategy with a high average and a long left tail is not the same risk profile as a strategy with a slightly lower average and no left tail. Boards often forget this.*
-:::
-
-
-## Looking ahead
-
-In **Chapter 9** we add a wrinkle that changes everything: *the people you are funding will react to your decisions*.
-
-. . .
-
-A donor's grant rarely lands in a vacuum. Governments redirect their own money in response. Other donors fill or do not fill the gaps. Some counties take the deal eagerly; others quietly redirect to other priorities. **Game theory** is the tool for thinking about that.
-
-
-## Further reading
-
-::: {.callout-box}
-**The data behind Grace's story**
-
-- **WHO Global Health Observatory** — country-level MNH indicators for Ethiopia, Rwanda, Kenya, Tanzania. *who.int/data/gho*.
-- **Lives Saved Tool (LiST)** — open-source modelling tool from Johns Hopkins for estimating lives saved by MNH interventions. *livessavedtool.org*.
-- **Brookings Institution, 2021** — *Financing the SDGs: Health and Education*. Open-access, methodological notes on portfolio allocation in global health.
+- **Absorption capacity.** A country with weak infrastructure may not be able to spend the money effectively. More funding does not automatically mean more impact.
+- **Diminishing returns.** The first million dollars does more than the tenth. After a certain point, each additional dollar saves fewer additional lives.
+- **Concentration risk.** If you put all your eggs in one basket and something goes wrong (political crisis, leadership change, supply chain failure), you lose *everything*.
+- **Fairness and politics.** Completely ignoring other countries creates tension with governments, donors, and partner organizations.
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**If you want to go deeper**
-
-- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapters 10–11 cover portfolio allocation and Monte Carlo for business decisions; the same machinery applies here.
-- **Markowitz, H. (1952)** — *Portfolio Selection*. The classic finance paper that started portfolio thinking. Twelve pages. Worth reading once.
+**The takeaway:** The "best" allocation is not simply "all to the highest burden." It is a balance of impact, risk, capacity, and strategic judgment. That is what makes this a puzzle.
 :::
 
 
-## The one thing to remember
+# Country Profiles {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What the public data tells us about each country</span>
+
+
+## Four Countries, Four Profiles
+
+All data below comes from **publicly available sources** (WHO, World Bank, DHS surveys). These are real numbers for real countries.
+
+. . .
+
+| Indicator | Ethiopia | Rwanda | Kenya | Tanzania |
+|---|---|---|---|---|
+| **Maternal Mortality Ratio** (per 100k live births) | 267 | 248 | 342 | 238 |
+| **Neonatal Mortality Rate** (per 1,000 live births) | 28 | 16 | 21 | 20 |
+| **Annual live births** (approx.) | 3.4 million | 370,000 | 1.5 million | 2.1 million |
+| **Health system** | 8+ diverse regions | Strong centralized | Devolved (47 counties) | Workforce gap |
+| **Key challenge** | Scale across vast geography | Sustaining gains | County-level variation | Rural staffing |
+
+. . .
+
+::: {.callout-box}
+**Source:** WHO Global Health Observatory; World Bank World Development Indicators; most recent Demographic and Health Surveys. Figures are approximate and may reflect different reporting years.
+:::
+
+
+## Reading the Profiles
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Ethiopia** has the highest NMR (28) and the largest birth cohort (3.4M). That means the *absolute number* of neonatal deaths is enormous. But Ethiopia also has 8+ regions with very different health systems -- scaling programs is hard.
+:::
+
+::: {.callout-box .green}
+**Rwanda** has the lowest NMR (16) and a famously strong, centralized health system. Programs tend to work well here. But the birth cohort is small, so the absolute number of lives you can save is limited.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Kenya** has the highest MMR (342) and a devolved system with 47 counties. Impact varies wildly depending on which county you work in. Some counties look like Rwanda; others look like Ethiopia.
+:::
+
+::: {.callout-box .red}
+**Tanzania** has a moderate burden (MMR 238, NMR 20) but a serious health workforce gap. There are not enough skilled birth attendants in rural areas. Without staff, equipment sits unused.
+:::
+:::
+:::
+
+. . .
 
 ::: {.key-takeaway}
-**Spreading resources is not a math question — it is a question about which uncertainties you are willing to live with.**
-
-The expected value picks a centre. The *shape* of the range picks a strategy. Show your board the shape.
+**No single country dominates on every dimension.** Ethiopia has the biggest need; Rwanda has the best system; Kenya has the highest maternal mortality; Tanzania has a critical workforce bottleneck. A smart allocation has to weigh all of these.
 :::
 
 
-##  {background-color="white"}
+# Three Strategies {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Concentrate, Spread, or Tiered?</span>
+
+
+## Strategy 1: Concentrate
+
+::: {.definition-box}
+**Concentrate:** Put the majority of the budget into one or two countries where you expect the highest absolute impact. In our case, that probably means Ethiopia (biggest birth cohort, highest NMR) and Kenya (highest MMR).
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Pros:**
+
+- Maximizes *expected* lives saved if your top picks perform well
+- Simpler to manage -- fewer countries means fewer coordination challenges
+- Deeper investment may push a country past a tipping point
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Cons:**
+
+- If Ethiopia hits a political crisis or Kenya's devolution slows rollout, you lose big
+- Rwanda and Tanzania are left with scraps -- and their governments notice
+- You are making a big bet on a few uncertain outcomes
+:::
+:::
+:::
+
+. . .
+
+::: {.example-block}
+[Illustrative Split]{.example-label}
+
+Ethiopia 50% | Kenya 30% | Tanzania 12% | Rwanda 8%
+
+*This is a hypothetical example for teaching purposes, not an actual program allocation.*
+:::
+
+
+## Strategy 2: Spread
+
+::: {.definition-box}
+**Spread:** Divide the budget roughly equally across all four countries. Everyone gets a fair share.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Pros:**
+
+- Reduces risk -- if one country struggles, the others can still deliver
+- Politically easier -- no country feels ignored
+- You learn about all four countries simultaneously
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Cons:**
+
+- You may spread too thin -- none of the countries gets enough to make a real difference
+- Equal shares ignore the fact that Ethiopia has 9x the births of Rwanda
+- The best-performing country is underfunded; the weakest is overfunded
+:::
+:::
+:::
+
+. . .
+
+::: {.example-block}
+[Illustrative Split]{.example-label}
+
+Ethiopia 25% | Kenya 25% | Tanzania 25% | Rwanda 25%
+
+*Equal allocation regardless of burden or capacity.*
+:::
+
+
+## Strategy 3: Tiered
+
+::: {.definition-box}
+**Tiered:** Weight the allocation by a combination of health burden and system capacity. Countries with higher burden *and* reasonable capacity get more. Countries with low burden or weak capacity get less (but not zero).
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Pros:**
+
+- Balances impact and risk -- bigger countries get more, but not everything
+- Accounts for capacity -- money goes where it can actually be used
+- Provides a rationale that is defensible to donors and governments
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Cons:**
+
+- Requires judgment calls about how to weight burden vs. capacity
+- More complex to explain and manage
+- "Weighted" does not mean "optimal" -- the weights are still subjective
+:::
+:::
+:::
+
+. . .
+
+::: {.example-block}
+[Illustrative Split]{.example-label}
+
+Ethiopia 40% | Kenya 28% | Tanzania 20% | Rwanda 12%
+
+*Weighted by burden (NMR x births) adjusted for system capacity.*
+:::
+
+
+## Comparing the Three Strategies
+
+| Feature | Concentrate | Spread | Tiered |
+|---|---|---|---|
+| **Expected impact** (if things go well) | Highest | Lowest | Middle |
+| **Worst-case outcome** (if things go badly) | Worst | Best | Middle |
+| **Fairness / political acceptability** | Low | High | Medium |
+| **Management complexity** | Low | Medium | Medium |
+| **Flexibility to adjust later** | Low (committed) | Medium | High |
+
+. . .
+
+::: {.callout-box}
+**Notice the pattern:** There is a tradeoff between *expected impact* and *protection against bad outcomes*. The Concentrate strategy is like buying a single lottery ticket -- high potential payoff, but risky. The Spread strategy is like buying insurance -- less upside, but more protection. The Tiered strategy tries to get the best of both worlds.
+:::
+
+. . .
+
+::: {.key-takeaway}
+**No strategy is universally "best."** The right choice depends on how much risk you are willing to take, how uncertain the future is, and what your stakeholders value. The rest of this chapter gives you tools to think through that choice.
+:::
+
+
+# Uncertainty {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">We do not know exactly what will happen</span>
+
+
+## What Could Go Right -- and What Could Go Wrong
+
+::: {.callout-box}
+**The honest truth:** No matter how good your analysis, the future is uncertain. Programs can exceed expectations or fall flat. The question is not "What *will* happen?" but **"What *could* happen, and how likely is each scenario?"**
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Things go well:**
+
+- Government commits to sustaining the program
+- Health workers stay at their posts
+- Supply chains deliver on time
+- Community uptake is strong
+- Other donors add funding
+
+*Probability: roughly 30-40% in most countries*
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Things go poorly:**
+
+- Political transition disrupts priorities
+- Trained workers leave for private sector
+- Drug stockouts undermine quality
+- Community resistance slows adoption
+- Other donors pull out
+
+*Probability: roughly 10-20% in most countries*
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The middle ground (40-50% probability):** Things go *okay*. Not everything works, but programs make meaningful progress. Some regions outperform; others underperform. This is the most likely scenario -- and the hardest to plan for.
+:::
+
+
+## Scenarios for Each Country
+
+Let us assign rough probabilities to three scenarios for each country. These are illustrative, based on the public data and general knowledge of each country's health system.
+
+. . .
+
+| Country | P(Things go well) | P(Middle ground) | P(Things go poorly) |
+|---|---|---|---|
+| **Ethiopia** | 0.30 | 0.50 | 0.20 |
+| **Rwanda** | 0.55 | 0.35 | 0.10 |
+| **Kenya** | 0.35 | 0.45 | 0.20 |
+| **Tanzania** | 0.30 | 0.50 | 0.20 |
+
+. . .
+
+::: {.callout-box}
+**Key pattern:** Rwanda has the highest probability of "things go well" (strong system, political stability, track record). Ethiopia and Tanzania carry more downside risk. Kenya is in between -- some counties are excellent, others are fragile.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**These probabilities are judgment calls, not precise measurements.** That is okay. The point of the exercise is not to nail the exact numbers -- it is to force yourself to think about *how confident* you are in each country's trajectory. Even approximate probabilities are better than ignoring uncertainty entirely.
+:::
+
+
+## Why Uncertainty Changes the Answer
+
+::: {.example-block}
+[A Simple Illustration]{.example-label}
+
+Suppose you have 100 units of budget to split between two countries:
+
+- **Country X:** If things go well (50%), you save 200 lives. If things go poorly (50%), you save 20 lives. Expected value: 110 lives.
+- **Country Y:** If things go well (50%), you save 130 lives. If things go poorly (50%), you save 90 lives. Expected value: 110 lives.
+
+Same expected value! But very different risk profiles.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**If you put everything in Country X:**
+
+- Best case: 200 lives
+- Worst case: 20 lives
+- You are gambling
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**If you split 50/50:**
+
+- Best case: 165 lives (lower)
+- Worst case: 55 lives (much higher)
+- You are diversifying
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Diversification reduces your worst-case outcome.** This is the same logic behind not putting all your savings in one stock. In global health, the "worst case" is measured in lives lost -- which makes diversification especially important.
+:::
+
+
+# Replaying the Future {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Monte Carlo simulation -- imagining 1,000 possible futures</span>
+
+
+## What Is Monte Carlo Simulation?
+
+::: {.definition-box}
+**Monte Carlo simulation** is a way of exploring uncertainty by letting a computer "replay the future" thousands of times. Each replay randomly picks a scenario for each country (things go well, middle ground, things go poorly), calculates the outcome, and records it. After 1,000 replays, you have a picture of *all the things that could happen* -- not just the average.
+:::
+
+. . .
+
+Think of it like this:
+
+::: {.incremental}
+- You write each scenario on a slip of paper and put them in a hat
+- You draw a slip for Ethiopia, a slip for Rwanda, a slip for Kenya, a slip for Tanzania
+- You calculate the total lives saved under that combination of draws
+- You put the slips back, shake the hat, and draw again
+- After 1,000 rounds, you have 1,000 possible outcomes
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Why "Monte Carlo"?** The technique is named after the Monte Carlo casino in Monaco -- because it uses randomness (like rolling dice) to explore possibilities. It was developed by physicists working on the atomic bomb and is now used in everything from weather forecasting to financial planning to global health.
+:::
+
+
+## What Monte Carlo Tells You
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Without Monte Carlo:**
+
+"Our best estimate is 5,000 lives saved."
+
+One number. No sense of uncertainty. Is this almost guaranteed? Or is it a coin flip?
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**With Monte Carlo:**
+
+"In 1,000 simulations, we saved between 2,100 and 8,400 lives. The middle 50% of outcomes fell between 4,200 and 6,100. There is a 10% chance we save fewer than 3,000."
+
+Now you understand the *range* of possibilities and can plan accordingly.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The key insight:** Monte Carlo does not tell you what *will* happen. It tells you what *could* happen, and how often. This lets you compare strategies not just on their average outcome, but on their *entire distribution* of outcomes -- including the best case, the worst case, and everything in between.
+:::
+
+
+## Comparing Strategies With Monte Carlo
+
+Imagine we run 1,000 simulations for each of our three strategies. Here is what the results might look like:
+
+. . .
+
+| Metric | Concentrate | Spread | Tiered |
+|---|---|---|---|
+| **Average lives saved** | 5,200 | 4,600 | 5,000 |
+| **Best case** (top 5%) | 8,400 | 6,100 | 7,200 |
+| **Worst case** (bottom 5%) | 1,800 | 3,200 | 2,700 |
+| **Chance of saving < 3,000** | 18% | 4% | 9% |
+
+*Illustrative numbers for teaching purposes. Actual outcomes depend on program design, country context, and budget scale.*
+
+. . .
+
+::: {.callout-box}
+**Read the table carefully:**
+
+- **Concentrate** has the highest average (5,200) but also the worst worst-case (1,800) and an 18% chance of falling below 3,000 lives.
+- **Spread** has the lowest average (4,600) but the best worst-case (3,200) and only a 4% chance of falling below 3,000.
+- **Tiered** is in between on every dimension -- a compromise.
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Which strategy is "best" depends on what you care about.** If you want the highest *expected* outcome and are willing to risk a bad result, go with Concentrate. If you want to protect against disaster, go with Spread. If you want a balance, go with Tiered. Monte Carlo makes this tradeoff visible.
+:::
+
+
+# You Don't Have to Decide Everything Today {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Sequential decisions -- invest a little, watch, then decide</span>
+
+
+## The Power of "Wait and See"
+
+::: {.callout-box}
+**A common mistake in resource allocation:** treating it as a one-shot decision. "Here is the budget. Divide it now. Done." But in reality, most programs operate over multiple years. You can make a *preliminary* allocation, observe what happens, and then *adjust*.
+:::
+
+. . .
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Year 1</strong><br>Pilot funding<br>(invest a little)</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>Observe</strong><br>Early results<br>(watch)</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Year 2+</strong><br>Scale or shift<br>(then decide)</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;"><strong>Outcome</strong><br>Lives saved<br>(over full program)</div>
+</div>
+
+. . .
+
+::: {.callout-box .green}
+**This is sequential decision making.** Instead of committing 100% of the budget upfront, you commit a smaller amount, gather information, and then make a better-informed decision about the rest. It is the difference between placing one giant bet and playing a series of smaller, smarter bets.
+:::
+
+
+## An Example: Two-Stage Allocation
+
+::: {.example-block}
+[Hypothetical Scenario]{.example-label}
+
+Suppose you have a budget of 100 units over two years. You are deciding how much to invest in Tanzania, where outcomes are uncertain because of the workforce gap.
+
+**Option A: Commit everything now.** Send 30 units to Tanzania in Year 1.
+
+**Option B: Pilot first.** Send 10 units to Tanzania in Year 1 as a pilot. Based on what you learn, decide whether to send 20 more in Year 2 -- or redirect those 20 units to another country.
+:::
+
+. . .
+
+| Scenario | P | Option A (all-in) | Option B (pilot first) |
+|---|---|---|---|
+| Workforce holds, program succeeds | 0.40 | 450 lives | 420 lives |
+| Mixed results | 0.40 | 250 lives | 270 lives |
+| Workforce collapses | 0.20 | 60 lives | 180 lives |
+| **Expected value** | | **278 lives** | **300 lives** |
+
+*Illustrative numbers. The pilot approach yields a higher expected value because you avoid wasting resources when things go badly.*
+
+. . .
+
+::: {.callout-box .orange}
+**Why is Option B better?** Because in the "workforce collapses" scenario, you only lose 10 units instead of 30. The 20 units you held back can be redirected to a country where they will do more good. The pilot buys you *information* -- and information has value.
+:::
+
+
+## The Cost of Waiting
+
+::: {.callout-box .red}
+**But waiting is not free.** Every month you delay scaling up a successful program, preventable deaths are occurring. The pilot period is not just "gathering data" -- it is a period when lives are at stake.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Value of waiting:**
+
+- Better information leads to better allocation
+- Avoid wasting resources on failing programs
+- Reduce the chance of catastrophic misallocation
+- Build evidence base for donors and governments
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Cost of delay:**
+
+- Preventable deaths during the pilot period
+- Political momentum may dissipate
+- Staff recruited for pilot may leave
+- Other donors may fill the gap (or leave it)
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**The decision is not "wait vs. act" but "how much to commit now vs. later."** A good sequential strategy commits enough to start saving lives immediately, while holding back enough to adjust course when you learn more. Getting this balance right is one of the hardest calls in global health.
+:::
+
+
+## When Sequential Decisions Work Best
+
+Sequential allocation is most valuable when:
+
+::: {.incremental}
+- **Uncertainty is high.** You genuinely do not know what will happen (e.g., a new country, an untested intervention)
+- **Information arrives quickly.** You can learn meaningful things in 6-12 months, not 5 years
+- **Funds are flexible.** You can actually redirect money from one country to another (not always easy with donor rules)
+- **The cost of delay is manageable.** The program is not in a crisis where every day counts
+:::
+
+. . .
+
+::: {.callout-box}
+**When it does NOT work well:**
+
+- If the window for action is closing fast (e.g., disease outbreak)
+- If donor contracts lock in allocations for multiple years
+- If political commitments require upfront certainty ("We promised Tanzania $X")
+- If the pilot is too small to generate useful information
+:::
+
+
+# MNH Application {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Applying the three strategies to our four countries</span>
+
+
+## Setting Up the Problem
+
+::: {.callout-box}
+**Scenario:** You lead an MNH program with a fixed annual budget (let us call it 100 units for simplicity). You must allocate across Ethiopia, Rwanda, Kenya, and Tanzania. Your goal: maximize lives saved while managing risk.
+:::
+
+. . .
+
+Using the public data from our country profiles, we can estimate a rough "impact score" for each country:
+
+| Country | NMR | Births (M) | Preventable deaths (est.) | System capacity | Impact score |
+|---|---|---|---|---|---|
+| **Ethiopia** | 28 | 3.4 | ~95,000 | Medium | High burden, moderate capacity |
+| **Rwanda** | 16 | 0.37 | ~6,000 | Strong | Lower burden, high capacity |
+| **Kenya** | 21 | 1.5 | ~32,000 | Variable | High burden, variable capacity |
+| **Tanzania** | 20 | 2.1 | ~42,000 | Weak-Medium | High burden, capacity gap |
+
+*Preventable deaths estimated as NMR x births x fraction preventable with known interventions. Approximate figures for illustration.*
+
+
+## The Three Strategies Applied
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Concentrate**
+
+Ethiopia 50% | Kenya 30%
+Tanzania 12% | Rwanda 8%
+
+*Logic:* Ethiopia and Kenya account for ~73% of estimated preventable deaths. Focus resources where the numbers are biggest.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Spread**
+
+Ethiopia 25% | Kenya 25%
+Tanzania 25% | Rwanda 25%
+
+*Logic:* Every country gets a fair share. Reduces risk from any single country failing.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Tiered**
+
+Ethiopia 40% | Kenya 28%
+Tanzania 20% | Rwanda 12%
+
+*Logic:* Weight by burden adjusted for capacity. Ethiopia gets the most (high burden), but not everything. Rwanda gets least (low burden), but enough to maintain programs.
+:::
+:::
+:::
+
+
+## Expected Outcomes Under Each Strategy
+
+Using our scenario probabilities and illustrative impact assumptions:
+
+. . .
+
+| Strategy | Expected lives saved | Best case (top 10%) | Worst case (bottom 10%) |
+|---|---|---|---|
+| **Concentrate** | ~5,200 | ~8,400 | ~1,800 |
+| **Spread** | ~4,600 | ~6,100 | ~3,200 |
+| **Tiered** | ~5,000 | ~7,200 | ~2,700 |
+
+*Illustrative figures based on hypothetical budget and impact assumptions. Not actual program projections.*
+
+. . .
+
+::: {.callout-box}
+**The Tiered strategy sacrifices about 4% of expected impact compared to Concentrate, but improves the worst-case outcome by 50%.** That tradeoff -- a small expected cost for a large reduction in downside risk -- is why many real-world programs gravitate toward tiered allocations.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Which would you choose?** There is no universally right answer. It depends on your risk tolerance, your donors' expectations, and how much flexibility you have to adjust over time.
+:::
+
+
+## Adding Sequential Decisions
+
+::: {.example-block}
+[A Tiered + Sequential Approach]{.example-label}
+
+**Year 1 (60% of budget):**
+
+- Ethiopia 24% | Kenya 17% | Tanzania 12% | Rwanda 7%
+
+**Year 2 (40% of budget):**
+
+- Reallocate based on Year 1 results
+- Countries performing well get scaled up
+- Countries struggling get reallocated to stronger performers
+
+**Expected outcome:** ~5,100 lives (slightly higher than static Tiered, with much better worst-case protection)
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The sequential version outperforms the static version** because it allows you to redirect resources when you learn that a country is underperforming. The information you gain in Year 1 is valuable -- and the Monte Carlo simulation in our R workshop will show you exactly how valuable.
+:::
+
+
+# R Workshop: Monte Carlo Strategy Comparison {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Replaying the future in R</span>
+
+
+## R Block 1: Setting Up the Countries
+
+```{r}
+#| label: setup-countries
+#| echo: true
+
+set.seed(42)
+
+# Country profiles using PUBLIC data (WHO, World Bank)
+countries <- data.frame(
+  country = c("Ethiopia", "Rwanda", "Kenya", "Tanzania"),
+  nmr = c(28, 16, 21, 20),           # neonatal mortality rate per 1,000
+  births_millions = c(3.4, 0.37, 1.5, 2.1),
+  p_good = c(0.30, 0.55, 0.35, 0.30),  # P(things go well)
+  p_mid  = c(0.50, 0.35, 0.45, 0.50),  # P(middle ground)
+  p_bad  = c(0.20, 0.10, 0.20, 0.20)   # P(things go poorly)
+)
+
+# Estimated preventable neonatal deaths (in thousands)
+# Rough estimate: NMR * births * fraction preventable (~0.5)
+countries$preventable_k <- with(countries,
+  nmr * births_millions * 0.5
+)
+
+countries
+```
+
+
+## R Block 2: The Simulation Function
+
+```{r}
+#| label: simulation-function
+#| echo: true
+
+# Simulate total lives saved for a given allocation strategy
+# allocation = vector of proportions summing to 1 (or 100)
+# n_sims = number of Monte Carlo replays
+
+simulate_strategy <- function(allocation, countries, n_sims = 1000) {
+  # Normalize allocation to proportions
+  alloc <- allocation / sum(allocation)
+  results <- numeric(n_sims)
+
+  for (i in 1:n_sims) {
+    total_lives <- 0
+
+    for (j in 1:nrow(countries)) {
+      # Draw a scenario for this country
+      scenario <- sample(
+        c("good", "mid", "bad"), size = 1,
+        prob = c(countries$p_good[j],
+                 countries$p_mid[j],
+                 countries$p_bad[j])
+      )
+
+      # Effectiveness multiplier depends on scenario
+      multiplier <- switch(scenario,
+        good = runif(1, 0.80, 1.00),  # 80-100% of potential
+        mid  = runif(1, 0.40, 0.70),  # 40-70% of potential
+        bad  = runif(1, 0.05, 0.25)   # 5-25% of potential
+      )
+
+      # Lives saved = allocation share * preventable deaths * multiplier
+      lives_j <- alloc[j] * countries$preventable_k[j] * 1000 * multiplier
+      total_lives <- total_lives + lives_j
+    }
+    results[i] <- total_lives
+  }
+  return(results)
+}
+```
+
+
+## R Block 3: Running the Three Strategies
+
+```{r}
+#| label: run-strategies
+#| echo: true
+
+# Define the three strategies (percentage allocations)
+#                    ETH  RWA  KEN  TZA
+strat_concentrate <- c(50,   8,  30,  12)
+strat_spread      <- c(25,  25,  25,  25)
+strat_tiered      <- c(40,  12,  28,  20)
+
+# Run 1,000 simulations for each
+n_sims <- 1000
+
+sim_conc   <- simulate_strategy(strat_concentrate, countries, n_sims)
+sim_spread <- simulate_strategy(strat_spread, countries, n_sims)
+sim_tiered <- simulate_strategy(strat_tiered, countries, n_sims)
+
+# Summary statistics
+summary_table <- data.frame(
+  Strategy = c("Concentrate", "Spread", "Tiered"),
+  Mean = round(c(mean(sim_conc), mean(sim_spread), mean(sim_tiered))),
+  Median = round(c(median(sim_conc), median(sim_spread), median(sim_tiered))),
+  P5  = round(c(quantile(sim_conc, 0.05), quantile(sim_spread, 0.05),
+                 quantile(sim_tiered, 0.05))),
+  P95 = round(c(quantile(sim_conc, 0.95), quantile(sim_spread, 0.95),
+                 quantile(sim_tiered, 0.95)))
+)
+summary_table
+```
+
+
+## R Block 4: Visualizing the Distributions
+
+```{r}
+#| label: visualize-distributions
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+library(ggplot2)
+
+# Combine simulation results into one data frame
+sim_df <- data.frame(
+  lives = c(sim_conc, sim_spread, sim_tiered),
+  strategy = rep(c("Concentrate", "Spread", "Tiered"),
+                 each = n_sims)
+)
+
+# Density plot: shows the full distribution for each strategy
+ggplot(sim_df, aes(x = lives / 1000, fill = strategy)) +
+  geom_density(alpha = 0.4, color = NA) +
+  geom_vline(
+    data = data.frame(
+      strategy = c("Concentrate", "Spread", "Tiered"),
+      mean_val = c(mean(sim_conc), mean(sim_spread),
+                   mean(sim_tiered)) / 1000
+    ),
+    aes(xintercept = mean_val, color = strategy),
+    linetype = "dashed", linewidth = 0.8
+  ) +
+  scale_fill_manual(values = c("#005CB9", "#83BD00", "#FA7650")) +
+  scale_color_manual(values = c("#005CB9", "#83BD00", "#FA7650")) +
+  labs(
+    x = "Lives Saved (thousands)",
+    y = "Density",
+    title = "1,000 Simulated Futures: Three Allocation Strategies",
+    subtitle = "Dashed lines = mean outcome for each strategy"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "bottom")
+```
+
+
+## R Block 5: Which Strategy "Wins" Most Often?
+
+```{r}
+#| label: strategy-comparison
+#| echo: true
+
+# For each simulation, which strategy saved the most lives?
+wins <- data.frame(
+  sim = 1:n_sims,
+  best = apply(cbind(sim_conc, sim_spread, sim_tiered), 1,
+               function(x) c("Concentrate", "Spread", "Tiered")[which.max(x)])
+)
+
+# How often does each strategy "win"?
+table(wins$best)
+
+# But also: how often does each strategy fall below a threshold?
+threshold <- 2000  # lives
+cat("\nProbability of saving fewer than", threshold, "lives:\n")
+cat("  Concentrate:", mean(sim_conc < threshold), "\n")
+cat("  Spread:     ", mean(sim_spread < threshold), "\n")
+cat("  Tiered:     ", mean(sim_tiered < threshold), "\n")
+```
+
+. . .
+
+::: {.callout-box}
+**Two ways to evaluate a strategy:**
+
+1. **How often does it win?** (Concentrate may win most individual simulations)
+2. **How often does it fail badly?** (Concentrate also has the highest chance of catastrophic shortfall)
+
+Which question matters more depends on your values and your risk tolerance.
+:::
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Resource allocation is a puzzle, not an optimization problem.** The "right" answer depends on your risk tolerance, your values, and how much you know about the future.
+:::
+
+. . .
+
+::: {.incremental}
+- **Three strategies** offer different tradeoffs: Concentrate (high risk, high reward), Spread (low risk, lower reward), Tiered (balanced)
+- **Uncertainty** means the "obvious best" country is not always the best bet -- diversification protects against bad surprises
+- **Monte Carlo simulation** lets you "replay the future" and see the full range of possible outcomes, not just the average
+- **Sequential decisions** ("invest a little, watch, then decide") let you buy information before committing fully
+- **The cost of delay is real** -- waiting to decide means lives lost today -- so the art is finding the right balance between acting now and learning first
+- **Portfolio thinking** applies to global health just as it applies to finance: do not put all your eggs in one basket
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 9 -- Multi-Agent Decision Making**
+
+So far, we have treated the allocation as *your* decision alone. But in reality, other actors are making decisions too:
+
+- **Governments** deciding whether to co-finance or redirect funds
+- **Other donors** deciding whether to invest alongside you or pull out
+- **Health workers** deciding whether to stay or leave
+
+Chapter 9 introduces **game theory** -- a framework for thinking about what happens when multiple decision-makers interact, each with their own objectives.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**From Chapter 8 to Chapter 9:** We solved the allocation problem as if we were the only player on the field. In Chapter 9, we recognize that governments and donors are playing their own games -- and our strategy needs to account for theirs.
+:::
+
+
+## {background-color="white"}
 
 <br><br><br>
 
@@ -291,7 +1014,7 @@ The expected value picks a centre. The *shape* of the range picks a strategy. Sh
 
 <br>
 
-[Inference and Intervention | Chapter 8]{style="color: #005CB9; font-size: 0.6em;"}
+[Inference and Intervention | Chapter 8: Multi-Country Resource Allocation]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

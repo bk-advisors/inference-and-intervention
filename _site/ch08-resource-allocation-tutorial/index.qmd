@@ -1,0 +1,297 @@
+---
+title: "Chapter 8 — Spreading the Money"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Grace
+
+**Grace, 40, programme officer at a global health partnership** *(a composite drawn from public donor reports — the role and constraints are real, the name is not)*
+
+. . .
+
+Grace has just received approval for a four-country MNH portfolio. Her budget is limited. Her four countries are **Ethiopia, Rwanda, Kenya, and Tanzania**. Her board meets in three weeks.
+
+. . .
+
+The board wants one slide. *"How are you splitting the money?"*
+
+. . .
+
+::: {.callout-box}
+**The question:** Concentrate it on the country most likely to deliver? Spread it evenly? Tier it? Each strategy has a different *shape of risk* — and Grace needs to see those shapes before she walks into the room.
+:::
+
+
+## And here is the puzzle
+
+Grace runs the numbers under the simplest assumption: equal split. Each country gets one quarter of the budget. *(Sources: WHO, DHS, country MOH reports, all public.)*
+
+. . .
+
+| Country | Expected lives saved | Range *(low – high)* |
+|---------|---------------------|---------------------|
+| **Ethiopia** | 1,200 | 600 – 1,800 |
+| **Rwanda** | 900 | 700 – 1,100 |
+| **Kenya** | 1,000 | 400 – 1,600 |
+| **Tanzania** | 1,100 | 500 – 1,700 |
+| **Total** | **4,200** | **2,200 – 6,200** |
+
+. . .
+
+::: {.callout-box .orange}
+The expected total looks fine. **The range is enormous.** Twenty-two hundred to sixty-two hundred. That is the difference between *"we did okay"* and *"we missed by half"*.
+:::
+
+
+# Three strategies, three risk shapes {background-color="#005CB9"}
+
+
+## Strategy 1 — Concentrate
+
+Put all the money on the country with the *highest expected return* — Ethiopia at 1,200 lives saved per quarter-budget.
+
+. . .
+
+::: {.incremental}
+
+- **If you scale up four-fold:** maybe 4,800 lives. Maybe much less if scale-up runs into bottlenecks.
+- **Range estimate:** 1,500 – 7,000.
+- **Best case is huge.** Worst case is the worst of any strategy.
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Concentration is a bet.** It is the right move if you have very strong evidence about the chosen country and a high tolerance for downside.
+:::
+
+
+## Strategy 2 — Spread evenly
+
+Quarter, quarter, quarter, quarter. The original 4,200 number, with the original range.
+
+. . .
+
+::: {.incremental}
+
+- **Total range:** 2,200 – 6,200.
+- **No country can crash the whole portfolio.**
+- **No country can singlehandedly carry it either.**
+
+:::
+
+. . .
+
+::: {.callout-box}
+The **safe** strategy. Lower upside, much smaller downside. The strategy that gets approved and is rarely celebrated.
+:::
+
+
+## Strategy 3 — Tier
+
+Two countries get **40% each** *(higher confidence)*. Two get **10% each** *(lower confidence — kept as learning bets)*.
+
+. . .
+
+::: {.incremental}
+
+- **Most of the money rides on the strongest evidence.**
+- **The smaller bets keep two countries warm**, so you can scale them up if they prove out.
+- **Range estimate:** 2,800 – 6,500.
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+The **portfolio** strategy. Higher floor than concentrate, higher ceiling than spread. Most experienced grant officers gravitate here.
+:::
+
+
+## A side-by-side picture
+
+| Strategy | Expected total | Worst case | Best case |
+|---|---|---|---|
+| **Concentrate** | 4,800 | 1,500 | 7,000 |
+| **Spread evenly** | 4,200 | 2,200 | 6,200 |
+| **Tier** | 4,500 | 2,800 | 6,500 |
+
+. . .
+
+::: {.callout-box .orange}
+**The expected value alone does not pick a winner.** The shape of the range — the distance between worst and best — does much of the work.
+:::
+
+
+# Seeing the shape with simulation {background-color="#005CB9"}
+
+
+## Why one number is not enough
+
+A single expected value tells you *the average over all the futures*. It does not tell you what *most* of the futures look like.
+
+. . .
+
+::: {.callout-box}
+For Grace's board, the question is not *"what is the average?"*. The question is *"could we end up under 3,000 lives saved? How likely is that?"* — and an average cannot answer it.
+:::
+
+
+## Monte Carlo, in plain language
+
+::: {.definition-box}
+**Monte Carlo simulation:** instead of asking "what is the average outcome?", you *play out* many possible futures — say, **10,000 futures** — using the picture and the lookup tables. Then you count how many of those futures landed where.
+:::
+
+. . .
+
+::: {.callout-box .green}
+The output is not a single number. It is a *distribution* — a histogram showing the *shape* of risk. You can read it like a weather forecast: *"there is a 20% chance of less than 3,000 lives saved."*
+:::
+
+
+## What Grace's three histograms look like
+
+::: {.incremental}
+
+- **Concentrate** → tall narrow bell on the right, with a very long left tail. *Most futures look great — but a small fraction look catastrophic.*
+- **Spread** → fat blob in the middle. *Almost no futures are great. Almost no futures are terrible. Most are okay.*
+- **Tier** → bell shifted slightly left of concentrate, with a much shorter left tail. *Catches most of the upside, cuts off most of the downside.*
+
+:::
+
+. . .
+
+::: {.callout-box}
+That difference in *shape* is the conversation Grace needs to have with her board — not a fight about whose expected value is bigger.
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — Probabilities of countries are not independent
+
+If a regional drought hits East Africa, it affects Ethiopia, Kenya, *and* Tanzania at the same time.
+
+. . .
+
+::: {.callout-box .orange}
+**Spreading across countries that share the same risk is not real diversification.** It just feels like it.
+:::
+
+
+## Warning 2 — The "tier" strategy assumes you will follow up
+
+If you put 10% into a learning bet, you have to *use* the learning. If next year's grant cycle ignores the small bet's results, you have wasted the money.
+
+. . .
+
+::: {.callout-box .orange}
+**Tiering only works if there is a feedback loop.** Build the review meeting into the grant agreement.
+:::
+
+
+## Warning 3 — The numbers came from somewhere
+
+Every cell in Grace's table started as someone's *guess*. The guesses were informed — by DHS surveys, by country reports, by interviews — but they were guesses.
+
+. . .
+
+::: {.callout-box .red}
+**A beautiful Monte Carlo on top of bad inputs is dangerous.** The simulation gives you the *shape* of the risk you can see. It cannot show you the risks you forgot to put in.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+You have a fixed MNH budget. You can spend it on:
+
+- **(A)** A national rollout in a country with strong recent results but moderate uncertainty,
+- **(B)** A regional pilot in a country with weak recent results but very high upside if it works,
+- **(C)** A 50/50 split.
+
+**Sketch the three risk shapes — concentrate-on-A, concentrate-on-B, 50/50 — without computing anything. Which one would you bring to the board, and why?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: a strategy with a high average and a long left tail is not the same risk profile as a strategy with a slightly lower average and no left tail. Boards often forget this.*
+:::
+
+
+## Looking ahead
+
+In **Chapter 9** we add a wrinkle that changes everything: *the people you are funding will react to your decisions*.
+
+. . .
+
+A donor's grant rarely lands in a vacuum. Governments redirect their own money in response. Other donors fill or do not fill the gaps. Some counties take the deal eagerly; others quietly redirect to other priorities. **Game theory** is the tool for thinking about that.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Grace's story**
+
+- **WHO Global Health Observatory** — country-level MNH indicators for Ethiopia, Rwanda, Kenya, Tanzania. *who.int/data/gho*.
+- **Lives Saved Tool (LiST)** — open-source modelling tool from Johns Hopkins for estimating lives saved by MNH interventions. *livessavedtool.org*.
+- **Brookings Institution, 2021** — *Financing the SDGs: Health and Education*. Open-access, methodological notes on portfolio allocation in global health.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapters 10–11 cover portfolio allocation and Monte Carlo for business decisions; the same machinery applies here.
+- **Markowitz, H. (1952)** — *Portfolio Selection*. The classic finance paper that started portfolio thinking. Twelve pages. Worth reading once.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**Spreading resources is not a math question — it is a question about which uncertainties you are willing to live with.**
+
+The expected value picks a centre. The *shape* of the range picks a strategy. Show your board the shape.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 8]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

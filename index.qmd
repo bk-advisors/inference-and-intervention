@@ -1,5 +1,5 @@
 ---
-title: "Inference and Intervention"
+title: "Causal Analysis in Public Health Management"
 subtitle: "Causal Thinking for Maternal & Newborn Health"
 ---
 

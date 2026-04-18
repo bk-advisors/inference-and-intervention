@@ -1,0 +1,314 @@
+---
+title: "Chapter 4 — Putting Numbers on the Picture"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Joyce
+
+**Joyce, 41, midwife at a rural facility in Mwanza Region, Tanzania** *(a composite drawn from the Tanzania Service Provision Assessment 2014/15 — the details are real, the name is not)*
+
+. . .
+
+Joyce has delivered hundreds of babies in her career.
+
+. . .
+
+Last week she opened her stockroom and counted. **Of the 100 women she has delivered in the last twelve months, 55 came in with at least one major risk factor** — bleeding history, anaemia, prior caesarean, or eclampsia signs *(consistent with TSPA 2014/15 facility-level data)*.
+
+. . .
+
+Of those 55, **6 ended badly** — either the mother or the baby did not come home.
+
+. . .
+
+::: {.callout-box}
+**The question:** A new mother walks in tomorrow with anaemia. **What is the chance she has a bad outcome — and how do we get an answer that is actually useful to Joyce, in plain numbers, not in formulas?**
+:::
+
+
+## And here is the puzzle
+
+Tanzania's national surveys give us numbers like *"the maternal mortality ratio is 524 per 100,000 live births"* *(WHO, 2017)*.
+
+. . .
+
+But Joyce does not deliver 100,000 births. She delivers about 100 a year.
+
+. . .
+
+::: {.callout-box .orange}
+**A number that is right at the country level can be useless at the bedside.** What we need is a way to take the picture from Chapters 2 and 3 and turn each arrow into a number Joyce can actually use.
+:::
+
+
+# Counts before formulas {background-color="#005CB9"}
+
+
+## Forget probability for a minute
+
+People say *"the probability is 0.06"* and most of the room glazes over.
+
+. . .
+
+People say *"6 out of 100"* and everybody gets it.
+
+. . .
+
+::: {.definition-box}
+**Natural frequencies** — counts out of a round number — are how human brains were built to think about chance. We are going to use them for the entire chapter.
+:::
+
+. . .
+
+::: {.callout-box .green}
+*Probability is just frequency in disguise.* If you ever get lost in this chapter, translate everything back into "X out of 100".
+:::
+
+
+## Joyce's last 100 mothers
+
+Out of the 100 mothers Joyce delivered in the last year:
+
+<br>
+
+| | Anaemia | No anaemia | Total |
+|---|---|---|---|
+| **Bad outcome** | 5 | 1 | 6 |
+| **Good outcome** | 35 | 59 | 94 |
+| **Total** | **40** | **60** | **100** |
+
+. . .
+
+::: {.callout-box}
+That is the whole picture in one table. Every row, every column, every cell — *people, not probabilities*.
+:::
+
+
+## Reading the table
+
+::: {.incremental}
+
+- **Out of every 100 mothers Joyce sees, 40 have anaemia.**
+- **Out of those 40 with anaemia, 5 have a bad outcome.** That is 5 out of 40 — or about 1 in every 8.
+- **Out of the 60 without anaemia, only 1 has a bad outcome.** That is 1 in 60.
+- **A mother with anaemia is roughly 8 times more likely to end badly than a mother without.**
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+Notice what we just did. We answered Joyce's question — *"a new mother walks in with anaemia, what is the chance?"* — in counts. No formulas.
+:::
+
+
+# Putting counts on the picture {background-color="#005CB9"}
+
+
+## From a chain to a lookup table
+
+Remember Faith's bleeding chain from Chapter 3? *(bleeding → family decides → permission → motorbike → arrives → survives)*
+
+. . .
+
+Each arrow on that chain can carry a **lookup table** — a small box of counts that says *"out of every 100 women who reach this point, X go this way and Y go that way"*.
+
+. . .
+
+::: {.definition-box}
+A picture with a lookup table on every arrow has a name. We call it a **Bayesian network**.
+
+Don't be intimidated by the name. It is just a picture from Chapter 2 with counts attached.
+:::
+
+
+## Joyce's tiny picture, with the table on it
+
+<br>
+
+::: {style="text-align: center; font-size: 0.95em;"}
+
+[Anaemia]{.dag-node .treatment}  →  [Bad outcome]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+| | Bad outcome | Good outcome | Total |
+|---|---|---|---|
+| **Anaemia** | 5 | 35 | **40** |
+| **No anaemia** | 1 | 59 | **60** |
+
+. . .
+
+::: {.callout-box}
+**Two boxes. One arrow. One lookup table.** That is the smallest possible picture-with-numbers — and it already answers Joyce's question.
+:::
+
+
+## Why this is a big deal
+
+Once an arrow has a lookup table on it, you can ask the picture *new questions* — running the arrow in *both directions*.
+
+. . .
+
+::: {.incremental}
+
+- **Forward — a mother walks in with anaemia. What's the chance of a bad outcome?** *5 out of 40 = roughly 1 in 8.*
+- **Backward — a bad outcome happened. What's the chance the mother had anaemia?** *5 out of 6, because 5 of the 6 bad outcomes were in anaemia mothers.*
+- **Comparison — does anaemia matter?** *1 in 8 versus 1 in 60 — anaemia mothers are about 8 times more likely to have a bad outcome.*
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Same table, three different questions, three different answers.** The picture *with* numbers can answer questions the picture *without* numbers cannot.
+:::
+
+
+## Where do the numbers come from?
+
+::: {.incremental}
+
+- **The facility logbook.** Joyce literally counted the last 100 mothers.
+- **The DHIS2 database.** Tanzania's national health information system — public, free, district-level data on bleeding rates and maternal outcomes.
+- **The Service Provision Assessment.** A survey of facility readiness done every few years — anaemia screening rates, drug availability, staffing.
+- **The interviews from Chapter 3.** Mary, Lokol, and Esther can give you rough fractions even when the database cannot.
+
+:::
+
+. . .
+
+::: {.callout-box .orange}
+You almost never need to estimate a number perfectly. You need to estimate it *well enough that the picture starts giving useful answers*. Better to be roughly right than precisely wrong.
+:::
+
+
+# Three quiet warnings {background-color="#005CB9"}
+
+
+## Warning 1 — Your numbers will be local
+
+Joyce's 100 mothers are not the same as Mwanza Region's 1,000 mothers, which are not the same as Tanzania's 1.8 million births a year.
+
+. . .
+
+::: {.callout-box .orange}
+**The lookup table is local.** Use it locally. When you need national numbers, get national counts.
+:::
+
+
+## Warning 2 — Small counts lie
+
+Joyce had **6** bad outcomes out of 100. That sounds solid. But 6 is a small number.
+
+. . .
+
+If two of those bad outcomes had been on different days, the picture would have looked very different.
+
+. . .
+
+::: {.callout-box .orange}
+**With small counts, your numbers are noisy.** We mark this on the picture by putting a *range* on each cell — not just "5 out of 40" but "5 out of 40, somewhere between 2 and 10."
+:::
+
+
+## Warning 3 — Numbers can hide a missing arrow
+
+You can put a beautiful lookup table on every arrow you drew — and still be wrong, because there is an arrow you forgot to draw.
+
+. . .
+
+::: {.callout-box .red}
+**The picture has to be right first.** A wrong picture with perfect numbers is worse than a right picture with rough numbers. Always come back to Chapter 2's grammar before you start counting.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+In a Tanzanian district, 100 women were tested for HIV during antenatal care last month. **20** tested positive. Of those 20, **3** had a low-birth-weight baby. Of the 80 who tested negative, **6** had a low-birth-weight baby.
+
+**Build a tiny lookup table. Then answer: a new HIV-positive mother is how many times more likely to have a low-birth-weight baby than an HIV-negative mother?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: count the rates first — 3 out of 20 versus 6 out of 80 — then divide them.*
+:::
+
+
+## Looking ahead
+
+In **Chapter 5**, you will take a picture-with-numbers like Joyce's and learn what to do when **new evidence arrives**.
+
+. . .
+
+A new test result comes back. A new survey lands on your desk. A new patient walks in. The picture does not get thrown out — it gets *updated*. That is what "Bayesian thinking" actually means in plain language.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Joyce's story**
+
+- **Tanzania Service Provision Assessment (TSPA) 2014/15** — the most recent national facility-level survey. Open-access at *dhsprogram.com*.
+- **WHO, 2017** — *Trends in maternal mortality: 1990 to 2015*. The source for Tanzania's maternal mortality ratio. Open-access.
+- **DHIS2 Tanzania** — national health information system, district-level dashboards at *moh.go.tz*.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 5 walks through lookup tables and conditional probability tables for business decisions; the same machinery applies here.
+- **Gigerenzer, G. (2002)** — *Calculated Risks*. The book that convinced every doctor in Europe to teach probability in natural frequencies instead of percentages.
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**A picture from Chapter 2 + a lookup table on every arrow = a Bayesian network.**
+
+That is all there is to it. The picture tells you the structure. The counts tell you the strengths. Together, they answer questions neither could answer alone.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 4]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

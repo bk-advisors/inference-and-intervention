@@ -1,7 +1,7 @@
 ---
-title: "Chapter 2 — Drawing the Picture"
+title: "Chapter 2: Qualitative Causal Models"
 subtitle: "Inference and Intervention | BK Advisors"
-author: "Matthew Luke Kuch | BK Advisors"
+author: "BK Advisors"
 date: today
 format:
   revealjs:
@@ -16,328 +16,840 @@ format:
     center: false
     width: 1280
     height: 720
-    self-contained: false
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
 ---
 
-## Meet Beatrice
+## Learning Objectives
 
-**Beatrice, 34, Northern Province, Rwanda** *(a composite drawn from DHS Rwanda 2019/20 narratives — the details are real, the name is not)*
+After this chapter, you will be able to:
 
-. . .
+::: {.incremental}
+- Identify the **three main node types** in a causal diagram and know when to use each
+- Assign **signed directed links** [+]/[-] to represent how one variable influences another
+- Recognize the three fundamental **triplet structures**: chain, fork, and collider
+- Apply **d-separation** rules to determine when information flows (or stops) between variables
+- Build a complete **qualitative DAG** for Rwanda's maternal and newborn health system
+:::
 
-Beatrice is an **Animatrice de Santé** — one of Rwanda's roughly **45,000 community health workers**, almost all of them women, almost all of them volunteers *(Rwanda Biomedical Centre, 2020)*.
 
-. . .
+## Chapter Overview
 
-She has six days of training, a bicycle, a phone, and a list of every pregnant woman in three nearby villages.
-
-. . .
-
-She is not a nurse. She is not a midwife. She is not paid a salary.
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Mental Models<br>to DAGs</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Node Types<br>& Links</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Three<br>Triplets</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Information<br>Flow Rules</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Rwanda MNH<br>Application</div>
+</div>
 
 . . .
 
 ::: {.callout-box}
-**The question:** How can a volunteer with six days of training help drive one of the fastest declines in newborn mortality on record?
+**Where we are:** Chapter 1 showed us *why* causal thinking matters — correlation traps, confounding, the danger of naive regression. Now we learn *how* to draw a causal model. By the end of this chapter, you will have a complete diagram of Rwanda's health system on paper (and in R).
 :::
 
 
-## And here is the puzzle
+# From Intuition to Structure {background-color="#005CB9"}
 
-In 2000, Rwanda's neonatal mortality rate was **41 deaths per 1,000 live births** *(DHS Rwanda 2000)*.
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Why writing down your causal beliefs changes everything</span>
 
-. . .
 
-By 2019, it had fallen to **19 per 1,000** *(DHS Rwanda 2019/20)*.
+## Everyone Has a Mental Model
 
-. . .
-
-Less than half. In one generation. With volunteers like Beatrice doing most of the front-line work.
+You already carry causal beliefs around in your head.
 
 . . .
+
+"If we train more community health workers, outcomes will improve." "Insurance coverage drives facility delivery rates." "Better equipment leads to better care."
+
+These are causal claims. The problem? They live in your head, where nobody can challenge them.
 
 ::: {.callout-box .orange}
-**Something in the system is making volunteers far more powerful than their training would suggest.** What?
+**Everyone has a mental model. The question is whether yours is written down where others can challenge it.**
 :::
 
 
-# We need a better picture {background-color="#005CB9"}
+## Implicit vs. Explicit Models
 
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Implicit Models (in your head)**
 
-## Words are not enough
-
-People say things like *"community health workers reduce mortality through early referral and behaviour change."*
-
-. . .
-
-::: {.bad-example}
-That sentence has six nouns and zero arrows. You cannot draw it. You cannot test it. You cannot tell what would break if you changed one piece.
+- Vague and shifting
+- Hidden assumptions
+- Two people disagree without knowing *why*
+- Cannot be tested against data
+:::
 :::
 
-. . .
-
+::: {.col}
 ::: {.callout-box .green}
-**This chapter teaches you how to turn that kind of sentence into a picture you can actually use.**
+**Explicit Models (on paper)**
+
+- Precise and shareable
+- Assumptions are visible
+- Disagreements become *productive*
+- Generate testable predictions
 :::
-
-
-## Three things a box can mean
-
-In our pictures, every box is one of three things:
-
-. . .
-
-::: {.incremental}
-
-- **A factor** — something that varies but you cannot directly choose. *Beatrice's eligible villages are mostly poor or mostly not poor.*
-- **An action** — something a person actively decides to do. *Beatrice visits a pregnant woman, or she does not.*
-- **An outcome** — the thing you ultimately care about. *The newborn survives, or does not.*
-
 :::
-
-. . .
-
-::: {.definition-box}
-Same shape on the page, three different roles. Knowing which is which is most of the work.
-:::
-
-
-## Beatrice's three boxes
-
-<br>
-
-::: {style="text-align: center; font-size: 0.95em;"}
-
-[Mother is poor]{.dag-node .confounder}     [Beatrice visits]{.dag-node .treatment}     [Newborn survives]{.dag-node .outcome .hexagon}
-
-:::
-
-<br>
-
-. . .
-
-- The **factor** is on the left. Beatrice cannot choose how poor a household is.
-- The **action** is in the middle. Beatrice can choose to visit, or not.
-- The **outcome** is on the right. That is the thing we are trying to move.
-
-
-## Arrows have signs
-
-An arrow does not just say *"this affects that"*. It also says *which direction*.
-
-. . .
-
-::: {.incremental}
-
-- A **positive arrow** means *"more of this leads to more of that"*. More antenatal visits → more birth-preparedness.
-- A **negative arrow** means *"more of this leads to less of that"*. More distance to clinic → less likely to deliver there.
-
 :::
 
 . . .
 
 ::: {.callout-box}
-A picture without signs is half a picture. *(We will mark them with + or − next to the arrow.)*
+A qualitative causal model is just a disciplined way of writing down what you believe about how things connect — before you add any numbers.
 :::
 
 
-## Beatrice's picture, with signs
+## The Model-Building Process
 
-<br>
-
-::: {style="text-align: center; font-size: 0.9em;"}
-
-[Mother is poor]{.dag-node .confounder}  −→  [Beatrice visits]{.dag-node .treatment}  +→  [Newborn survives]{.dag-node .outcome .hexagon}
-
-<br><br>
-
-[Mother is poor]{.dag-node .confounder}  −−−−−−−−−−−−→  [Newborn survives]{.dag-node .outcome .hexagon}
-
-:::
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><span class="step-number">1</span><br>List your<br>variables</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><span class="step-number green">2</span><br>Classify<br>node types</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;"><span class="step-number orange">3</span><br>Draw<br>arrows</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><span class="step-number amber">4</span><br>Assign<br>signs</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;"><span class="step-number teal">5</span><br>Check<br>structure</div>
+</div>
 
 . . .
-
-::: {.callout-box .orange}
-Two arrows point at the outcome. That is the start of the puzzle: which one is doing the work?
-:::
-
-
-# Three shapes that show up everywhere {background-color="#005CB9"}
-
-
-## Shape 1 — The chain
-
-Three boxes in a row. *A* causes *B*, which causes *C*.
-
-<br>
-
-::: {style="text-align: center; font-size: 0.95em;"}
-[Beatrice visits]{.dag-node .treatment}  →  [Mother knows danger signs]{.dag-node}  →  [Mother goes to clinic in time]{.dag-node .outcome .hexagon}
-:::
-
-. . .
-
-::: {.definition-box}
-**The middle box passes the message along.** Block the middle box (no danger-signs message) and the chain breaks.
-:::
-
-
-## Shape 2 — The fork
-
-One box causes two others. The two are not connected to each other — they just share a parent.
-
-<br>
-
-::: {style="text-align: center; font-size: 0.95em;"}
-
-[Government rolls out CHW programme]{.dag-node .confounder}
-
-⬇  ⬇
-
-[Beatrice gets training]{.dag-node .treatment}     [New ambulance lands in district]{.dag-node .treatment}
-
-:::
-
-. . .
-
-::: {.callout-box .orange}
-This is the trap from Chapter 1. Beatrice and the ambulance look like they cause each other. They do not. They share a parent.
-:::
-
-
-## Shape 3 — The collider
-
-Two boxes both cause a third. The third is the *collider*.
-
-<br>
-
-::: {style="text-align: center; font-size: 0.95em;"}
-
-[Beatrice visits]{.dag-node .treatment}     [Distance to clinic is short]{.dag-node .treatment}
-
-⬇  ⬇
-
-[Mother delivers in clinic]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-**The strange thing about colliders:** the two parents are unrelated *until* you look at families who delivered in the clinic. Then they suddenly look related — and that "relationship" is fake.
-
-We'll come back to this in Chapter 6. For now, just remember the shape.
-:::
-
-
-# Putting it together {background-color="#005CB9"}
-
-
-## Beatrice's full picture
-
-<br>
-
-::: {style="text-align: center; font-size: 0.85em;"}
-
-[Government CHW programme]{.dag-node .confounder}
-
-⬇  ⬇
-
-[Beatrice's training]{.dag-node .treatment}     [Distance to clinic]{.dag-node .confounder}
-
-⬇                                           ⬇
-
-[Beatrice visits]{.dag-node .treatment}      →     [Mother knows danger signs]{.dag-node}     →     [Newborn survives]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-**You can see chains, forks, and colliders all at once.** This is what a useful picture looks like.
-:::
-
-
-## So how do volunteers drive that much change?
-
-Look at the picture. Beatrice's training is one box. Her visits are one box. But the outcome at the end has **three different paths leading to it**.
-
-. . .
-
-::: {.incremental}
-
-- The **chain** path: she teaches danger signs, the mother recognises them, the mother gets to a clinic in time.
-- The **shared-parent** path: the same programme that put Beatrice in the village also paid for the new ambulance.
-- The **distance** path: closer clinics make every other arrow more powerful.
-
-:::
-
-. . .
-
-::: {.callout-box}
-Volunteers look small. The **system around them** is what makes them powerful.
-:::
-
-
-# Try it yourself {background-color="#005CB9"}
-
-
-## You are the analyst
 
 ::: {.example-block}
-[scenario]{.example-label}
+[Everyday Example]{.example-label}
 
-A new programme in a neighbouring district will train CHWs to use a smartphone app for danger-sign screening. The pitch deck claims: *"smartphone screening will reduce neonatal mortality by 20%"*.
-
-**Before you fund it: draw the picture.** What boxes go on it? Which arrows have signs you can guess? Which arrows are you uncertain about?
+A school principal says: "I think class size affects teacher attention, and teacher attention affects test scores." That sentence *is* a causal model: **Class Size → Teacher Attention → Test Scores** with signs [-] and [+]. We just gave it structure.
 :::
+
+
+# Three Node Types {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The building blocks of every causal diagram</span>
+
+
+## Probabilistic Nodes (Ovals)
+
+::: {.definition-box}
+**Probabilistic Node:** A variable whose value is uncertain — determined by nature or upstream causes. You observe it but do not directly control it. Drawn as an **oval**.
+:::
+
+Think of it this way: these are the things the world throws at you.
+
+::: {.columns-equal}
+::: {.col}
+**Everyday:** Tomorrow's weather, a student's exam score, traffic on your commute
+:::
+::: {.col}
+::: {.example-block}
+[MNH Example]{.example-label}
+
+- **Quality of Care** {Good, Poor}
+- **Care-Seeking Behavior** {High, Low}
+- **Workforce Competency** {Competent, Developing}
+:::
+:::
+:::
+
+<table style="width: 70%; margin: 0.3em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node" style="padding: 0.5em 1em;">Quality<br>of Care</div></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node" style="padding: 0.5em 1em;">Care-Seeking<br>Behavior</div></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node" style="padding: 0.5em 1em;">Workforce<br>Competency</div></td>
+</tr>
+</table>
+
+
+## Decision Nodes (Rectangles)
+
+::: {.definition-box}
+**Decision Node:** A variable you *choose*. It represents a deliberate action by a decision-maker. Drawn as a **rectangle**.
+:::
+
+Think of it this way: these are the levers you can pull.
+
+::: {.columns-equal}
+::: {.col}
+**Everyday:** Which university to apply to, how much to spend on advertising, whether to study or watch TV
+:::
+::: {.col}
+::: {.example-block}
+[MNH Example]{.example-label}
+
+- **CHW Training Investment** {Fund, Don't Fund}
+- **Equipment Procurement** {Invest, Defer}
+- **Insurance Policy** {Expand Mutuelle, Status Quo}
+:::
+:::
+:::
+
+<table style="width: 70%; margin: 0.3em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node decision rect" style="padding: 0.5em 1em;">CHW Training<br>Investment</div></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node decision rect" style="padding: 0.5em 1em;">Equipment<br>Procurement</div></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node decision rect" style="padding: 0.5em 1em;">Insurance<br>Policy</div></td>
+</tr>
+</table>
+
+
+## Objective Nodes (Hexagons)
+
+::: {.definition-box}
+**Objective Node:** The thing you are ultimately trying to achieve. Drawn as a **hexagon**. Arrows flow *into* objective nodes, never *out*. This is the scoreboard.
+:::
+
+::: {.columns-equal}
+::: {.col}
+**Everyday:** Your final GPA, a company's annual profit, a team's win-loss record
+:::
+::: {.col}
+::: {.example-block}
+[MNH Example]{.example-label}
+
+- **Neonatal Mortality** — Rwanda NMR ~16 per 1,000
+- **Maternal Mortality** — Rwanda MMR ~248 per 100,000
+:::
+:::
+:::
+
+<table style="width: 50%; margin: 0.3em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node hexagon outcome" style="padding: 0.5em 1em; border-style: double;">Neonatal<br>Mortality</div></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node hexagon outcome" style="padding: 0.5em 1em; border-style: double;">Maternal<br>Mortality</div></td>
+</tr>
+</table>
+
+
+## Node Types: Quick Reference
+
+| Type | Shape | What it represents | Who controls it? |
+|---|---|---|---|
+| **Probabilistic** | Oval | Uncertain variables | Nature / context |
+| **Decision** | Rectangle | Choices you make | The decision-maker |
+| **Objective** | Hexagon | Goals you're trying to achieve | Nobody — it's the outcome |
+
+. . .
+
+::: {.callout-box}
+**A note on function nodes:** There is a fourth type — function nodes — for variables calculated exactly from their parents (like "Total Spending = Training + Equipment + Systems"). We will not focus on them here. Just know they exist for accounting identities and formulas.
+:::
+
+
+# Signed Links {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Arrows that tell you which direction things move</span>
+
+
+## How Links Work
+
+::: {.definition-box}
+**Directed Link:** An arrow from A to B means changing A can change B. The sign — [+] or [-] — tells you the direction.
+:::
+
+| Sign | Meaning | Plain English |
+|---|---|---|
+| **[+]** | More A leads to more B | "A pushes B up" |
+| **[-]** | More A leads to less B | "A pushes B down" |
+
+<table style="width: 70%; margin: 0.4em auto; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node decision rect">CHW Training<br>Investment</div></td>
+<td style="text-align: center; padding: 0.5em;"><span class="dag-arrow positive" style="font-size: 1.8em;">→ [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node">Workforce<br>Competency</div></td>
+<td style="text-align: center; padding: 0.5em;"><span class="dag-arrow negative" style="font-size: 1.8em;">→ [-]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node hexagon outcome" style="border-style: double;">Neonatal<br>Mortality</div></td>
+</tr>
+</table>
+
+Read it out loud: "Training investment *increases* workforce competency, and higher competency *decreases* neonatal mortality."
+
+
+## Sign Multiplication Along Paths
+
+Here is the trick: when you follow a path through multiple arrows, you multiply the signs.
+
+::: {.callout-box}
+**Sign multiplication:** [+] x [+] = [+], [-] x [-] = [+], [+] x [-] = [-]. Same rule as multiplying positive and negative numbers.
+:::
+
+| Path | Signs | Overall | Interpretation |
+|---|---|---|---|
+| Training → Competency → Mortality | [+] x [-] | **[-]** | Training reduces mortality |
+| Insurance → Care-Seeking → Quality → Mortality | [+] x [+] x [-] | **[-]** | Insurance reduces mortality |
+
+::: {.example-block}
+[Everyday Example]{.example-label}
+
+**Rain → Wet Roads → Car Accidents.** Rain *increases* wet roads [+]. Wet roads *increase* accidents [+]. Overall: [+] x [+] = [+]. Rain increases accidents.
+:::
+
+
+# The Three Triplets {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Every causal diagram is built from just three patterns</span>
+
+
+## Why Three Triplets Matter
+
+Every DAG — no matter how large — is built from combinations of just three structures. Learn these three patterns and you understand every causal diagram.
+
+| # | Name | Shape | Key Feature |
+|---|---|---|---|
+| 1 | **Chain** (Serial) | A → B → C | B is a *mediator* |
+| 2 | **Fork** (Diverging) | A ← B → C | B is a *common cause* |
+| 3 | **Collider** (Converging) | A → B ← C | B is a *collision point* |
+
+::: {.callout-box .orange}
+Each triplet has its own rule about when information flows and when it stops. Get these rules wrong and your entire analysis falls apart.
+:::
+
+
+## Triplet 1: The Chain
+
+::: {.definition-box}
+**Chain:** A → B → C. Node B sits in the middle, passing information from A to C. B is a **mediator**.
+:::
+
+::: {.example-block}
+[Everyday Example]{.example-label}
+
+**Rain → Wet Roads → Car Accidents.** If you already know the roads are wet, does learning it rained tell you anything new about accident risk? No. The road condition already captured everything rain had to say.
+:::
+
+<table style="width: 60%; margin: 0.4em auto; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node treatment" style="padding: 0.5em 1em;">A</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">→</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node" style="padding: 0.5em 1em;">B</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">→</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node outcome" style="padding: 0.5em 1em;">C</div></td>
+</tr>
+</table>
+
+**The rule:** Information flows from A to C through B. But if you **hold B fixed** (condition on it), the flow **stops**.
+
+
+## Chain: MNH Example
+
+<table style="width: 80%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node decision rect">CHW Training<br>Investment</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 1.8em;">→ [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node">Workforce<br>Competency</div></td>
+<td style="text-align: center;"><span class="dag-arrow negative" style="font-size: 1.8em;">→ [-]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node hexagon outcome" style="border-style: double;">Neonatal<br>Mortality</div></td>
+</tr>
+</table>
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Not conditioning on Competency:**
+
+Training and Mortality are associated. Knowing a district invested in training tells us mortality is likely lower.
+:::
+:::
+::: {.col}
+::: {.callout-box .orange}
+**Conditioning on Competency:**
+
+If we already know a health worker is competent, it does not matter *how* she got there. The path is **blocked**.
+:::
+:::
+:::
+
+::: {.callout-box}
+**For Rwanda:** Training's value is entirely *mediated* through competency. If you can measure competency directly, you do not need training records to predict outcomes.
+:::
+
+
+## Triplet 2: The Fork
+
+::: {.definition-box}
+**Fork:** A ← B → C. Node B is a **common cause** of both A and C. This creates a *spurious correlation* between A and C.
+:::
+
+::: {.example-block}
+[Everyday Example]{.example-label}
+
+**Ice Cream Sales ← Summer Heat → Drowning Deaths.** Ice cream and drowning are correlated. But ice cream does not cause drowning. Summer heat drives both. Know the temperature, and the link vanishes.
+:::
+
+<table style="width: 60%; margin: 0.4em auto; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node treatment" style="padding: 0.5em 1em;">A</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">←</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node confounder" style="padding: 0.5em 1em;">B</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">→</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node outcome" style="padding: 0.5em 1em;">C</div></td>
+</tr>
+</table>
+
+**The rule:** A and C look associated, but only because of B. **Hold B fixed**, and A and C become independent.
+
+
+## Fork: MNH Example
+
+<table style="width: 80%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node">CHW<br>Deployment</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 1.8em;">← [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node confounder">Disease<br>Burden</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 1.8em;">→ [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node hexagon outcome" style="border-style: double;">Neonatal<br>Mortality</div></td>
+</tr>
+</table>
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Naive observation:**
+
+Districts with more CHWs have *higher* mortality. Health workers cause harm?
+:::
+:::
+::: {.col}
+::: {.callout-box .green}
+**Causal reality:**
+
+Disease burden is the common cause. High-burden districts get more workers *and* have higher mortality. Control for burden and the spurious link disappears.
+:::
+:::
+:::
+
+::: {.callout-box}
+**For Rwanda:** Across 30 districts, the Ministry of Health deploys more CHWs to higher-burden areas. Any comparison of CHW density vs. mortality *must* control for baseline disease burden.
+:::
+
+
+## Triplet 3: The Collider
+
+::: {.definition-box}
+**Collider:** A → B ← C. Two arrows *collide* at B. This is the dangerous exception — it behaves **opposite** to chains and forks.
+:::
+
+::: {.example-block}
+[Everyday Example]{.example-label}
+
+**High Grades → University Admission ← Athletic Talent.** A selective university requires high grades or athletic talent. Among *admitted students*, non-athletes must be academic stars. This negative link only appears once you condition on admission.
+:::
+
+<table style="width: 60%; margin: 0.4em auto; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node treatment" style="padding: 0.5em 1em;">A</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">→</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node" style="padding: 0.5em 1em; border-width: 3px;">B</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 2em;">←</span></td>
+<td style="text-align: center; padding: 0.6em;"><div class="dag-node outcome" style="padding: 0.5em 1em;">C</div></td>
+</tr>
+</table>
+
+**The rule:** A and C are **independent** by default — the collider *blocks* information. But if you **condition on B**, the path **opens**. This is called "explaining away."
+
+
+## Collider: MNH Example
+
+<table style="width: 80%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node treatment">Staffing<br>Level</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 1.8em;">→ [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node" style="border-width: 3px;">Quality<br>of Care</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive" style="font-size: 1.8em;">← [+]</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node treatment">Equipment<br>Availability</div></td>
+</tr>
+</table>
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Not conditioning on Quality:**
+
+Staffing and Equipment are independent — separate decisions.
+:::
+:::
+::: {.col}
+::: {.callout-box .red}
+**Conditioning on Quality = Good:**
+
+Among good-quality facilities, if staffing is low, equipment *must* be excellent. Each cause "explains away" the other.
+:::
+:::
+:::
+
+::: {.callout-box}
+**For Rwanda:** With ~1.3 nurses per 1,000 (vs. WHO target of 4.45), if you only study high-performing facilities, staffing and equipment will appear negatively related — a statistical illusion from collider bias.
+:::
+
+
+# Information Flow Rules {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">d-Separation: when does information flow, and when does it stop?</span>
+
+
+## The Three Rules
+
+Burn this into your memory:
+
+| # | Structure | Default | Condition on middle node |
+|---|---|---|---|
+| **1** | **Chain:** A → B → C | Flows | **BLOCKED** |
+| **2** | **Fork:** A ← B → C | Flows | **BLOCKED** |
+| **3** | **Collider:** A → B ← C | **BLOCKED** | Flows! |
 
 . . .
 
 ::: {.callout-box .orange}
-*Hint: where does "the smartphone" go on the picture? Where does "phone signal" go? Where does "literacy" go?*
+Chains and forks behave the same — conditioning on the middle *blocks* the flow. Colliders are the rebel — conditioning on the middle *opens* the flow.
 :::
 
-. . .
-
-In **Chapter 3**, we will turn this exercise into a real method — building a causal picture by sitting down and interviewing the people who run the programme.
-
-
-## Looking ahead
-
-In **Chapter 3**, you will learn how to *build* a picture from scratch by interviewing people — health workers, mothers, finance officers, district managers.
-
-. . .
-
-You will use the rules from this chapter — three node types, signed arrows, three shapes — to turn what they tell you into something you can put on a wall and argue about.
-
-
-## Further reading
-
 ::: {.callout-box}
-**The data behind Beatrice's story**
+**The fancy name:** These rules are called **d-separation** (the "d" stands for directional). Two variables are d-separated if every path between them is blocked. D-separated variables are independent — knowing one tells you nothing about the other.
+:::
 
-- **DHS Rwanda 2000, 2010, 2014/15, 2019/20** — the four surveys this chapter draws from. All publicly available at *dhsprogram.com*.
-- **Rwanda Biomedical Centre, 2020** — *Annual Health Statistics Booklet*. The official source for community health worker counts.
-- **Farmer P. et al., 2013** — "Reduced premature mortality in Rwanda: lessons from success." *BMJ*, 346:f65. Open-access.
+
+## Applying d-Separation
+
+In a real diagram, two variables may be connected by *multiple* paths. You must check every path.
+
+::: {.definition-box}
+**d-Separation:** X and Y are d-separated given a set Z if **every** path between them is blocked. A path is blocked if it contains: (1) a chain or fork whose middle node is in Z, OR (2) a collider whose middle node (and descendants) is *not* in Z.
 :::
 
 . . .
 
 ::: {.callout-box .green}
-**If you want to go deeper**
-
-- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention: Causal Models for Business Analysis*. Routledge. Chapters 2 and 3 are the textbook treatment of the picture-drawing rules we just walked through.
-- **Pearl, J., Glymour, M. & Jewell, N. (2016)** — *Causal Inference in Statistics: A Primer*. Wiley. Chapter 1 covers chains, forks, and colliders with worked examples.
+**Shortcut:** Walk along each path. At each node ask: chain/fork middle, or collider? Chain/fork middle conditioned on → blocked. Collider *not* conditioned on → blocked. One blocked node is enough to block the whole path.
 :::
 
 
-## The one thing to remember
+## d-Separation: Worked Example
+
+<table style="width: 75%; margin: 0.3em auto; font-size: 0.5em;">
+<tr>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node decision rect">Training</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node" style="border-width: 3px;">Quality</div></td>
+<td style="text-align: center;"><span class="dag-arrow negative">→ [-]</span></td>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node hexagon outcome" style="border-style: double;">Mortality</div></td>
+</tr>
+<tr><td></td><td></td><td style="text-align: center;"><span class="dag-arrow positive">↑ [+]</span></td><td></td><td></td></tr>
+<tr><td></td><td></td><td style="text-align: center; padding: 0.4em;"><div class="dag-node treatment">Equipment</div></td><td></td><td></td></tr>
+</table>
+
+::: {.columns-equal}
+::: {.col}
+**Q: Training indep. of Mortality given Quality?**
+
+Path: Training → Quality → Mortality. Quality is a **chain** middle, conditioned on → **Blocked**. Answer: **Yes**, d-separated.
+:::
+::: {.col}
+**Q: Training indep. of Equipment given Quality?**
+
+Path: Training → Quality ← Equipment. Quality is a **collider**, conditioned on → **Opened**. Answer: **No**, not d-separated.
+:::
+:::
+
+
+# MNH Application: Rwanda {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Building a qualitative DAG with real-world structure</span>
+
+
+## Rwanda at a Glance
+
+| Indicator | Value | Source |
+|---|---|---|
+| Neonatal Mortality Rate | ~16 per 1,000 live births | WHO |
+| Maternal Mortality Ratio | ~248 per 100,000 live births | WHO |
+| Facility delivery rate | 94%+ | DHS |
+| Health insurance (Mutuelle de Sante) | ~85% coverage | Gov't of Rwanda |
+| Nurses per 1,000 population | ~1.3 (WHO target: 4.45) | WHO |
+| Community health workers | ~58,000 across 30 districts | Gov't of Rwanda |
+
+::: {.callout-box}
+Rwanda's CHW program and Mutuelle de Sante universal insurance are widely studied success stories. But challenges remain: the workforce is stretched thin, and neonatal mortality has been harder to reduce than under-5 mortality.
+:::
+
+
+## Choosing Our Variables
+
+We want a DAG rich enough to capture key dynamics but small enough to reason about — 7 nodes:
+
+::: {.columns-equal}
+::: {.col}
+**Decision Nodes (Rectangles)**
+
+- **CHW Training Investment**
+- **Equipment Procurement**
+- **Insurance Policy** (Mutuelle)
+:::
+::: {.col}
+**Probabilistic Nodes (Ovals)**
+
+- **Workforce Competency**
+- **Equipment Availability**
+- **Care-Seeking Behavior**
+- **Quality of Care**
+
+**Objective Node (Hexagon)**
+
+- **Neonatal Mortality**
+:::
+:::
+
+
+## The Rwanda MNH DAG
+
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.45em;">
+<tr>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node decision rect" style="padding: 0.4em 0.6em;">CHW Training<br>Investment</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td rowspan="3" style="text-align: center; padding: 0.4em;"><div class="dag-node" style="padding: 0.4em 0.6em;">Workforce<br>Competency</div></td>
+<td rowspan="3" style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td rowspan="3" style="text-align: center; padding: 0.4em;"><div class="dag-node" style="padding: 0.4em 0.6em; border-width: 3px;">Quality<br>of Care</div></td>
+<td rowspan="3" style="text-align: center;"><span class="dag-arrow negative">→ [-]</span></td>
+<td rowspan="3" style="text-align: center; padding: 0.4em;"><div class="dag-node hexagon outcome" style="padding: 0.4em 0.6em; border-style: double;">Neonatal<br>Mortality</div></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node decision rect" style="padding: 0.4em 0.6em;">Equipment<br>Procurement</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node" style="padding: 0.4em 0.6em;">Equipment<br>Availability</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node decision rect" style="padding: 0.4em 0.6em;">Insurance<br>Policy</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;"><div class="dag-node" style="padding: 0.4em 0.6em;">Care-Seeking<br>Behavior</div></td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+</tr>
+</table>
+
+::: {.callout-box}
+Read left to right: **Decisions** (what we control) → **Mediators** (how they work) → **Quality of Care** (the bottleneck) → **Neonatal Mortality** (what we want to reduce).
+:::
+
+
+## Signs and Path Analysis
+
+| Link | Sign | Why |
+|---|---|---|
+| CHW Training → Workforce Competency | [+] | Trained CHWs are more skilled |
+| Equipment Procurement → Equipment Availability | [+] | Procurement puts equipment in facilities |
+| Insurance Policy → Care-Seeking Behavior | [+] | Mutuelle removes financial barriers |
+| Workforce Competency → Quality of Care | [+] | Competent workers deliver better care |
+| Equipment Availability → Quality of Care | [+] | Equipment enables clinical interventions |
+| Care-Seeking Behavior → Quality of Care | [+] | Higher utilization enables systematic improvement |
+| Quality of Care → Neonatal Mortality | [-] | Better care saves newborn lives |
+
+::: {.callout-box .green}
+**Overall path signs:** Every decision-to-mortality path carries [-]. All three channels reduce mortality. The question is: **which has the strongest effect?** Chapter 4 will answer that.
+:::
+
+
+## Spotting Triplets in the Rwanda DAG
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Chains**
+
+- Training → Competency → Quality
+- Insurance → Care-Seeking → Quality
+- Procurement → Availability → Quality → Mortality
+
+*Conditioning on the mediator blocks the path.*
+:::
+:::
+::: {.col}
+::: {.callout-box .red}
+**Colliders**
+
+- Competency → Quality ← Availability
+- Competency → Quality ← Care-Seeking
+
+*Quality is a collider. Conditioning on it creates spurious links between its parents — "explaining away."*
+:::
+:::
+:::
+
+::: {.callout-box .orange}
+**No fork in this DAG?** Correct — each decision is a separate root node. Adding "Total Health Budget" as parent of all three decisions would create forks (Training ← Budget → Equipment).
+:::
+
+
+# R Workshop {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Building Rwanda's DAG in R with dagitty and ggdag</span>
+
+
+## Setting Up
+
+```{r}
+#| label: setup
+#| echo: true
+
+# Install packages (run once — uncomment the line below)
+# install.packages(c("dagitty", "ggdag", "ggplot2"))
+
+library(dagitty)    # Define and analyze DAGs
+library(ggdag)      # Visualize DAGs using ggplot2
+library(ggplot2)    # General plotting
+```
+
+
+## Step 1: Define Rwanda's DAG
+
+```{r}
+#| label: define-dag
+#| echo: true
+
+# Rwanda MNH Qualitative DAG
+# 7 nodes: 3 decisions, 3 probabilistic, 1 objective
+rwanda_dag <- dagitty('dag {
+  # Decision nodes (things we control)
+  CHW_Training       [pos="0,0"]
+  Equipment_Procure  [pos="0,1"]
+  Insurance_Policy   [pos="0,2"]
+
+  # Probabilistic nodes (uncertain, nature-determined)
+  Competency         [pos="1,0"]
+  Equip_Avail        [pos="1,1"]
+  Care_Seeking       [pos="1,2"]
+  Quality            [pos="2,1"]
+
+  # Objective node (what we want to reduce)
+  Neonatal_Mortality [pos="3,1"]
+
+  # Causal arrows
+  CHW_Training      -> Competency
+  Equipment_Procure -> Equip_Avail
+  Insurance_Policy  -> Care_Seeking
+  Competency        -> Quality
+  Equip_Avail       -> Quality
+  Care_Seeking      -> Quality
+  Quality           -> Neonatal_Mortality
+}')
+
+isAcyclic(rwanda_dag)   # Should return TRUE
+```
+
+
+## Step 2: Visualize the DAG
+
+```{r}
+#| label: visualize-dag
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+# Basic plot
+ggdag(rwanda_dag) +
+  theme_dag() +
+  labs(title    = "Rwanda MNH: Qualitative Causal Model",
+       subtitle = "7-node DAG for neonatal health investment")
+
+# Color-coded by exposure and outcome
+ggdag_status(rwanda_dag,
+             exposure = "CHW_Training",
+             outcome  = "Neonatal_Mortality") +
+  theme_dag() +
+  labs(title = "Exposure: CHW Training | Outcome: Neonatal Mortality")
+```
+
+
+## Step 3: Test d-Separation
+
+```{r}
+#| label: dsep-tests
+#| echo: true
+
+# Test 1: Training indep of Mortality given Quality? (chain)
+dseparated(rwanda_dag,
+           "CHW_Training", "Neonatal_Mortality", "Quality")
+# Expected: TRUE — chain blocked at Quality
+
+# Test 2: Competency indep of Equip_Avail? (unconditional)
+dseparated(rwanda_dag,
+           "Competency", "Equip_Avail", c())
+# Expected: TRUE — no connecting path
+
+# Test 3: Competency indep of Equip_Avail given Quality? (collider)
+dseparated(rwanda_dag,
+           "Competency", "Equip_Avail", "Quality")
+# Expected: FALSE — collider bias opens the path!
+```
+
+::: {.callout-box .green}
+TRUE = independent (path blocked). FALSE = information flows. Test 3 shows the collider effect in action.
+:::
+
+
+## Step 4: Paths and Adjustment Sets
+
+```{r}
+#| label: paths-and-adjustments
+#| echo: true
+
+# All paths from CHW_Training to Neonatal_Mortality
+paths(rwanda_dag, from = "CHW_Training", to = "Neonatal_Mortality")
+
+# Testable predictions: if data violates any, revise the model
+impliedConditionalIndependencies(rwanda_dag)
+
+# What must we control for to estimate the causal effect?
+adjustmentSets(rwanda_dag,
+               exposure = "CHW_Training",
+               outcome  = "Neonatal_Mortality")
+# Returns {} — no confounders (CHW_Training is a root node)
+```
+
+::: {.callout-box .orange}
+**Why the empty set?** CHW_Training has no parents in this DAG, so there are no backdoor paths to close. The causal effect can be estimated without adjustment — *if* the DAG is correct.
+:::
+
+
+## Key Takeaways
 
 ::: {.key-takeaway}
-**A causal diagram is just three node types, signed arrows, and three shapes.**
+**A qualitative causal model makes your assumptions visible, shareable, and testable.**
 
-That is the whole grammar. Once you know it, you can draw a picture for *any* programme you encounter — and the picture will tell you which questions are answerable.
+Every DAG is built from three triplets — **chains**, **forks**, and **colliders** — each with its own information flow rule.
+
+Chains and forks: conditioning on the middle *blocks* the flow. Colliders: conditioning on the middle *opens* the flow. Get this backwards and you introduce bias instead of removing it.
+
+For Rwanda: three investment decisions flow through three mediators into Quality of Care, then Neonatal Mortality. The diagram tells us *where* to look — the numbers (Chapter 4) will tell us *how much*.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 3 — The Interview Case**
+
+We put qualitative models to work on a real consulting engagement:
+
+- Building a DAG from stakeholder interviews
+- Translating expert beliefs into nodes and arrows
+- Surfacing hidden disagreements about how the system works
+- Preparing the qualitative model for quantification
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Then: Chapter 4 — Quantitative Causal Models**
+
+We replace [+] and [-] signs with actual probabilities — answering: **how much** does each investment channel reduce mortality?
 :::
 
 
@@ -350,7 +862,7 @@ That is the whole grammar. Once you know it, you can draw a picture for *any* pr
 
 <br>
 
-[Inference and Intervention | Chapter 2]{style="color: #005CB9; font-size: 0.6em;"}
+[Inference and Intervention | Chapter 2: Qualitative Causal Models]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

@@ -1,8 +1,8 @@
-# CLAUDE.md — Inference and Intervention
+# CLAUDE.md — Causal Analysis in Public Health Management
 
 ## Project Overview
 
-A 10-chapter Quarto reveal.js lecture series based on *Inference and Intervention: Causal Models for Business Analysis* (Ryall & Bramson, 2014), adapted for Maternal & Newborn Health (MNH). Includes a companion course website, pre-class essays, whiteboard diagrams, and speaker notes.
+"Causal Analysis in Public Health Management" is a 10-chapter Quarto reveal.js course based on *Inference and Intervention: Causal Models for Business Analysis* (Ryall & Bramson, 2014), adapted for Maternal & Newborn Health (MNH). Each chapter has a main lecture (textbook-structured, v2 style) plus a tutorial / breakout-session deck (Made-to-Stick / SUCCES style). Includes a companion course website, pre-class essays, whiteboard diagrams, and speaker notes.
 
 ## Audience
 

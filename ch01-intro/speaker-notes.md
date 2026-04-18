@@ -1,299 +1,157 @@
-# Chapter 1 Speaker Notes — Did It Actually Work?
+# Speaker Notes — Chapter 1: Introduction to Causal Analysis
 
-**Commander's Intent:** Two things happening together is not the same as one causing the other — and figuring out which is which is the whole job of causal analysis.
+## Overview
+Welcome, everyone. Today I'm going to show you a puzzle that should genuinely bother you — and then we're going to learn the thinking tools to solve it. The big idea is simple: if you want to make smart decisions about where to put scarce resources, you need to know what actually *causes* what, not just what happens to show up alongside what. By the end of this session, you'll never look at a graph or a statistic the same way again.
 
-**Plot:** Challenge — the learner is positioned as an analyst trying to figure out whether Ethiopia's Health Extension Worker programme worked.
+## Slide: Learning Objectives
+Here are five things I want you to walk away with today. *(pause)* First, we'll learn to tell apart two jobs every decision-maker has — figuring out what's going on, and deciding what to do about it. Then we'll work through real examples from Ethiopia that show why "correlation is not causation" isn't just a bumper sticker — getting it wrong can lead to exactly the wrong decision. We'll name the three classic traps that fool people, introduce the basic pieces of a causal model — nodes, arrows, and DAGs — and by the end you'll see why all of this matters when real lives are on the line.
 
-**Protagonist:** Almaz, 22, Tigray, composite (clearly labeled).
+## Slide: Chapter Overview
+Think of this as today's roadmap. We're going from "What does a manager actually do?" all the way to "Here's a diagram that can keep you from making a terrible mistake." *(pause)* See the five steps up there? Assessment, Intervention, Correlation traps, Causal framework, and then a real application in Ethiopia. And look at the big idea at the bottom — when resources are scarce, and they always are, you need to know what causes what before you decide what to do. That's the thread running through everything today.
 
-**Estimated runtime:** 18–22 minutes.
+## Slide: Situational Assessment
+Alright, let's jump in with the first big idea.
 
----
+## Slide: Here's the Puzzle
+Here's a puzzle that should make you uncomfortable. *(pause)* Ethiopia has one of the biggest community health worker programs in Africa — over 40,000 Health Extension Workers spread across the country. That's amazing. But here's the strange part: the regions where the *most* health workers are deployed tend to have the *highest* mortality rates. *(pause)* So... does deploying health workers cause deaths? Obviously not. But if you just looked at the numbers — workers deployed versus mortality rates — that's exactly what the data would seem to say. *(pause)* This is the kind of puzzle that causal thinking solves. The data isn't lying. But it's not telling the whole story, either. Stick with me, and by the end of this chapter you'll be able to explain exactly what's going on here.
 
-## Overview (before slide 1)
+## Slide: The Manager's Two Questions
+This is the foundation of the whole course. Every decision-maker faces exactly two questions. *(pause)* Look at the two boxes. On the left: "What is happening?" That's what we call situational assessment — it's detective work. On the right: "What should I do about it?" That's intervention — choosing which levers to pull.
 
-Welcome to Chapter 1. *(pause)*
+Here's the key insight, and I want you to really let this sink in: you cannot answer Question 2 well until you've answered Question 1 well. Acting without understanding causes is like a doctor prescribing medicine without a diagnosis. You might get lucky, or you might make things worse.
 
-This is the most important chapter in the whole course. Not because the ideas are the hardest — they are not. But because everything we do in the next nine chapters is built on what we learn here.
+## Slide: What Is Situational Assessment?
+So what does this detective work actually look like? *(pause)* Think about a doctor examining a patient — what symptoms are there, and what do they point to? Or a mechanic diagnosing a car — the engine's overheating, but is it the coolant, the fan, or a cracked gasket? Same thing with a health program manager in Ethiopia asking, "Why isn't neonatal mortality falling in this region — is it a staffing problem, a supply chain problem, or something else entirely?"
 
-Today I am going to tell you a story about a young mother in Ethiopia called Almaz. And I am going to use her story to introduce the three traps that catch almost everyone the first time they try to figure out whether something "worked".
+In every case, the person is trying to figure out what's causing what before deciding how to act. Causal models give us a systematic way to do that, instead of just guessing.
 
-By the end of these twenty-something minutes, I want you to be able to answer one question for me: **what is the difference between two things happening together, and one of them causing the other?** *(pause)*
+## Slide: Ethiopia's Health Challenge: The Numbers
+Let me show you the situation Ethiopia faces. *(pause)* Look at these numbers. Maternal mortality is about 267 per 100,000 live births. Neonatal mortality is about 28 per 1,000. They've got over 40,000 Health Extension Workers deployed. About 74 percent of pregnant women get at least one check-up visit.
 
-If you can answer that, the whole rest of the course will make sense.
+Now, here's the thing — Ethiopia has made *enormous* progress. Maternal mortality used to be over 1,000 per 100,000 back in the 1990s. So they've come a really long way. But there's still far to go, and figuring out where to invest next depends on understanding what's *causing* the remaining deaths.
 
-Let's start with Almaz.
+## Slide: Managerial Intervention
+Okay, let's move to the second big question — what should I actually do?
 
----
+## Slide: Managers Manage Scarce Resources
+Here's a point that sounds obvious but has huge consequences. *(pause)* Resources are always limited. Money, time, people, equipment — you never have enough of everything. That means every investment involves trade-offs. Every dollar you spend on training midwives is a dollar you didn't spend on buying equipment. Every month you spend building a data system is a month you're not spending on direct care.
 
-## Slide: Meet Almaz
+So which investments will actually *cause* the biggest drop in mortality? If you don't know the answer to that causal question, you're basically guessing.
 
-Almaz is twenty-two years old. She lives in Tigray, in the north of Ethiopia. *(pause)*
+## Slide: The Trade-Off
+Look at these three options. *(pause)* Option A: invest in People — train 5,000 more midwives. Option B: invest in Products — buy CPAP machines and emergency kits for every district hospital. Option C: invest in Systems — build a real-time data dashboard and a referral transport network.
 
-Now — I have to be honest with you. Almaz is not a real person. She is a *composite*. That means I built her story out of details from the Demographic and Health Surveys for Ethiopia, which are publicly available, and the details are all real even though the name is not. I am going to do this a lot in this course. Whenever I introduce someone by name, I will tell you whether they are real or whether they are a composite. *(pause)*
+All three sound reasonable, right? But you can't do all three equally well. So which one will *cause* the greatest reduction in mortality? *(pause)* That's a causal question, and you can't answer it just by looking at a spreadsheet full of correlations.
 
-OK. So. It is 2015. Almaz is having her first baby. She is at home — most births in Ethiopia were still happening at home in 2015, and we are going to come back to that fact in a minute. Her mother is in the room. And so is a young woman in a green uniform.
+## Slide: Why You Need Causal Thinking to Decide
+Here's what happens when you skip the causal reasoning and just look at the data. *(pause)* You might see that regions with the most equipment have the lowest mortality. So you say, "Buy more equipment!" But wait — those regions are also the wealthiest and most urban. They'd have had lower mortality anyway. The equipment isn't causing the low mortality. Wealth is causing both.
 
-That young woman is what the Ethiopian government calls a **Health Extension Worker**. They are not doctors. They are not even nurses. They are local women who have gone through about a year of training and then come back to live and work in their own communities. *(pause)*
+That's huge. Let that sink in. *(pause)* Without causal thinking, data can lead you to exactly the wrong decision.
 
-The labour is long. But the baby comes out crying. Both Almaz and her baby survive. *(pause)*
+## Slide: Correlation ≠ Causation
+Now let's dig into *why* correlations mislead us. There are three specific traps, and we're going to name each one.
 
-And here is the question I want you to sit with for a moment. *Look at the box on the screen.* Did the woman in the green uniform save Almaz's baby? Or would the baby have been fine anyway? *(longer pause)*
+## Slide: The Ice Cream Problem
+Before we get back to health data, here's a classic example everyone can relate to. *(pause)* On days when ice cream sales are high, drowning deaths are also high. So... does ice cream cause drowning? *(pause)* Of course not. Hot weather causes both. People eat more ice cream in summer, and people swim more in summer. Summer heat is the hidden third variable connecting both.
 
-Hold onto that question. We are going to keep coming back to it.
+This hidden-third-variable problem has a name: confounding. And it's just one of three traps that make people confuse correlation with causation.
 
----
+## Slide: Trap 1: Confounding
+Confounding happens when a third variable influences both the supposed cause and the supposed effect. *(pause)* Remember our Ethiopia puzzle? Regions with more Health Extension Workers have higher mortality. Does that mean health workers cause deaths? No — more workers get deployed to the sickest regions. Disease burden is the confounder. It drives both where workers go *and* where mortality is high.
 
-## Slide: And here is the puzzle
+Look at the diagram. See how Disease Burden sends arrows to both Health Worker Deployment and Neonatal Mortality? That shared cause creates a correlation between workers and mortality, even though workers actually *help*. Same data, totally misleading conclusion — unless you think causally.
 
-Now let me zoom out from Almaz and show you the country picture.
+## Slide: Trap 2: Reverse Causation
+Second trap. *(pause)* Countries that receive more international health funding tend to have higher mortality rates. So does foreign aid increase mortality? *(pause)* No. High mortality *attracts* funding. Donors send money to the countries with the worst outcomes. The causal arrow runs from mortality to funding, not the other way around.
 
-Between 2000 and 2016, the maternal mortality rate in Ethiopia fell from **673 deaths per 100,000 live births** down to **412 deaths per 100,000**. That is a huge drop. That is hundreds of mothers every year who are alive today who would not have been twenty years ago. *(pause)*
+Think of it this way: seeing more firefighters at bigger fires doesn't mean firefighters cause fires. They're *responding* to them. Same logic.
 
-Over those same years, Ethiopia trained roughly **38,000 Health Extension Workers**. One of the largest community health workforces ever assembled in Africa. *(pause)*
+## Slide: Trap 3: Selection Bias
+Third trap, and this one is sneaky. *(pause)* Imagine you look at data from hospitals that report to Ethiopia's health information system. Among those hospitals, CPAP machines don't seem related to survival. So equipment doesn't matter, right?
 
-So at first glance, the answer looks easy. Right? More workers, fewer deaths. The programme worked. Case closed. Move on.
+Not so fast. Only well-resourced hospitals report data consistently. The hospitals where CPAP machines would make the *biggest* difference — small, under-resourced facilities — are missing from the data entirely. You're drawing conclusions from a biased sample. The danger? You might conclude equipment doesn't matter, when actually it matters enormously for the facilities you can't see.
 
-*(pause)*
+## Slide: Three Traps: Summary
+Let's pull it together. Look at the summary table. *(pause)* Confounding — a hidden third variable. Reverse causation — the arrow points the wrong way. Selection bias — your data sample isn't representative. All three create patterns that look like real causal effects but aren't.
 
-If only it were that simple. Watch what happens on the next slide.
+The antidote? Explicit causal modeling — drawing a picture of what causes what *before* you analyze the data. And that's exactly what we're building next.
 
----
+## Slide: The Causal Model Framework
+Alright, now here's where it gets really interesting.
 
-## Slide: But here is the twist
+## Slide: What Is a Causal Model?
+Think of a causal model as just a diagram that shows what causes what. *(pause)* It has three simple ingredients. Nodes — the things you care about, drawn as shapes. Arrows — causal links from one thing to another. And signs — plus or minus — telling you which direction the effect goes.
 
-In 2005, only **5 out of 100** Ethiopian women gave birth in a health facility. Just five. *(pause)*
+Here's the one rule I want you to remember: an arrow from A to B means that *changing* A can change B. But changing B does not change A. Arrows have a direction, and the direction matters.
 
-By 2016 — eleven years later, after all those Health Extension Workers had been deployed — that number had risen. To **26 out of 100**. *(pause)*
+## Slide: What Is a DAG?
+DAG stands for Directed Acyclic Graph. *(pause)* "Directed" means arrows have a direction. "Acyclic" means no loops — you can never follow the arrows from any node back to itself. "Graph" is just the math word for a diagram of connected things.
 
-Twenty-six out of one hundred.
+Look at the two examples. The valid DAG goes A to B to C — you can follow the arrows forward but never get back to where you started. The invalid one goes A to B to C and back to A — that's a loop, and it breaks the whole thing. *(pause)* Why does this matter? Because loops make it impossible to figure out what causes what — everything causes everything. DAGs force you to be clear about direction.
 
-So I want you to think about what that means. Three out of every four women in Ethiopia, including Almaz, were *still* giving birth at home during the very years when maternal deaths were dropping fastest.
+## Slide: A Simple 3-Node Chain
+Here's the simplest useful causal model for a health program. *(pause)* Investment goes to Coverage, and Coverage goes to Mortality. More investment increases coverage — that's the plus sign. Higher coverage reduces mortality — that's the minus sign.
 
-If most women were not going to clinics, then something other than "more clinic visits" was driving the drop. *(pause)*
+Notice that Investment doesn't directly reduce mortality. It works *through* coverage. That's what we call a chain. And it already tells us something useful: if investment goes up but coverage does *not* go up, the money is being wasted somewhere in between. The chain helps you find where things break down.
 
-So what was it? Was it the Health Extension Workers? Was it something else entirely? Was it both? *(pause)*
+## Slide: But Wait — It Is Not That Simple
+Obviously, three nodes is too simple. What about confounders like disease burden? What about multiple pathways — investment might improve training, equipment, *and* data systems, each affecting mortality differently? What about quality of care?
 
-That is the puzzle. And here is what I want you to know: the puzzle of Almaz and Ethiopia is the same puzzle that hides inside almost every question you will ever ask in global health. So if we can crack it here, we can crack it anywhere.
+That's what the rest of the course is about. *(pause)* In Chapter 2, we'll learn the formal rules for building these diagrams. In later chapters, we'll add numbers and use the models to make actual decisions. For now, just make sure you've got the basic building blocks: nodes, arrows, and direction.
 
----
+## Slide: Preview: A Richer Model
+Here's a taste of where we're headed. *(pause)* Look at this diagram. Investment on the left flows through three channels — Workforce Training, Equipment Supply, and Data Systems. Those all feed into Quality of Care, which then drives Mortality Reduction.
 
-## Slide: What if I told you... (section divider)
+Investment is a decision node — that's the rectangle, meaning we control it. What's missing? Confounders. We'll add those in Chapter 2. But even this preview shows you how much richer the picture gets when you think in terms of multiple pathways.
 
-*(pause for the slide transition)*
+## Slide: MNH Application: Ethiopia
+Now let's apply all of this to a real health system.
 
-Here is the secret. There are three traps hiding inside the question "did the programme work?" — and once you see them, you cannot un-see them.
+## Slide: Ethiopia's Three-Pillar Approach
+Ethiopia's Health Extension Program has invested across three pillars. *(pause)* People — over 40,000 Health Extension Workers. Products — essential medicines, equipment, supplies. Systems — data tracking, referral networks, supervision.
 
----
+Here's the causal question: how do these three pillars combine to produce better outcomes? Think of it this way: a trained midwife without emergency equipment can't stop a hemorrhage. Emergency equipment without a trained midwife is just a box on a shelf. And neither one helps if the mother can't get to the facility. People, Products, and Systems are complements — they multiply each other's effect.
 
-## Slide: ...there are three traps hiding inside that question?
+## Slide: Ethiopia's Causal Chain
+Look at the diagram. All three pillars flow into Quality of Care. Quality then reduces both Maternal Mortality and Neonatal Mortality. *(pause)* Notice that Quality is the bottleneck — the place where everything converges. If quality is poor, no amount of spending on any single pillar will fix the outcomes. Everything has to come together at that node.
 
-Three traps. *(pause between each)*
+## Slide: Why the Numbers Mislead
+Now let's go back to our opening puzzle. *(pause)* If you looked at raw data across Ethiopia's regions, you'd see that regions with the most Health Extension Workers also have the highest mortality. A naive analyst might say, "These investments aren't working!"
 
-First trap: **two things happening together is not the same as one causing the other.**
+But here's what the causal model reveals: the regions with the highest disease burden receive the most resources *because* they have the worst outcomes. Confounding by disease burden creates a positive correlation between resources and mortality, even when resources are saving lives. *(pause)* This is exactly Trap 1 in action. Same data, different conclusion — because we thought causally.
 
-Second trap: **a third thing you didn't think of can be driving both.**
+## Slide: ANC Coverage: A Closer Look
+Ethiopia's antenatal care coverage shows how much progress has been made and how far there is to go. *(pause)* About 74 percent of pregnant women get at least one visit, but only about 43 percent complete the recommended four visits. Urban coverage is much higher than rural coverage — yet another confounder.
 
-Third trap: **you have to draw the picture before you trust the numbers.** *(pause)*
+Here's the causal chain: ANC visits lead to early detection of complications, which leads to timely referral, which leads to skilled treatment, which leads to survival. Every link has to work. If *any* one link breaks — a missed visit, a failed referral, an absent midwife, a missing drug — the outcome can be death. *(pause)* That's why causal models matter for real decisions. A naive analysis might say "check-ups don't help" if coverage goes up but deaths stay constant. A causal model asks: where in the chain is it breaking?
 
-I know — said like that, they sound abstract. So we are going to walk through each one using Almaz. Three traps, three little stories. Then we come back to the puzzle and see if we can crack it.
+## Slide: R Workshop: Your First Causal Diagrams
+Alright, now let's get our hands on some code.
 
----
+## Slide: Setting Up the R Environment
+First things first — we need to load our tools. Three packages: dagitty for defining and analyzing causal diagrams, ggdag for drawing pictures of those diagrams, and ggplot2 which powers the visuals behind the scenes. *(pause)* If you haven't installed them yet, uncomment that first line and run it. These three packages are going to be our toolkit throughout the whole course, so make sure they're working.
 
-## Slide: Trap 1 — Two things together ≠ one caused the other
+## Slide: R: Drawing Our Simple 3-Node Chain
+Let's build our first diagram in code. *(pause)* Look at the dagitty syntax — it's pretty straightforward. We define three nodes: Investment, Coverage, and Mortality. We set their positions so they lay out in a nice row. Then we draw the arrows: Investment causes Coverage, Coverage causes Mortality. That's our three-node chain from earlier, except now it's in R where we can actually analyze it. The ggdag call at the bottom turns it into a picture. Notice the arrows only go left to right — that direction matters.
 
-OK. Trap one. The umbrella and the rain.
+## Slide: R: Adding a Confounder
+Now let's add Disease Burden as a confounder. *(pause)* This is the hidden variable that was creating the misleading correlation between health workers and mortality. Look at the code — Disease Burden sits at the top and sends arrows down to *both* Health Workers and Mortality. That's the fork structure — the classic confounding pattern we talked about. We use color coding to make it pop: green for the thing we think is the cause, red for the outcome, amber for the confounder.
 
-Imagine your neighbour. Every morning you see her walk out the door carrying an umbrella. *(pause)* And every morning it rains. *(pause)*
+## Slide: R: What Do We Need to Control For?
+Here's the powerful part. *(pause)* Once we've drawn the diagram, R can tell us *exactly* which variables we need to control for. We call adjustmentSets, and it returns: Disease Burden. That's it. Control for disease burden, and the confounding goes away.
 
-So — did her umbrella cause the rain? *(small laugh)* Of course not. That is silly. We all know that. *(pause)*
+In plain English? If you compare regions that have the *same* disease burden, the regions with more health workers will have *lower* mortality. *(pause)* This is the whole point of the course in one slide. Draw the diagram. Ask R what to control for. Analyze correctly. Make better decisions.
 
-But the *reason* it is silly is worth saying out loud. The reason it is silly is that there is something else going on: she **checked the forecast**. The forecast told her it was going to rain. So she grabbed her umbrella *and* the rain landed on her head — both because of the same forecast.
+## Slide: R: Ethiopia's Three-Pillar Model
+Now let's build the richer model with all three pillars — People, Products, and Systems — plus Disease Burden as a confounder. *(pause)* Look at how the code defines each node and each arrow. All three pillars flow into Quality. Quality reduces both NMR and MMR. Disease Burden affects outcomes directly. Run this code, look at the picture, and trace the pathways from any starting point to any outcome. This is how investment translates into results.
 
-The umbrella and the rain happened together. But neither caused the other. Something else caused both.
+## Slide: R: Finding All the Paths
+We can ask R to show us every causal pathway from a starting point to an endpoint. *(pause)* The paths function shows all the routes from People to NMR — every different way that a workforce investment could affect mortality. And adjustmentSets tells us what we'd need to control for to isolate that effect. Try modifying the code to look at paths from Systems to MMR instead. How many routes are there? What do you need to control for?
 
-That is trap number one. Look at the green box on the screen. *Things that happen at the same time often share a cause. They do not always cause each other.* Read that twice. Tattoo it on the inside of your eyelids. We are going to come back to it more than any other sentence in this course.
+## Slide: Key Takeaways
+Let's wrap up with the big ideas. *(pause)* Causal thinking starts with two questions: "What is happening?" and "What should I do?" You can't answer the second without the first. Correlation does not equal causation — confounding, reverse causation, and selection bias all create misleading patterns. A causal model makes your assumptions visible, testable, and actionable. It tells you what to control for, where the chain breaks, and which interventions will actually work.
 
----
+And Ethiopia's 40,000 Health Extension Workers are not causing deaths. Disease burden is confounding the relationship. Causal models help us see through the numbers to the truth.
 
-## Slide: Trap 1 in Almaz's story
-
-Now let's apply that to Almaz.
-
-The Health Extension Worker was in the room when Almaz's baby cried. That is a fact. *(pause)*
-
-But "in the room when it happened" is the *same kind of evidence* as "carrying an umbrella when it rained". *(pause)*
-
-We cannot tell, from this one moment, whether the Health Extension Worker actually caused the safe birth — or whether she was simply *present* during a birth that would have gone fine anyway.
-
-*(pause)*
-
-That is the aha moment for trap one. If you only have one story — one mother, one HEW, one good outcome — you cannot separate "she helped" from "she was there". You need more than that.
-
----
-
-## Slide: Trap 2 — A hidden third thing
-
-Trap two. The ice cream and the swimming pool.
-
-Across many countries, every summer, two things go up at the same time: ice cream sales rise, and so do drowning deaths. *(pause)*
-
-Now — does ice cream cause drowning? *(pause)* No.
-
-Does drowning cause ice cream sales? *(small laugh)* Definitely not. *(pause)*
-
-So why do they move together? Because of a third thing that you can probably already guess: **hot weather**. When it gets hot, more people eat ice cream. And when it gets hot, more people go swimming. The hot weather is causing both. Neither is causing the other.
-
-In statistics we have a name for that hidden third thing. We call it a **confounder**. C-O-N-F-O-U-N-D-E-R. Don't worry, it sounds fancier than it is. A confounder is just a hidden third thing that drives the two things you are looking at. *(pause)*
-
-Whenever you see two things moving together — *always* ask: is there a hidden third thing that might be causing both?
-
----
-
-## Slide: Trap 2 in Almaz's story
-
-So back to Almaz. Here is the part of her story I held back.
-
-The same year the Health Extension Worker arrived in Almaz's village — a **new road** also reached the village. *(pause)*
-
-That road cut the trip to the nearest district hospital from **four hours** down to **ninety minutes**. So when something went wrong in a difficult birth, families could now reach a real hospital in time. The Tigray Regional Health Bureau wrote a public summary about this in 2014.
-
-Now think. The HEW arrived. The road arrived. The same year. In the same village. *(pause)*
-
-So when we look at Almaz's village and see that maternal deaths went down — was it the HEW? Was it the road? Was it both? *(pause)*
-
-You cannot tell. Not yet. Because they arrived together. And "they arrived together" is exactly what makes it hard. *That* is a confounder in action.
-
----
-
-## Slide: Trap 3 — Draw the picture first
-
-Trap three. And this one is the most important, because it is the tool we use to handle the first two.
-
-When everything is tangled together — the HEW, the road, the school, the radio campaign, the new bus that brought the nurse — you need a way to **see** the tangle before you start counting things.
-
-The tool we use is called a **directed acyclic graph**. *(pause)* I know. It sounds awful. It sounds like something a computer scientist would invent at 2 a.m. *(small laugh)* Don't be intimidated by the name.
-
-Because here is what it actually is. *Look at the green box on the screen.* It is just **a picture made of boxes and arrows**. That's it.
-
-A box stands for a thing that can vary — like whether the HEW is in the village, or whether the road is open, or whether the baby survives.
-
-An arrow stands for a single sentence: "this one influences that one".
-
-Boxes and arrows. That is the whole tool. We will spend Chapter 2 going much deeper into the rules — but the picture itself is something you could teach to a ten-year-old.
-
----
-
-## Slide: Trap 3 in Almaz's story
-
-Here is Almaz's situation as a picture.
-
-*Look at the diagram.* At the top, you see one box: **government funding**. Two arrows come down from it. One arrow goes to **Health Extension Worker**. The other arrow goes to **new road**. Why? Because the same government decision paid for both. They share a parent.
-
-Then both of those have arrows pointing down to **Almaz's baby survives**. Because either of them could have helped. *(pause)*
-
-Now — and this is the moment — *look at the picture and see what it tells you*. The HEW and the road are siblings. They share a parent — the funding decision. So if you want to know whether the HEW worked, you cannot just compare villages with HEWs to villages without. Because villages with HEWs *also* tend to have new roads. They came in the same package.
-
-This is the aha moment for trap three. The picture *shows* you why the simple question "did the HEW work?" cannot be answered without also asking about the road. You can see it in the geometry.
-
-That is what the tool does. It makes invisible things visible.
-
----
-
-## Slide: Back to the puzzle (section divider)
-
-OK. We have walked through the three traps. Let's go back to the puzzle and see if we can answer it.
-
----
-
-## Slide: So what was actually going on?
-
-Here is what the Lancet's analysis of Ethiopia's mortality decline actually says. Wang and colleagues, 2014, in The Lancet Global Health, looked at a lot of data. And what they found was not "the HEW programme worked" or "the HEW programme didn't work". What they found was that **at least three things were moving in the same direction at the same time**.
-
-*Bullets, one at a time.*
-
-One. The Health Extension Workers, doing antenatal visits in villages, recognising danger signs. *(pause)*
-
-Two. New roads and transport, making it possible to actually reach a hospital when something went wrong. *(pause)*
-
-Three. Girls staying in school longer, marrying later, having their first baby older — all of which independently lower the risk of dying in childbirth. *(pause)*
-
-And probably others. *(pause)*
-
-So look at the box on the screen. The hidden piece is this: **"the programme worked" is the wrong question.** *(pause)*
-
-The right question is: *which parts* worked, *for whom*, and *how much*. And you cannot answer those questions without first drawing the picture.
-
-That is what the rest of this course is going to teach you to do.
-
----
-
-## Slide: Why this matters
-
-Now I want to widen the lens for one slide. Almaz is one story. Ethiopia is one country. But the trap is *everywhere*. *(pause)*
-
-Every time someone says "we did X and the outcome got better, so X worked" — about a vaccine campaign, a cash transfer, a school feeding programme, a new clinic, a new app, anything — they are at risk of confusing all three of the traps we just walked through. *(pause)*
-
-You will hear this kind of sentence almost every week if you work in this field. Sometimes it is innocent. Sometimes it is wishful thinking. Sometimes it is a person trying to keep their job. But almost always, the right response is the same: *show me the picture. What else was happening at the same time?*
-
-The job of this course is to give you the tools to ask that question well. And to be the person other people turn to when they need it asked.
-
----
-
-## Slide: Try It (You are the analyst)
-
-OK. Try it. *(pause)*
-
-A neighbouring district to Almaz's launches a free SMS reminder service for pregnant women in 2018. By 2020 — two years later — antenatal visit rates in that district have risen by twelve percentage points. *(pause)*
-
-The district health officer tells you the SMS service caused the rise. He wants more funding to expand it. *(pause)*
-
-You have to write a one-paragraph note recommending whether to fund the expansion. **What is the first question you would ask him?** *(longer pause)*
-
-Don't answer out loud. Just think. *(pause)*
-
-If you are thinking *"what else changed in that district between 2018 and 2020?"* — you are on exactly the right track. Maybe a new clinic opened. Maybe the road improved. Maybe a radio drama about pregnancy launched. Maybe the SMS service worked. Probably *all of those things at once.* And right now, with what you have been told, you cannot tell which.
-
-In Chapter 2, we are going to turn this exact kind of question into a picture you can draw — and use that picture to decide what data to ask for next.
-
----
-
-## Slide: What you will do in R (section divider) and On the companion page
-
-Just a quick note about the R workshop part.
-
-When you go to the companion page for this chapter — and there is a link from the course homepage — you will see a few lines of R code. R is just a programming language for working with data. Don't worry if you have never seen it before; we will introduce it slowly.
-
-What the code does is **draw the picture** I just showed you — Almaz's diagram with the funding box, the HEW box, the road box, and the survival box. And then it asks R one specific question: *if I add the road to my picture, does the apparent effect of the HEW change?* *(pause)*
-
-You do not need to install anything yet. The code on the companion page is there to **read** first, run later. Just read it. See if it makes sense. If it does — great. If not — even better, because we are going to come back to it many times.
-
----
-
-## Slide: Looking ahead
-
-So that is Chapter 1.
-
-In Chapter 2, we are going to learn how to draw these pictures properly. What the boxes can mean. What the arrows can mean. And what the rules are for connecting them. *(pause)*
-
-By the end of Chapter 2, you will be able to draw a picture for *any* programme someone tells you about — even if you have never heard of it before.
-
----
-
-## Slide: The one thing to remember
-
-If you remember nothing else from this entire chapter, please remember this. *(pause)*
-
-**Two things happening together is not the same as one causing the other.** *(pause)*
-
-Almaz's baby lived. The Health Extension Worker was in the room. So was a new road. So was a longer school year for the girls of her village. *(pause)*
-
-The whole job of causal analysis is figuring out which of those mattered — and how much. *(pause)*
-
-That is what the next nine chapters are going to teach you to do. I am glad you are here. See you in Chapter 2.
-
----
-
-## Slide: Closing (white)
-
-*(pause for the closing slide; no narration needed)*
+## Slide: Looking Ahead
+Next time, we learn the formal grammar of causal diagrams. *(pause)* Three types of nodes, signed links, and the three fundamental structures — chains, forks, and colliders. Colliders are the most surprising one, and they trip up even experienced analysts. That's where we go from "causal thinking is important" to "here's exactly how to do it." See you in Chapter 2.

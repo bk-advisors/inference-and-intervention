@@ -1,0 +1,1071 @@
+---
+title: "Chapter 9: Game Theory & Strategic Interactions"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+---
+
+## Learning Objectives
+
+After this chapter, you will be able to:
+
+::: {.incremental}
+- Explain why **other people's reactions** change the outcome of your decisions
+- Read a **2x2 payoff matrix** and identify each player's best response
+- Find the **Nash Equilibrium** — the outcome where nobody wants to change their mind
+- Recognize the **free-rider problem** and explain why rational choices can produce bad results
+- Design **commitment devices** and conditional agreements that escape bad equilibria
+:::
+
+
+## Chapter Overview
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Other People<br>React</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">The Payoff<br>Matrix</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Nash<br>Equilibrium</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">The Free-<br>Rider Trap</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Escape<br>Routes</div>
+</div>
+
+. . .
+
+::: {.callout-box}
+**The shift:** Chapters 7 and 8 assumed you were the only decision-maker — choosing against uncertainty, rolling dice against nature. Now we add **strategic players** who watch what you do and adjust their own behavior. Welcome to game theory.
+:::
+
+
+# Other People React {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">When the world is not a passive backdrop</span>
+
+
+## The Single-Decision-Maker Assumption Breaks Down
+
+Everything we have done so far assumes you are the only one making choices. Nature is uncertain, sure, but it does not *respond* to you.
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Chapters 7-8: You vs. Nature**
+
+- You pick an intervention
+- Uncertainty plays out (rain or shine, epidemic or calm)
+- You compute expected value and choose wisely
+
+*Nature does not care what you decided.*
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Chapter 9: You vs. Strategic Players**
+
+- You announce a large health investment
+- The government **watches** and decides to cut its own spending
+- A partner organization **adjusts** its effort based on your monitoring
+
+*The other players absolutely care what you decided.*
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .red}
+**The core problem:** When an international donor announces it will fund community health workers, the government may quietly reduce its own health budget. The donor's generosity gets partially absorbed — not by patients, but by the government's budget office. Ignoring this strategic response means overestimating your impact.
+:::
+
+
+## Why Does This Matter?
+
+Think about it this way. You and a friend are assigned a group project.
+
+. . .
+
+::: {.incremental}
+- If you know your friend **always does excellent work**, what is your incentive? You can relax a little. They will carry the load.
+- If your friend knows **you** always do excellent work, they have the same incentive.
+- Result: **both** of you slack off, waiting for the other to step up. The project suffers.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is not about laziness.** Each person is making a perfectly logical calculation. The problem is that *individually rational* choices lead to a *collectively terrible* outcome. Game theory is the study of exactly this kind of trap — and how to escape it.
+:::
+
+
+## From Group Projects to Global Health
+
+The group project dynamic plays out at massive scale in international development:
+
+. . .
+
+| Player | Their Goal | Their Temptation |
+|---|---|---|
+| **International Donor** | Maximize lives saved per dollar | Fund generously without conditions |
+| **National Government** | Balance health outcomes with budget pressures | Let the donor cover costs, redirect budget elsewhere |
+
+. . .
+
+::: {.callout-box}
+**The Co-Investment Dilemma:** When an international donor invests in a country's health system, the government might reduce its own health spending — effectively free-riding on the donor's generosity. The total investment ends up smaller than either side intended.
+
+This chapter gives you the tools to see the trap, predict the outcome, and design agreements that prevent it.
+:::
+
+
+# The Payoff Matrix {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Mapping out what happens when two players collide</span>
+
+
+## What Is a Payoff Matrix?
+
+::: {.definition-box}
+**Payoff Matrix:** A simple table that shows every possible combination of choices two players can make, and what each player gets as a result. Think of it as a cheat sheet for strategic situations.
+:::
+
+. . .
+
+Every game has three ingredients:
+
+| Ingredient | What It Means | Our Example |
+|---|---|---|
+| **Players** | Who is making decisions? | Donor, Government |
+| **Strategies** | What can each player do? | Invest or Don't Invest; Co-Invest or Free-Ride |
+| **Payoffs** | What does each player get for each combination? | Health impact labels |
+
+. . .
+
+::: {.callout-box}
+**The assumption:** Each player is *rational* — they pick the option that gives them the best outcome, given what they think the other player will do. Rational does not mean selfish; it means consistent and goal-directed.
+:::
+
+
+## The Co-Investment Dilemma: Setup
+
+Let us build a payoff matrix for the donor-government relationship.
+
+. . .
+
+**Players:**
+
+- **Donor:** Decides whether to invest heavily in health infrastructure
+- **Government:** Decides whether to co-invest (match with its own budget) or free-ride (let the donor pay)
+
+. . .
+
+**What we care about:** Overall health impact — measured as a simple label from best to worst.
+
+::: {.callout-box .green}
+We are keeping this deliberately simple. No complicated math. Just: what happens when each side makes their choice?
+:::
+
+
+## The 2x2 Matrix
+
+**The Co-Investment Dilemma (Outcome Labels)**
+
+|  | **Government: Co-Invests** | **Government: Free-Rides** |
+|---|---|---|
+| **Donor: Invests** | HIGH IMPACT | MEDIUM IMPACT |
+| **Donor: Doesn't Invest** | MEDIUM IMPACT | STATUS QUO |
+
+. . .
+
+::: {.incremental}
+- **High Impact** (Invest, Co-Invest): Both sides put money in. Clinics are built, staffed, and sustained. Maximum lives saved.
+- **Medium Impact** (one side invests, the other does not): Something gets done, but it is incomplete or unsustainable.
+- **Status Quo** (nobody invests): Nothing changes. Preventable deaths continue at baseline rates.
+:::
+
+
+## Adding Numbers to the Matrix
+
+Let us assign simple payoff scores. Higher is better for each player.
+
+. . .
+
+**Payoffs: (Donor score, Government score)**
+
+|  | **Gov: Co-Invests** | **Gov: Free-Rides** |
+|---|---|---|
+| **Donor: Invests** | **(4, 3)** | **(1, 4)** |
+| **Donor: Doesn't Invest** | **(3, 1)** | **(2, 2)** |
+
+. . .
+
+::: {.callout-box}
+**How to read this:** Each cell has two numbers. The **first** is the Donor's payoff. The **second** is the Government's payoff.
+
+- Donor **(4, \_)**: Best outcome = both invest, huge impact, great reputation
+- Government **(\_,4)**: Best outcome = donor invests, government free-rides. Maximum benefit, minimum cost
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Notice the tension.** The Donor's best outcome is (Invest, Co-Invest). The Government's best outcome is (Donor Invests, Government Free-Rides). Their interests are not aligned.
+:::
+
+
+## Finding Each Player's Best Response
+
+Let us figure out what each player *should* do, given the other's choice.
+
+. . .
+
+**Government's best response:**
+
+- If Donor **Invests:** Co-Invest gets **3**, Free-Ride gets **4**. Best response: **Free-Ride**
+- If Donor **Doesn't Invest:** Co-Invest gets **1**, Free-Ride gets **2**. Best response: **Free-Ride**
+
+. . .
+
+::: {.callout-box .red}
+**Free-Ride is the Government's best response no matter what the Donor does.** This is called a *dominant strategy* — it wins regardless of the other player's choice.
+:::
+
+. . .
+
+**Donor's best response:**
+
+- If Government **Co-Invests:** Invest gets **4**, Don't Invest gets **3**. Best response: **Invest**
+- If Government **Free-Rides:** Invest gets **1**, Don't Invest gets **2**. Best response: **Don't Invest**
+
+. . .
+
+::: {.callout-box}
+The Donor does *not* have a dominant strategy. Their best move depends on what the Government does. But if the Donor correctly predicts the Government will free-ride, the Donor's best response is: **Don't Invest.**
+:::
+
+
+# Nash Equilibrium {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The outcome where nobody wants to change their mind</span>
+
+
+## What Is Nash Equilibrium?
+
+::: {.definition-box}
+**Nash Equilibrium:** An outcome where **no player can do better by changing their own choice alone.** Both players look at the result and say, "Given what the other person is doing, I would not change a thing."
+:::
+
+. . .
+
+Think of it as the "stable resting point" of a strategic situation. It is not necessarily the *best* outcome — it is the outcome that *sticks* because nobody has a reason to move.
+
+. . .
+
+::: {.callout-box .green}
+**Named after John Nash** (the mathematician from the film *A Beautiful Mind*). His insight: in any game with a finite number of strategies, at least one such stable point always exists.
+:::
+
+
+## Finding Nash Equilibrium in Our Matrix
+
+Let us check every cell. A Nash Equilibrium needs *both* players to be playing their best response simultaneously.
+
+. . .
+
+|  | **Gov: Co-Invests** | **Gov: Free-Rides** |
+|---|---|---|
+| **Donor: Invests** | (4, 3) | (1, 4) |
+| **Donor: Doesn't Invest** | (3, 1) | **(2, 2)** |
+
+. . .
+
+**Checking (Don't Invest, Free-Ride) = (2, 2):**
+
+- Donor: If I switch to Invest while Gov Free-Rides, I get 1 instead of 2. *No improvement.* Stay.
+- Government: If I switch to Co-Invest while Donor Doesn't Invest, I get 1 instead of 2. *No improvement.* Stay.
+
+. . .
+
+::: {.key-takeaway}
+**(Don't Invest, Free-Ride) is the Nash Equilibrium.** Both players are stuck at (2, 2) — even though (Invest, Co-Invest) at (4, 3) would make them *both* better off.
+:::
+
+
+## The Trap
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**What rational self-interest produces:**
+
+(Don't Invest, Free-Ride) = **(2, 2)**
+
+Total value: **4**
+
+Both players are cautious. Nothing gets done. Status quo.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**What cooperation would produce:**
+
+(Invest, Co-Invest) = **(4, 3)**
+
+Total value: **7**
+
+Both players contribute. Maximum health impact.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The gap between 4 and 7 is the cost of strategic mistrust.** Both players know cooperation is better. But neither wants to be the one who invests while the other free-rides — that is the worst outcome of all (payoff of 1). So both play it safe, and everyone loses.
+:::
+
+
+## A Worse Version: When the Donor Always Invests
+
+What if the Donor has a strong humanitarian mandate and **always invests**, regardless of what the Government does?
+
+. . .
+
+If the Government *knows* the Donor will always invest:
+
+- Co-Invest: payoff = **3**
+- Free-Ride: payoff = **4**
+
+. . .
+
+The Government rationally chooses to free-ride every time.
+
+. . .
+
+::: {.callout-box .red}
+**The predictability trap:** When a donor is *known* to always fund generously, it creates a perverse incentive. The Government knows it can free-ride without consequence. The more committed the Donor, the stronger the free-riding incentive. Good intentions, bad game theory.
+:::
+
+
+# The Free-Rider Problem {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">When rational choices produce irrational outcomes</span>
+
+
+## What Is Free-Riding?
+
+::: {.definition-box}
+**Free-Rider Problem:** When one player benefits from another's effort or investment **without contributing their fair share.** The free-rider is being individually rational — but the collective result is worse for everyone.
+:::
+
+. . .
+
+You have seen this before:
+
+::: {.incremental}
+- **Group projects at school:** One person does all the work. Everyone gets the same grade. Next time, *nobody* wants to go first.
+- **Shared apartment:** Nobody wants to clean the kitchen. Everyone waits for someone else to do it. The kitchen becomes a disaster.
+- **Global health:** A donor builds clinics. The government cuts its health budget by exactly the amount the donor spent. Net new investment: zero.
+:::
+
+
+## The Free-Rider Problem in Health Financing
+
+::: {.example-block}
+[How Free-Riding Works in Practice]{.example-label}
+
+**Step 1:** International donor announces it will invest in training community health workers and supporting health insurance enrollment.
+
+**Step 2:** The government — observing this investment — quietly redirects its own health budget to other priorities (roads, military, prestige projects).
+
+**Step 3:** The donor's money replaces government spending rather than adding to it. Total health investment barely changes.
+
+**Step 4:** When the donor eventually exits, there is no government budget to sustain the programs. Everything collapses.
+:::
+
+. . .
+
+::: {.callout-box .red}
+**This is not a hypothetical.** Researchers have documented "fungibility" — the phenomenon where aid money displaces domestic spending rather than supplementing it — across multiple countries and sectors. It is one of the central challenges in international development.
+:::
+
+
+## Why Smart People Get Trapped
+
+The free-rider problem is not about stupidity or malice. It is about **incentive structures.**
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Each player is being perfectly rational:**
+
+- The government *should* minimize costs if someone else is paying
+- The donor *should* hesitate if their money will be redirected
+- Each side's logic is internally sound
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**But the collective result is terrible:**
+
+- Programs are underfunded
+- Sustainability is undermined
+- Both sides end up worse off than if they had cooperated
+- Lives are lost that could have been saved
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The lesson from game theory:** If you want different outcomes, you cannot just ask nicely. You have to **change the game itself** — restructure the incentives so that cooperation becomes each player's best response. That is what the next section is about.
+:::
+
+
+# Escape Routes {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Three ways to turn a bad equilibrium into a good one</span>
+
+
+## Escape Route 1: Commitment Devices
+
+::: {.definition-box}
+**Commitment Device:** A mechanism that **locks a player into a course of action**, making it costly or impossible to deviate. By limiting your own future choices, you change the other player's incentives.
+:::
+
+. . .
+
+::: {.example-block}
+[How This Works]{.example-label}
+
+**The donor puts 40% of its funding in escrow.** The money is only released if the government hits specific spending targets (verified by an independent auditor).
+
+Now the government faces a new calculation:
+
+- **Co-Invest:** Receive escrow funds + build sustainable programs = good outcome
+- **Free-Ride:** Lose escrow funds + short-term savings but long-term program collapse = bad outcome
+
+The commitment device changes the payoff matrix so that cooperation becomes the dominant strategy.
+:::
+
+
+## Escape Route 2: Conditional Agreements
+
+::: {.definition-box}
+**Conditional Agreement:** "I will invest **if and only if** you match." This transforms a one-sided gift into a **mutual commitment.**
+:::
+
+. . .
+
+**Revised Payoff Matrix with Conditional Funding:**
+
+|  | **Gov: Co-Invests** | **Gov: Free-Rides** |
+|---|---|---|
+| **Donor: Conditional Investment** | **(4, 3)** | **(2, 2)** |
+| **Donor: Doesn't Invest** | **(3, 1)** | **(2, 2)** |
+
+. . .
+
+::: {.callout-box .green}
+**What changed?** The cell (Invest, Free-Ride) no longer gives the Government a payoff of 4. Because the Donor's investment is conditional, free-riding triggers reduced funding — so the Government only gets 2. Now **Co-Invest is the Government's best response** when the Donor plays Conditional.
+
+The new Nash Equilibrium is **(Conditional Investment, Co-Invest) = (4, 3).** Cooperation wins.
+:::
+
+
+## Escape Route 3: Repeated Interactions
+
+::: {.definition-box}
+**Repeated Game:** When players interact **multiple times over years**, reputation and future consequences change the calculation. Free-riding in round 1 means the other player punishes you in round 2.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**One-Shot Game**
+
+- Free-ride and walk away
+- No consequences beyond today
+- Bad equilibrium is stable
+
+*"We will never see each other again."*
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Repeated Game (Multi-Year Partnership)**
+
+- Free-ride today, lose funding tomorrow
+- Your reputation follows you
+- Cooperation becomes sustainable
+
+*"We will be working together for the next decade."*
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**This is why long-term partnerships matter.** A 10-year program relationship gives both sides incentives to cooperate — because cheating today destroys the value of tomorrow. One-off grants, by contrast, are a game theorist's nightmare: maximum temptation to free-ride with zero consequences.
+:::
+
+
+## Putting the Escape Routes Together
+
+The most effective programs combine all three:
+
+. . .
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Commitment<br>Device</strong><br>Escrow funds<br>tied to targets</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Conditional<br>Agreement</strong><br>"Match or<br>we scale down"</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>Repeated<br>Interaction</strong><br>Multi-year<br>partnership</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;"><strong>Cooperation</strong><br>Both sides<br>invest fully</div>
+</div>
+
+. . .
+
+::: {.key-takeaway}
+**You do not escape bad equilibria by hoping people will be generous.** You escape them by designing agreements where cooperation is every player's best response. Change the payoffs, change the game, change the outcome.
+:::
+
+
+# MNH Application: Kenya's Devolved Health System {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">47 counties, 47 games — a real-world multi-player free-rider scenario</span>
+
+
+## Kenya: 47 Games at Once
+
+::: {.callout-box}
+**Kenya devolved power to 47 counties in 2013,** including responsibility for delivering health services. This created something game theory finds fascinating: not one donor-government game, but **47 simultaneous games** — each county making its own spending decisions, each interacting with national government and international donors.
+
+We will look at Kenya's maternal and newborn health landscape through the lens of strategic interaction, focusing on how conditional grants attempt to solve the free-rider problem at scale.
+:::
+
+. . .
+
+**Key publicly known facts:**
+
+| Indicator | Value |
+|---|---|
+| Devolved counties (since 2013) | 47 |
+| Maternal Mortality Ratio (WHO) | ~342 per 100,000 live births |
+| Neonatal Mortality Rate | ~21 per 1,000 live births |
+| Facility-based delivery rate (national) | ~89% |
+| Health data system | DHIS2 (District Health Information Software) |
+
+. . .
+
+::: {.callout-box .orange}
+**The core challenge:** National averages mask enormous variation. Some counties approach world-class MNH performance. Others lag far behind. The devolved system means that **each county is a separate strategic player** — and some play the game very differently from others.
+:::
+
+
+## The Conditional Grant System
+
+::: {.definition-box}
+**Conditional Grant:** A transfer from national to county government where funds are released **only when the county meets specified spending targets and performance indicators.** Kenya uses DHIS2 data to verify compliance, turning a simple budget transfer into a structured incentive mechanism.
+:::
+
+. . .
+
+**How does this relate to game theory?**
+
+::: {.incremental}
+- **The old game (pre-devolution):** Central government controls all health spending. Donors negotiate with one player. Accountability is centralized but often weak.
+- **The new game (post-devolution):** 47 counties each receive health budgets. National government allocates conditional grants. Counties decide how to spend them. Donors interact with both levels.
+- **The commitment device:** Conditional grants tie future funding to verified performance — funds only flow when counties demonstrate they have spent previous allocations on health priorities and met DHIS2-tracked indicators.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is a real-world commitment device.** The national government cannot credibly promise to fund counties that redirect health money to roads or administration. The conditional grant structure automates the enforcement, reducing the need for trust.
+:::
+
+
+## NHIF as a Partial Commitment Device
+
+::: {.definition-box}
+**NHIF (National Hospital Insurance Fund)** is Kenya's national health insurance scheme. It covers formal sector workers and their dependents, with voluntary enrollment for informal sector workers. Unlike a universal system, NHIF's reach varies dramatically across counties.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**What NHIF Does Well**
+
+- Provides a domestic financing mechanism for health
+- Creates a political constituency that depends on continued health funding
+- Signals government commitment to health financing to donors
+- Covers facility-based deliveries for enrolled members
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Where NHIF Falls Short**
+
+- Coverage is concentrated in urban areas and formal employment
+- Rural and informal sector workers — who need MNH services most — are often uninsured
+- County-level NHIF enrollment varies enormously
+- The uneven coverage creates **different incentive structures** in different counties
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**The game theory implication:** In counties with high NHIF enrollment, the government has strong incentives to maintain health infrastructure (insured voters demand it). In counties with low enrollment, the political cost of cutting health spending is lower — making free-riding more tempting.
+:::
+
+
+## The County Free-Rider Problem
+
+Kenya's devolved system creates a textbook multi-player free-rider scenario.
+
+. . .
+
+::: {.example-block}
+[How County-Level Free-Riding Works]{.example-label}
+
+**Step 1:** National government allocates conditional health grants to a county.
+
+**Step 2:** The county receives the funds but redirects a portion to other priorities — road construction, administrative costs, or politically visible projects that win votes faster than maternal health clinics.
+
+**Step 3:** Donors and national government see health indicators stagnate despite funding flows.
+
+**Step 4:** High-burden counties like Bungoma, Kakamega, Kilifi, and Mombasa continue to show poor MNH outcomes even as national averages improve — because the grant money was partially diverted.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**The Three-Player Game**
+
+| Player | Strategy | Temptation |
+|---|---|---|
+| **Donor** | Fund county health programs | Funds get redirected |
+| **National Gov** | Allocate conditional grants | Counties divert funds |
+| **County Gov** | Spend grants on health | Redirect to other priorities |
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Why 47 games is harder than one:** With a single national government, a donor can monitor one partner. With 47 counties, enforcement costs multiply. Some counties cooperate genuinely, others game the system, and it is expensive to tell the difference — especially when DHIS2 data quality varies by county.
+:::
+:::
+:::
+
+
+## How Kenya Maps onto the Escape Routes
+
+Let us map Kenya's conditional grant system onto our three escape routes:
+
+. . .
+
+| Escape Route | Kenya's Implementation |
+|---|---|
+| **Commitment Devices** | Conditional grants tie funding to DHIS2-verified performance indicators — counties must demonstrate health spending before receiving the next tranche |
+| **Conditional Agreements** | National-to-county transfers are structured as "meet targets or lose funding" — a direct conditional agreement |
+| **Repeated Interactions** | Annual budget cycles create a repeated game — counties that cooperate this year receive funding next year; those that divert funds face consequences |
+
+. . .
+
+::: {.callout-box .green}
+**The ~89% national facility delivery rate** masks the real story. Some counties have achieved rates above 90% — evidence that the cooperative equilibrium holds where conditional grants are enforced. Other counties lag significantly, suggesting that free-riding persists where enforcement is weak.
+:::
+
+
+## Counterfactual: With vs Without Conditional Grants
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Unconditional Grant Counties**
+
+- Funds flow regardless of health spending
+- County governments face no penalty for diversion
+- Rational strategy: redirect to politically rewarding projects
+- Health indicators stagnate or decline
+- Donor funding displaces rather than supplements county effort
+
+**Outcome:** The classic free-rider equilibrium. (Don't Invest, Free-Ride) at (2, 2). Total value: 4.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Conditional Grant Counties**
+
+- Funds released only upon verified health performance
+- Diverting funds means losing the next tranche
+- Rational strategy: spend on health to maintain funding flow
+- Health indicators improve as cooperation holds
+- DHIS2 data provides the verification mechanism
+
+**Outcome:** The cooperative equilibrium. (Invest, Co-Invest) at (4, 3). Total value: 7.
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Game theory explains why Kenya's conditional grant system matters:** by tying future funding to verified performance, the system changes each county's payoff matrix. Free-riding becomes costly because it triggers funding cuts. Cooperation becomes the dominant strategy — not because county officials are more virtuous, but because the incentive structure makes cooperation the rational choice. The counties where this mechanism works well demonstrate what is possible; the counties where enforcement is weak demonstrate what happens without it.
+:::
+
+
+# R Workshop: Game Simulation {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Build, solve, and simulate a 2x2 game in R</span>
+
+
+## R: Building the Payoff Matrix
+
+```{r}
+#| label: payoff-matrix
+#| echo: true
+
+# ── The Co-Investment Dilemma ──
+# Players: Donor (rows) and Government (columns)
+# Strategies: Invest / Don't Invest  x  Co-Invest / Free-Ride
+# Each cell: c(Donor payoff, Government payoff)
+
+donor_payoffs <- matrix(
+  c(4, 3,   # (Invest, Co-Invest)  and (Don't Invest, Co-Invest)
+    1, 2),  # (Invest, Free-Ride)  and (Don't Invest, Free-Ride)
+  nrow = 2, ncol = 2,
+  dimnames = list(
+    Donor = c("Invest", "Don't Invest"),
+    Gov   = c("Co-Invest", "Free-Ride")
+  )
+)
+
+gov_payoffs <- matrix(
+  c(3, 1,   # (Invest, Co-Invest)  and (Don't Invest, Co-Invest)
+    4, 2),  # (Invest, Free-Ride)  and (Don't Invest, Free-Ride)
+  nrow = 2, ncol = 2,
+  dimnames = list(
+    Donor = c("Invest", "Don't Invest"),
+    Gov   = c("Co-Invest", "Free-Ride")
+  )
+)
+
+# Print the combined matrix
+cat("=== Co-Investment Dilemma ===\n\n")
+for (i in 1:2) {
+  for (j in 1:2) {
+    cat(sprintf("  %-14s vs %-12s => Donor: %d, Gov: %d\n",
+                rownames(donor_payoffs)[i],
+                colnames(donor_payoffs)[j],
+                donor_payoffs[i, j],
+                gov_payoffs[i, j]))
+  }
+}
+```
+
+
+## R: Finding Nash Equilibrium
+
+```{r}
+#| label: find-nash
+#| echo: true
+
+# ── Find all Nash Equilibria in a 2x2 game ──
+# A cell (i,j) is a NE if:
+#   - Player 1's payoff at (i,j) is the max in column j (best response)
+#   - Player 2's payoff at (i,j) is the max in row i (best response)
+
+find_nash <- function(p1_payoffs, p2_payoffs) {
+  nr <- nrow(p1_payoffs)
+  nc <- ncol(p1_payoffs)
+  nash_cells <- list()
+
+  for (i in 1:nr) {
+    for (j in 1:nc) {
+      p1_best <- p1_payoffs[i, j] == max(p1_payoffs[, j])
+      p2_best <- p2_payoffs[i, j] == max(p2_payoffs[i, ])
+
+      if (p1_best & p2_best) {
+        nash_cells <- c(nash_cells, list(c(row = i, col = j)))
+      }
+    }
+  }
+  nash_cells
+}
+
+# Find and display NE
+equilibria <- find_nash(donor_payoffs, gov_payoffs)
+
+cat("Nash Equilibria found:", length(equilibria), "\n\n")
+for (eq in equilibria) {
+  cat(sprintf("  (%s, %s) => Donor: %d, Gov: %d\n",
+              rownames(donor_payoffs)[eq["row"]],
+              colnames(donor_payoffs)[eq["col"]],
+              donor_payoffs[eq["row"], eq["col"]],
+              gov_payoffs[eq["row"], eq["col"]]))
+}
+# Expected: (Don't Invest, Free-Ride) => Donor: 2, Gov: 2
+```
+
+
+## R: Simulating a Repeated Game
+
+```{r}
+#| label: repeated-game-sim
+#| echo: true
+
+# ── Repeated game: compare Unconditional vs Conditional donor strategy ──
+set.seed(42)
+n_rounds <- 15
+
+# Payoffs per round (same matrix as above)
+get_payoffs <- function(donor_action, gov_action) {
+  if (donor_action == "Invest" & gov_action == "Co-Invest")
+    return(c(D = 4, G = 3))
+  if (donor_action == "Invest" & gov_action == "Free-Ride")
+    return(c(D = 1, G = 4))
+  if (donor_action == "No Invest" & gov_action == "Co-Invest")
+    return(c(D = 3, G = 1))
+  return(c(D = 2, G = 2))  # No Invest, Free-Ride
+}
+
+simulate_game <- function(donor_strategy, n_rounds) {
+  d_actions <- character(n_rounds)
+  g_actions <- character(n_rounds)
+  d_pay     <- numeric(n_rounds)
+  g_pay     <- numeric(n_rounds)
+
+  for (t in 1:n_rounds) {
+    # Donor's strategy
+    if (donor_strategy == "unconditional") {
+      d_actions[t] <- "Invest"
+    } else {
+      # Conditional: invest only if Gov cooperated last round
+      d_actions[t] <- if (t == 1) "Invest"
+                      else if (g_actions[t - 1] == "Co-Invest") "Invest"
+                      else "No Invest"
+    }
+
+    # Government: tries free-riding first, learns from consequences
+    if (t <= 2) {
+      g_actions[t] <- "Free-Ride"
+    } else if (donor_strategy == "conditional" &
+               d_actions[t] == "No Invest") {
+      g_actions[t] <- "Co-Invest"  # Cooperate after punishment
+    } else if (donor_strategy == "unconditional") {
+      g_actions[t] <- "Free-Ride"  # No reason to stop free-riding
+    } else {
+      g_actions[t] <- "Co-Invest"  # Maintain cooperation
+    }
+
+    pay <- get_payoffs(d_actions[t], g_actions[t])
+    d_pay[t] <- pay["D"]
+    g_pay[t] <- pay["G"]
+  }
+
+  data.frame(round = 1:n_rounds, donor = d_actions, gov = g_actions,
+             donor_payoff = d_pay, gov_payoff = g_pay)
+}
+
+uncond <- simulate_game("unconditional", n_rounds)
+cond   <- simulate_game("conditional", n_rounds)
+cat("Unconditional: total Donor payoff =", sum(uncond$donor_payoff), "\n")
+cat("Conditional:   total Donor payoff =", sum(cond$donor_payoff), "\n")
+```
+
+
+## R: Visualizing the Repeated Game
+
+```{r}
+#| label: repeated-game-plot
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+library(ggplot2)
+
+# Combine results
+uncond$strategy <- "Unconditional (always invest)"
+cond$strategy   <- "Conditional (invest if Gov cooperated)"
+results <- rbind(uncond, cond)
+
+# Compute cumulative payoff
+results <- results |>
+  transform(cum_donor = ave(donor_payoff, strategy, FUN = cumsum))
+
+ggplot(results, aes(x = round, y = cum_donor, color = strategy)) +
+  geom_line(linewidth = 1.3) +
+  geom_point(aes(shape = gov), size = 3) +
+  scale_color_manual(values = c("#E24A3F", "#83BD00")) +
+  scale_shape_manual(
+    values = c("Co-Invest" = 16, "Free-Ride" = 4),
+    name = "Gov Action"
+  ) +
+  labs(
+    title = "Repeated Game: Cumulative Donor Payoff Over 15 Rounds",
+    subtitle = "Conditional strategy forces Government cooperation after initial free-riding",
+    x = "Funding Round",
+    y = "Cumulative Donor Payoff",
+    color = "Donor Strategy"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(color = "#005CB9", face = "bold"),
+    legend.position = "bottom"
+  )
+```
+
+
+## R: Payoff Matrix Heatmap
+
+```{r}
+#| label: payoff-heatmap
+#| echo: true
+#| fig-width: 9
+#| fig-height: 5
+
+library(ggplot2)
+
+# Build tidy data for the 2x2 game
+game_df <- data.frame(
+  Donor = c("Invest", "Invest", "Don't Invest", "Don't Invest"),
+  Gov   = c("Co-Invest", "Free-Ride", "Co-Invest", "Free-Ride"),
+  Donor_Payoff = c(4, 1, 3, 2),
+  Gov_Payoff   = c(3, 4, 1, 2)
+)
+game_df$Total <- game_df$Donor_Payoff + game_df$Gov_Payoff
+game_df$Label <- paste0("Donor: ", game_df$Donor_Payoff,
+                        "\nGov: ", game_df$Gov_Payoff)
+
+# Factor ordering
+game_df$Donor <- factor(game_df$Donor,
+                        levels = c("Invest", "Don't Invest"))
+game_df$Gov   <- factor(game_df$Gov,
+                        levels = c("Co-Invest", "Free-Ride"))
+
+ggplot(game_df, aes(x = Gov, y = Donor, fill = Total)) +
+  geom_tile(color = "white", linewidth = 3) +
+  geom_text(aes(label = Label), size = 6, fontface = "bold") +
+  scale_fill_gradient2(
+    low = "#E24A3F", mid = "#FED141", high = "#83BD00",
+    midpoint = 4.5, name = "Total\nPayoff"
+  ) +
+  labs(
+    title = "The Co-Investment Dilemma: Payoff Matrix",
+    subtitle = "Nash Equilibrium at (Don't Invest, Free-Ride) despite higher total at (Invest, Co-Invest)",
+    x = "Government Strategy", y = "Donor Strategy"
+  ) +
+  theme_minimal(base_size = 16) +
+  theme(
+    panel.grid = element_blank(),
+    plot.title = element_text(color = "#005CB9", face = "bold")
+  )
+```
+
+
+## R: Try It Yourself
+
+::: {.callout-box .green}
+**Exercises to extend the workshop:**
+
+1. **Change the payoffs.** What happens if you increase the Government's payoff for co-investing from 3 to 5? Does the Nash Equilibrium change?
+
+2. **Add a third strategy.** Give the Government a "Partial Co-Invest" option with intermediate payoffs. Find all Nash Equilibria in the new 2x3 matrix.
+
+3. **Modify the repeated game.** What if the Government only switches to cooperation after being punished for **two** consecutive rounds instead of one? How does this affect cumulative payoffs?
+
+4. **Kenya county simulation.** Model a 10-year game where a county government faces conditional grants (funds released only if health targets are met). Compare total health impact to a scenario with unconditional grants where the county can freely redirect funds.
+:::
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Other people react to your decisions.** In global health, governments, donors, and partners all make strategic choices based on what the others are doing. Ignoring these reactions leads to overestimating your impact.
+
+**The payoff matrix** reveals the structure of strategic interactions. A simple 2x2 table exposes who has the incentive to cooperate and who has the incentive to free-ride.
+
+**Nash Equilibrium** is the outcome where nobody wants to change their mind. It is often not the best outcome — just the stable one.
+
+**The free-rider trap** is real and pervasive. Rational self-interest can lock everyone into a collectively bad result.
+
+**Escape routes exist:** commitment devices, conditional agreements, and repeated interactions can shift the equilibrium from free-riding to cooperation. Kenya's conditional grant system across 47 devolved counties is a powerful real-world example.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 10 — Data-Driven Causal Modeling**
+
+We return from strategic theory to empirical evidence:
+
+- Learning **causal structure** from real health datasets
+- Estimating **parameters** using Bayesian networks
+- Combining **expert knowledge with data**
+- Validating models and running **sensitivity analysis** for policy recommendations
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The arc of the book:** Chapters 1-6 built causal models (inference). Chapters 7-9 used them for decisions (intervention) — first for a single decision-maker, then for resource allocation, and now for strategic interactions. Chapter 10 grounds everything in data, closing the loop between theory and evidence.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 9: Game Theory & Strategic Interactions]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

@@ -1,6 +1,6 @@
-# Skills: Inference and Intervention
+# Skills: Causal Analysis in Public Health Management
 
-This file documents the patterns, conventions, and decisions made while building and revising the 10-chapter Quarto reveal.js lecture series and the companion course website, based on *Inference and Intervention: Causal Models for Business Analysis* (Ryall & Bramson, 2014), adapted for a Maternal & Newborn Health (MNH) audience.
+This file documents the patterns, conventions, and decisions made while building and revising the "Causal Analysis in Public Health Management" course — a 10-chapter Quarto reveal.js lecture series and the companion website, based on *Inference and Intervention: Causal Models for Business Analysis* (Ryall & Bramson, 2014), adapted for a Maternal & Newborn Health (MNH) audience.
 
 ---
 
@@ -71,7 +71,7 @@ All 10 decks use this exact YAML header:
 ```yaml
 ---
 title: "Chapter N: Title Here"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "BK Advisors"
 date: today
 format:
@@ -140,7 +140,7 @@ Every deck follows this section order:
 
 <br>
 
-[Inference and Intervention | Chapter N: Title]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter N: Title]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

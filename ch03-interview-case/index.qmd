@@ -1,7 +1,7 @@
 ---
-title: "Chapter 3 — Building the Picture from Scratch"
+title: "Chapter 3: The MNH Diagnostic Case Study"
 subtitle: "Inference and Intervention | BK Advisors"
-author: "Matthew Luke Kuch | BK Advisors"
+author: "BK Advisors"
 date: today
 format:
   revealjs:
@@ -16,300 +16,1127 @@ format:
     center: false
     width: 1280
     height: 720
-    self-contained: false
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
 ---
 
-## Meet Faith
+## Learning Objectives
 
-**Faith, 29, M&E officer, Turkana County, Kenya** *(a composite drawn from county health reports — the details are real, the name is not)*
+After this chapter, you will be able to:
 
-. . .
-
-Faith has been the monitoring and evaluation officer for Turkana's maternal health programme for two years.
-
-. . .
-
-Her job is to figure out **what is working**. Her tools are a laptop, a notebook, and a budget for petrol.
-
-. . .
-
-Last month her county director walked into her office and asked one sentence: *"Why is our maternal mortality not falling as fast as the neighbouring county's?"*
-
-. . .
-
-::: {.callout-box}
-**The question:** How do you build a useful causal picture for a programme you have never studied — in two weeks, with no prior research, and with people who do not speak the language of statistics?
+::: {.incremental}
+- Apply the **iterative model-building process** — hypothesis, interview, revision — to a real health system
+- Start with a simple 3-4 node model and **expand it systematically** through stakeholder conversations
+- Distinguish **root nodes** (highest-leverage intervention points) from **intermediate nodes** in a causal system
+- Explain why **supply-side** improvements alone are insufficient without addressing **demand-side** barriers
+- Use a completed causal model to **prioritize recommendations** based on structure, not just intuition
 :::
 
 
-## And here is the puzzle
+## Chapter Overview
 
-Kenya devolved health to **47 counties** in 2013 *(Constitution of Kenya, Schedule 4)*.
+::: {.callout-box}
+**Where we are:** Chapter 1 introduced causal thinking. Chapter 2 gave us the formal tools — nodes, arrows, triplets, d-separation. Now we put those tools to work.
+
+**What we will build:** A complete causal model of Kenya's maternal and newborn health challenge, assembled piece by piece through three rounds of stakeholder interviews.
+:::
 
 . . .
 
-Since then, some counties have cut maternal mortality dramatically. Others have barely moved *(Kenya Health Information System, county dashboards)*.
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Case<br>Setup</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Interview<br>Round 1</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Interview<br>Round 2</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Interview<br>Round 3</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Final Model &<br>Recommendations</div>
+</div>
 
 . . .
 
-The county-level numbers can tell you *which* counties are improving. They cannot tell you *why*.
+::: {.callout-box .green}
+**The detective metaphor:** Building a causal model from interviews is like solving a mystery. Each conversation reveals new suspects, new motives, and new connections. You don't build a 20-node diagram on day one. You start simple and let the conversations tell you what's missing.
+:::
+
+
+# The Diagnostic Mindset {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">How consultants build causal models from stakeholder interviews</span>
+
+
+## The Iterative Process
+
+::: {.definition-box}
+**Diagnostic Causal Modeling:** An iterative cycle of hypothesis, stakeholder interview, model revision, sharper questions, and further refinement — repeated until the model tells a coherent causal story.
+:::
+
+. . .
+
+::: {.incremental}
+- **Start simple:** Begin with the most stripped-down model you can draw — maybe three or four nodes
+- **Interview a stakeholder:** Listen for causes, mechanisms, and surprises
+- **Revise the model:** Add the new variables and links their story reveals
+- **Generate sharper questions:** The updated model tells you exactly what to ask next
+- **Repeat:** Each round deepens the model and narrows your uncertainty
+:::
 
 . . .
 
 ::: {.callout-box .orange}
-**To find out why, you have to go talk to people. The question is — who, and in what order, and what do you do with what they tell you?**
+**Why not just build the big model from the start?** Because you do not know what you do not know. The first interview always reveals variables you never considered. If you lock in a complex model too early, you will miss the real story.
 :::
 
 
-# The interview method {background-color="#005CB9"}
+## Key Principles
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**1. Focus on Significant Drivers**
+
+Not every variable matters equally. Your model should capture the factors with the largest causal effects on the outcome — leave out the noise.
+:::
+
+::: {.callout-box .green}
+**2. Seek Common Causes**
+
+When one variable drives multiple problems simultaneously, that is a high-leverage intervention point. Look for the forks.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**3. Let the Model Guide Your Questions**
+
+Vague interviews yield vague models. Use your current diagram to generate *specific, testable hypotheses* for the next conversation.
+:::
+
+::: {.callout-box .red}
+**4. Supply and Demand Both Matter**
+
+A health system has two sides. Improving facility quality (supply) is wasted if mothers cannot reach the facility (demand).
+:::
+:::
+:::
 
 
-## Three rules before you walk in
+# The Case Setup {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Diagnosing Kenya's MNH challenge</span>
+
+
+## The Brief: Why Is Maternal Mortality Still So High?
+
+::: {.callout-box}
+**Country:** Kenya — 47 counties with a devolved health system since 2013
+
+**The puzzle:** Despite a facility delivery rate of roughly 89% (DHS/WHO), Kenya's maternal mortality ratio remains around 342 per 100,000 live births — and the neonatal mortality rate sits at approximately 21 per 1,000 live births. Some counties are performing well. Others are struggling badly.
+:::
+
+. . .
+
+**Key context from publicly available data:**
+
+| Indicator | Value | Source |
+|---|---|---|
+| Maternal Mortality Ratio | ~342 / 100,000 live births | WHO |
+| Neonatal Mortality Rate | ~21 / 1,000 live births | WHO |
+| Facility delivery rate | ~89% | DHS |
+| Counties | 47 (devolved governance) | Kenya Constitution |
+| DHIS2 adoption | Nationwide since 2011 | MOH Kenya |
+| High-burden counties | Bungoma, Kakamega, Kilifi, Mombasa, Nairobi | DHIS2 / published analyses |
+
+. . .
+
+::: {.callout-box .red}
+**The central question:** Women are reaching facilities — but outcomes are not improving fast enough. Why?
+:::
+
+
+## County-Level Variation
+
+One of Kenya's most striking features is how much outcomes vary across its 47 counties.
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Better-performing counties**
+
+Some counties have maternal mortality ratios well below the national average. They tend to have more midwives per capita, functional referral networks, and stronger county health management teams.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Struggling counties**
+
+High-burden counties like Bungoma, Kakamega, and Kilifi report significantly higher mortality despite having health facilities in place. The facilities exist — but something in the chain between "facility" and "survival" is broken.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**This variation is a clue.** If the problem were purely about whether facilities exist, every county with facilities would do well. The variation tells us that *what happens inside* the facility — and *whether women can reach it in time* — matters more than whether the building is there.
+:::
+
+
+## The Initial (Simple) Model
+
+Before any interviews, we draw the simplest model we can — just the basic logic of how facility-based care should reduce mortality.
+
+. . .
+
+<table style="width: 90%; margin: 0.5em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node decision rect">Facility<br>Access</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">→ [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node">Facility<br>Births</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive">→ [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node">Quality of<br>Care</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow negative">→ [−]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+**Round 0: 4 nodes, 3 links.**
 
 ::: {.incremental}
-
-1. **Start with the outcome, not the programme.** Ask everyone the same opening question: *"When a mother dies in this county, what is the most common chain of events?"*
-2. **Listen for nouns. Sketch them as boxes.** Every noun a person uses — *referral form*, *fuel*, *stockout*, *husband's permission* — is a candidate for a box.
-3. **Ask the connecting question.** After every box: *"And what does that depend on?"*
-
+- The logic: more facility access leads to more facility births, which leads to better quality of care, which reduces mortality
+- **Problem 1:** This treats "Quality of Care" as a single black box — what drives it?
+- **Problem 2:** It assumes that getting women to facilities is sufficient — but Kenya already has 89% facility delivery
+- **Problem 3:** No supply-side detail — no staffing, no equipment, no training
 :::
+
+. . .
+
+**We need to talk to people who actually work in the system.**
+
+
+# Interview Round 1: County Health Director {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The supply-side view</span>
+
+
+## The County Health Director's Perspective
+
+We sit down with a County Health Director from one of Kenya's high-burden counties.
+
+. . .
+
+::: {.example-block}
+[Interview: County Health Director]{.example-label}
+
+**Q: Your county has around 89% facility delivery. Why is maternal mortality still so high?**
+
+"We have 14 health facilities that handle deliveries. But only 4 of them have enough midwives for round-the-clock coverage. The rest rely on general nurses who have not had obstetric emergency training. When a woman comes in with a hemorrhage at 2 AM, sometimes there is nobody on shift who knows how to manage it."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: County Health Director (cont.)]{.example-label}
+
+**Q: What about equipment? We understand CPAP machines and PPH kits have been distributed.**
+
+"Yes, we received the equipment. We even have some good supplies. But here is the honest truth — in [county], we have one midwife for every 15 deliveries per shift. That midwife is exhausted. She cannot monitor a CPAP machine, manage a complicated delivery, and attend to three other women at the same time. The equipment sits there."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: County Health Director (cont.)]{.example-label}
+
+**Q: What would make the biggest difference in your county?**
+
+"Staff. Trained, specialized staff. We ran a BEmONC training last year — 60 health workers attended. But the training was two weeks long and the follow-up was weak. I would estimate maybe a third of them are actually applying what they learned."
+:::
+
+
+## What We Learned: Round 1
+
+The County Health Director revealed three new variables hiding inside our "Quality of Care" box:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Staffing Levels**
+
+The ratio of skilled midwives to deliveries is dangerously low — 1:15 in some facilities. General nurses cover the gaps but lack specialized training.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Equipment Availability**
+
+Equipment has been procured and delivered. It is physically present. But it is not being used effectively because of staffing constraints.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Training Effectiveness**
+
+Training workshops were delivered, but only a fraction of health workers are applying their new skills. The gap between "trained" and "competent" is real.
+:::
+
+
+## Updating the Model: Round 1
+
+New variables: **Staffing Levels**, **Equipment**, **Training**
+
+<table style="width: 95%; margin: 0.4em auto; font-size: 0.48em;">
+<tr>
+<td style="text-align: center; padding: 0.4em; vertical-align: middle;" rowspan="3">
+<div class="dag-node decision rect">County<br>Health<br>Budget</div>
+</td>
+<td style="text-align: center;" rowspan="3"><span class="dag-arrow positive">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node treatment">Staffing<br>Levels</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;" rowspan="3">
+<div class="dag-node">Quality of<br>Care</div>
+</td>
+<td style="text-align: center;" rowspan="3"><span class="dag-arrow negative">→ [−]</span></td>
+<td style="text-align: center; padding: 0.4em;" rowspan="3">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node treatment">Equipment<br>Available</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node treatment">Training<br>Delivered</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→ [+]</span></td>
+</tr>
+</table>
+
+. . .
+
+**Round 1: 7 nodes, 6 links.**
+
+::: {.callout-box}
+**Key Insight:** The "Quality of Care" box has been unpacked into three inputs — staffing, equipment, and training. All three are funded, but the director's testimony suggests **staffing is the binding constraint**. Equipment without staff to operate it is a wasted investment.
+:::
+
+
+## What Questions to Ask Next?
+
+The Round 1 model raises specific, testable questions:
+
+::: {.incremental}
+- **Why is staffing so low?** Is it a hiring problem, a retention problem, or a deployment problem?
+- **Why does training not translate into competency?** Is the training poorly designed, or do trained staff leave?
+- **Is equipment actually functional?** The director said "we have it" — but does it work?
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The model guides the next interview.** Without it, we would ask vague questions like "What's going wrong?" With the model, we can ask: "Of the 60 health workers you trained last year, how many are still in your county?" That is a much sharper question.
+:::
+
+
+# Interview Round 2: Midwife at District Hospital {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Where the transmission breaks down</span>
+
+
+## The Midwife's Reality
+
+We visit a district hospital in a high-burden county and interview a senior midwife who has worked there for eight years.
+
+. . .
+
+::: {.example-block}
+[Interview: Senior Midwife]{.example-label}
+
+**Q: You have been here eight years. How has the staffing situation changed?**
+
+"When I started, we had six midwives in the maternity ward. Now we are three. Two transferred to Nairobi — better pay, better housing. One went to work for an NGO. We were promised replacements, but the county government has not hired anyone in two years."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: Senior Midwife (cont.)]{.example-label}
+
+**Q: We understand you received CPAP machines six months ago. How are they working?**
+
+"We received two CPAP machines. One broke after three months — the humidifier cracked. There is no biomedical technician in this county. We submitted a repair request, but spare parts have to come from Nairobi. It has been three months and we are still waiting. The other machine works, but I am the only one on shift who knows how to use it properly."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: Senior Midwife (cont.)]{.example-label}
+
+**Q: What happens when a complicated case comes in and you cannot handle it here?**
+
+"We are supposed to refer to the county referral hospital. But the ambulance is shared with the whole sub-county — four facilities. Sometimes we call and it is already out on another trip. Sometimes the family arranges a motorcycle, but for an eclampsia case that is very dangerous. Last month a woman waited four hours for transport. She did not survive."
+:::
+
+
+## Here's What Surprised Us
+
+The midwife's testimony revealed something our Round 1 model completely missed: **the transmission problem.**
+
+. . .
+
+::: {.callout-box .red}
+**The money went in at the top, but it leaked out — or got stuck.**
+
+- Training was delivered, but trained staff **left** (retention failure)
+- Equipment was procured, but it **broke** and nobody could fix it (maintenance failure)
+- Referral systems were designed, but ambulances **were not available** when needed (referral failure)
+:::
+
+. . .
+
+Three new variables emerge:
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .orange}
+**Staff Retention**
+
+Trained midwives transfer to Nairobi or leave for NGO jobs. Rural and high-burden counties lose their most skilled workers.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Equipment Maintenance**
+
+No biomedical technicians at county level. Spare parts supply chains are slow or nonexistent. Machines break and stay broken.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**Referral System**
+
+Ambulance sharing across multiple facilities means transport is unreliable. Emergency cases wait hours. This is an independent pathway to mortality.
+:::
+
+
+## Updating the Model: Round 2
+
+New variables: **Staff Retention**, **Equipment Maintenance**, **Referral System**
+
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.42em;">
+<tr>
+<td colspan="9" style="text-align: center; padding: 0.3em;">
+<div class="dag-node decision rect">County Health Budget</div>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Staffing<br>Levels</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Equipment<br>Procured</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Training<br>Delivered</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Referral<br>System</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↓</span></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node confounder">Staff<br>Retention</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Staff<br>Competency</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node confounder">Equipment<br>Maintenance</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Equipment<br>Utilization</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↘</span></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↘</span></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Quality of<br>Care</div>
+</td>
+<td></td>
+<td style="text-align: center;"><span class="dag-arrow negative">→ [−]</span></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+<td></td>
+</tr>
+</table>
+
+. . .
+
+**Round 2: 9 nodes, 10 links.**
+
+
+## Spotting the Common Causes
+
+::: {.callout-box .orange}
+**Critical discovery:** Staff Retention and Equipment Maintenance are **common causes** — diverging triplets (forks!) that affect multiple downstream variables simultaneously.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Staff Retention is a fork:**
+
+Staff Competency ← **Retention** → Equipment Utilization
+
+When trained midwives leave, *both* clinical competency drops *and* equipment goes unused (because nobody remaining knows how to operate it). Two symptoms, one root cause.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Equipment Maintenance is a fork:**
+
+CPAP Availability ← **Maintenance** → PPH Kit Availability
+
+When there is no biomedical technician, *all* equipment degrades — not just one type. A single maintenance failure ripples through multiple care pathways.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .red}
+**Why this matters:** Common causes are the highest-leverage intervention points in any system. Fixing retention alone could improve both competency *and* utilization at the same time. That is two results for one intervention.
+:::
+
+
+# Interview Round 3: Community Health Worker {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The demand side — what we had been missing</span>
+
+
+## We'd Been Looking at Half the Picture
+
+Two rounds of interviews focused entirely on the supply side — what happens inside health facilities. But a community health worker (CHW) based in a rural sub-county opens our eyes to a completely different set of barriers.
+
+. . .
+
+::: {.example-block}
+[Interview: Community Health Worker]{.example-label}
+
+**Q: In your area, what stops women from delivering at a health facility?**
+
+"Most women here want to deliver at the facility. But the nearest one that handles deliveries is 18 kilometers away. There is no paved road. During the rainy season, a motorcycle ride takes two hours — if you can find a motorcycle. Some women start walking when labor begins, but labor does not wait for the road to improve."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: Community Health Worker (cont.)]{.example-label}
+
+**Q: Even with the free maternity care policy, we hear that costs are still a barrier. Is that true?**
+
+"The delivery is free, yes. But the motorcycle to the facility costs 500 shillings. You need to bring your own basin, your own razor blade, your own cotton wool. If you stay two nights, you need food. For a family earning 200 shillings a day, that is a week's income. Some women just stay home."
+:::
+
+. . .
+
+::: {.example-block}
+[Interview: Community Health Worker (cont.)]{.example-label}
+
+**Q: Are there women who choose not to go even when they can afford it?**
+
+"Some older women in the community tell the young mothers that hospitals are dangerous — that doctors will cut you unnecessarily. There is also the issue of dignity. Some women have told me they were shouted at by nurses during their last delivery. They say they would rather deliver at home with a traditional birth attendant who treats them with respect."
+:::
+
+
+## The Demand-Side Revelation
+
+::: {.callout-box .red}
+**We had been looking at half the picture.** Kenya's 89% facility delivery rate is a national average. In rural sub-counties of high-burden counties, the rate can drop to 50-60%. And even women who reach a facility may arrive too late because of transport delays.
+:::
+
+. . .
+
+Three new demand-side variables:
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Geographic Access**
+
+Distance and road quality determine whether a woman can physically reach a facility in time. This is especially critical for obstetric emergencies where every hour matters.
+:::
+
+::: {.callout-box .green}
+**Financial Barriers**
+
+Despite free maternity policies, indirect costs — transport, supplies, food, lost wages — prevent the poorest families from seeking facility care.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .orange}
+**Health-Seeking Behavior**
+
+Trust, past experience, cultural norms, and community influence shape whether a woman *chooses* facility delivery — even when she can afford and access it.
+:::
+:::
+:::
+
+
+## Updating the Model: Round 3
+
+Adding demand-side nodes: **Geographic Access**, **Financial Barriers**, **Health-Seeking Behavior**
+
+. . .
+
+The model now has **two distinct halves** that converge on the outcome:
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Supply Side (Rounds 1-2)**
+
+Budget → Staffing → Retention → Competency
+Budget → Equipment → Maintenance → Utilization
+Budget → Training → Competency
+Budget → Referral System
+All → Quality of Care
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Demand Side (Round 3)**
+
+Geographic Access → Facility Births
+Financial Barriers → Facility Births
+Health-Seeking Behavior → Facility Births
+
+Facility Births + Quality of Care → **Maternal Mortality**
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The structural insight:** Quality of Care and Facility Births are both **parents** of Maternal Mortality. Improving quality without improving access does not help the women who never arrive. Improving access without improving quality sends more women into facilities that cannot save them. Both halves must move together.
+:::
+
+
+## The Complete Causal Model
+
+**Round 3: 12 nodes.**
+
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.4em;">
+<tr>
+<td colspan="4" style="text-align: center; font-weight: 700; color: #005CB9; padding: 0.3em;">SUPPLY SIDE</td>
+<td style="text-align: center; padding: 0.3em;"></td>
+<td colspan="3" style="text-align: center; font-weight: 700; color: #3E9B6E; padding: 0.3em;">DEMAND SIDE</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node decision rect">County<br>Budget</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Staffing</div><br>
+<div class="dag-node treatment">Equipment</div><br>
+<div class="dag-node treatment">Training</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node confounder">Retention</div><br>
+<div class="dag-node confounder">Maintenance</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Competency</div><br>
+<div class="dag-node">Utilization</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→</span></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow">↓</span></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node treatment">Geo Access</div><br>
+<div class="dag-node treatment">Fin Barriers</div><br>
+<div class="dag-node treatment">Health-Seeking</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow positive">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Facility<br>Births</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node">Quality<br>of Care</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.2em;"><span class="dag-arrow negative">↓ [−]</span></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+
+# Model Evolution Summary {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">How our understanding grew — round by round</span>
+
+
+## Evolution of the Model
+
+| Round | Nodes | Links | Who We Talked To | What We Added |
+|---|---|---|---|---|
+| **Round 0** | 4 | 3 | (Nobody — desk review) | Facility Access → Births → Quality → Mortality |
+| **Round 1** | 7 | 6 | County Health Director | Staffing, Equipment, Training |
+| **Round 2** | 9 | 10 | Senior Midwife | Retention, Maintenance, Referral System |
+| **Round 3** | 12 | 14 | Community Health Worker | Geographic Access, Financial Barriers, Health-Seeking Behavior |
+
+. . .
+
+::: {.callout-box}
+**Pattern:** Each interview round roughly doubled the model's explanatory power. Round 1 decomposed the supply side. Round 2 revealed the *transmission failures* — why inputs were not becoming outputs. Round 3 added the entire demand side that Rounds 1 and 2 had missed.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Notice who taught us what.** The director saw the system from the top. The midwife saw it from the front line. The community health worker saw it from the community. Each perspective revealed variables the others could not see. **This is why you need multiple stakeholders.**
+:::
+
+
+# Prioritizing Recommendations {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The model does the prioritization for you</span>
+
+
+## Using Model Structure to Prioritize
+
+Now that we have a 12-node model, how do we decide where to intervene? We could rely on gut instinct — but the model gives us a more disciplined answer.
 
 . . .
 
 ::: {.definition-box}
-You are not running a survey. You are building a *picture* — and the picture is the deliverable.
-:::
-
-
-## Faith's first interview — the midwife
-
-Faith starts with **Mary**, a midwife at a rural facility two hours from the county town.
-
-. . .
-
-She asks the opening question. Mary thinks. Then she says:
-
-. . .
-
-::: {.example-block}
-[mary]{.example-label}
-
-*"Most of the deaths I see come down to this — the woman bleeds at home, the family waits four hours hoping it will stop, by the time they get a motorbike to bring her here, she has lost too much blood. We have the drugs. We do not have her in time."*
-:::
-
-. . .
-
-::: {.callout-box .green}
-**Listen for nouns:** *bleeding*, *family*, *waiting*, *motorbike*, *drugs*, *time*.
-:::
-
-
-## Mary's picture, in boxes
-
-<br>
-
-::: {style="text-align: center; font-size: 0.85em;"}
-
-[Bleeding starts at home]{.dag-node}  →  [Family waits]{.dag-node}  →  [Motorbike arranged]{.dag-node}  →  [Mother arrives too late]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-This is a **chain** — exactly the shape you learned in Chapter 2.
-
-. . .
-
-::: {.callout-box}
-The nouns become boxes. The order of events becomes the arrows. That is the whole trick.
-:::
-
-
-## Faith's second interview — the husband
-
-Next, Faith meets **Lokol**, whose wife survived a difficult delivery six months ago.
-
-. . .
-
-She asks the same opening question.
-
-. . .
-
-::: {.example-block}
-[lokol]{.example-label}
-
-*"My wife was bleeding. I knew she needed to go. But in our compound, my older brother is the elder — he is the one who decides about big expenses. And he was at the market that day. I am her husband, but I am not the elder of the compound. I had to wait until he came back to give permission to spend the money on transport. By then it was very late."*
-:::
-
-. . .
-
-::: {.callout-box .orange}
-A new noun appears: **permission**. It was not on Mary's picture. But it sits *before* the motorbike box, and it changes the meaning of "family waits". *(In Lokol's extended-family compound, the older brother holds financial authority — a real pattern in many rural Kenyan households.)*
-:::
-
-
-## Updating Mary's picture with Lokol's words
-
-<br>
-
-::: {style="text-align: center; font-size: 0.78em;"}
-
-[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission from elder]{.dag-node .confounder}  →  [Motorbike arranged]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-**The aha:** "Family waits" was not really one box. It was *two* boxes — the deciding, and the permission. Mary did not see the permission box because she only sees what arrives at the clinic. Lokol saw it because he lived it.
-:::
-
-
-## Faith's third interview — the county finance officer
-
-Now Faith goes to the county headquarters and meets **Esther**, the finance officer.
-
-. . .
-
-She asks the opening question. Esther laughs gently.
-
-. . .
-
-::: {.example-block}
-[esther]{.example-label}
-
-*"I cannot tell you about deaths. I can tell you that we have run out of misoprostol — the drug that stops bleeding — three times this year, because the national supplier delivered late. We always pay on time. The drug just is not in the warehouse."*
-:::
-
-. . .
-
-::: {.callout-box .orange}
-A new noun appears far up the chain: **stockout**. It is nowhere near the bedside, but it is what made the bedside picture possible.
-:::
-
-
-## The picture grows again
-
-<br>
-
-::: {style="text-align: center; font-size: 0.7em;"}
-
-[National supplier delays]{.dag-node .confounder}  →  [County stockout]{.dag-node .confounder}  →  [Drug not at facility]{.dag-node}
-
-⬇
-
-[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission]{.dag-node .confounder}  →  [Motorbike]{.dag-node}  →  [Mother arrives]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
-
+**Root Node:** A node with no parents in the causal model — nothing in the diagram causes it. Root nodes are the ultimate causes. Intervening on them has the broadest downstream effects because every pathway flows *from* them.
 :::
 
 . . .
 
 ::: {.callout-box}
-Three people, three different parts of the picture. None of them was wrong. None of them had the whole thing.
+**The principle:** Count the number of downstream paths from each node to the outcome. Nodes with more paths are higher-leverage — they affect more things simultaneously. Root nodes and common-cause nodes almost always rank highest.
 :::
 
 
-# Three traps when you do this {background-color="#005CB9"}
+## The Priority Ranking
 
+::: {.columns-equal}
+::: {.col}
+**Highest Priority — Root causes with multiple downstream effects:**
 
-## Trap 1 — Believing the loudest voice
+::: {.callout-box .red}
+<span class="step-number red">1</span> **Staff Retention**
 
-The first person you interview is the most dangerous.
-
-. . .
-
-::: {.bad-example}
-You go in, the midwife tells you a clear story, and you walk out thinking you have the picture. You stop interviewing.
+Root cause affecting *both* competency and utilization. Every midwife who leaves takes her training, her experience, and her CPAP skills with her. Invest in housing allowances, career development, and rural service incentives.
 :::
-
-. . .
-
-::: {.good-example}
-**Always interview at least one person from each of three groups:** the bedside *(midwives, families)*, the supply chain *(finance, logistics)*, and the leadership *(district medical officer, programme manager)*. Each group sees boxes the others cannot see.
-:::
-
-
-## Trap 2 — Drawing arrows you do not have evidence for
-
-It is tempting to add arrows because they "feel right".
-
-. . .
 
 ::: {.callout-box .orange}
-**The rule:** every arrow on the picture should come from at least one specific sentence somebody said. If you cannot quote the source, the arrow is a hypothesis, not a fact — and you should mark it differently *(we use a dotted arrow)*.
+<span class="step-number orange">2</span> **Equipment Maintenance**
+
+Root cause affecting all equipment pathways. Deploy county-level biomedical technicians and establish spare parts supply chains. Equipment without maintenance is a wasted investment — it breaks, and it stays broken.
+:::
 :::
 
-
-## Trap 3 — Confusing "what people say" with "what is true"
-
-People tell you their *understanding* of the system. Their understanding may be wrong.
-
-. . .
-
-::: {.callout-box .green}
-**That is fine.** The point of the picture is not to be true on day one. It is to be *specific enough that you can test it*. The next chapters will teach you how to put numbers on this picture and see which arrows survive contact with data.
-:::
-
-
-# Try it yourself {background-color="#005CB9"}
-
-
-## You are the analyst
-
-::: {.example-block}
-[scenario]{.example-label}
-
-You have one week and a budget for petrol. You need to build a causal picture explaining why one ward in a Kenyan county has much higher under-5 mortality than its three neighbours.
-
-**Who do you interview, in what order, and what is the opening question for each?**
-:::
-
-. . .
-
-::: {.callout-box .orange}
-*Hint: who is closest to the death? Who is closest to the supply chain? Who is closest to the budget? Visit them in that order.*
-:::
-
-. . .
-
-In **Chapter 4**, we will take a picture like Faith's and start putting actual numbers on the arrows.
-
-
-## Looking ahead
-
-In **Chapter 4**, you will take a finished interview-built picture and add the missing piece: **numbers**.
-
-. . .
-
-You will learn how to turn "Mary says about half the women bleed for more than thirty minutes before the family decides" into a number you can put on the arrow — and then how to combine all those numbers into a model that can be tested against real data.
-
-
-## Further reading
+::: {.col}
+**High Priority — Independent pathways:**
 
 ::: {.callout-box}
-**The data behind Faith's story**
+<span class="step-number">3</span> **Geographic Access / Referral System**
 
-- **Constitution of Kenya, 2010**, Schedule 4 — the legal basis for devolution to 47 counties.
-- **Kenya Health Information System (KHIS)** — county dashboards with maternal mortality and stockout data, publicly available at *hiskenya.org*.
-- **Bourbonnais N., 2013** — *Implementing Free Maternal Health Care in Kenya: Challenges, Strategies, and Recommendations*. Kenya National Commission on Human Rights. Open-access.
+Independent pathway to mortality. Women who cannot reach a facility in time die regardless of facility quality. Invest in ambulance networks and maternity waiting homes.
+:::
+
+::: {.callout-box .green}
+<span class="step-number green">4</span> **Demand-Side Barriers**
+
+Financial barriers and health-seeking behavior determine whether women *choose* to seek care. Transport subsidies, respectful maternity care training, and community health worker engagement.
+:::
+:::
+:::
+
+
+## Why Root Nodes Are Highest-Leverage
+
+::: {.example-block}
+[MNH Example]{.example-label}
+
+**Staff Retention** is a root node — nothing in our model causes it (it is determined by salary policy, housing, career paths — all outside the current health system model). But it has at least **three downstream effects:**
+
+1. Retention → Competency → Quality → Mortality
+2. Retention → Equipment Utilization → Quality → Mortality
+3. Retention → Staffing ratios → Quality → Mortality
+
+Fix retention, and you improve three pathways at once. Fix training alone (a non-root node), and trained staff still leave — so the effect evaporates.
 :::
 
 . . .
-
-::: {.callout-box .green}
-**If you want to go deeper**
-
-- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 4 covers interview-driven model building in business settings; the method translates directly.
-- **Schon, D. (1983)** — *The Reflective Practitioner*. The classic on extracting models from people who "just know how the work works".
-:::
-
-
-## The one thing to remember
 
 ::: {.key-takeaway}
-**The fastest way to build a useful causal picture is to ask the people who actually do the work — in three different groups, in a particular order — and draw their answers.**
+**The model does the prioritization for you.** You do not need to guess which interventions matter most. Count the downstream paths. The variables with the most connections to the outcome are the ones to invest in first.
+:::
 
-Faith built her picture in three interviews. None of them had the whole story. All of them needed each other.
+
+# MNH Application: The Full Kenya DAG {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The completed diagnostic model</span>
+
+
+## The Full Kenya MNH Causal Model
+
+::: {.callout-box}
+**The completed model tells a coherent story:** County health budgets flow through three supply-side channels — staffing, equipment, and training — but are undermined by staff attrition and equipment breakdown at the transmission layer. Meanwhile, demand-side barriers — geography, cost, and trust — determine whether women reach facilities at all. Both supply and demand must work together to reduce maternal and neonatal mortality.
+:::
+
+. . .
+
+| Layer | Nodes | Status |
+|---|---|---|
+| **Inputs** | Budget, Staffing, Equipment, Training | Funded and delivered |
+| **Transmission** | Retention, Maintenance, Referral System | **Broken** — the critical bottleneck |
+| **Demand** | Geographic Access, Financial Barriers, Health-Seeking Behavior | **Underestimated** — missed until Round 3 |
+| **Outcomes** | Quality of Care, Facility Births, Maternal Mortality | Below target |
+
+. . .
+
+::: {.callout-box .red}
+**The program invested in the right inputs** — training, equipment, facility construction. **But it missed the transmission mechanisms** — retention, maintenance — and the demand-side barriers. Redirecting even a modest portion of the budget toward these neglected nodes could unblock the entire system.
+:::
+
+
+# R Workshop: Building the DAG Iteratively {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using dagitty to formalize each interview round</span>
+
+
+## R: Round 1 — The Simple Supply-Side Model
+
+```{r}
+#| label: round1-dag
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+
+library(dagitty)
+library(ggdag)
+library(ggplot2)
+
+# Round 1: After interviewing the County Health Director
+# Simple supply-side decomposition (7 nodes)
+round1 <- dagitty('dag {
+  Budget     [pos="0,1"]
+  Staffing   [pos="1,0"]
+  Equipment  [pos="1,1"]
+  Training   [pos="1,2"]
+  Quality    [pos="2,1"]
+  Fac_Births [pos="3,1"]
+  Mortality  [pos="4,1"]
+
+  Budget -> Staffing
+  Budget -> Equipment
+  Budget -> Training
+  Staffing -> Quality
+  Equipment -> Quality
+  Training -> Quality
+  Quality -> Mortality
+}')
+
+ggdag(round1) + theme_dag() +
+  labs(title = "Round 1: Supply-Side Model (7 nodes)",
+       subtitle = "After interviewing the County Health Director")
+```
+
+
+## R: Round 2 — Adding Transmission Failures
+
+```{r}
+#| label: round2-dag
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+# Round 2: After interviewing the Senior Midwife
+# Transmission failures emerge (9 nodes)
+round2 <- dagitty('dag {
+  Budget      [pos="0,1"]
+  Staffing    [pos="1,0"]
+  Equipment   [pos="1,1"]
+  Training    [pos="1,2"]
+  Retention   [pos="1.5,0.3"]
+  Maintenance [pos="1.5,1.3"]
+  Referral    [pos="1.5,2.3"]
+  Competency  [pos="2,0.5"]
+  Utilization [pos="2,1.5"]
+  Quality     [pos="3,1"]
+  Mortality   [pos="4,1"]
+
+  Budget -> Staffing
+  Budget -> Equipment
+  Budget -> Training
+  Budget -> Referral
+  Staffing -> Retention
+  Training -> Competency
+  Retention -> Competency
+  Retention -> Utilization
+  Equipment -> Utilization
+  Maintenance -> Utilization
+  Competency -> Quality
+  Utilization -> Quality
+  Referral -> Quality
+  Quality -> Mortality
+}')
+
+ggdag(round2) + theme_dag() +
+  labs(title = "Round 2: Transmission Failures (11 nodes)",
+       subtitle = "After interviewing the Senior Midwife")
+```
+
+
+## R: Round 3 — The Complete Model
+
+```{r}
+#| label: round3-dag
+#| echo: true
+#| fig-width: 11
+#| fig-height: 6
+
+# Round 3: After interviewing the Community Health Worker
+# Demand-side variables added (12+ nodes)
+round3 <- dagitty('dag {
+  Budget        [pos="0,1"]
+  Staffing      [pos="1,0"]
+  Equipment     [pos="1,1"]
+  Training      [pos="1,2"]
+  Retention     [pos="1.5,0.3"]
+  Maintenance   [pos="1.5,1.3"]
+  Referral      [pos="1.5,2.3"]
+  Competency    [pos="2,0.5"]
+  Utilization   [pos="2,1.5"]
+  Quality       [pos="3,1"]
+  Geo_Access    [pos="1,3.5"]
+  Fin_Barriers  [pos="1,4.5"]
+  Health_Seeking [pos="1,5.5"]
+  Fac_Births    [pos="2.5,4.5"]
+  Mortality     [pos="4,3"]
+
+  Budget -> Staffing
+  Budget -> Equipment
+  Budget -> Training
+  Budget -> Referral
+  Staffing -> Retention
+  Training -> Competency
+  Retention -> Competency
+  Retention -> Utilization
+  Equipment -> Utilization
+  Maintenance -> Utilization
+  Competency -> Quality
+  Utilization -> Quality
+  Referral -> Quality
+  Geo_Access -> Fac_Births
+  Fin_Barriers -> Fac_Births
+  Health_Seeking -> Fac_Births
+  Quality -> Mortality
+  Fac_Births -> Mortality
+}')
+
+ggdag(round3) + theme_dag() +
+  labs(title = "Round 3: Complete Kenya MNH Model",
+       subtitle = "Supply + Demand after all three interviews")
+```
+
+
+## R: Analyzing the Complete Model
+
+```{r}
+#| label: model-analysis
+#| echo: true
+
+# What must we control for to estimate the causal effect
+# of Budget on Mortality?
+adjustmentSets(round3,
+               exposure = "Budget",
+               outcome = "Mortality")
+
+# What are the implied conditional independencies?
+# Each one is a testable prediction of our model
+impliedConditionalIndependencies(round3)
+
+# How many paths connect Budget to Mortality?
+paths(round3,
+      from = "Budget",
+      to = "Mortality")
+
+# Key question: Is Retention d-separated from Maintenance?
+# If not, they may share a hidden common cause we missed
+dseparated(round3, "Retention", "Maintenance", c())
+```
+
+. . .
+
+::: {.callout-box .green}
+**Practical value:** The `adjustmentSets()` function tells us which variables we *must* measure to evaluate the program's causal effect. The implied conditional independencies generate testable predictions — when Kenya's DHIS2 data arrives, we can check each one. If the data violates any of them, our model needs revision.
+:::
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Build models iteratively.** Start with 3-4 nodes and let stakeholder interviews reveal what is missing. You cannot build the right model from a desk — you have to talk to people.
+
+**Root nodes are leverage points.** Staff Retention and Equipment Maintenance emerged as the critical bottlenecks that initial investment plans overlooked. They have the most downstream effects.
+
+**Supply and demand both matter.** Kenya's 89% facility delivery rate masks huge variation. Demand-side barriers — geography, cost, trust — are invisible from the supply side.
+
+**The model does the prioritization.** You do not need to guess which interventions matter most. The structure of the diagram tells you: intervene where the most downstream paths originate.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 4 — Quantitative Causal Models**
+
+We will take the qualitative model built in this chapter and **add numbers**:
+
+- Conditional probability tables (CPTs) replacing [+] and [-] with actual probabilities
+- Joint probability distributions across the full network
+- Bayes' rule for updating beliefs when new evidence arrives
+- Computing the probability that mortality is high given specific combinations of supply and demand conditions
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The transition:** A qualitative model tells you *what affects what*. A quantitative model tells you *by how much*. That is what we need to make budget allocation decisions — and that is where Chapter 4 takes us.
 :::
 
 
@@ -322,7 +1149,7 @@ Faith built her picture in three interviews. None of them had the whole story. A
 
 <br>
 
-[Inference and Intervention | Chapter 3]{style="color: #005CB9; font-size: 0.6em;"}
+[Inference and Intervention | Chapter 3: The MNH Diagnostic Case Study]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

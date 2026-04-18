@@ -1,7 +1,7 @@
 ---
-title: "Chapter 1 — Did It Actually Work?"
+title: "Chapter 1: Introduction to Causal Analysis"
 subtitle: "Inference and Intervention | BK Advisors"
-author: "Matthew Luke Kuch | BK Advisors"
+author: "BK Advisors"
 date: today
 format:
   revealjs:
@@ -16,336 +16,938 @@ format:
     center: false
     width: 1280
     height: 720
-    self-contained: false
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
 ---
 
-## Meet Almaz
+## Learning Objectives
 
-**Almaz, 22, Tigray region, Ethiopia** *(a composite story drawn from DHS Ethiopia 2016 narratives — the details are real, the name is not)*
+After this chapter, you will be able to:
 
-. . .
+::: {.incremental}
+- Distinguish between **situational assessment** ("What is happening?") and **managerial intervention** ("What should I do?")
+- Explain why **correlation does not imply causation** using real-world health examples
+- Identify three classic traps in causal thinking: **confounding**, **reverse causation**, and **selection bias**
+- Describe the basic building blocks of a **causal model** — nodes, arrows, and directed acyclic graphs (DAGs)
+- Explain why causal reasoning matters for designing health programs that actually save lives
+:::
 
-It is 2015. Almaz is having her first baby.
 
-. . .
+## Chapter Overview
 
-She gives birth at home. Her mother is in the room. So is a young woman in a green uniform — a **Health Extension Worker** sent by the government.
-
-. . .
-
-The labour is long but the baby comes out crying. Both survive.
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Situational<br>Assessment</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Managerial<br>Intervention</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">Correlation<br>≠ Causation</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;">Causal Model<br>Framework</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">MNH<br>Application</div>
+</div>
 
 . . .
 
 ::: {.callout-box}
-**The question:** Did the woman in the green uniform save Almaz's baby? Or would the baby have been fine anyway?
+**The big idea:** When resources are scarce — and they always are — you need to know *what causes what* before you can decide *what to do*. This chapter introduces the thinking tools that make that possible.
 :::
 
 
-## And here is the puzzle
+# Situational Assessment {background-color="#005CB9"}
 
-Between 2000 and 2016, maternal mortality in Ethiopia fell from **673 to 412 deaths per 100,000 live births** *(DHS Ethiopia 2000; 2016)*.
-
-. . .
-
-Over the same period, Ethiopia trained and deployed roughly **38,000 Health Extension Workers** like the one in Almaz's story *(WHO 2013)*.
-
-. . .
-
-::: {.callout-box .orange}
-At first glance, this looks easy: more workers, fewer deaths. The program worked.
-:::
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What is happening? What are the causes?</span>
 
 
-## But here is the twist
+## Here's the Puzzle
 
-In 2005, only **5 out of 100** Ethiopian women gave birth in a health facility.
+Ethiopia has one of the largest community health worker programs in Africa — over **40,000 Health Extension Workers** deployed across the country.
 
 . . .
 
-By 2016, that number had risen — but only to **26 out of 100** *(DHS Ethiopia 2005; 2016)*.
-
-. . .
-
-So most births in Ethiopia, including Almaz's, were still happening **at home** during the years when mortality was falling fastest.
+But here is something strange:
 
 . . .
 
 ::: {.callout-box .red}
-If most women were not going to clinics, then something other than "more clinic visits" was driving the drop. What?
-:::
-
-
-# What if I told you... {background-color="#005CB9"}
-
-
-## ...there are three traps hiding inside that question?
-
-::: {.incremental}
-
-1. **Two things happening together is not the same as one causing the other.**
-
-2. **A third thing you didn't think of can be driving both.**
-
-3. **You have to draw the picture before you trust the numbers.**
-
+**The regions where the most Health Extension Workers are deployed tend to have the highest mortality rates.**
 :::
 
 . . .
 
+Does deploying health workers *cause* deaths?
+
+. . .
+
+Obviously not. But if you just looked at the numbers — workers deployed vs. mortality rates — that is exactly what the data would seem to say.
+
+. . .
+
+::: {.callout-box .green}
+**This is the kind of puzzle that causal thinking solves.** The data is not lying. But it is not telling the whole story either. By the end of this chapter, you will be able to explain exactly what is going on.
+:::
+
+
+## The Manager's Two Questions
+
+Every decision-maker faces two fundamental questions:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
 ::: {.callout-box}
-For the rest of this chapter, we are going to walk through these three traps using Almaz's story.
+**Question 1: What is happening?**
+
+*Situational Assessment* — understanding the current state by gathering evidence and reasoning about causes.
+
+"Why are so many mothers still dying in Amhara region despite having more health workers than anywhere else?"
+:::
 :::
 
-
-## Trap 1 — Two things together ≠ one caused the other
-
-Every morning you see your neighbour walk out the door carrying an umbrella.
-
-. . .
-
-Every morning it rains.
-
-. . .
-
-::: {.bad-example}
-The umbrella caused the rain.
-:::
-
-. . .
-
-::: {.good-example}
-Your neighbour checked the forecast. The forecast caused both — her umbrella *and* the rain landing on her head.
-:::
-
-. . .
-
-::: {.definition-box}
-**The lesson:** Things that happen at the same time often share a cause. They do not always cause each other.
-:::
-
-
-## Trap 1 in Almaz's story
-
-The Health Extension Worker was in the room when Almaz's baby cried.
-
-. . .
-
-But "in the room when it happened" is the same kind of evidence as "carrying an umbrella when it rained".
-
-. . .
-
+::: {.col}
 ::: {.callout-box .green}
-**The aha:** We cannot tell from this one moment whether the HEW *caused* the safe birth, or whether she was simply *present* during a birth that would have gone fine anyway.
+**Question 2: What should I do?**
+
+*Managerial Intervention* — choosing which levers to pull to change outcomes.
+
+"Should we train more midwives, buy more equipment, or fix the data system?"
 :::
-
-
-## Trap 2 — A hidden third thing
-
-Across many countries, ice cream sales and drowning deaths rise together every summer.
-
-. . .
-
-::: {.bad-example}
-Ice cream causes drowning.
 :::
-
-. . .
-
-::: {.good-example}
-**Hot weather** causes both — more people eat ice cream *and* more people swim.
 :::
-
-. . .
-
-::: {.definition-box}
-**The lesson:** When two things move together, look for a hidden third thing — a *confounder* — that might be driving both.
-:::
-
-
-## Trap 2 in Almaz's story
-
-The same year the Health Extension Worker arrived in Almaz's village, a new road also reached the village.
-
-. . .
-
-The road cut the trip to the nearest district hospital from **four hours** to **ninety minutes**.
-
-. . .
-
-So when something went wrong in a difficult birth, families could now reach a hospital in time. *(Tigray Regional Health Bureau, 2014, public summary)*
-
-. . .
-
-::: {.callout-box .green}
-**The aha:** Was it the HEW? Was it the road? Was it both? You cannot tell which until you separate them — and "they arrived together" is exactly what makes it hard.
-:::
-
-
-## Trap 3 — Draw the picture first
-
-When everything is tangled together — the HEW, the road, the school, the radio campaign, the new bus that brought the nurse — you need a way to **see** the tangle before you start counting things.
-
-. . .
-
-The tool we use is a **directed acyclic graph**. Don't be intimidated by the name. It is just **a picture made of boxes and arrows**.
-
-. . .
-
-::: {.definition-box}
-**A box** = a thing that can vary (the HEW being there or not; the road being open or not; the baby surviving or not).
-
-**An arrow** = "this one influences that one".
-:::
-
-
-## Trap 3 in Almaz's story
-
-Here is Almaz's situation as a picture:
-
-<br>
-
-::: {style="text-align: center; font-size: 0.85em;"}
-
-[Government funding]{.dag-node .confounder}
-
-⬇  ⬇
-
-[Health Extension Worker]{.dag-node .treatment}     [New road]{.dag-node .treatment}
-
-⬇  ⬇
-
-[Almaz's baby survives]{.dag-node .outcome .hexagon}
-
-:::
-
-. . .
-
-::: {.callout-box .green}
-**The aha:** Once you draw this, you can *see* why the simple question "did the HEW work?" cannot be answered without also asking about the road. They share a parent — the funding decision that paid for both.
-:::
-
-
-# Back to the puzzle {background-color="#005CB9"}
-
-
-## So what was actually going on?
-
-The Lancet's analysis of Ethiopia's mortality decline points to **three things at once** — and probably others — moving in the same direction *(Wang et al., Lancet Global Health, 2014)*:
-
-. . .
-
-::: {.incremental}
-
-- **Health Extension Workers** in villages, doing antenatal visits and recognising danger signs
-- **New roads and transport** making it possible to actually reach a hospital when something went wrong
-- **Girls staying in school longer**, marrying later, having their first baby older
-
-:::
-
-. . .
-
-::: {.callout-box}
-**The hidden piece:** "The program worked" is the wrong question. The right question is *which parts* worked, *for whom*, and *how much* — and you cannot answer that without first drawing the picture.
-:::
-
-
-## Why this matters
-
-Almaz is one story. Ethiopia is one country. But the trap is everywhere.
-
-. . .
-
-Every time someone says **"we did X and the outcome got better, so X worked"** — about a vaccine campaign, a cash transfer, a school feeding programme, a new clinic — they are at risk of confusing all three traps.
 
 . . .
 
 ::: {.callout-box .orange}
-The job of this course is to give you the tools to **not** make that mistake.
+**Key insight:** You cannot answer Question 2 well until you have answered Question 1 well. Acting without understanding causes is like prescribing medicine without a diagnosis.
 :::
 
 
-# Try it yourself {background-color="#005CB9"}
+## What Is Situational Assessment?
+
+::: {.definition-box}
+**Situational Assessment:** Using evidence to reason about the current state of a system — figuring out which variables are in which states, and *why*.
+:::
+
+. . .
+
+Think of it this way:
+
+::: {.incremental}
+- A **doctor** examining a patient: What symptoms are present? What do they point to?
+- A **mechanic** diagnosing a car: The engine is overheating — but is it the coolant, the fan, or a cracked gasket?
+- A **health program manager** in Ethiopia: Neonatal mortality is not falling in Somali region — is it a workforce problem, a supply chain problem, or something else entirely?
+:::
+
+. . .
+
+::: {.callout-box}
+In each case, the person is trying to **figure out what is causing what** before deciding how to act. Causal models give us a systematic way to do this.
+:::
 
 
-## You are the analyst
+## Ethiopia's Health Challenge: The Numbers
+
+Here is the situation Ethiopia faces, based on publicly available data:
+
+. . .
+
+| Indicator | Ethiopia | Source |
+|---|---|---|
+| **Maternal Mortality Ratio** | ~267 per 100,000 live births | WHO, 2020 |
+| **Neonatal Mortality Rate** | ~28 per 1,000 live births | UNICEF, 2021 |
+| **Health Extension Workers** | 40,000+ deployed nationally | Ethiopia MoH |
+| **Antenatal care coverage** (at least 1 visit) | ~74% | DHS, 2019 |
+| **Leading causes of maternal death** | Hemorrhage, hypertension, sepsis, obstructed labor | WHO |
+
+. . .
+
+::: {.callout-box}
+Ethiopia has made enormous progress — maternal mortality dropped from over 1,000 per 100,000 in the 1990s to about 267 today. But there is still a long way to go, and where to invest next depends on understanding what is *causing* the remaining deaths.
+:::
+
+
+# Managerial Intervention {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">What should I do? Which levers should I pull?</span>
+
+
+## Managers Manage Scarce Resources
+
+::: {.definition-box}
+**Managerial Intervention:** A decision about which things to control or change — the choice of *what* to act on, before deciding *how* to act.
+:::
+
+. . .
+
+::: {.incremental}
+- Resources are always limited — money, time, people, equipment
+- Every investment involves **trade-offs**: spending on training means *not* spending on equipment
+- Choosing wisely requires understanding **what causes what**
+:::
+
+. . .
+
+::: {.callout-box}
+Imagine you are running a health program in Ethiopia with a fixed budget. You have to choose how to divide your resources. Here are three options:
+:::
+
+
+## The Trade-Off
+
+::: {.columns-equal}
+::: {.col}
+::: {.example-block}
+[Option A: People]{.example-label}
+
+Train 5,000 more midwives in emergency obstetric care. Staff every health center with a skilled birth attendant.
+
+**Theory:** More trained staff → better care → fewer deaths.
+:::
+:::
+
+::: {.col}
+::: {.example-block}
+[Option B: Products]{.example-label}
+
+Buy CPAP machines for newborn breathing support, PPH kits for hemorrhage treatment, and ultrasound devices for every district hospital.
+
+**Theory:** Better equipment → better treatment → fewer deaths.
+:::
+:::
+:::
+
+. . .
 
 ::: {.example-block}
-[scenario]{.example-label}
+[Option C: Systems]{.example-label}
 
-A neighbouring district to Almaz's launches a free SMS reminder service for pregnant women in 2018. By 2020, antenatal visit rates in that district have risen by 12 percentage points.
+Build a real-time data dashboard (DHIS2), a referral transport network, and a supply chain tracking system.
 
-The district health officer tells you the SMS service caused the rise. He wants more funding to expand it.
-
-**What is the first question you would ask him before recommending the funding?**
-:::
-
-. . .
-
-::: {.callout-box .green}
-*Hint: think about what else might have changed in that district between 2018 and 2020.*
+**Theory:** Better information → better decisions → better care → fewer deaths.
 :::
 
 . . .
 
 ::: {.callout-box .orange}
-In **Chapter 2** we will turn this kind of question into a picture you can actually draw — and use that picture to decide what to ask next.
+**Here is the problem:** All three sound reasonable. But you cannot do all three equally well. So which one will *cause* the greatest reduction in mortality? That is a causal question — and you cannot answer it with a spreadsheet full of correlations.
 :::
 
 
-# What you will do in R {background-color="#005CB9"}
+## Why You Need Causal Thinking to Decide
 
-
-## On the companion page
-
-When you go to the companion page for this chapter, you will write **a few lines of R** that draw Almaz's diagram from earlier — the boxes for the HEW, the road, and the baby's survival, with the funding box up top.
+Consider what happens if you skip the causal reasoning and just look at the data:
 
 . . .
 
-You will then ask R one specific question: *if I add the road to my picture, does the apparent effect of the HEW change?*
+::: {.columns-equal}
+::: {.col}
+::: {.example-block}
+[What the data might show]{.example-label}
 
-. . .
+Regions with the **most equipment** have the **lowest mortality**.
 
-::: {.callout-box .green}
-You do not need to install anything yet. The code on the companion page is there to read first, run later.
+**Naive conclusion:** Buy more equipment!
+:::
 :::
 
+::: {.col}
+::: {.example-block}
+[What is actually going on]{.example-label}
 
-## Looking ahead
+Regions with the most equipment are also the **wealthiest, most urban regions** — they would have had lower mortality anyway.
 
-In **Chapter 2**, we will learn how to draw these pictures properly — what the boxes can mean, what the arrows can mean, and what the rules are for connecting them.
-
-. . .
-
-By the end of Chapter 2, you will be able to draw a picture for *any* programme someone tells you about — even if you have never heard of it before.
-
-
-## Further reading
-
-::: {.callout-box}
-**The data behind Almaz's story**
-
-- **DHS Ethiopia, 2000 / 2005 / 2011 / 2016** — the four Demographic and Health Surveys this chapter draws from. All publicly available at *dhsprogram.com*.
-- **WHO, 2013** — *Success Factors for Women's and Children's Health: Ethiopia.* The country case study on the Health Extension Worker programme.
-- **Wang H. et al., 2014** — "Global, regional, and national levels of neonatal, infant, and under-5 mortality." *The Lancet*, 384(9947). Open-access.
+**The equipment is not causing the low mortality. Wealth is causing both.**
+:::
+:::
 :::
 
 . . .
-
-::: {.callout-box .green}
-**If you want to go deeper on the ideas**
-
-- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention: Causal Models for Business Analysis.* Routledge. The textbook this course is adapted from. Same tools, different setting — written for business decisions; we use them here for public health and MNH.
-- **Pearl, J. & Mackenzie, D. (2018)** — *The Book of Why.* The most readable introduction to causal inference ever written. Start with chapters 1 and 4.
-:::
-
-
-## The one thing to remember
 
 ::: {.key-takeaway}
-**Two things happening together is not the same as one causing the other.**
+**Without causal thinking, data can lead you to exactly the wrong decision.**
 
-Almaz's baby lived. The HEW was in the room. So was a new road. So was a longer school year for girls. The whole job of causal analysis is figuring out which of those mattered — and how much.
+The rest of this chapter teaches you *why* this happens and *how* to avoid it.
+:::
+
+
+# Correlation ≠ Causation {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The three traps of causal reasoning</span>
+
+
+## The Ice Cream Problem
+
+Before we go back to health data, here is a classic example everyone can relate to:
+
+. . .
+
+::: {.example-block}
+[Everyday Analogy]{.example-label}
+
+**Observation:** On days when ice cream sales are high, drowning deaths are also high.
+
+**Naive conclusion:** Ice cream causes drowning!
+
+**Reality:** Hot weather causes *both*. People eat more ice cream in summer. People also swim more in summer. **Summer heat** is the hidden third variable connecting both.
+:::
+
+. . .
+
+This hidden-third-variable problem has a name: **confounding**. And it is just one of three traps that make people confuse correlation with causation.
+
+
+## Trap 1: Confounding
+
+::: {.definition-box}
+**Confounding** occurs when a third variable influences both the supposed cause and the supposed effect, creating a misleading association between them.
+:::
+
+. . .
+
+::: {.example-block}
+[MNH Example]{.example-label}
+
+**Observation:** Regions in Ethiopia with more Health Extension Workers deployed have *higher* mortality rates.
+
+**Naive conclusion:** Health workers cause deaths?
+
+**Reality:** More health workers are deployed **to the sickest regions** — places with the highest disease burden. **Disease burden** is the confounder. It drives both health worker deployment (because that is where the need is) *and* mortality (because that is where disease is worst).
+:::
+
+. . .
+
+<table style="margin: 0.3em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node treatment">Health Worker<br>Deployment</div></td>
+<td style="text-align: center; padding: 0.5em;"><span class="dag-arrow">←</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node confounder">Disease<br>Burden</div></td>
+<td style="text-align: center; padding: 0.5em;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.5em;"><div class="dag-node outcome">Neonatal<br>Mortality</div></td>
+</tr>
+</table>
+
+. . .
+
+::: {.callout-box}
+**Read the diagram:** Disease burden sends arrows to *both* health worker deployment *and* mortality. That shared cause creates a correlation between workers and mortality — even though workers actually *help*.
+:::
+
+
+## Trap 2: Reverse Causation
+
+::: {.definition-box}
+**Reverse Causation** occurs when the supposed effect actually causes the supposed cause — the arrow points the wrong way.
+:::
+
+. . .
+
+::: {.example-block}
+[MNH Example]{.example-label}
+
+**Observation:** Countries that receive more international health funding tend to have *higher* mortality rates.
+
+**Naive conclusion:** Foreign aid increases mortality?
+
+**Reality:** High mortality **attracts** funding. Donors send money to the countries with the worst health outcomes. The causal arrow runs from mortality to funding, not the other way around.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+[What people assume:]{.bad-example}
+
+More Funding → Higher Mortality
+:::
+::: {.col}
+[What is actually happening:]{.good-example}
+
+Higher Mortality → More Funding
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Think of it this way:** Seeing more firefighters at bigger fires does not mean firefighters cause fires. They are responding to them. Same logic.
+:::
+
+
+## Trap 3: Selection Bias
+
+::: {.definition-box}
+**Selection Bias** occurs when the data sample is not representative of the population, because which cases end up in your data depends on the very things you are trying to study.
+:::
+
+. . .
+
+::: {.example-block}
+[MNH Example]{.example-label}
+
+**Observation:** Among hospitals that report data to Ethiopia's DHIS2 system, CPAP machine availability appears unrelated to neonatal survival.
+
+**Problem:** Only **well-resourced hospitals** consistently report data to DHIS2. These hospitals already have better outcomes. The hospitals where CPAP machines would make the *biggest* difference — small, under-resourced facilities — are missing from the data entirely.
+
+**Selection mechanism:** Hospital capacity determines both whether the hospital reports data *and* how well its babies survive.
+:::
+
+. . .
+
+::: {.callout-box .red}
+**The danger:** If you only study the hospitals you can see in the data, you might conclude that equipment does not matter — when in fact it matters enormously for the facilities you *cannot* see.
+:::
+
+
+## Three Traps: Summary
+
+| Trap | What Goes Wrong | Ethiopia Example |
+|---|---|---|
+| **Confounding** | A hidden third variable drives both X and Y | Disease burden drives both worker deployment and mortality |
+| **Reverse Causation** | Y causes X, not X causes Y | Mortality attracts international funding |
+| **Selection Bias** | Your data sample is not representative | Only well-resourced hospitals report to DHIS2 |
+
+. . .
+
+::: {.key-takeaway}
+**All three traps create patterns in the data that look like causal effects but are not.**
+
+The antidote? Explicit causal modeling — drawing a picture of what causes what *before* you analyze the data.
+:::
+
+
+# The Causal Model Framework {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Nodes, arrows, and directed graphs</span>
+
+
+## What Is a Causal Model?
+
+Think of it this way: a causal model is just a **diagram** that shows what causes what.
+
+. . .
+
+It has three simple ingredients:
+
+::: {.incremental}
+- **Nodes** — the things you care about (drawn as circles, rectangles, or other shapes)
+- **Arrows** — causal links from one thing to another ("A causes B" is drawn as A → B)
+- **Signs** — [+] or [-] telling you the direction of effect (does more of A mean more of B, or less?)
+:::
+
+. . .
+
+::: {.callout-box}
+**The key rule:** An arrow from A to B means that *changing* A can change B. But changing B does *not* change A. Arrows have a direction — and the direction matters.
+:::
+
+
+## What Is a DAG?
+
+::: {.definition-box}
+**Directed Acyclic Graph (DAG):** A diagram where all arrows point in one direction and there are no loops — you can never follow the arrows from any node back to itself. "Directed" means arrows have a direction. "Acyclic" means no circles. "Graph" is just the math word for a diagram of connected nodes.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Valid DAG (no loops)**
+
+A → B → C
+
+You can follow the arrows forward but never get back to where you started.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Not a valid DAG (has a loop)**
+
+A → B → C → A
+
+Following the arrows brings you back to A. This is a cycle, not a DAG.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**Why does this matter?** Loops make it impossible to figure out what causes what — everything causes everything. DAGs force you to be clear and specific about the direction of causation.
+:::
+
+
+## A Simple 3-Node Chain
+
+Here is the simplest useful causal model for a health program:
+
+<table style="width: 85%; margin: 0.5em auto; font-size: 0.6em;">
+<tr>
+<td style="text-align: center; padding: 1em;">
+<div class="dag-node treatment" style="padding: 0.5em 0.8em;">Investment</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow positive" style="font-size: 1.8em;">→ [+]</span>
+</td>
+<td style="text-align: center; padding: 1em;">
+<div class="dag-node" style="padding: 0.5em 0.8em;">Intervention<br>Coverage</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow negative" style="font-size: 1.8em;">→ [-]</span>
+</td>
+<td style="text-align: center; padding: 1em;">
+<div class="dag-node outcome" style="padding: 0.5em 0.8em;">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **Investment → Coverage [+]:** More funding increases the percentage of mothers who receive skilled care
+- **Coverage → Mortality [-]:** Higher coverage of life-saving interventions reduces maternal deaths
+- This is a **chain** — investment does not directly reduce mortality; it works *through* coverage
+:::
+
+. . .
+
+::: {.callout-box}
+This tiny model already tells us something useful: if investment goes up but coverage does *not* go up, the money is being wasted somewhere in between. The chain helps you find where things break down.
+:::
+
+
+## But Wait — It Is Not That Simple
+
+The 3-node chain is a good start, but it ignores a lot. What about:
+
+. . .
+
+::: {.incremental}
+- **Confounders** like disease burden, that affect both where investment goes and how high mortality is?
+- **Multiple pathways** — investment might improve training, equipment, *and* data systems, each affecting mortality differently?
+- **Quality of care** as a mediator between inputs and outcomes?
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**That is what the rest of the course is about.** In Chapter 2, we will learn the formal rules for building these diagrams. In Chapters 4-6, we will add numbers. In Chapters 7-8, we will use them to make decisions. For now, just understand the basic building blocks: **nodes**, **arrows**, and **direction**.
+:::
+
+
+## Preview: A Richer Model
+
+Here is a taste of where we are heading — a more realistic model with multiple pathways:
+
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.5em;">
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="min-width: 80px;">Health<br>Investment</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="vertical-align: top; text-align: center; padding: 0.4em;">
+<div class="dag-node" style="min-width: 80px; margin-bottom: 0.3em;">Workforce<br>Training</div><br>
+<div class="dag-node" style="min-width: 80px; margin-bottom: 0.3em;">Equipment<br>Supply</div><br>
+<div class="dag-node" style="min-width: 80px;">Data<br>Systems</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node" style="min-width: 80px;">Quality<br>of Care</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">→</span></td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node outcome" style="min-width: 80px;">Mortality<br>Reduction</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **Investment** is a decision node (rectangle) — we control it
+- **Workforce, Equipment, Data Systems** are different channels through which investment works
+- **Quality of Care** is where all the channels converge
+- **Mortality Reduction** is the outcome we care about
+- What is missing? Confounders! We will add those in Chapter 2.
+:::
+
+
+# MNH Application: Ethiopia {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Causal thinking applied to real health decisions</span>
+
+
+## Ethiopia's Three-Pillar Approach
+
+Ethiopia's Health Extension Program — one of the most ambitious in Africa — has invested across three pillars:
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>People</strong><br>40,000+ Health<br>Extension Workers</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Products</strong><br>Essential medicines,<br>equipment, supplies</div>
+<div class="step-item" style="border-left: 4px solid #FA7650;"><strong>Systems</strong><br>DHIS2, referral<br>networks, supervision</div>
+</div>
+
+. . .
+
+::: {.callout-box}
+**The causal question:** How do these three pillars combine to produce better outcomes? Do they work independently, or do they need each other?
+:::
+
+. . .
+
+Think of it this way: a trained midwife (People) without a PPH kit (Products) cannot stop a hemorrhage. A PPH kit without a trained midwife is just a box on a shelf. And neither one helps if the mother cannot get to the facility (Systems).
+
+**People, Products, and Systems are *complements* — they multiply each other's effect.**
+
+
+## Ethiopia's Causal Chain
+
+Here is how these pillars connect to outcomes:
+
+<table style="width: 95%; margin: 0.3em auto; font-size: 0.5em;">
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">People<br><span style="font-size: 0.75em; font-weight: 400;">40,000 HEWs</span></div>
+</td>
+<td style="text-align: center;" rowspan="3"><span class="dag-arrow positive" style="font-size: 1.6em;">→ [+]</span></td>
+<td style="text-align: center; padding: 0.4em;" rowspan="3">
+<div class="dag-node" style="padding: 0.4em 0.6em;">Quality<br>of Care</div>
+</td>
+<td style="text-align: center;" rowspan="3"><span class="dag-arrow negative" style="font-size: 1.6em;">→ [-]</span></td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node outcome" style="padding: 0.3em 0.6em;">Maternal<br>Mortality<br><span style="font-size: 0.75em; font-weight: 400;">MMR ~267</span></div>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">Products<br><span style="font-size: 0.75em; font-weight: 400;">Equipment & supplies</span></div>
+</td>
+<td></td>
+</tr>
+<tr>
+<td style="vertical-align: middle; text-align: center; padding: 0.4em;">
+<div class="dag-node decision rect" style="padding: 0.3em 0.6em;">Systems<br><span style="font-size: 0.75em; font-weight: 400;">DHIS2 & referrals</span></div>
+</td>
+<td style="text-align: center; padding: 0.4em;">
+<div class="dag-node outcome" style="padding: 0.3em 0.6em;">Neonatal<br>Mortality<br><span style="font-size: 0.75em; font-weight: 400;">NMR ~28</span></div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.callout-box .green}
+**Notice:** All three pillars flow into Quality of Care. Quality is the bottleneck — the place where everything converges. If quality is poor, no amount of spending on any one pillar will fix the outcomes.
+:::
+
+
+## Why the Numbers Mislead
+
+Now let's go back to our opening puzzle. If you looked at raw data across Ethiopia's regions:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.example-block}
+[What the data shows]{.example-label}
+
+Regions with the most Health Extension Workers per capita also have the highest maternal mortality.
+
+Regions with the most equipment also tend to have high mortality.
+
+**A naive analyst might say:** "These investments are not working!"
+:::
+:::
+
+::: {.col}
+::: {.example-block}
+[What the causal model reveals]{.example-label}
+
+The regions with the highest **disease burden** — think Somali, Afar, Gambella — receive the most resources *because* they have the worst outcomes.
+
+**Confounding by disease burden** creates a positive correlation between resources and mortality, even when resources are saving lives.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**This is exactly Trap 1 (confounding) in action.** The solution is not to ignore the data. The solution is to build a causal model that includes disease burden as a confounder, and then analyze the data *through* that model.
+:::
+
+
+## ANC Coverage: A Closer Look
+
+Ethiopia's antenatal care (ANC) coverage shows how much progress has been made — and how far there is to go:
+
+. . .
+
+::: {.incremental}
+- **~74% of pregnant women** attend at least one ANC visit (DHS 2019)
+- But only about **43%** complete the recommended four or more visits
+- **Urban coverage** is much higher than **rural coverage** — another confounder
+- The leading causes of maternal death — hemorrhage (~25%), hypertension (~16%), sepsis (~11%) — are all treatable *if* mothers reach skilled care in time
+:::
+
+. . .
+
+::: {.callout-box}
+**Here is the causal chain:** ANC visits → Early detection of complications → Timely referral → Skilled treatment → Survival. Every link in this chain must work. If *any* one link breaks — a missed visit, a failed referral, an absent midwife, a missing drug — the outcome can be death.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**This is why causal models matter for real decisions.** A naive analysis might say "ANC does not reduce mortality" if coverage goes up but deaths stay constant. A causal model asks: *where in the chain is it breaking?*
+:::
+
+
+# R Workshop: Your First Causal Diagrams {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Using dagitty and ggdag in R</span>
+
+
+## Setting Up the R Environment
+
+Before we draw any diagrams, we need to load our tools. The code below loads three R packages that we will use throughout this course.
+
+```{r}
+#| label: setup
+#| echo: true
+
+# Install these packages the first time you use them (remove the # to run):
+# install.packages(c("dagitty", "ggdag", "ggplot2"))
+
+# Load the packages into our R session
+library(dagitty)    # dagitty lets us define and analyze causal diagrams (DAGs)
+library(ggdag)      # ggdag draws pretty pictures of those DAGs
+library(ggplot2)    # ggplot2 is the general-purpose plotting library
+```
+
+::: {.callout-box}
+**What do these packages do?**
+
+- **dagitty** — lets you write down a causal diagram in code and ask questions about it (like "what do I need to control for?")
+- **ggdag** — turns that code into a visual diagram you can look at
+- **ggplot2** — the engine that powers the drawings (ggdag uses it behind the scenes)
+:::
+
+
+## R: Drawing Our Simple 3-Node Chain
+
+Let's start by drawing the simple Investment → Coverage → Mortality chain we saw earlier. The code below defines three nodes and two arrows, then draws the picture.
+
+```{r}
+#| label: simple-dag
+#| echo: true
+#| fig-width: 8
+#| fig-height: 4
+
+# Step 1: Define the DAG
+# We list nodes with positions (pos="x,y") and arrows (->)
+mnh_simple <- dagitty('dag {
+  Investment [pos="0,0"]
+  Coverage   [pos="1,0"]
+  Mortality  [pos="2,0"]
+
+  Investment -> Coverage
+  Coverage -> Mortality
+}')
+
+# Step 2: Draw it
+# ggdag() takes our DAG definition and produces a plot
+# theme_dag() removes the gridlines and axes to keep it clean
+ggdag(mnh_simple) +
+  theme_dag() +
+  labs(title = "Simple MNH Causal Model",
+       subtitle = "Investment → Coverage → Mortality")
+```
+
+::: {.callout-box .green}
+**What to notice:** The arrows only go left-to-right. Investment affects Coverage, and Coverage affects Mortality. There is no arrow from Investment directly to Mortality — the effect goes *through* Coverage.
+:::
+
+
+## R: Adding a Confounder
+
+Now let's add Disease Burden as a confounder — the hidden variable that was creating the misleading correlation between health workers and mortality. This is the confounding diagram from our Ethiopia example.
+
+```{r}
+#| label: confounded-dag
+#| echo: true
+#| fig-width: 9
+#| fig-height: 5
+
+# Define the confounded model
+# Disease_Burden affects BOTH Health_Workers and Mortality
+confounded_model <- dagitty('dag {
+  Disease_Burden [pos="1,0"]
+  Health_Workers [pos="0,1"]
+  Mortality      [pos="2,1"]
+
+  Disease_Burden -> Health_Workers
+  Disease_Burden -> Mortality
+  Health_Workers -> Mortality
+}')
+
+# Draw it with color-coding:
+# - "exposure" = the thing we think is the cause (Health_Workers)
+# - "outcome" = the thing we are measuring (Mortality)
+ggdag_status(confounded_model,
+             exposure = "Health_Workers",
+             outcome = "Mortality") +
+  theme_dag() +
+  scale_color_manual(values = c("exposure" = "#83BD00",    # green for treatment
+                                "outcome" = "#E24A3F",     # red for outcome
+                                "other" = "#F8A623")) +    # amber for confounder
+  labs(title = "Confounding: Health Workers and Mortality",
+       subtitle = "Disease burden drives both — creating a misleading correlation")
+```
+
+::: {.callout-box}
+**Read the picture:** Disease Burden sits at the top, sending arrows down to *both* Health Workers and Mortality. That is the fork structure — the classic confounding pattern. Without accounting for Disease Burden, you would wrongly conclude that health workers increase mortality.
+:::
+
+
+## R: What Do We Need to Control For?
+
+Here is the powerful part. Once we have drawn the diagram, R can tell us *exactly* which variables we need to control for to get the true causal effect.
+
+```{r}
+#| label: adjustment-sets
+#| echo: true
+
+# Ask dagitty: "What do I need to control for to estimate the
+# causal effect of Health_Workers on Mortality?"
+adjustmentSets(confounded_model,
+               exposure = "Health_Workers",
+               outcome = "Mortality")
+
+# This should return: { Disease_Burden }
+# Translation: "Control for Disease Burden, and the confounding goes away."
+```
+
+. . .
+
+::: {.callout-box .green}
+**What this means in plain English:** If you compare regions that have the *same* disease burden, then the regions with more health workers will have *lower* mortality. The confounding disappears once you account for why workers were deployed where they were.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**This is the whole point of the course in one slide.** Draw the causal diagram. Ask R what to control for. Analyze the data correctly. Make better decisions. We will build on this foundation in every chapter that follows.
+:::
+
+
+## R: Ethiopia's Three-Pillar Model
+
+Let's build the richer model that includes Ethiopia's three-pillar approach — People, Products, and Systems — with Disease Burden as a confounder.
+
+```{r}
+#| label: ethiopia-dag
+#| echo: true
+#| fig-width: 10
+#| fig-height: 6
+
+# Define Ethiopia's three-pillar theory of change as a DAG
+ethiopia_toc <- dagitty('dag {
+  People          [pos="1,0"]
+  Products        [pos="1,1"]
+  Systems         [pos="1,2"]
+  Quality         [pos="2,1"]
+  NMR             [pos="3,0.5"]
+  MMR             [pos="3,1.5"]
+  Disease_Burden  [pos="2,2.5"]
+
+  People   -> Quality
+  Products -> Quality
+  Systems  -> Quality
+  Quality  -> NMR
+  Quality  -> MMR
+  Disease_Burden -> NMR
+  Disease_Burden -> MMR
+}')
+
+# Draw the full model
+ggdag(ethiopia_toc) +
+  theme_dag() +
+  labs(title = "Ethiopia MNH: Three-Pillar Theory of Change",
+       subtitle = "People, Products, and Systems → Quality → Mortality")
+```
+
+. . .
+
+::: {.callout-box}
+**What this model says:** All three pillars flow into Quality of Care. Quality then reduces both NMR and MMR. Disease Burden affects the outcomes directly — a region with severe malaria burden will have higher mortality even with good care.
+:::
+
+
+## R: Finding All the Paths
+
+We can also ask R to show us every causal pathway from a starting point to an endpoint. This helps us see all the different routes through which an investment could affect mortality.
+
+```{r}
+#| label: ethiopia-paths
+#| echo: true
+
+# What are all the paths from People (workforce investment) to NMR?
+people_to_nmr <- paths(ethiopia_toc,
+                        from = "People",
+                        to = "NMR")
+
+# Print the paths — each one is a different causal route
+print(people_to_nmr)
+
+# What variables must we control for to isolate
+# the effect of People on NMR?
+adjustmentSets(ethiopia_toc,
+               exposure = "People",
+               outcome = "NMR")
+```
+
+::: {.callout-box .green}
+**Try It:** Modify the code above to look at the paths from "Systems" to "MMR" instead. How many routes are there? What do you need to control for?
+:::
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Causal thinking starts with two questions:** "What is happening?" (situational assessment) and "What should I do?" (managerial intervention). You cannot answer the second well without answering the first.
+
+**Correlation does not equal causation.** Three traps — confounding, reverse causation, and selection bias — all create misleading patterns in data.
+
+**A causal model (DAG)** makes your assumptions visible, testable, and actionable. It tells you what to control for, where the chain breaks, and which interventions will actually work.
+
+**Ethiopia's 40,000 Health Extension Workers are not causing deaths.** Disease burden is confounding the relationship. Causal models help us see through the numbers to the truth.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 2 — Qualitative Causal Models**
+
+Now that you know *why* we need causal diagrams, we will learn *how* to build them properly:
+
+- Four types of nodes: probabilistic, objective, strategic option, and function
+- How to assign [+] and [-] signs to every arrow
+- The three fundamental structures: **chains**, **forks**, and **colliders** — and why colliders are the most surprising
+- How to determine whether two variables are truly independent (d-separation)
+:::
+
+. . .
+
+::: {.callout-box .green}
+**By the end of Chapter 2**, you will be able to draw a complete causal diagram for any health program — and use it to make testable predictions about what the data should look like.
 :::
 
 
@@ -358,7 +960,7 @@ Almaz's baby lived. The HEW was in the room. So was a new road. So was a longer 
 
 <br>
 
-[Inference and Intervention | Chapter 1]{style="color: #005CB9; font-size: 0.6em;"}
+[Inference and Intervention | Chapter 1: Introduction to Causal Analysis]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

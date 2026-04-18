@@ -1,0 +1,972 @@
+---
+title: "Chapter 7: Decision Analysis & Value of Information"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+---
+
+
+## Learning Objectives
+
+After this chapter, you will be able to:
+
+::: {.incremental}
+- Draw **decision maps** that lay out your options, the uncertain events, and the outcome you care about
+- Calculate **expected value** by asking: "If you played this decision 100 times, what would happen on average?"
+- Explain why **watching is different from doing** -- seeing an umbrella is not the same as giving someone an umbrella
+- Use **graph surgery** ("cutting the arrows") to figure out the true effect of an intervention
+- Estimate the **value of information** -- how much is it worth to learn something before you commit?
+:::
+
+
+## Chapter Overview -- From Understanding to Deciding
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">Decision<br>Maps</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">Expected<br>Value</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">Watching vs.<br>Doing</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">Cutting the<br>Arrows</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">Value of<br>Information</div>
+</div>
+
+. . .
+
+::: {.callout-box}
+**The big shift:** Chapters 1--6 asked *"What is happening and why?"* That is inference -- understanding the system. Starting now, the question changes to **"What should I do about it?"** That is intervention -- acting on the system. Decision maps are the bridge between the two.
+:::
+
+
+# Decision Maps {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Adding choices and goals to our causal diagrams</span>
+
+
+## What Is a Decision Map?
+
+::: {.definition-box}
+**Decision Map:** A diagram that takes the causal models we have been building and adds two new ingredients: a **choice** you control (drawn as a rectangle) and a **goal** you want to achieve (drawn as a hexagon). Everything else -- the uncertain stuff you cannot control -- stays as ovals, just like before.
+:::
+
+. . .
+
+| Node Type | Shape | What It Means | Kenya MNH Example |
+|---|---|---|---|
+| **Uncertain event** | Oval | Something you do not control | Neonatal mortality rate, staffing levels |
+| **Choice** | Rectangle | Something you *do* control | Which intervention to fund |
+| **Goal** | Hexagon | What you want to maximize (or minimize) | Neonatal lives saved |
+
+. . .
+
+::: {.callout-box}
+Think of it this way: **Chapters 2--6 gave us a map of the territory.** A decision map adds *you* to the map -- it shows where you are standing and which roads you can choose to take.
+:::
+
+
+## A Simple Decision Map
+
+<table style="width: 85%; margin: 0.5em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node decision rect" style="padding: 0.5em 0.7em;">County Health<br>Director's Choice</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow">&rarr;</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node" style="padding: 0.5em 0.7em;">Neonatal<br>Outcomes</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow">&rarr;</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node hexagon" style="padding: 0.5em 0.7em; border-color: #3E9B6E; color: #3E9B6E;">Newborn<br>Lives Saved</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow">&uarr;</span>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder" style="padding: 0.5em 0.7em;">County Baseline<br>Conditions</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **Rectangle** (choice): The county health director picks an intervention strategy
+- **Ovals** (uncertain): Neonatal outcomes depend on both the choice *and* conditions the director cannot control
+- **Hexagon** (goal): Newborn lives saved -- the thing we want to maximize
+- The arrow from the choice to outcomes is the **causal effect** of the decision
+:::
+
+
+## The Kenya MNH Decision
+
+::: {.example-block}
+[The Scenario]{.example-label}
+
+A **county health director** in Kenya has limited resources. She must choose between two options:
+
+- **Option A -- CPAP Equipment:** Purchase and install Continuous Positive Airway Pressure (CPAP) machines in **10 facilities** across her county. Estimated cost: KES 15 million.
+- **Option B -- EmONC Training:** Fund Emergency Obstetric and Newborn Care training for **50 midwives** across 25 facilities. Estimated cost: KES 15 million.
+
+Both options cost the same. The question is: **which one will save more newborn lives?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Why this is hard:** The answer depends on things she does not know for certain -- will the CPAP machines be maintained? Will the trained midwives stay in their posts? The decision map helps her think through the uncertainty *before* committing.
+:::
+
+
+# Expected Value {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">"If you played this decision 100 times..."</span>
+
+
+## The "100 Times" Rule
+
+::: {.definition-box}
+**Expected Value (EV):** If you could make the same decision 100 times under the same conditions, the expected value is the average outcome you would get. It weights each possible outcome by how likely it is to happen.
+:::
+
+. . .
+
+Here is the intuition. Imagine the county health director could somehow run the same year 100 times:
+
+::: {.incremental}
+- In some of those runs, things go well -- equipment works, midwives stay
+- In some runs, things go badly -- equipment breaks, midwives leave
+- The expected value is the **average across all 100 runs**
+- It tells you: "On balance, what can I expect from this choice?"
+:::
+
+. . .
+
+::: {.callout-box}
+**We do not need fancy formulas.** Expected value is just: add up (probability of each scenario) times (outcome in that scenario). That is it.
+:::
+
+
+## Option A: CPAP Equipment for 10 Facilities
+
+What could happen if the director buys CPAP machines?
+
+| Scenario | What Happens | Probability | Lives Saved |
+|---|---|---|---:|
+| **Best case** | Machines work, staff trained to use them | 40 out of 100 | 120 |
+| **Partial success** | Machines work, staff struggle with them | 35 out of 100 | 50 |
+| **Failure** | Machines break down, no maintenance | 25 out of 100 | 10 |
+
+. . .
+
+**Expected value of Option A:**
+
+$$EV_A = (0.40 \times 120) + (0.35 \times 50) + (0.25 \times 10) = 48 + 17.5 + 2.5 = \mathbf{68}$$
+
+. . .
+
+::: {.callout-box}
+**On average, Option A saves about 68 newborn lives** per year in this county. Not bad -- but let us see how Option B compares.
+:::
+
+
+## Option B: EmONC Training for 50 Midwives
+
+What could happen if the director funds midwife training?
+
+| Scenario | What Happens | Probability | Lives Saved |
+|---|---|---|---:|
+| **Best case** | Most midwives stay and apply skills | 30 out of 100 | 150 |
+| **Partial success** | About half stay, skills fade over time | 50 out of 100 | 80 |
+| **Failure** | High turnover, training wasted | 20 out of 100 | 20 |
+
+. . .
+
+**Expected value of Option B:**
+
+$$EV_B = (0.30 \times 150) + (0.50 \times 80) + (0.20 \times 20) = 45 + 40 + 4 = \mathbf{89}$$
+
+. . .
+
+::: {.callout-box .green}
+**On average, Option B saves about 89 newborn lives** -- roughly 30% more than Option A. The midwife training reaches more facilities and is less dependent on a single point of failure (equipment maintenance).
+:::
+
+
+## Comparing the Two Options Side by Side
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Option A: CPAP Equipment**
+
+- Expected lives saved: **68**
+- Upside potential: 120 lives (if everything works)
+- Downside risk: Only 10 lives if machines fail
+- Range: **10 to 120**
+- Depends heavily on: maintenance capacity
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Option B: EmONC Training**
+
+- Expected lives saved: **89**
+- Upside potential: 150 lives (if retention is high)
+- Downside risk: 20 lives if turnover is severe
+- Range: **20 to 150**
+- Depends heavily on: midwife retention
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Option B wins on expected value.** But notice something important: the answer depends on the probabilities we assumed. What if we got those probabilities wrong? We will come back to this with sensitivity analysis in the R Workshop.
+:::
+
+
+## Decision Trees: A Different View of the Same Idea
+
+A **decision tree** is just a decision map drawn sideways, as a branching diagram:
+
+. . .
+
+::: {.callout-box}
+**How to read a decision tree:**
+
+1. Start at the left with your **choice** (rectangle): CPAP or Training?
+2. Follow each branch to the **uncertain events** (ovals): what scenarios can happen?
+3. At the end of each branch, find the **outcome** (lives saved)
+4. **Work backwards:** multiply outcomes by probabilities, then compare the choices
+
+This "working backwards" approach is called **folding back** the tree. It is the standard way to solve decision problems.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Key insight:** A decision tree and a decision map contain the same information -- they are just drawn differently. Decision trees are good for sequential problems (one choice leads to another). Decision maps are better for seeing the whole causal structure at once.
+:::
+
+
+# Watching vs. Doing {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">THE critical concept in causal reasoning</span>
+
+
+## The Umbrella Analogy
+
+::: {.example-block}
+[The Key Distinction]{.example-label}
+
+**Watching:** You look outside and *see* people carrying umbrellas. You conclude it is probably raining. The umbrella is a *signal* -- it tells you about the weather.
+
+**Doing:** You *hand out* umbrellas to everyone on the street. Does it start raining? Of course not. Giving someone an umbrella does not change the weather.
+
+**Seeing an umbrella is not the same as giving an umbrella.**
+:::
+
+. . .
+
+::: {.callout-box .red}
+**This seems obvious with umbrellas, but it is one of the most common mistakes in policy and program design.** People see a correlation (facilities with CPAP have lower mortality) and assume the intervention caused it. But correlation is watching. Causation requires understanding what happens when you *do* something.
+:::
+
+
+## Watching vs. Doing in Kenya's Health System
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box}
+**Watching (Observation)**
+
+You look at data from Kenya's 47 counties and notice: *counties where facilities have CPAP machines tend to have 30% lower neonatal mortality.*
+
+But those counties also tend to have:
+
+- More health workers per facility
+- Better supply chains
+- Stronger county health management teams
+- Higher budgets from county government
+
+The CPAP machine is a **signal** of a well-resourced county. It is the umbrella.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Doing (Intervention)**
+
+You **give** a CPAP machine to a facility in an under-resourced county -- changing nothing else about that county.
+
+The true causal effect might be only a **10% reduction** in neonatal mortality -- still valuable, but much less than the 30% you saw in the data.
+
+The difference? When you *watch*, you see the effect of CPAP **plus** everything else that comes with it. When you *do*, you see only the effect of CPAP itself.
+:::
+:::
+:::
+
+
+## Why Does This Happen?
+
+The problem is **confounders** -- variables that affect both the treatment and the outcome.
+
+<table style="width: 85%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td colspan="3" style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder" style="padding: 0.5em 0.7em;">County Resources<br>(budget, staff, management)</div>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8601; [+]</span>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8600; [&minus;]</span>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment" style="padding: 0.5em 0.7em;">CPAP<br>Present</div>
+</td>
+<td style="text-align: center;">
+<span class="dag-arrow negative">&rarr; [&minus;]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome" style="padding: 0.5em 0.7em;">Neonatal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **County Resources** is the confounder -- the hidden common cause
+- Rich counties buy CPAP *and* have lower mortality (for lots of reasons)
+- When you just **watch**, you see the combined effect of resources + CPAP
+- When you **do** (give CPAP to a resource-poor county), you only get the direct CPAP effect
+:::
+
+
+## The Lesson for Decision-Making
+
+::: {.callout-box .orange}
+**Before you use data to make decisions, always ask:** Am I looking at the result of *watching* or *doing*?
+
+- **Watching data** (observational): "Counties with CPAP have 30% lower mortality" -- includes confounders
+- **Doing data** (interventional): "Giving CPAP to a random county reduces mortality by 10%" -- isolates the causal effect
+- If you use watching data as if it were doing data, you will **overestimate** the benefit of your intervention and **misallocate** resources
+:::
+
+. . .
+
+::: {.key-takeaway}
+**The numbers you use for expected value calculations must come from "doing" estimates, not "watching" estimates.** Otherwise your decision map will point you in the wrong direction.
+:::
+
+
+# Cutting the Arrows {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Graph surgery -- the visual trick that makes "doing" concrete</span>
+
+
+## Graph Surgery: The Big Idea
+
+::: {.definition-box}
+**Graph Surgery ("Cutting the Arrows"):** When you *intervene* on a variable -- when you set it to a specific value by deliberate action -- you **cut all the arrows pointing into it** in your causal diagram. The variable no longer depends on its usual causes; it depends only on *your* choice.
+:::
+
+. . .
+
+Why? Because when you decide to give a facility a CPAP machine, that decision does not depend on whether the county is rich or poor. *You* are making it happen. So the arrow from "County Resources" to "CPAP Present" no longer applies.
+
+
+## Before and After Surgery
+
+::: {.columns-equal}
+::: {.col}
+**Before (Watching):**
+
+<table style="font-size: 0.5em; margin: 0 auto;">
+<tr><td style="text-align:center;"><div class="dag-node confounder">County<br>Resources</div></td></tr>
+<tr><td style="text-align:center;"><span class="dag-arrow">&darr; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &darr;</span></td></tr>
+<tr>
+<td style="text-align:center;">
+<div class="dag-node treatment" style="display:inline-block;">CPAP</div>
+<span class="dag-arrow">&rarr;</span>
+<div class="dag-node outcome" style="display:inline-block;">NMR</div>
+</td>
+</tr>
+</table>
+
+Both arrows from Resources are intact. CPAP and NMR are connected through the confounder *and* through the direct causal path.
+:::
+
+::: {.col}
+**After Surgery (Doing):**
+
+<table style="font-size: 0.5em; margin: 0 auto;">
+<tr><td style="text-align:center;"><div class="dag-node confounder">County<br>Resources</div></td></tr>
+<tr><td style="text-align:center;"><span style="color:#ccc;">&darr; (cut)</span> &nbsp;&nbsp;&nbsp;&nbsp; <span class="dag-arrow">&darr;</span></td></tr>
+<tr>
+<td style="text-align:center;">
+<div class="dag-node treatment" style="display:inline-block;">CPAP</div>
+<span class="dag-arrow">&rarr;</span>
+<div class="dag-node outcome" style="display:inline-block;">NMR</div>
+</td>
+</tr>
+</table>
+
+The arrow from Resources to CPAP is **cut**. Now the only path from CPAP to NMR is the direct causal one. The confounder is blocked.
+:::
+:::
+
+. . .
+
+::: {.callout-box .green}
+**After the surgery, County Resources still affects NMR directly** (richer counties still have lower mortality for other reasons). But it no longer confuses our estimate of what CPAP itself does. That is why graph surgery works.
+:::
+
+
+## Graph Surgery Applied to Our Kenya Decision
+
+Let us apply this to the county health director's choice:
+
+<table style="width: 95%; margin: 0.4em auto; font-size: 0.45em;">
+<tr>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node decision rect">Director's<br>Choice</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">&rarr;</span></td>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node">Intervention<br>Delivery</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">&rarr;</span></td>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node">Neonatal<br>Outcomes</div>
+</td>
+<td style="text-align: center;"><span class="dag-arrow">&rarr;</span></td>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node hexagon" style="border-color: #3E9B6E; color: #3E9B6E;">Lives<br>Saved</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow">&uarr;</span>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow">&uarr;</span>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node confounder">Maintenance<br>Capacity</div>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.5em;">
+<div class="dag-node confounder">Midwife<br>Retention</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+. . .
+
+::: {.callout-box}
+**The director controls her choice** (the rectangle). She does **not** control maintenance capacity or midwife retention (the ovals). Graph surgery cuts all arrows into the decision node, making it clear that the only thing connecting her choice to lives saved is the causal path through intervention delivery and neonatal outcomes.
+:::
+
+
+# Value of Information {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">"How much would it be worth to know first?"</span>
+
+
+## The Pilot Question
+
+::: {.example-block}
+[The Key Question]{.example-label}
+
+Our county health director has picked Option B (training) based on expected value. But she is uncertain about midwife retention. **What if she could find out the retention rate before committing her entire budget?**
+
+For instance: what if she spent KES 1.5 million (10% of the budget) to **pilot the training in 5 facilities first** and measure retention over 6 months?
+:::
+
+. . .
+
+::: {.callout-box}
+**This is the value of information question:** Before committing resources to all facilities, what is it worth to learn something first?
+
+If the pilot changes her decision, it has value. If it does not change her decision (she would pick training regardless), it has no value.
+:::
+
+
+## When Information Has Value
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**Information IS valuable when...**
+
+- You are uncertain about a key variable
+- Different answers would lead to **different decisions**
+- The cost of being wrong is high
+
+*Example:* If the pilot reveals high turnover, the director switches to CPAP. That switch saves resources that would have been wasted.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**Information is NOT valuable when...**
+
+- You would make the same decision regardless
+- The cost of gathering information is too high
+- The information arrives too late to act on
+
+*Example:* If training wins even under the worst retention scenario, a pilot does not change anything.
+:::
+:::
+:::
+
+
+## Calculating the Value of a Pilot
+
+Suppose the pilot can reveal one of three things:
+
+| Pilot Result | What It Tells Us | P(result) | Best Decision | EV of Best Decision |
+|---|---|---|---|---:|
+| **Retention is high** | >80% of midwives stay | 30% | Training | 150 lives |
+| **Retention is moderate** | ~50% stay | 50% | Training | 80 lives |
+| **Retention is low** | <30% stay | 20% | **CPAP** | **68 lives** |
+
+. . .
+
+**Expected value WITH the pilot** (choosing the best option after seeing results):
+
+$$EV_{\text{with pilot}} = (0.30 \times 150) + (0.50 \times 80) + (0.20 \times 68) = 45 + 40 + 13.6 = \mathbf{98.6}$$
+
+. . .
+
+**Expected value WITHOUT the pilot** (our original best choice -- training):
+
+$$EV_{\text{without}} = \mathbf{89}$$
+
+. . .
+
+::: {.key-takeaway}
+**Value of the pilot = 98.6 &minus; 89 = 9.6 additional lives saved.** The pilot is worth running if its cost (in terms of lives delayed) is less than 9.6 lives. This is the "value of information" -- the payoff from learning before committing.
+:::
+
+
+## Applying This to Kenya's 47 Counties
+
+::: {.callout-box}
+**Scaling the idea:** Kenya has 47 counties with significant variation in health system capacity. Before rolling out a single intervention strategy nationwide, the national government could:
+
+1. **Pilot in 5 diverse counties** -- urban, rural, arid, high-burden, low-burden
+2. **Measure the key uncertain variables** -- retention, maintenance capacity, supply chain reliability
+3. **Update the decision map** with real data from the pilots
+4. **Customize by county** -- maybe CPAP is better for some counties, training for others
+
+This is a sequential decision: **Pilot first, then decide.**
+:::
+
+. . .
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;"><strong>Stage 1</strong><br>Run pilot in<br>5 counties</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;"><strong>Observe</strong><br>Pilot results</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;"><strong>Stage 2</strong><br>Choose strategy<br>per county type</div>
+<div class="step-arrow">&rarr;</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;"><strong>Outcome</strong><br>Newborn lives<br>saved nationwide</div>
+</div>
+
+. . .
+
+::: {.callout-box .orange}
+**The value of the pilot depends on county-level variation.** If all 47 counties were identical, one pilot would be enough. But Kenya's devolved health system means counties vary enormously in staffing, budgets, and infrastructure. Piloting across diverse county types gives the most useful information.
+:::
+
+
+# MNH Application: Kenya County Decisions {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Putting it all together with Kenya's devolved health system</span>
+
+
+## Kenya's Maternal and Newborn Health Context
+
+::: {.callout-box}
+**Key facts about Kenya's health system:**
+
+- **47 counties** with devolved health governance since 2013
+- ~**89% facility delivery rate** nationally, but wide county variation (50% to 95%+)
+- Maternal mortality ratio: ~**342 per 100,000** live births
+- Significant **county-level variation** in neonatal mortality -- from 15 to 40+ per 1,000
+- County governments control health budgets, staffing, and procurement
+- **Each county health director faces her own version of the CPAP vs. Training decision**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**Why Kenya is a perfect case study:** The devolved system means 47 different decision-makers are independently making resource allocation choices. Some will make good decisions, some will not. Decision analysis can help every county director think more clearly about uncertainty.
+:::
+
+
+## The Full Decision Problem
+
+::: {.example-block}
+[County-Level Decision]{.example-label}
+
+A county health director in a **high-burden county** (NMR ~38 per 1,000, ~65% facility delivery, limited equipment) faces this choice:
+
+| Factor | Option A: CPAP | Option B: EmONC Training |
+|---|---|---|
+| **Cost** | KES 15M | KES 15M |
+| **Facilities reached** | 10 | 25 |
+| **Health workers affected** | 20 (technicians) | 50 (midwives) |
+| **Key uncertainty** | Maintenance | Retention |
+| **Best-case lives saved** | 120 | 150 |
+| **Worst-case lives saved** | 10 | 20 |
+| **Expected lives saved** | 68 | 89 |
+:::
+
+
+## How the Decision Changes Across County Types
+
+Not every county is the same. Here is how the expected value shifts:
+
+| County Type | Counties | Option A (CPAP) EV | Option B (Training) EV | Better Choice |
+|---|---:|---:|---:|---|
+| **High-burden, weak systems** | ~12 | 55 | 95 | Training |
+| **High-burden, moderate systems** | ~10 | 75 | 85 | Training |
+| **Moderate-burden** | ~15 | 70 | 70 | Either |
+| **Low-burden, strong systems** | ~10 | 80 | 55 | CPAP |
+
+. . .
+
+::: {.callout-box .green}
+**The answer is not the same everywhere.** In counties with weak health systems, training has a bigger impact because it addresses the most binding constraint (workforce capacity). In well-resourced counties with strong staffing, CPAP fills a different gap. **Context determines the optimal choice.**
+:::
+
+
+## The "Watching vs. Doing" Trap in County Data
+
+::: {.example-block}
+[A Common Mistake]{.example-label}
+
+A policymaker looks at data from all 47 counties and sees: *counties that invested in CPAP equipment last year had 25% lower neonatal mortality than counties that invested in training.*
+
+She concludes: "We should tell all counties to buy CPAP."
+
+**This is the watching-vs.-doing mistake.** Counties that bought CPAP were already better-resourced (they could afford it and maintain it). The 25% difference is mostly about county resources, not about CPAP itself.
+:::
+
+. . .
+
+::: {.callout-box .red}
+**After graph surgery** -- cutting the arrow from county resources to CPAP -- the true causal effect of CPAP might be only a 10% mortality reduction. Meanwhile, the true causal effect of training (after surgery) might be a 15% reduction. **The naive data pointed in the wrong direction.**
+:::
+
+
+# R Workshop: Decision Analysis {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Expected value calculation and sensitivity analysis in R</span>
+
+
+## R: Setting Up the Decision Problem
+
+```{r}
+#| label: setup-decision
+#| echo: true
+
+library(dplyr)
+library(ggplot2)
+
+# Define the two options with their scenarios
+option_a <- data.frame(
+  option   = "A: CPAP Equipment",
+  scenario = c("Best case", "Partial success", "Failure"),
+  probability = c(0.40, 0.35, 0.25),
+  lives_saved = c(120, 50, 10)
+)
+
+option_b <- data.frame(
+  option   = "B: EmONC Training",
+  scenario = c("Best case", "Partial success", "Failure"),
+  probability = c(0.30, 0.50, 0.20),
+  lives_saved = c(150, 80, 20)
+)
+
+# Combine into one table
+decisions <- bind_rows(option_a, option_b)
+
+# Calculate expected value for each option
+ev_table <- decisions |>
+  group_by(option) |>
+  summarise(
+    expected_lives = sum(probability * lives_saved),
+    .groups = "drop"
+  ) |>
+  arrange(desc(expected_lives))
+
+ev_table
+# B: EmONC Training = 89, A: CPAP Equipment = 68
+```
+
+
+## R: Visualizing the Two Options
+
+```{r}
+#| label: compare-options
+#| echo: true
+#| fig-width: 9
+#| fig-height: 5
+
+# Bar chart comparing expected values
+ggplot(ev_table, aes(x = reorder(option, expected_lives),
+                     y = expected_lives,
+                     fill = option)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = paste0(expected_lives, " lives")),
+            hjust = -0.1, size = 5, fontface = "bold") +
+  coord_flip() +
+  scale_fill_manual(values = c("A: CPAP Equipment" = "#005CB9",
+                               "B: EmONC Training" = "#83BD00")) +
+  scale_y_continuous(limits = c(0, 120)) +
+  labs(title = "Expected Newborn Lives Saved per Year",
+       subtitle = "County-level decision: CPAP vs. EmONC Training (KES 15M budget)",
+       x = NULL, y = "Expected Lives Saved") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "none")
+```
+
+
+## R: Sensitivity Analysis -- How Robust Is Our Answer?
+
+```{r}
+#| label: sensitivity-analysis
+#| echo: true
+#| fig-width: 9
+#| fig-height: 5
+
+# The key uncertainty for Option B is midwife retention
+# Let us vary P(best case) for training from 0 to 0.70
+# and see how the expected value changes
+
+p_best_seq <- seq(0, 0.70, by = 0.01)
+
+sensitivity <- data.frame(
+  p_best = rep(p_best_seq, 2),
+  option = rep(c("A: CPAP Equipment", "B: EmONC Training"),
+               each = length(p_best_seq)),
+  ev = c(
+    # Option A stays fixed at 68
+    rep(68, length(p_best_seq)),
+    # Option B: EV changes with retention
+    # If P(best) varies, redistribute remaining prob between partial & failure
+    # Keep ratio of partial:failure at 50:20 = 5:2
+    sapply(p_best_seq, function(p) {
+      remaining <- 1 - p
+      p_partial <- remaining * (5/7)
+      p_failure <- remaining * (2/7)
+      p * 150 + p_partial * 80 + p_failure * 20
+    })
+  )
+)
+
+ggplot(sensitivity, aes(x = p_best, y = ev, color = option)) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 68, linetype = "dashed", alpha = 0.4) +
+  geom_vline(xintercept = 0.30, linetype = "dotted", alpha = 0.5) +
+  annotate("text", x = 0.32, y = 60, label = "Our estimate\n(P = 0.30)",
+           size = 3.5, hjust = 0, color = "#666") +
+  scale_color_manual(values = c("A: CPAP Equipment" = "#005CB9",
+                                "B: EmONC Training" = "#83BD00")) +
+  labs(x = "P(High Retention) for Training Option",
+       y = "Expected Lives Saved",
+       title = "Sensitivity Analysis: When Does CPAP Beat Training?",
+       subtitle = "Training is better unless retention probability drops below ~8%",
+       color = "Option") +
+  theme_minimal(base_size = 14)
+```
+
+. . .
+
+::: {.callout-box .green}
+**The training option is surprisingly robust.** It beats CPAP unless the probability of high retention drops to near zero. This means even if our retention estimate is somewhat wrong, the decision probably does not change.
+:::
+
+
+## R: Value of Information Calculation
+
+```{r}
+#| label: voi-calculation
+#| echo: true
+
+# Value of information: how much is a pilot worth?
+
+# Without pilot: best decision is Training, EV = 89
+ev_without_pilot <- 89
+
+# With pilot: we learn the retention level before committing
+# Three possible pilot outcomes:
+pilot_results <- data.frame(
+  result = c("High retention", "Moderate retention", "Low retention"),
+  probability = c(0.30, 0.50, 0.20),
+  best_option = c("Training", "Training", "CPAP"),
+  ev_best = c(150, 80, 68)
+)
+
+# Expected value with pilot (choosing the best option after seeing results)
+ev_with_pilot <- sum(pilot_results$probability * pilot_results$ev_best)
+
+# Value of the pilot
+voi <- ev_with_pilot - ev_without_pilot
+
+cat("Expected value WITHOUT pilot:", ev_without_pilot, "lives\n")
+cat("Expected value WITH pilot:   ", ev_with_pilot, "lives\n")
+cat("Value of information:        ", voi, "lives\n")
+cat("\nThe pilot is worth running if its cost",
+    "(in delayed lives) is less than", voi, "lives.\n")
+```
+
+. . .
+
+::: {.callout-box}
+**The pilot is worth about 9.6 additional lives.** That is the maximum "price" the county should be willing to pay (in terms of delay or diverted funds) for the information a pilot provides.
+:::
+
+
+## R: County-Type Comparison
+
+```{r}
+#| label: county-types
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+# Compare expected values across county types
+county_types <- data.frame(
+  county_type = rep(c("High-burden,\nweak systems",
+                      "High-burden,\nmoderate systems",
+                      "Moderate\nburden",
+                      "Low-burden,\nstrong systems"), 2),
+  option = rep(c("A: CPAP", "B: Training"), each = 4),
+  ev = c(55, 75, 70, 80,    # CPAP across county types
+         95, 85, 70, 55)     # Training across county types
+)
+
+ggplot(county_types, aes(x = county_type, y = ev, fill = option)) +
+  geom_col(position = "dodge", width = 0.6) +
+  geom_text(aes(label = ev),
+            position = position_dodge(width = 0.6),
+            vjust = -0.3, size = 4) +
+  scale_fill_manual(values = c("A: CPAP" = "#005CB9",
+                               "B: Training" = "#83BD00")) +
+  labs(x = NULL, y = "Expected Lives Saved",
+       title = "Optimal Strategy Varies by County Type",
+       subtitle = "No single intervention is best everywhere",
+       fill = "Option") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "top")
+```
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Decision maps** add your choices and goals to causal diagrams, turning understanding into action.
+
+**Expected value** ("play it 100 times") gives you a principled way to compare options under uncertainty. The county health director should fund midwife training -- it saves about 30% more lives on average.
+
+**Watching is not the same as doing.** Seeing that facilities with CPAP have lower mortality does not mean giving CPAP causes that reduction. Use graph surgery ("cut the arrows") to isolate the true causal effect before plugging numbers into your decision map.
+
+**Information has measurable value.** Before committing to all 47 counties, a pilot in 5 diverse counties could be worth an additional 9--10 lives per county -- if it changes the decision.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 8 -- Resource Allocation Under Uncertainty**
+
+We have been thinking about one county director's choice. Now we zoom out to the national level:
+
+- **Allocating a fixed budget** across Kenya's 47 counties -- who gets how much?
+- **Sequential decisions:** pilot in some counties, then scale based on results
+- **County government co-financing:** will counties match national funds, or free-ride?
+- **The cost of waiting vs. the cost of being wrong** -- when is it better to act now with imperfect information?
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The connection:** Chapter 7 taught you how to think about a *single* decision under uncertainty. Chapter 8 extends this to *many* decisions that interact -- because what happens in one county affects what you can do in the others.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 7: Decision Analysis & Value of Information]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

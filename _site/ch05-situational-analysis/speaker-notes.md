@@ -1,287 +1,126 @@
-# Chapter 5 Speaker Notes — When New Evidence Arrives
+# Speaker Notes -- Chapter 5: Situational Analysis
 
-**Commander's Intent:** Bayesian updating is just redistributing your "out of 100" between explanations — keeping the total at 100 — based on which ones the new evidence fits.
+## Overview
+Welcome to Chapter 5. This is where we start running the model backwards -- like a detective working from the crime scene. In Chapter 4 we built a Bayesian network that goes forward, from causes to effects. Today we flip it around. We observe an outcome -- like high neonatal mortality in an Ethiopian region -- and ask: what is most likely going wrong? And the star of today's session is something called "explaining away." It is the most counterintuitive and practically important result in causal reasoning, and I promise it will change how you think about diagnosis.
 
-**Plot:** Challenge — an analyst updating her beliefs in real time as evidence trickles in over a week.
+## Slide: Learning Objectives
+Five things I want you to walk away with. *(pause)* First, explaining belief updating in plain language -- "updating your best guess when you learn something new." Second, computing marginal probabilities by averaging across possibilities you have not yet observed. Third, tracing how evidence flows through chains, forks, and colliders -- and knowing when the flow stops. Fourth, the explaining away phenomenon -- the crown jewel of causal inference. And fifth, using a Bayesian network to diagnose why an Ethiopian region has high neonatal mortality.
 
-**Protagonist:** Hiwot, 47, regional health director in Amhara Region, Ethiopia. Composite from FMOH quarterly reports.
+## Slide: Chapter Overview -- Running the Model Backwards
+Look at the five-step flow on the slide. *(pause)* The detective's question, averaging across possibilities, updating your best guess, how evidence flows, explaining away, and finally the Ethiopian region diagnosis. And look at the big idea at the bottom. In Chapter 4 we built the model forward -- starting from causes and predicting outcomes. Now we run it backwards. We see the outcome and ask: what caused this? This is how managers, doctors, and detectives actually think.
 
-**Estimated runtime:** 22–24 minutes.
+## Slide: The Wet Sidewalk
+Here is a scenario everyone can relate to. *(pause)* You walk outside and the sidewalk is wet. What happened? There are two possibilities. Maybe it rained. Or maybe the neighbor's sprinklers went off at 5 AM. You were asleep, so you did not see either one happen. *(pause)* This is the detective's question. You see the result -- wet sidewalk. You did not see the cause. You have to reason backwards, from effect to cause, using what you know about how the world works. That is exactly what we are going to do with health data today.
 
----
+Notice something: you are not randomly guessing. You bring knowledge to the problem. You know it is the rainy season, so rain is plausible. You know your neighbor has sprinklers on a timer. You weigh those possibilities against each other. That weighing is belief updating, and it is exactly what the Bayesian network does -- just with numbers instead of gut feelings.
 
-## Overview (before slide 1)
+## Slide: The Same Logic, Applied to Health
+Now here is the detective question for a health program manager. *(pause)* An Ethiopian region reports a neonatal mortality rate of 35 per 1,000 live births -- well above the national average of about 28 per 1,000. The program director asks: "What is most likely going wrong? Is it staffing? Equipment? The referral system? All three?" You cannot visit every facility. But you have a model. You can run it backwards. *(pause)* This chapter teaches you the mechanics of running the model backwards. There are exactly three skills: averaging across possibilities, updating your best guess, and understanding how evidence flows through different structures.
 
-Welcome back. *(pause)*
+## Slide: From Forward to Backward
+Look at the two boxes on the slide. *(pause)* On the left, Chapter 4's forward reasoning: "If staffing is low and equipment is unavailable, what is the probability of high mortality?" That is prediction. On the right, Chapter 5's backward reasoning: "We observe high mortality in a region. What does this tell us about staffing and equipment?" That is diagnosis. *(pause)* Both directions use the same model. The math is the same. The difference is what you know and what you want to find out.
 
-Last chapter we put numbers on the picture. We learned that a picture from Chapter 2, plus a lookup table on every arrow, equals a Bayesian network. Joyce in Mwanza counted her hundred mothers and turned them into a working tool.
+Here is why this matters so much in practice. Prediction is useful for planning -- you can estimate what will happen if conditions are a certain way. But diagnosis is what managers actually need most of the time. They already see the outcome. The question is: what caused it, and where do I intervene?
 
-But there is one piece still missing. What do you do when **new evidence arrives**? *(pause)*
+## Slide: When You Do Not Know
+Suppose you want to predict mortality in a region, but you have no idea whether staffing is adequate or low. *(pause)* You know two things from your model. If staffing is adequate, probability of high mortality is 20 percent. If staffing is low, probability of high mortality is 55 percent. And you know from national data that about 40 percent of Ethiopian health facilities have adequate staffing. *(pause)* So what is your overall best guess? You average across the two possibilities, weighted by how likely each one is. Overall P(High Mortality) = 0.40 times 0.20 plus 0.60 times 0.55 = 0.08 plus 0.33 = 0.41. A 41 percent chance of high mortality. That is a weighted average. The fancy name for this is "marginal probability," but "weighted average across possibilities" is all it really is.
 
-Picture-with-numbers is a snapshot. Real life is not a snapshot. Real life is a stream of new information — phone calls, reports, facility visits, surprise findings — and an analyst's job is to update her picture as the stream comes in. *(pause)*
+## Slide: The Weighted Average in Pictures
+Look at the table on the slide. *(pause)* Each row is one scenario. Staffing adequate has a 40 percent weight and contributes 0.08 to the total. Staffing low has a 60 percent weight and contributes 0.33. Add them up: 0.41. That is our starting point before we learn anything about this specific region. Everything that follows is about how this number changes when evidence comes in.
 
-This chapter teaches that updating. It is what people mean when they say *"Bayesian"*. And — I promise you this — there is no formula. There are only counts, and a redistribution rule, and a few warnings. *(pause)*
+## Slide: Averaging with Two Unknown Parents
+Now suppose you also do not know whether equipment is available. *(pause)* You average across all four combinations -- adequate staffing with available equipment, adequate with unavailable, low with available, low with unavailable. Each one is weighted by how likely that combination is. Look at the table -- the biggest contributor is the last row: low staffing plus unavailable equipment, with a weight of 0.39 and a high mortality probability of 0.60. That single combination contributes 0.234 to the total. *(pause)* Add them all up and you get P(High Mortality) = 41.7 percent. That is our "before" number -- our baseline expectation before any evidence arrives.
 
-Today we go back to Ethiopia. To meet a regional health director named Hiwot.
+## Slide: Before and After
+Here is the core idea of this chapter, in one sentence. *(pause)* When you learn something new, your estimates change. Your "before" beliefs are called the prior. Your "after" beliefs -- after incorporating evidence -- are called the posterior. The shift from prior to posterior is belief updating. Think of the wet sidewalk again. Before looking outside, you gave a 50 percent chance it rained. After seeing the wet sidewalk, that goes up to 75 percent. The wet sidewalk shifted your belief by 25 percentage points.
 
----
+## Slide: Updating in the MNH Model
+Now let us apply this to a real problem. *(pause)* Before we learn anything about this specific Ethiopian region, our priors come from national averages. P(Staffing = Low) = 60 percent. P(Equipment = Unavailable) = 65 percent. These are our defaults. *(pause)* Now we learn the region has high neonatal mortality. After updating: P(Staffing = Low given High NMR) = 73 percent. P(Equipment = Unavailable given High NMR) = 74 percent. Both bad explanations became more likely. What just happened? High mortality is more consistent with low staffing than with adequate staffing. So observing high mortality shifts our belief toward the "low staffing" explanation. Same logic for equipment.
 
-## Slide: Meet Hiwot
+## Slide: How Much Does Evidence Shift Your Beliefs?
+Look at the table -- this is where the diagnostic payoff shows up. *(pause)* Staffing shifts the most, 13 percentage points. Equipment shifts by 9 points. Referral by 8 points. So if you are the program analyst and you can only investigate one thing first, where do you look? Staffing. It is the variable with the strongest signal. *(pause)* This is the power of running the model backwards -- it tells you where to look first.
 
-Hiwot is forty-seven years old. She is the regional health director for Amhara Region in northern Ethiopia. *(pause)*
+## Slide: The Updating Rule in Plain English
+Let me give you the recipe in four steps, no formula needed. *(pause)* One: start with your best guess about a cause -- that is the prior. Two: ask how likely the evidence is under each possible state of the cause. Three: the state that makes the evidence more likely gets a boost; the other state gets downgraded. Four: normalize so your beliefs still add up to 100 percent. That is all Bayes' rule does. You have already seen the formal math in Chapter 4. Here we focus on the logic.
 
-Same disclosure. Hiwot is a composite drawn from publicly available Federal Ministry of Health quarterly reports. The details are real, the name is not. *(pause)*
+## Slide: The Three Structures, Revisited
+In Chapter 2 you learned three patterns that every causal diagram is built from. Now we ask a new question: how does evidence travel through each one? *(pause)* Look at the table on the slide. Chains: evidence flows along the chain, unless the middle node is known. Forks: evidence flows through the common cause, unless the common cause is known. Colliders: evidence is blocked by default, unless the middle node is known. *(pause)* Chains and forks behave the same way -- conditioning on the middle node blocks the flow. Colliders are the rebel. Conditioning on the middle node opens the flow.
 
-It is Monday morning. Hiwot opens her email. *(pause)*
+## Slide: Chain -- Evidence Flows Along the Path
+Training goes to Competency goes to Mortality. *(pause)* If competency is unknown and you learn that mortality is high, that is bad news about competency, which is bad news about training. Evidence flows the whole way along the chain. "High mortality? Probably low competency. Probably inadequate training." *(pause)* But if you already know competency is low? Now learning that mortality is high tells you nothing new about training -- competency already explained everything. The chain is blocked.
 
-The latest quarterly report from one of her districts — and there are dozens of districts in Amhara — shows maternal deaths jumped from nine last quarter to fourteen this quarter. *(pause)* Fifty-six percent increase. In a single district. In a single quarter. *(pause)*
+## Slide: Fork -- Evidence Flows Through the Common Cause
+PPH Detection and Newborn Resuscitation are both driven by Workforce Quality. *(pause)* If quality is unknown and a region is bad at PPH detection, that suggests low workforce quality, which suggests they are probably also bad at newborn resuscitation. Evidence flows through the common cause. *(pause)* But if you already know workforce quality is good? Learning about PPH detection tells you nothing new about resuscitation. The fork is blocked.
 
-Her phone is already ringing. *(pause)*
+## Slide: Collider -- Evidence is BLOCKED by Default
+Staffing and Equipment both feed into Neonatal Outcome. *(pause)* Here is what is different from everything we have seen so far. Staffing and equipment are independent decisions. Knowing one tells you nothing about the other. The collider blocks the flow. *(pause)* But if you learn the newborn survived? Now staffing and equipment are connected -- they compete to explain the good outcome. The collider is opened. This is explaining away.
 
-Now look at the box on the screen. **What is the most likely explanation — and how should new evidence arriving over the next two weeks change her answer?** *(pause)*
+## Slide: Summary -- The Three Rules
+Burn these three rules into your memory. *(pause)* Chain: evidence flows unless the middle is known, then it stops. Fork: evidence flows unless the middle is known, then it stops. Collider: evidence is blocked unless the middle is known, then it flows. Chains and forks -- conditioning blocks. Colliders -- conditioning opens. The collider is the rebel.
 
-That question is the heart of this chapter. And the answer is going to teach you almost everything about how to think under uncertainty.
+If you only remember one thing from this section, make it the collider rule. The chain and fork rules feel natural -- most people get them intuitively. But the collider rule is genuinely surprising. The idea that knowing the outcome of two independent causes suddenly creates a connection between them -- that is the engine behind explaining away, which is where we are heading next.
 
----
+## Slide: The Setup -- A Newborn Survives Against the Odds
+Here is the scenario that will stick with you. *(pause)* A health facility in a remote Ethiopian region -- where outcomes are usually poor -- reports that a newborn with respiratory distress survived. This is great news, but surprising. Two things could explain it: amazing staff who performed skilled resuscitation, or great equipment -- a functioning CPAP machine was available. Or maybe both. *(pause)* Look at the diagram. Staffing Quality and Equipment Quality both feed into Newborn Outcome. This is a collider.
 
-## Slide: And here is the puzzle
+## Slide: The Twist
+Now the twist. You investigate further and learn that the CPAP machine was broken that day. The equipment was NOT available. *(pause)* Think about what happens to your belief about the staff. Before learning about equipment: "The baby survived. Could be good staff, could be good equipment, could be both." After learning equipment was broken: "The baby survived without equipment?! The staff must have been incredible." *(pause)* This is explaining away. When you rule out one cause of a good outcome, you become even more convinced the other cause must be present. One explanation crowds out the other.
 
-Within an hour, three explanations are sitting on Hiwot's desk. *(pause)*
+## Slide: Why This Matters So Much
+Explaining away is not just a curiosity. It changes how you diagnose problems. *(pause)* Consider the reverse direction. A region has high neonatal mortality. You learn that staffing is actually adequate. What happens to your belief about equipment? It gets worse. If staffing is fine but outcomes are still bad, then equipment must be the problem. Good staffing "explains away" the possibility that staffing caused the bad outcome, leaving equipment as the prime suspect. *(pause)* The management insight: every time you confirm that one potential cause is in good shape, the spotlight shifts more intensely to the remaining causes. Explaining away focuses your attention.
 
-*Bullet by bullet.* Explanation one: the new district hospital lost two midwives in the last six weeks. Personnel attrition. *(pause)*
+## Slide: Explaining Away -- The Numbers
+Let me make it concrete with numbers. *(pause)* Prior beliefs: P(Staff = Skilled) = 40 percent, P(Equipment = Available) = 35 percent. Now we observe the newborn survived. Both estimates go up modestly -- 52 and 47 percent. But now suppose we learn the equipment was broken. P(Staff = Skilled) jumps to 71 percent. *(pause)* Look at the jumps in the table on the slide. Knowing the baby survived raises both estimates modestly. But ruling out one cause makes the remaining cause shoot up dramatically. That is explaining away -- the most powerful diagnostic tool in your toolkit.
 
-Explanation two: there has been a measles outbreak elsewhere in the region. Maybe it is overwhelming the inpatient ward and pulling resources away from the maternity unit. A surge. *(pause)*
+## Slide: Everyday Explaining Away
+Here are examples you already know. *(pause)* A student got into a top university. Was it grades or athletics? If you learn the student has average grades, you become very confident they are a star athlete. A restaurant is packed. Is the food amazing, or is it the only option nearby? If you learn there are ten other restaurants on the same block, you become more convinced the food must be exceptional. Your internet is slow. Router or provider? You restart the router and it is still slow. Now you are much more sure the problem is the provider. *(pause)* Explaining away happens every time two independent causes compete to explain the same result. It is everywhere once you start looking for it.
 
-Explanation three: the district just started reporting deaths it had been quietly missing. Reporting improvement. The number went up because the *measurement* got better, not because the underlying reality got worse. *(pause)*
+## Slide: Ethiopia -- The Context
+Let us look at the numbers for Ethiopia. *(pause)* NMR around 28 per 1,000. MMR around 267 per 100,000. About 74 percent antenatal care coverage. Over 38,000 Health Extension Workers across 8-plus regions. But facility delivery is only about 50 percent nationally, with wide regional variation. And skilled birth attendance is about 28 percent, with huge regional gaps. *(pause)* Ethiopia has made remarkable progress through its Health Extension Worker program, but regional variation is enormous -- some regions perform far better than others.
 
-Look at the orange box. **They cannot all be the main story. But Hiwot does not yet know which one is.** *(pause)*
+## Slide: The Diagnostic Scenario
+Here is the situation. *(pause)* A region in rural Ethiopia reports NMR of 35 per 1,000 -- well above the national average. Despite receiving program resources, mortality has not improved. The program director asks: "What is going wrong?" We will use our Bayesian network to diagnose the problem one piece of evidence at a time. *(pause)* The model has five nodes: HEW Staffing, Equipment, and Referral System as root nodes feeding into Quality of Care, which feeds into NMR.
 
-And here is the harder problem. Different evidence will arrive in a different order. A phone call here. An email there. A facility visit on Friday. Her belief has to update *each time*. So the question is not just *"which explanation is right?"*. The question is *"how should she think about this so that each new piece of evidence moves her belief in the right direction?"*. *(pause)*
+## Slide: Step 1 -- Start with Priors
+Before learning anything about this specific region, our best guesses come from national data. *(pause)* 40 percent of facilities have adequate HEW staffing. 35 percent have functioning essential equipment. Only 30 percent have reliable referral pathways. These priors reflect typical conditions across Ethiopian regions. These numbers come from publicly available HMIS and survey data.
 
-That question has a clean answer. Let me show you.
+Notice that all three start in rough shape. Most facilities are short-staffed, most lack functioning equipment, and most have weak referral systems. That is the baseline reality in much of rural Ethiopia. The question is not whether things are bad -- we already know that. The question is which specific thing is most likely causing the problem in this particular region.
 
----
+## Slide: Step 2 -- First Evidence: NMR is High
+We observe NMR is high. *(pause)* Using the model, we update all three root causes. Staffing shifts from 60 to 72 percent -- a 12-point jump. Equipment shifts from 65 to 74 percent -- 9 points. Referral shifts from 70 to 78 percent -- 8 points. *(pause)* All three causes shifted toward their bad states. But staffing shifted the most, suggesting it is the strongest suspect. If you can only investigate one thing, start there.
 
-## Slide: How belief actually works (section divider)
+## Slide: Step 3 -- Second Evidence: Equipment is Adequate
+A field visit reveals that equipment is actually in decent shape -- CPAP machines are available, essential drugs are stocked. *(pause)* Now we update again, adding this evidence. P(Staffing = Low) jumps from 72 to 81 percent -- another 9-point increase. P(Referral = Weak) jumps from 78 to 84 percent. *(pause)* This is explaining away in action. We ruled out equipment as the problem. But mortality is still high. So our belief that staffing and referrals are causing the problem intensified. Equipment being adequate makes the other causes more suspect, not less.
 
-*(pause for transition)*
+## Slide: Step 4 -- Third Evidence: Referral System is Functional
+Deeper investigation shows the referral system actually works. *(pause)* Now P(Staffing = Low) jumps to 91 percent. We have ruled out equipment and referrals. The model now says there is a 91 percent probability that staffing is the root cause. Each piece of evidence that ruled out an alternative cause made staffing more likely -- classic explaining away. *(pause)* Recommendation: prioritize an HEW staffing review for this region.
 
----
+## Slide: The Diagnosis Pathway -- Summary
+Look at the four-step flow on the slide. *(pause)* Prior: P(Staff Low) = 60 percent. After NMR is high: 72 percent. After equipment is OK: 81 percent. After referral is OK: 91 percent. Each time we ruled out a possible cause, the remaining causes became more suspect. This is explaining away applied sequentially -- a diagnostic workflow. The model did the hard reasoning for us. *(pause)* This is situational analysis. You observe outcomes, gather evidence, and use the model to progressively narrow down the root cause. It is exactly what a good doctor does -- and now you can do it for an entire health system.
 
-## Slide: Start with what you already believe
+## Slide: R Block 1 -- Build the Ethiopian MNH Model
+Let us get into the R code. *(pause)* We define a five-node Bayesian network. Three root nodes: Staffing, Equipment, Referral. Quality depends on all three. NMR depends on Quality. The arcs function should show four directed edges. Walk through the model string carefully -- the notation is the same as in Chapter 4.
 
-Before any new evidence arrives, Hiwot already has an *opinion*. *(pause)*
+## Slide: R Block 2 -- Specify the CPTs
+Now we attach the lookup tables. *(pause)* Root nodes are straightforward -- just the priors. The Quality CPT has 8 rows because it has three binary parents. The best case gives 92 percent good quality. The worst case gives just 12 percent. The NMR CPT maps quality to mortality: good quality gives 85 percent low NMR, poor quality gives 70 percent high NMR.
 
-She has been running this region for years. She knows the district. She knows the staffing situation. She has seen reporting reforms come and go. She is not starting from zero. *(pause)*
+## Slide: R Block 3 -- Baseline Query
+Our first query: what is the overall P(NMR = High) with no evidence? *(pause)* The cpquery function simulates a million hypothetical regions from the model, then counts how many have NMR = High. The answer should come out around 0.42 -- about a 42 percent chance of high NMR in a random region. That is our starting point before any evidence.
 
-So she writes down — even just on a sticky note — what she believes *before* the new evidence arrives. And she thinks all three explanations are roughly equally likely. About thirty-three out of one hundred, for each. *(pause)*
+## Slide: R Block 4 -- Running the Model Backwards
+Now the detective work. *(pause)* We observe NMR = High and ask: what does this tell us about staffing? The answer should be around 0.72 -- up from the prior of 0.60. We do the same for equipment and referral. Every root cause shifts toward its bad state, with staffing showing the biggest jump.
 
-Look at the box. **That is her starting belief.** *(pause)*
+## Slide: R Block 5 -- Explaining Away in Action
+Here is where it gets really good. *(pause)* Query 5: NMR is high AND equipment is OK. What happens to staffing? It jumps to about 0.81. Ruling out equipment made staffing more suspect. Query 6: NMR is high, equipment is OK, AND referral is OK. Staffing jumps to about 0.91. The more causes we rule out, the more certain we become about the remaining cause. This is explaining away -- the crown jewel.
 
-This sticky note has a fancy name in statistics. It is called the **prior**. Look at the definition box. *Prior is just a fancy word for "what I believed before the new evidence arrived."* *(pause)*
+## Slide: R Block 6 -- Comparing Two Regions
+Now we compare a struggling region with a well-performing one. *(pause)* The compare_regions function computes posteriors for all root nodes given an NMR observation. For the high-NMR region, all causes shift toward their bad states. For the low-NMR region, all causes shift toward their good states. The shifts go in opposite directions. Same model doing both jobs -- diagnosing problems and identifying what is working well.
 
-Some people get scared by the word "Bayesian". It sounds technical. The whole technical part is just this: *write down your prior*. That is the hard discipline. The math after that is just bookkeeping.
+## Slide: R Block 7 -- Visualize the Belief Updating
+Finally, we visualize the explaining away pathway. *(pause)* A bar chart showing P(Staffing = Low) at each step: prior 60 percent, after NMR high 72 percent, after equipment OK 81 percent, after referral OK 91 percent. When you see the bars climbing step by step, the pattern becomes unmistakable. This is the kind of visualization you would put in a report for a program director.
 
----
+## Slide: Key Takeaways
+Four things to take away. *(pause)* First, marginal probability equals your best guess before you learn anything -- a weighted average. Second, belief updating: new evidence shifts your beliefs, with Bayes' rule doing the heavy lifting. Third, chains and forks let evidence flow, but conditioning on the middle node blocks it. Colliders block evidence by default, but conditioning on the middle opens the flow. Fourth, explaining away is the most powerful diagnostic tool: ruling out one cause makes the remaining causes more likely. *(pause)* And in R, cpquery lets you ask any backward question with a single line of code.
 
-## Slide: Then evidence arrives
-
-Tuesday morning. The chief of staff at the district hospital calls Hiwot. *(pause)*
-
-Two pieces of information come out in the call. *(pause)* One: the two midwives leaving is real. They did leave. The personnel story has *some* support. *(pause)* Two: the chief of staff also confirms that there has been *no unusual measles activity in the district* this quarter. The measles surge story just lost its support. *(pause)*
-
-Look at the green box. **Two pieces of information at once.** One makes "personnel" more likely. The other makes "measles" less likely. *(pause)*
-
-So Hiwot updates her sticky note. The numbers move.
-
----
-
-## Slide: Counts, not formulas
-
-Here is how the numbers move.
-
-*Look at the table.* On the left, before Tuesday: thirty-three, thirty-three, thirty-three. Even split. *(pause)* On the right, after Tuesday: personnel jumps to fifty-five, measles drops to eight, reporting nudges up to thirty-seven. *(pause)*
-
-Notice — and this is the only mechanical thing you need to learn in this entire chapter — the totals always still add to one hundred. *(pause)* The total is always one hundred. The numbers shuffle around. But they always add to one hundred. *(pause)*
-
-Look at the box. **The numbers shifted. Nobody changed Hiwot's mind for her. The new facts made some scenarios more plausible and others less plausible, and the totals still add to a hundred.** *(pause)*
-
-That is the entire mechanism. If you can re-distribute one hundred between three buckets while keeping the total at one hundred, you have already understood Bayesian updating.
-
----
-
-## Slide: What just happened, in one sentence
-
-So let me say it as cleanly as I can. *(pause)*
-
-Look at the definition box. **Bayesian updating is just this: when new evidence arrives, you redistribute your "out of one hundred" between the explanations — keeping the total at one hundred — based on which explanations the evidence fits.** *(pause)*
-
-That is the whole idea. There is no formula you need to memorise. There is no complicated calculation. There is just this redistribution rule, applied carefully. *(pause)*
-
-If anyone tells you Bayesian thinking is complicated, ask them to explain it without using a formula. If they can't, they don't really understand it. The formula is just a way to be precise about the redistribution. The redistribution itself is something a child can do.
-
----
-
-## Slide: Information flows along the picture (section divider)
-
-*(pause for transition)*
-
-OK. There is one more piece. So far we talked about updating between three *explanations*. But each explanation is really a *picture* — a set of boxes and arrows from Chapters 2 and 3. So when new evidence arrives, the question is: *which boxes does it touch?*
-
----
-
-## Slide: The picture decides where evidence flows
-
-Hiwot's three explanations live on a picture. Each one has its own boxes — *personnel* has staffing, scheduling, caseload boxes; *measles* has outbreak, inpatient strain, maternity competition boxes; *reporting* has HMIS pipeline, training, software boxes. *(pause)*
-
-When new evidence arrives, it enters the picture at one specific box. And from that box, it spreads outward along the arrows. *(pause)*
-
-Look at the box. **This is why we drew the picture in Chapters 2 and 3. The picture tells you which boxes the new evidence is allowed to update — and which boxes it is not.** *(pause)*
-
-The picture is doing real work here. Without it, you would update everything when any new piece of evidence arrived, and that is exactly the wrong thing to do.
-
----
-
-## Slide: Three rules for how evidence flows
-
-There are three rules for how evidence flows along the picture. They map exactly onto the three shapes from Chapter 2 — chain, fork, collider. *(pause)*
-
-*Bullet by bullet.* **Rule one. Along a chain, evidence flows freely.** New evidence about a midstream box updates everything upstream and downstream. Bleeding goes up at the facility? That updates your belief about danger-sign recognition (upstream) and about bad outcomes (downstream). The chain is open in both directions. *(pause)*
-
-**Rule two. Across a fork, evidence flows freely until you observe the parent.** Two children of the same parent will look correlated *until* you look at the parent. Once you know the parent's value, the two children become independent again. *(pause)*
-
-**Rule three. Across a collider, evidence does *not* flow — *unless* you observe the collider, in which case it suddenly does.** *(pause)*
-
-I know rule three sounds weird. It is weird. It is the most counterintuitive thing in the entire course. We will see it cause an actual problem in Chapter 6, with Simpson's Paradox. For now, just file it away. *(pause)*
-
-Look at the orange box. **Rule three is the strange one we warned you about in Chapter 2.** It is also the rule that catches almost everyone. Mark it.
-
----
-
-## Slide: Hiwot's most useful trick — explaining away
-
-Now we are going to see the most useful trick in the whole chapter. It has a name. It is called **explaining away**.
-
-Wednesday. A second piece of evidence arrives. The district HMIS officer — that is the person who runs the district health information system — confirms that the reporting pipeline was indeed cleaned up last quarter. And four of this quarter's fourteen deaths had been previously unrecorded. *(pause)*
-
-So part of the rise — the four extra deaths — was a *measurement* improvement, not a real increase. *(pause)*
-
-Now look at the example block. **The reporting explanation just got more likely.** Of course. *(pause)* **And — this is the strange bit — the personnel explanation got *less* likely**, even though no new evidence about personnel arrived. *(pause)*
-
-Why? Because if reporting is suddenly carrying more of the rise, *less of the rise needs to be carried by anything else*. The total rise is fixed. If the reporting bucket grew, the personnel bucket must have shrunk to compensate. *(pause)*
-
-Look at the green box. **This is called explaining away.** One cause becoming more likely automatically makes its competitors less likely — even without new evidence about them. *(pause)*
-
-This is a real, deep, slightly counterintuitive feature of how belief works. And it falls out naturally from the redistribution rule. The total has to stay at one hundred. So if one bucket grows, others have to shrink. That is all "explaining away" really is.
-
----
-
-## Slide: The picture after explaining away
-
-Here is the table after Wednesday.
-
-*Look at the table.* Before Wednesday: personnel fifty-five, measles eight, reporting thirty-seven. After Wednesday: personnel thirty-two, measles five, reporting sixty-three. *(pause)*
-
-Look at the personnel row. It dropped from fifty-five to thirty-two. *Twenty-three points*. Nothing new about personnel arrived. The drop was entirely because reporting absorbed more of the rise. *(pause)*
-
-Look at the box. **Personnel dropped — not because anything new about personnel came in, but because reporting absorbed more of the rise.** *(pause)*
-
-That is explaining away. Tape it next to the redistribution rule.
-
----
-
-## Slide: Three quiet warnings (section divider)
-
-*(pause for transition)*
-
-OK. Three warnings before you go and do this on your own.
-
----
-
-## Slide: Warning 1 — Your prior matters
-
-Warning one. **Your prior matters.** *(pause)*
-
-If Hiwot had started with *"personnel never matters here"* — say, ten percent for personnel and forty-five each for measles and reporting — the *same Tuesday call* would have moved her to a *different place*. *(pause)*
-
-That is not a flaw. That is honest. Two people with different starting beliefs can see the same evidence and end up with different conclusions. *(pause)*
-
-Look at the orange box. **The fix is to write down your prior so others can challenge it.** *(pause)*
-
-This is the one piece of professional discipline that takes the most practice. Most people do not write down their prior. They just have one in their head, and they pretend the evidence "speaks for itself". The evidence never speaks for itself. The evidence speaks *to* a prior. Make yours visible.
-
----
-
-## Slide: Warning 2 — Updating is not the same as overreacting
-
-Warning two. **Updating is not the same as overreacting.** *(pause)*
-
-Each new piece of evidence shifts the picture. But evidence has *weight*. Strong evidence should produce a big shift. Weak evidence should produce a small shift. *(pause)*
-
-A single anecdote should not flip your belief from thirty-three-thirty-three-thirty-three all the way to five-five-ninety. If it did, your weights were wrong — you treated weak evidence like strong evidence. *(pause)*
-
-Look at the orange box. **Strong shifts require strong evidence.** *(pause)*
-
-The shorthand version: a single phone call should move you a little. A randomised trial should move you a lot. Five facility visits should move you somewhere in between. Calibrate the shift to the weight of the evidence.
-
----
-
-## Slide: Warning 3 — Rule 3 (colliders) catches almost everyone
-
-Warning three. **Rule three.** *(pause)*
-
-I keep coming back to it, because it is the rule that breaks the most analyses in the world. *(pause)*
-
-Conditioning on a collider — that is, looking only at cases where two arrows have already collided — creates *fake correlations* between things that are actually unrelated. *(pause)*
-
-Look at the red box. **If you find yourself surprised by a sudden correlation in your data, ask: did I just filter on a downstream collider?** *(pause)*
-
-This error hides inside half the famous "paradoxes" in epidemiology. We are going to see one of them in Chapter 6.
-
----
-
-## Slide: Try It (You are the analyst)
-
-OK. Try it. *(pause)*
-
-A regional director in Kenya sees that antenatal coverage in one county jumped from sixty-five percent to seventy-eight percent in a single quarter. Three explanations. *(pause)*
-
-One: the new SMS reminder programme is working. Two: a coding change in DHIS2 reclassified some clinic visits. Three: a measles vaccination drive brought more women to clinics, where they were also screened for ANC. *(pause)*
-
-Start with thirty-three-thirty-three-thirty-three. *(pause)* A phone call confirms the DHIS2 coding change is real. **How do your numbers move? What is the *next* piece of evidence you should ask for?** *(pause)*
-
-Hint. Which one of the three explanations does the coding change support — and which does it weaken via *explaining away*? *(pause)*
-
-If you said *"the coding change is now much more likely, and the SMS programme is now less likely because reclassification absorbs some of the apparent rise"* — you have got it. The next piece of evidence I would ask for is the raw clinic visit logs. Do they show more individual women, or just more recorded visits per woman? That single number would resolve the next round of redistribution.
-
----
-
-## Slide: Looking ahead
-
-So that is Chapter 5.
-
-In Chapter 6 we are going to look at one of the strangest patterns in all of statistics: when the same data tells you opposite things at the country level and at the regional level. *(pause)*
-
-It has a name. **Simpson's Paradox.** And it is closely related to the collider trap from rule three. We will see exactly how. We will see when to disaggregate. And — just as importantly — we will see *when not to*. *(pause)*
-
-It is one of the most useful chapters in the course. See you there.
-
----
-
-## Slide: The one thing to remember
-
-If you remember nothing else from this chapter, remember this. *(pause)*
-
-**Bayesian updating is just redistributing your "out of one hundred" between explanations — keeping the total at one hundred — based on which ones the new evidence fits.** *(pause)*
-
-Hiwot did not throw out her picture when new evidence arrived. She updated the numbers on it. *(pause)*
-
-That is what an analyst does all day. *(pause)*
-
-See you in Chapter 6.
-
----
-
-## Slide: Closing (white)
-
-*(pause; no narration)*
+## Slide: Looking Ahead
+Next time we tackle a famous trap that will blow your mind. *(pause)* Simpson's Paradox -- where aggregated data literally reverses the true causal effect. An intervention that looks harmful overall but is beneficial in every country. Same data, opposite conclusions. We will see why this happens, how to avoid it, and what it means for comparing MNH programs across Ethiopia, Rwanda, Kenya, and Tanzania. See you next time.

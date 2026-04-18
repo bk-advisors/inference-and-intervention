@@ -11,12 +11,23 @@ Tanzania's national maternal mortality ratio is **524 per 100,000 live births** 
 **The one thing to remember from this chapter:** A picture from Chapter 2 + a lookup table on every arrow = a Bayesian network. The picture tells you the structure; the counts tell you the strengths.
 :::
 
-## Watch the lecture
+## Main lecture
 
 ::: {.slide-embed}
 <iframe src="../ch04-quantitative-models/index.html"></iframe>
 <div class="slide-embed-footer">
-<a href="../ch04-quantitative-models/index.html" target="_blank">Open slides full-screen &rarr;</a>
+<a href="../ch04-quantitative-models/index.html" target="_blank">Open lecture slides full-screen &rarr;</a>
+</div>
+:::
+
+## Tutorial / breakout session
+
+The tutorial deck takes the same ideas and retells them as a story — built for a live breakout session, not a lecture.
+
+::: {.slide-embed}
+<iframe src="../ch04-quantitative-models-tutorial/index.html"></iframe>
+<div class="slide-embed-footer">
+<a href="../ch04-quantitative-models-tutorial/index.html" target="_blank">Open tutorial slides full-screen &rarr;</a>
 </div>
 :::
 

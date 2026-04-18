@@ -1,0 +1,328 @@
+---
+title: "Chapter 3 — Building the Picture from Scratch"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "Matthew Luke Kuch | BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    self-contained: false
+---
+
+## Meet Faith
+
+**Faith, 29, M&E officer, Turkana County, Kenya** *(a composite drawn from county health reports — the details are real, the name is not)*
+
+. . .
+
+Faith has been the monitoring and evaluation officer for Turkana's maternal health programme for two years.
+
+. . .
+
+Her job is to figure out **what is working**. Her tools are a laptop, a notebook, and a budget for petrol.
+
+. . .
+
+Last month her county director walked into her office and asked one sentence: *"Why is our maternal mortality not falling as fast as the neighbouring county's?"*
+
+. . .
+
+::: {.callout-box}
+**The question:** How do you build a useful causal picture for a programme you have never studied — in two weeks, with no prior research, and with people who do not speak the language of statistics?
+:::
+
+
+## And here is the puzzle
+
+Kenya devolved health to **47 counties** in 2013 *(Constitution of Kenya, Schedule 4)*.
+
+. . .
+
+Since then, some counties have cut maternal mortality dramatically. Others have barely moved *(Kenya Health Information System, county dashboards)*.
+
+. . .
+
+The county-level numbers can tell you *which* counties are improving. They cannot tell you *why*.
+
+. . .
+
+::: {.callout-box .orange}
+**To find out why, you have to go talk to people. The question is — who, and in what order, and what do you do with what they tell you?**
+:::
+
+
+# The interview method {background-color="#005CB9"}
+
+
+## Three rules before you walk in
+
+::: {.incremental}
+
+1. **Start with the outcome, not the programme.** Ask everyone the same opening question: *"When a mother dies in this county, what is the most common chain of events?"*
+2. **Listen for nouns. Sketch them as boxes.** Every noun a person uses — *referral form*, *fuel*, *stockout*, *husband's permission* — is a candidate for a box.
+3. **Ask the connecting question.** After every box: *"And what does that depend on?"*
+
+:::
+
+. . .
+
+::: {.definition-box}
+You are not running a survey. You are building a *picture* — and the picture is the deliverable.
+:::
+
+
+## Faith's first interview — the midwife
+
+Faith starts with **Mary**, a midwife at a rural facility two hours from the county town.
+
+. . .
+
+She asks the opening question. Mary thinks. Then she says:
+
+. . .
+
+::: {.example-block}
+[mary]{.example-label}
+
+*"Most of the deaths I see come down to this — the woman bleeds at home, the family waits four hours hoping it will stop, by the time they get a motorbike to bring her here, she has lost too much blood. We have the drugs. We do not have her in time."*
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Listen for nouns:** *bleeding*, *family*, *waiting*, *motorbike*, *drugs*, *time*.
+:::
+
+
+## Mary's picture, in boxes
+
+<br>
+
+::: {style="text-align: center; font-size: 0.85em;"}
+
+[Bleeding starts at home]{.dag-node}  →  [Family waits]{.dag-node}  →  [Motorbike arranged]{.dag-node}  →  [Mother arrives too late]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+This is a **chain** — exactly the shape you learned in Chapter 2.
+
+. . .
+
+::: {.callout-box}
+The nouns become boxes. The order of events becomes the arrows. That is the whole trick.
+:::
+
+
+## Faith's second interview — the husband
+
+Next, Faith meets **Lokol**, whose wife survived a difficult delivery six months ago.
+
+. . .
+
+She asks the same opening question.
+
+. . .
+
+::: {.example-block}
+[lokol]{.example-label}
+
+*"My wife was bleeding. I knew she needed to go. But in our compound, my older brother is the elder — he is the one who decides about big expenses. And he was at the market that day. I am her husband, but I am not the elder of the compound. I had to wait until he came back to give permission to spend the money on transport. By then it was very late."*
+:::
+
+. . .
+
+::: {.callout-box .orange}
+A new noun appears: **permission**. It was not on Mary's picture. But it sits *before* the motorbike box, and it changes the meaning of "family waits". *(In Lokol's extended-family compound, the older brother holds financial authority — a real pattern in many rural Kenyan households.)*
+:::
+
+
+## Updating Mary's picture with Lokol's words
+
+<br>
+
+::: {style="text-align: center; font-size: 0.78em;"}
+
+[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission from elder]{.dag-node .confounder}  →  [Motorbike arranged]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The aha:** "Family waits" was not really one box. It was *two* boxes — the deciding, and the permission. Mary did not see the permission box because she only sees what arrives at the clinic. Lokol saw it because he lived it.
+:::
+
+
+## Faith's third interview — the county finance officer
+
+Now Faith goes to the county headquarters and meets **Esther**, the finance officer.
+
+. . .
+
+She asks the opening question. Esther laughs gently.
+
+. . .
+
+::: {.example-block}
+[esther]{.example-label}
+
+*"I cannot tell you about deaths. I can tell you that we have run out of misoprostol — the drug that stops bleeding — three times this year, because the national supplier delivered late. We always pay on time. The drug just is not in the warehouse."*
+:::
+
+. . .
+
+::: {.callout-box .orange}
+A new noun appears far up the chain: **stockout**. It is nowhere near the bedside, but it is what made the bedside picture possible.
+:::
+
+
+## The picture grows again
+
+<br>
+
+::: {style="text-align: center; font-size: 0.7em;"}
+
+[National supplier delays]{.dag-node .confounder}  →  [County stockout]{.dag-node .confounder}  →  [Drug not at facility]{.dag-node}
+
+⬇
+
+[Bleeding starts]{.dag-node}  →  [Family decides]{.dag-node}  →  [Permission]{.dag-node .confounder}  →  [Motorbike]{.dag-node}  →  [Mother arrives]{.dag-node}  →  [Mother dies]{.dag-node .outcome .hexagon}
+
+:::
+
+. . .
+
+::: {.callout-box}
+Three people, three different parts of the picture. None of them was wrong. None of them had the whole thing.
+:::
+
+
+# Three traps when you do this {background-color="#005CB9"}
+
+
+## Trap 1 — Believing the loudest voice
+
+The first person you interview is the most dangerous.
+
+. . .
+
+::: {.bad-example}
+You go in, the midwife tells you a clear story, and you walk out thinking you have the picture. You stop interviewing.
+:::
+
+. . .
+
+::: {.good-example}
+**Always interview at least one person from each of three groups:** the bedside *(midwives, families)*, the supply chain *(finance, logistics)*, and the leadership *(district medical officer, programme manager)*. Each group sees boxes the others cannot see.
+:::
+
+
+## Trap 2 — Drawing arrows you do not have evidence for
+
+It is tempting to add arrows because they "feel right".
+
+. . .
+
+::: {.callout-box .orange}
+**The rule:** every arrow on the picture should come from at least one specific sentence somebody said. If you cannot quote the source, the arrow is a hypothesis, not a fact — and you should mark it differently *(we use a dotted arrow)*.
+:::
+
+
+## Trap 3 — Confusing "what people say" with "what is true"
+
+People tell you their *understanding* of the system. Their understanding may be wrong.
+
+. . .
+
+::: {.callout-box .green}
+**That is fine.** The point of the picture is not to be true on day one. It is to be *specific enough that you can test it*. The next chapters will teach you how to put numbers on this picture and see which arrows survive contact with data.
+:::
+
+
+# Try it yourself {background-color="#005CB9"}
+
+
+## You are the analyst
+
+::: {.example-block}
+[scenario]{.example-label}
+
+You have one week and a budget for petrol. You need to build a causal picture explaining why one ward in a Kenyan county has much higher under-5 mortality than its three neighbours.
+
+**Who do you interview, in what order, and what is the opening question for each?**
+:::
+
+. . .
+
+::: {.callout-box .orange}
+*Hint: who is closest to the death? Who is closest to the supply chain? Who is closest to the budget? Visit them in that order.*
+:::
+
+. . .
+
+In **Chapter 4**, we will take a picture like Faith's and start putting actual numbers on the arrows.
+
+
+## Looking ahead
+
+In **Chapter 4**, you will take a finished interview-built picture and add the missing piece: **numbers**.
+
+. . .
+
+You will learn how to turn "Mary says about half the women bleed for more than thirty minutes before the family decides" into a number you can put on the arrow — and then how to combine all those numbers into a model that can be tested against real data.
+
+
+## Further reading
+
+::: {.callout-box}
+**The data behind Faith's story**
+
+- **Constitution of Kenya, 2010**, Schedule 4 — the legal basis for devolution to 47 counties.
+- **Kenya Health Information System (KHIS)** — county dashboards with maternal mortality and stockout data, publicly available at *hiskenya.org*.
+- **Bourbonnais N., 2013** — *Implementing Free Maternal Health Care in Kenya: Challenges, Strategies, and Recommendations*. Kenya National Commission on Human Rights. Open-access.
+:::
+
+. . .
+
+::: {.callout-box .green}
+**If you want to go deeper**
+
+- **Ryall, M. D. & Bramson, A. L. (2014)** — *Inference and Intervention*. Routledge. Chapter 4 covers interview-driven model building in business settings; the method translates directly.
+- **Schon, D. (1983)** — *The Reflective Practitioner*. The classic on extracting models from people who "just know how the work works".
+:::
+
+
+## The one thing to remember
+
+::: {.key-takeaway}
+**The fastest way to build a useful causal picture is to ask the people who actually do the work — in three different groups, in a particular order — and draw their answers.**
+
+Faith built her picture in three interviews. None of them had the whole story. All of them needed each other.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 3]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::

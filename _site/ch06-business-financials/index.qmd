@@ -1,0 +1,1047 @@
+---
+title: "Chapter 6: Simpson's Paradox & Cost-Effectiveness"
+subtitle: "Inference and Intervention | BK Advisors"
+author: "BK Advisors"
+date: today
+format:
+  revealjs:
+    theme: [default, custom.scss]
+    logo: bka-logo.png
+    slide-number: true
+    transition: fade
+    background-transition: slide
+    title-slide-attributes:
+      data-background-color: "#005CB9"
+    hash-type: number
+    center: false
+    width: 1280
+    height: 720
+    embed-resources: true
+execute:
+  echo: true
+  eval: false
+  warning: false
+---
+
+## Learning Objectives
+
+After this chapter, you will be able to:
+
+::: {.incremental}
+- Identify **Simpson's Paradox** and explain why aggregated data can show the opposite of what disaggregated data reveals
+- Distinguish **confounders from mediators** and explain why the causal model determines which answer is correct
+- Recognize the **Prosecutor's Fallacy** -- confusing the probability of evidence given a hypothesis with the probability of a hypothesis given evidence
+- Apply **causal reasoning** to cross-country MNH comparisons, avoiding misleading aggregate statistics
+- Use **ggplot2 in R** to visualize Simpson's Paradox with aggregated vs. stratified plots
+:::
+
+
+## Chapter Overview
+
+<div class="step-flow">
+<div class="step-item" style="border-left: 4px solid #005CB9;">The Paradox<br>Revealed</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #83BD00;">How Aggregation<br>Lies</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #F8A623;">The Causal<br>Key</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #E24A3F;">MNH Across<br>Countries</div>
+<div class="step-arrow">→</div>
+<div class="step-item" style="border-left: 4px solid #3E9B6E;">R Workshop:<br>Visualize It</div>
+</div>
+
+. . .
+
+::: {.callout-box}
+**Core Insight:** The same dataset can produce two completely opposite conclusions depending on how you slice it. Simpson's Paradox is not a statistical curiosity -- it is a real-world trap that has misled policymakers, scientists, and courts. The causal model tells you which answer to trust.
+:::
+
+
+# The Paradox {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Same data. Opposite conclusions.</span>
+
+
+## The Setup: A Training Program Across Four Countries
+
+Imagine you are evaluating a new **emergency obstetric care (EmOC) training program** for midwives and health workers across four East African countries: Ethiopia, Rwanda, Kenya, and Tanzania.
+
+. . .
+
+You have outcome data from facilities that received the training and facilities that did not.
+
+. . .
+
+::: {.callout-box .red}
+**The combined data across all four countries shows this:**
+
+Facilities **with** training: maternal mortality ratio of **310 per 100,000** live births
+
+Facilities **without** training: maternal mortality ratio of **285 per 100,000** live births
+
+The training program appears to **increase** maternal deaths. Should we shut it down?
+:::
+
+. . .
+
+::: {.callout-box .green}
+**Wait.** Before you cancel the program, look at each country separately...
+:::
+
+
+## The Reveal: Country-by-Country
+
+::: {.example-block}
+[Country-Level Results]{.example-label}
+
+| Country | With Training | Without Training | Difference |
+|---|---:|---:|---:|
+| **Ethiopia** | 380 per 100K | 420 per 100K | **-40** (better) |
+| **Rwanda** | 210 per 100K | 250 per 100K | **-40** (better) |
+| **Kenya** | 290 per 100K | 340 per 100K | **-50** (better) |
+| **Tanzania** | 190 per 100K | 230 per 100K | **-40** (better) |
+:::
+
+. . .
+
+The training **reduces** maternal mortality in **every single country**.
+
+. . .
+
+::: {.key-takeaway}
+**Same data. Opposite conclusions.**
+
+Combined: training looks harmful. Country by country: training helps everywhere. This is Simpson's Paradox.
+:::
+
+
+## How Is That Possible?
+
+The secret is in **who gets trained**.
+
+. . .
+
+::: {.incremental}
+- Countries with **higher baseline mortality** (more severe conditions, weaker health systems) received **more** training -- because they needed it most
+- Ethiopia and Kenya have higher baseline MMR and received the bulk of training slots
+- Rwanda and Tanzania have lower baseline MMR and received fewer training slots
+- When you combine the data, the high-mortality countries **dominate** the training group, dragging the average up
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**The hidden third variable:** Baseline severity determines *both* who gets trained *and* what the outcomes look like. It is a **confounder** -- and ignoring it reverses the true effect.
+:::
+
+
+# How Aggregation Lies {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The mechanics of the reversal</span>
+
+
+## The Composition Effect
+
+Here is a simplified version showing how the numbers work:
+
+::: {.columns-equal}
+::: {.col}
+::: {.example-block}
+[Aggregated (Misleading)]{.example-label}
+
+| Group | Trained | Untrained |
+|---|---:|---:|
+| Deaths | 186 | 143 |
+| Total births | 60,000 | 50,000 |
+| **MMR** | **310** | **286** |
+
+Training looks worse!
+:::
+:::
+
+::: {.col}
+::: {.example-block}
+[Where the trained facilities are]{.example-label}
+
+| Country | % of Trained | Baseline MMR |
+|---|---:|---:|
+| Ethiopia | 40% | Very high |
+| Kenya | 30% | High |
+| Rwanda | 18% | Moderate |
+| Tanzania | 12% | Lower |
+
+Training is concentrated in hard places.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**The math of the reversal:** 70% of trained facilities are in high-mortality countries (Ethiopia + Kenya), but only 35% of untrained facilities are. The groups being compared are fundamentally different -- and the difference is driven by the confounder, not the treatment.
+:::
+
+
+## Visual: Combined vs. Separated
+
+Think of it as two pictures of the same data:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Picture 1: One Big Bar Chart**
+
+You see two bars -- "Trained" vs. "Untrained." The trained bar is taller (worse). You conclude: training hurts.
+
+But you are comparing apples to oranges. The trained group is full of facilities in the hardest settings.
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Picture 2: Four Side-by-Side Charts**
+
+You see the same comparison *within* each country. In every single chart, the trained bar is shorter (better). Training helps.
+
+Now you are comparing apples to apples.
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Aggregation hides the confounder.** When a third variable affects both group membership and outcomes, combining groups can flip the direction of the effect. The only way to see the truth is to **separate the groups**.
+:::
+
+
+## The Confounder in the DAG
+
+The causal structure that generates Simpson's Paradox is the **fork** -- a confounder that is a common cause of both the treatment and the outcome:
+
+. . .
+
+<table style="width: 85%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder">Baseline<br>Severity</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8601; [+]</span>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8600; [+]</span>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment">Training<br>Received</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8594; [-]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **Baseline Severity → Training:** Countries with worse outcomes receive more training (they need it most)
+- **Baseline Severity → Mortality:** Countries with worse baselines have higher mortality regardless of training
+- **Training → Mortality:** Training *actually reduces* mortality (the true causal effect is negative)
+- The spurious positive association in aggregated data comes from the **back-door path** through Baseline Severity
+:::
+
+
+# UC Berkeley Admissions {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">The most famous example of Simpson's Paradox</span>
+
+
+## The Lawsuit That Wasn't
+
+In 1973, UC Berkeley was accused of gender discrimination in graduate admissions. The aggregated data looked damning:
+
+. . .
+
+::: {.example-block}
+[Overall Admission Rates (Fall 1973)]{.example-label}
+
+| | Applicants | Admitted | Rate |
+|---|---:|---:|---:|
+| **Men** | 8,442 | 3,738 | **44%** |
+| **Women** | 4,321 | 1,494 | **35%** |
+
+A 9 percentage point gap. Women seemed to face a clear disadvantage.
+:::
+
+. . .
+
+::: {.callout-box .red}
+**On the surface:** This looks like systematic bias against women. Lawyers filed a discrimination lawsuit.
+:::
+
+
+## But Then They Looked by Department
+
+::: {.example-block}
+[Department-Level Admission Rates]{.example-label}
+
+| Department | Men Applied | Men Admit | Women Applied | Women Admit |
+|---|---:|---:|---:|---:|
+| A | 825 | 62% | 108 | **82%** |
+| B | 560 | 63% | 25 | **68%** |
+| C | 325 | 37% | 593 | **34%** |
+| D | 417 | 33% | 375 | **35%** |
+| E | 191 | 28% | 393 | **24%** |
+| F | 373 | 6% | 341 | **7%** |
+:::
+
+. . .
+
+In four out of six departments, **women were admitted at equal or higher rates** than men.
+
+. . .
+
+::: {.key-takeaway}
+**The paradox:** Women appeared disadvantaged overall, but were advantaged in most individual departments. Department choice was the confounder.
+:::
+
+
+## The Berkeley DAG
+
+<table style="width: 85%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment rect">Gender</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8594;</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder rect">Department<br>Applied To</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8594;</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome rect">Admission<br>Decision</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.incremental}
+- **Gender → Department:** Women disproportionately applied to departments with low admission rates (like English and Humanities), while men applied to departments with high rates (like Engineering)
+- **Department → Admission:** Some departments admit 60%+ of applicants; others admit fewer than 10%
+- The **overall gap** is driven by application patterns, not by discrimination within departments
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**But wait -- is Department a confounder or a mediator?** This is where the causal model becomes essential. If gender *causes* department choice, then Department is technically a mediator. The correct analysis depends on the question you are asking. We will return to this distinction in the next section.
+:::
+
+
+# The Causal Key {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Confounder vs. mediator: the same variable can play different roles</span>
+
+
+## The Critical Distinction
+
+::: {.definition-box}
+**The same variable can be a confounder in one causal model and a mediator in another.** The DAG -- not the data -- tells you which role it plays. And that role determines whether you should adjust for it or not.
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .green}
+**CONFOUNDER (Common Cause)**
+
+Treatment ← **Confounder** → Outcome
+
+The confounder causes *both* the treatment and the outcome. It creates a spurious association.
+
+[Adjust for it -- conditioning removes the bias]{.good-example}
+:::
+:::
+
+::: {.col}
+::: {.callout-box .red}
+**MEDIATOR (On the Causal Path)**
+
+Treatment → **Mediator** → Outcome
+
+The mediator is *part of how* the treatment produces its effect.
+
+[Do NOT adjust for it -- conditioning blocks the real effect]{.bad-example}
+:::
+:::
+:::
+
+
+## Confounder Example: Baseline Severity
+
+In the EmOC training example, **Baseline Severity** is a confounder:
+
+. . .
+
+<table style="width: 75%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td></td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder">Baseline<br>Severity</div>
+</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8601;</span>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8600;</span>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment">EmOC<br>Training</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8594; [-]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+- Baseline severity is *not caused by* the training -- it existed before the program started
+- It influences who gets trained *and* what outcomes look like
+- **We should adjust for it** to see the true effect of training
+
+. . .
+
+::: {.callout-box .green}
+**Result:** When we stratify by baseline severity (i.e., look within each country), the confounding disappears and we see training's true benefit.
+:::
+
+
+## Mediator Example: Skill Level
+
+Now consider a different variable -- **Skill Level after training:**
+
+. . .
+
+<table style="width: 75%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment">EmOC<br>Training</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8594; [+]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node">Skill<br>Level</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8594; [-]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+- Training *causes* improved skills, and improved skills *cause* lower mortality
+- Skill Level is *on the causal path* -- it is the mechanism through which training works
+- **We should NOT adjust for it** -- doing so would block the causal pathway and make training look ineffective
+
+. . .
+
+::: {.callout-box .red}
+**The danger of adjusting for a mediator:** If we compare trained and untrained facilities *among those with the same skill level*, we have removed the very effect we are trying to measure. Training would appear to do nothing -- because we controlled away its mechanism.
+:::
+
+
+## The Decision Rule
+
+::: {.key-takeaway}
+**The causal model settles the debate.**
+
+The data alone cannot tell you whether to adjust for a variable. You need to know the **causal structure** -- is this variable a confounder (common cause) or a mediator (on the pathway)?
+
+- **Confounder?** Adjust for it. Stratify. Condition on it.
+- **Mediator?** Leave it alone. Do not condition on it.
+
+Get this wrong, and you can reach exactly the wrong conclusion.
+:::
+
+. . .
+
+::: {.callout-box}
+**This is why we spent Chapters 2-5 building causal models.** Without a DAG, Simpson's Paradox is unresolvable -- the data is genuinely consistent with both stories. The causal structure is what breaks the tie.
+:::
+
+
+# MNH Application: Comparing Countries {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Why raw country comparisons mislead</span>
+
+
+## Maternal Mortality Across East Africa
+
+Here are the most recent WHO/UNICEF estimates of the **maternal mortality ratio** (deaths per 100,000 live births) for the four countries in our study:
+
+. . .
+
+| Country | MMR (per 100K) | Annual Births (approx.) | Health System Context |
+|---|---:|---:|---|
+| **Ethiopia** | ~267 | ~3.3 million | Rapidly expanding but low baseline coverage |
+| **Rwanda** | ~248 | ~370,000 | Strong community health system, small population |
+| **Kenya** | ~342 | ~1.5 million | Mixed urban/rural, wide variation |
+| **Tanzania** | ~238 | ~2.1 million | Moderate system strength, large rural population |
+
+*Source: WHO, UNICEF, UNFPA, World Bank, and UN Population Division estimates*
+
+. . .
+
+::: {.callout-box .orange}
+**Notice the variation.** Kenya has the highest MMR despite having a relatively strong urban health infrastructure. Tanzania has the lowest despite a large rural population. These differences reflect dozens of underlying factors -- and they make naive country comparisons treacherous.
+:::
+
+
+## The Naive Comparison Trap
+
+Suppose a program runs EmOC training in all four countries. After two years, we measure the reduction in MMR:
+
+. . .
+
+::: {.example-block}
+[Raw Cost-Effectiveness Comparison]{.example-label}
+
+| Country | MMR Reduction | Program Spending | Apparent Efficiency |
+|---|---:|---:|---|
+| **Tanzania** | -22 points | $4.5M | Looks best |
+| **Rwanda** | -19 points | $3.8M | Looks good |
+| **Ethiopia** | -15 points | $12.0M | Looks worst |
+| **Kenya** | -18 points | $7.2M | Looks mediocre |
+:::
+
+. . .
+
+::: {.callout-box .red}
+**Tempting conclusion:** "Tanzania gets the best results for the money. Shift spending away from Ethiopia."
+
+**Why this is wrong:** Ethiopia's lower apparent efficiency reflects its *harder starting conditions* -- larger population, lower baseline coverage, weaker infrastructure. The same dollar buys less *visible* improvement, but may save more lives at the margin because the unmet need is so much larger.
+:::
+
+
+## The Confounder: Baseline Health System Strength
+
+::: {.definition-box}
+**Baseline burden** (MMR, health system capacity, population size, geographic access) is the confounder. It determines both where programs invest heavily *and* what raw outcomes look like. Ignoring it leads to Simpson's Paradox in cost-effectiveness rankings.
+:::
+
+. . .
+
+<table style="width: 85%; margin: 0.4em auto; font-size: 0.55em;">
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node confounder">Baseline<br>Burden</div>
+</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8601; [+]</span>
+</td>
+<td></td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow positive">&#8600; [+]</span>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node treatment">Program<br>Investment</div>
+</td>
+<td style="text-align: center; padding: 0.3em;">
+<span class="dag-arrow negative">&#8594; [-]</span>
+</td>
+<td style="text-align: center; padding: 0.6em;">
+<div class="dag-node outcome">Maternal<br>Mortality</div>
+</td>
+</tr>
+</table>
+
+. . .
+
+::: {.callout-box}
+**The pattern is identical to our training example.** High-burden countries receive more investment *and* have worse outcomes. Without adjustment, the investment appears to cause worse outcomes -- when it actually causes better ones.
+:::
+
+
+## What Correct Adjustment Reveals
+
+When we account for baseline burden -- comparing each country's outcomes to what would have been expected *without* the program, given its starting conditions:
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**Naive Ranking:**
+
+1. Tanzania (most efficient)
+2. Rwanda
+3. Kenya
+4. Ethiopia (least efficient)
+
+"Shift funds from Ethiopia to Tanzania."
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**Adjusted Ranking:**
+
+1. Ethiopia (highest marginal impact per dollar, given massive unmet need)
+2. Kenya (large population, major gaps to address)
+3. Tanzania (solid returns, nearing diminishing returns)
+4. Rwanda (strong system already, less marginal gain)
+
+"Ethiopia is where the next dollar saves the most lives."
+:::
+:::
+:::
+
+. . .
+
+::: {.key-takeaway}
+**Rankings can reverse completely** when you adjust for the confounder. The country that looks least efficient on paper may be the best investment at the margin -- because it has the most room to improve.
+:::
+
+
+## The Lesson for Program Leaders
+
+::: {.callout-box}
+**Three rules for cross-country MNH comparisons:**
+:::
+
+. . .
+
+::: {.incremental}
+1. **Never compare raw cost-effectiveness across countries** without adjusting for baseline conditions. Different starting points make raw numbers incomparable.
+2. **Always ask: what is the confounder?** In MNH, it is almost always some combination of baseline mortality burden, health system capacity, population size, and geographic access.
+3. **Use the causal model to determine what to adjust for.** Baseline burden is a confounder (adjust for it). Quality improvement is a mediator (do not adjust for it). The DAG tells you which is which.
+:::
+
+. . .
+
+::: {.callout-box .orange}
+**This is not just about statistics.** Getting this wrong means shifting resources away from the countries that need them most -- and toward the countries that look good on paper because they started from a better position.
+:::
+
+
+# Bonus Insight: The Prosecutor's Fallacy {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">When a 99% accurate test does not mean a 99% chance</span>
+
+
+## The Fallacy in One Slide
+
+::: {.example-block}
+[A Quick Thought Experiment]{.example-label}
+
+A diagnostic test for a rare complication is **99% accurate** -- it correctly identifies the condition 99% of the time, and correctly rules it out 99% of the time.
+
+You test positive.
+
+**Question:** What is the probability you actually have the condition?
+:::
+
+. . .
+
+Most people answer **99%**. That feels right -- the test is 99% accurate, after all.
+
+. . .
+
+::: {.callout-box .red}
+**The answer depends entirely on how rare the condition is.**
+
+If the condition affects 1 in 1,000 people:
+
+- Out of 100,000 people tested, **100** have the condition and **99** test positive (true positives)
+- But **99,900** do NOT have it, and **999** of them test positive anyway (false positives)
+- Total positive tests: 99 + 999 = **1,098**
+- Chance you actually have it: 99 / 1,098 = **about 9%**
+
+A "99% accurate" test gives you only a **9% chance** of actually having the condition.
+:::
+
+
+## Why This Matters
+
+::: {.definition-box}
+**The Prosecutor's Fallacy:** Confusing the probability of the evidence given the hypothesis with the probability of the hypothesis given the evidence. In plain language: confusing "how well the test works" with "what the test result means for you."
+:::
+
+. . .
+
+::: {.columns-equal}
+::: {.col}
+::: {.callout-box .red}
+**What people hear:**
+
+"The test is 99% accurate, so a positive result means 99% chance of disease."
+
+This confuses P(positive | disease) with P(disease | positive).
+:::
+:::
+
+::: {.col}
+::: {.callout-box .green}
+**What is actually true:**
+
+"The probability of disease given a positive test depends on both the test accuracy **and** how common the disease is (the base rate)."
+
+When the disease is rare, most positives are false positives.
+:::
+:::
+:::
+
+. . .
+
+::: {.callout-box}
+**Connection to Simpson's Paradox:** Both fallacies share the same root cause -- ignoring a crucial piece of context (the confounder in Simpson's, the base rate in the Prosecutor's Fallacy). In both cases, the causal model tells you what context you need.
+:::
+
+
+# R Workshop {background-color="#005CB9"}
+
+<span style="color: rgba(255,255,255,0.7); font-size: 0.7em;">Simulating and visualizing Simpson's Paradox with ggplot2</span>
+
+
+## R Block 1: Simulate the Paradox
+
+```{r}
+#| label: simulate-simpsons
+#| echo: true
+
+library(tidyverse)
+
+set.seed(2024)
+
+# Simulate an EmOC training program across 4 countries
+# Confounder: country (determines both training allocation and baseline MMR)
+
+simpsons_data <- tibble(
+  country = c(
+    rep("Ethiopia", 1200), rep("Kenya", 900),
+    rep("Rwanda", 500),    rep("Tanzania", 400)
+  )
+) |>
+  mutate(
+    # Confounder: high-burden countries get MORE training
+    trained = case_when(
+      country == "Ethiopia"  ~ rbinom(n(), 1, 0.70),
+      country == "Kenya"     ~ rbinom(n(), 1, 0.60),
+      country == "Rwanda"    ~ rbinom(n(), 1, 0.35),
+      country == "Tanzania"  ~ rbinom(n(), 1, 0.25)
+    ),
+    # Outcome: training REDUCES mortality in every country
+    # But high-burden countries have higher baseline mortality
+    death_prob = case_when(
+      country == "Ethiopia"  & trained == 1 ~ 0.038,
+      country == "Ethiopia"  & trained == 0 ~ 0.052,
+      country == "Kenya"     & trained == 1 ~ 0.029,
+      country == "Kenya"     & trained == 0 ~ 0.041,
+      country == "Rwanda"    & trained == 1 ~ 0.018,
+      country == "Rwanda"    & trained == 0 ~ 0.025,
+      country == "Tanzania"  & trained == 1 ~ 0.016,
+      country == "Tanzania"  & trained == 0 ~ 0.022
+    ),
+    death = rbinom(n(), 1, death_prob),
+    trained_label = ifelse(trained == 1, "Trained", "Not Trained")
+  )
+
+# Aggregated result (misleading)
+simpsons_data |>
+  group_by(trained_label) |>
+  summarise(
+    mortality_rate = mean(death),
+    n = n(),
+    .groups = "drop"
+  )
+
+# Country-level result (correct)
+simpsons_data |>
+  group_by(country, trained_label) |>
+  summarise(
+    mortality_rate = mean(death),
+    n = n(),
+    .groups = "drop"
+  ) |>
+  pivot_wider(names_from = trained_label, values_from = c(mortality_rate, n))
+```
+
+
+## R Block 2: The Aggregated View (Misleading)
+
+```{r}
+#| label: plot-aggregated
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+library(ggplot2)
+
+# Aggregated bar chart -- the misleading picture
+p_aggregated <- simpsons_data |>
+  group_by(trained_label) |>
+  summarise(mortality_rate = mean(death), .groups = "drop") |>
+  ggplot(aes(x = trained_label, y = mortality_rate, fill = trained_label)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = sprintf("%.1f%%", mortality_rate * 100)),
+            vjust = -0.5, size = 5, fontface = "bold") +
+  scale_fill_manual(values = c("Trained" = "#005CB9", "Not Trained" = "#FA7650")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.06)) +
+  labs(
+    title = "Aggregated: Training Appears HARMFUL",
+    subtitle = "Combined across all four countries",
+    y = "Mortality Rate", x = NULL
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(color = "#E24A3F", face = "bold")
+  )
+
+p_aggregated
+```
+
+. . .
+
+::: {.callout-box .red}
+**If you stopped here, you would cancel a life-saving program.** The aggregated chart tells a false story because it mixes together countries with very different baselines.
+:::
+
+
+## R Block 3: The Stratified View (Correct)
+
+```{r}
+#| label: plot-stratified
+#| echo: true
+#| fig-width: 12
+#| fig-height: 5
+
+# Stratified bar chart -- the true picture
+p_stratified <- simpsons_data |>
+  group_by(country, trained_label) |>
+  summarise(mortality_rate = mean(death), .groups = "drop") |>
+  ggplot(aes(x = trained_label, y = mortality_rate, fill = trained_label)) +
+  geom_col(width = 0.6) +
+  geom_text(aes(label = sprintf("%.1f%%", mortality_rate * 100)),
+            vjust = -0.5, size = 3.5, fontface = "bold") +
+  facet_wrap(~ country, nrow = 1) +
+  scale_fill_manual(values = c("Trained" = "#005CB9", "Not Trained" = "#FA7650")) +
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.07)) +
+  labs(
+    title = "Stratified: Training HELPS in Every Country",
+    subtitle = "The same data, split by country",
+    y = "Mortality Rate", x = NULL
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(color = "#3E9B6E", face = "bold"),
+    strip.text = element_text(face = "bold", size = 12)
+  )
+
+p_stratified
+```
+
+. . .
+
+::: {.callout-box .green}
+**In every panel, the blue bar (Trained) is lower than the orange bar (Not Trained).** Training reduces mortality in every country. The aggregated chart lied because it mixed countries together without accounting for baseline severity.
+:::
+
+
+## R Block 4: Side-by-Side Comparison
+
+```{r}
+#| label: plot-combined
+#| echo: true
+#| fig-width: 14
+#| fig-height: 6
+
+library(patchwork)
+
+# Combine both views for maximum impact
+(p_aggregated + p_stratified) +
+  plot_layout(widths = c(1, 2.5)) +
+  plot_annotation(
+    title = "Simpson's Paradox: Same Data, Opposite Conclusions",
+    subtitle = "Left: aggregated (misleading) | Right: stratified by country (correct)",
+    theme = theme(
+      plot.title = element_text(size = 16, face = "bold", color = "#005CB9"),
+      plot.subtitle = element_text(size = 12, color = "#666")
+    )
+  )
+```
+
+. . .
+
+::: {.key-takeaway}
+**This is the visualization you should remember from this chapter.** One dataset, two visualizations, opposite conclusions. The causal model tells you which one to trust.
+:::
+
+
+## R Block 5: The Regression Comparison
+
+```{r}
+#| label: regression-comparison
+#| echo: true
+
+# Naive regression: ignores the confounder (country)
+naive_model <- lm(death ~ trained, data = simpsons_data)
+
+# Adjusted regression: includes the confounder
+adjusted_model <- lm(death ~ trained + country, data = simpsons_data)
+
+# Compare the training coefficient
+comparison <- tibble(
+  Model = c("Naive (ignores country)", "Adjusted (controls for country)"),
+  Training_Effect = c(
+    coef(naive_model)["trained"],
+    coef(adjusted_model)["trained"]
+  ),
+  Interpretation = c(
+    "Training appears to INCREASE mortality",
+    "Training DECREASES mortality (correct)"
+  )
+)
+
+print(comparison)
+
+# The sign of the coefficient flips!
+# Naive: positive (training looks harmful)
+# Adjusted: negative (training is beneficial)
+```
+
+. . .
+
+::: {.callout-box}
+**Key lesson:** The coefficient on `trained` literally changes sign when you add `country` to the regression. This is Simpson's Paradox expressed as **omitted variable bias** -- the statistical fingerprint of a missing confounder.
+:::
+
+
+## R Block 6: Visualizing the Confounder's Role
+
+```{r}
+#| label: plot-confounder
+#| echo: true
+#| fig-width: 10
+#| fig-height: 5
+
+# Show how the confounder drives the paradox
+# Plot: training rate vs. baseline mortality by country
+
+country_summary <- simpsons_data |>
+  group_by(country) |>
+  summarise(
+    pct_trained = mean(trained),
+    baseline_mortality = mean(death[trained == 0]),
+    .groups = "drop"
+  )
+
+ggplot(country_summary, aes(x = pct_trained, y = baseline_mortality)) +
+  geom_point(size = 5, color = "#005CB9") +
+  geom_text(aes(label = country), vjust = -1.2, size = 4.5, fontface = "bold") +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed", color = "#FA7650") +
+  scale_x_continuous(labels = scales::percent, limits = c(0.1, 0.85)) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "The Confounder: Baseline Severity Drives Training Allocation",
+    subtitle = "Countries with higher mortality receive more training -- creating the paradox",
+    x = "Percentage of Facilities Trained",
+    y = "Baseline Mortality Rate (Untrained Facilities)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(color = "#005CB9", face = "bold")
+  )
+```
+
+. . .
+
+::: {.callout-box .orange}
+**This scatter plot shows why the paradox occurs.** Countries with higher baseline mortality (Ethiopia, Kenya) also have the highest training rates. When you aggregate, the high-mortality countries dominate the trained group, making training look harmful. The dashed line shows the positive correlation between severity and training -- the hallmark of the confounder.
+:::
+
+
+## Key Takeaways
+
+::: {.key-takeaway}
+**Simpson's Paradox** is not a curiosity -- it is a trap. Aggregated data can show the exact opposite of what is really happening. The same dataset, sliced two ways, gives two contradictory answers.
+
+**The resolution is causal, not statistical.** The data alone cannot tell you which answer is correct. You need a causal model (a DAG) to identify whether a variable is a confounder (adjust for it) or a mediator (do not adjust).
+
+**In MNH cost-effectiveness**, naive cross-country comparisons mislead because baseline burden is a confounder. Adjusting for it can reverse which countries and interventions look most effective -- and that reversal can save thousands of lives.
+:::
+
+
+## Looking Ahead
+
+::: {.callout-box}
+**Next: Chapter 7 -- Single-Agent Interventions**
+
+Now that we understand how to correctly estimate causal effects (avoiding Simpson's Paradox), we turn to **making optimal decisions** with those estimates:
+
+- **Influence diagrams** that add decision nodes to our causal models
+- **Expected value** calculations for choosing between intervention options
+- **Expected Value of Perfect Information (EVPI):** How much would it be worth to resolve uncertainty before investing?
+- The critical difference between **observing** a variable and **intervening** on it (the do-operator in action)
+:::
+
+. . .
+
+::: {.callout-box .green}
+**The connection:** Chapter 6 taught us how to *correctly estimate* causal effects -- seeing through the paradox to the truth. Chapter 7 teaches us how to *use* those correct estimates to make the best possible investment decisions.
+:::
+
+
+##  {background-color="white"}
+
+<br><br><br>
+
+::: {style="text-align: center;"}
+![](bka-logo.png){width="250px"}
+
+<br>
+
+[Inference and Intervention | Chapter 6: Simpson's Paradox & Cost-Effectiveness]{style="color: #005CB9; font-size: 0.6em;"}
+
+[BK Advisors]{style="color: #666; font-size: 0.5em;"}
+:::
