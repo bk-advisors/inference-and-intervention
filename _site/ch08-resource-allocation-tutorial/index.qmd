@@ -1,6 +1,6 @@
 ---
 title: "Chapter 8 — Spreading the Money"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -291,7 +291,7 @@ The expected value picks a centre. The *shape* of the range picks a strategy. Sh
 
 <br>
 
-[Inference and Intervention | Chapter 8]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 8]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

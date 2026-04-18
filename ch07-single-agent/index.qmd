@@ -1,6 +1,6 @@
 ---
 title: "Chapter 7: Decision Analysis & Value of Information"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "BK Advisors"
 date: today
 format:
@@ -966,7 +966,7 @@ We have been thinking about one county director's choice. Now we zoom out to the
 
 <br>
 
-[Inference and Intervention | Chapter 7: Decision Analysis & Value of Information]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 7: Decision Analysis & Value of Information]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

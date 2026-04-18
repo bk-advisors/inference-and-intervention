@@ -1,6 +1,6 @@
 ---
 title: "Chapter 10: Structure Learning from Observational Data"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "BK Advisors"
 date: today
 format:
@@ -751,7 +751,7 @@ Training programs are *deployed* to improve staffing. Staffing does not create t
 
 ## Congratulations
 
-You have completed **Inference and Intervention**.
+You have completed **Causal Analysis in Public Health Management**.
 
 . . .
 
@@ -781,7 +781,7 @@ That is what separates good analysis from great analysis. And great analysis sav
 
 <br>
 
-[Inference and Intervention | Chapter 10: Structure Learning from Observational Data]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 10: Structure Learning from Observational Data]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 

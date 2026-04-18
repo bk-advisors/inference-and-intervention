@@ -1,6 +1,6 @@
 ---
 title: "Chapter 10 — Can the Computer Just Tell Us?"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -313,7 +313,7 @@ Esther's algorithm was powerful. The expert was indispensable. The two together 
 
 <br>
 
-[Inference and Intervention | Chapter 10 | The end of the course — and the start of the work]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 10 | The end of the course — and the start of the work]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

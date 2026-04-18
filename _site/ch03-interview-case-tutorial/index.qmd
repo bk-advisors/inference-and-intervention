@@ -1,6 +1,6 @@
 ---
 title: "Chapter 3 — Building the Picture from Scratch"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -322,7 +322,7 @@ Faith built her picture in three interviews. None of them had the whole story. A
 
 <br>
 
-[Inference and Intervention | Chapter 3]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 3]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

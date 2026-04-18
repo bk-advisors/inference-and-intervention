@@ -1,6 +1,6 @@
 ---
 title: "Chapter 2: Qualitative Causal Models"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "BK Advisors"
 date: today
 format:
@@ -862,7 +862,7 @@ We replace [+] and [-] signs with actual probabilities — answering: **how much
 
 <br>
 
-[Inference and Intervention | Chapter 2: Qualitative Causal Models]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 2: Qualitative Causal Models]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

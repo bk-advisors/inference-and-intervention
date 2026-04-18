@@ -1,6 +1,6 @@
 ---
 title: "Chapter 9 — When the Other Side Reacts"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -285,7 +285,7 @@ The payoff matrix is the picture from Chapter 2, with one new rule: every box is
 
 <br>
 
-[Inference and Intervention | Chapter 9]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 9]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

@@ -1,6 +1,6 @@
 ---
 title: "Chapter 7 — From Understanding to Deciding"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -312,7 +312,7 @@ David did not need a PhD. He needed a picture, two lookup tables, and the discip
 
 <br>
 
-[Inference and Intervention | Chapter 7]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 7]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

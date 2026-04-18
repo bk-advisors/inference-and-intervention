@@ -1,6 +1,6 @@
 ---
 title: "Chapter 4 — Putting Numbers on the Picture"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
 format:
@@ -308,7 +308,7 @@ That is all there is to it. The picture tells you the structure. The counts tell
 
 <br>
 
-[Inference and Intervention | Chapter 4]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 4]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

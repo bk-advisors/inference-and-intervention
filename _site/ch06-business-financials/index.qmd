@@ -1,6 +1,6 @@
 ---
 title: "Chapter 6: Simpson's Paradox & Cost-Effectiveness"
-subtitle: "Inference and Intervention | BK Advisors"
+subtitle: "Causal Analysis in Public Health Management | BK Advisors"
 author: "BK Advisors"
 date: today
 format:
@@ -1041,7 +1041,7 @@ Now that we understand how to correctly estimate causal effects (avoiding Simpso
 
 <br>
 
-[Inference and Intervention | Chapter 6: Simpson's Paradox & Cost-Effectiveness]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Chapter 6: Simpson's Paradox & Cost-Effectiveness]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::

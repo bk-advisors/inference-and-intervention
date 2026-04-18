@@ -1,5 +1,5 @@
 ---
-title: "Inference and Intervention"
+title: "Causal Analysis in Public Health Management"
 subtitle: "A Practical Course on Causal Thinking for Public Health"
 author: "Matthew Luke Kuch | BK Advisors"
 date: today
@@ -214,7 +214,7 @@ Let's move to Chapter 1.
 
 <br>
 
-[Inference and Intervention | Course Introduction]{style="color: #005CB9; font-size: 0.6em;"}
+[Causal Analysis in Public Health Management | Course Introduction]{style="color: #005CB9; font-size: 0.6em;"}
 
 [BK Advisors]{style="color: #666; font-size: 0.5em;"}
 :::
