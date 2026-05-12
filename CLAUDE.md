@@ -105,6 +105,14 @@ quarto render
 quarto preview
 ```
 
+### Deploy gotcha (important)
+
+Project-level `quarto render` **only builds the website pages** listed in `_quarto.yml` — it does *not* re-render the standalone reveal.js decks in `ch*/`. After changing shared SCSS or any deck content, you must:
+
+1. Re-render each deck individually: `quarto render ch02-qualitative-models/index.qmd` (loop over all `ch*/` and `course-intro/`).
+2. Sync the refreshed deck HTMLs into `_site/` (GitHub Pages serves from `_site/`, not the repo root): `cp ch*/index.html _site/ch*/index.html` equivalent.
+3. Commit and push. Pages redeploys in 1–3 minutes; use a cache-bust query (`?v=...`) to bypass the Fastly CDN when verifying.
+
 ## See Also
 
 - `skills.md` — Full operational manual with CSS classes, slide patterns, speaker note conventions
