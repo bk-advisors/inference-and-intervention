@@ -188,7 +188,7 @@ Think of it this way: these are the levers you can pull.
 
 - **CHW Training Investment** {Fund, Don't Fund}
 - **Equipment Procurement** {Invest, Defer}
-- **Insurance Policy** {Expand Mutuelle, Status Quo}
+- **Health Insurance Coverage** {Expand Mutuelle de Santé (Rwanda's community health insurance), Keep As Is}
 :::
 :::
 :::
